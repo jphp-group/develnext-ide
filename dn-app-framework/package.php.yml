@@ -16,6 +16,7 @@ includes:
 
 hub:
   login: d.zayceff@gmail.com
+  config-dir: ./../
 
 doc:
   url-prefix: 'https://github.com/jphp-compiler/develnext/blob/master/%name%/api-docs/'
