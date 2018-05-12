@@ -128,6 +128,19 @@ class UIDesktopBundle extends AbstractJarBundle
         ];
     }
 
+    public function getJPPMDependencies()
+    {
+        return [
+            'jphp-gui-ext' => '*',
+            'jphp-gui-tabs-ext' => '*',
+            'jphp-gui-desktop-ext' => '*',
+            'jphp-zend-ext' => '*',
+            'dn-app-framework' => '*',
+            'jphp-yaml-ext' => '*',
+            'wizard-core' => '*',
+        ];
+    }
+
     public function onAdd(Project $project, AbstractBundle $owner = null)
     {
         parent::onAdd($project, $owner);
