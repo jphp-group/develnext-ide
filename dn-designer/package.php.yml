@@ -1,0 +1,15 @@
+name: develnext-designer
+version: 1.0.0
+
+plugins: [Gradle, Hub]
+
+sources:
+- src
+
+deps:
+  jphp-core: '~1.0.0'
+  jphp-gui-ext: '~1.0.0'
+
+gradle:
+  deps:
+  - 'org.fxmisc.richtext:richtextfx:0.8.2'

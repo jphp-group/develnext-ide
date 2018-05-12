@@ -24,6 +24,11 @@ use php\util\Scanner;
  */
 abstract class AbstractJarBundle extends AbstractBundle
 {
+    public function getJPPMDeps()
+    {
+        return [];
+    }
+
     /**
      * @return array
      */
