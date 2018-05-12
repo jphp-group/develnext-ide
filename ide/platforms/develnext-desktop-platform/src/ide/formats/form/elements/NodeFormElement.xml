@@ -1,0 +1,79 @@
+<element>
+    <init>
+        <property code="visible" virtual="1" value="1" />
+        <property code="enabled" virtual="1" value="1" />
+    </init>
+
+    <properties group="general" title="Главное" sort="1000" />
+
+    <properties group="extra" title="Дополнительно" sort="2000" >
+        <property code="id" name="ID" editor="id" tooltip="Уникальный идентификатор элемента в рамках формы" />
+        <property code="style" name="CSS стиль" editor="text" tooltip="Набор fx css правил для стиля" />
+        <property code="classesString" name="CSS класс(ы)" editor="text" tooltip="Класс или несколько классов через пробел" />
+
+        <property code="cursor" name="Курсор" editor="enum" tooltip="Тип курсора при наведении на объект" virtual="1" defaultValue="DEFAULT">
+            <variants>
+                <variant value="DEFAULT">[DEFAULT] По умолчанию</variant>
+                <variant value="HAND">[HAND] Указательный палец</variant>
+                <variant value="TEXT">[TEXT] Редактирование</variant>
+                <variant value="WAIT">[WAIT] Ожидание</variant>
+                <variant value="MOVE">[MOVE] Перемещение</variant>
+                <variant value="CROSSHAIR">[CROSSHAIR] Крестик</variant>
+                <variant value="NONE">[NONE] Отсутствует</variant>
+            </variants>
+        </property>
+
+        <property code="visible" name="Видимость" editor="boolean" virtual="1" tooltip="Видимость элемента на форме в момент старта" />
+        <property code="enabled" name="Доступность" editor="boolean" virtual="1" tooltip="Доступность элемента на форме в момент старта" />
+
+        <property code="opacity" name="Непрозрачность" editor="floatSlider" min="0" max="1" tooltip="Уровень непрозрачности от 0 до 1, например, 0.5 - объект прозрачен наполовину" />
+        <property code="rotate" name="Угол поворота" editor="floatSlider" min="0" max="360" tooltip="Уровень поворота в градусах от 0 до 360" />
+
+        <property code="position" name="Позиция (X, Y)" editor="doubleArray" tooltip="Позиция по X (горизонтали) и по Y (вертикали)" />
+        <property code="size" name="Размеры (W, H)" editor="doubleArray" tooltip="Размеры, ширина (width) + высота (height)" />
+        <property code="anchorFlags" name="Растягивание" editor="anchor" tooltip="Автоматическое растягивание объекта, к левой части, к правой, к верху, к низу" />
+
+        <property code="focusTraversable" name="Табуляция" editor="boolean" tooltip="Перемещать фокус через клавишу TAB" />
+        <property code="tooltipText" name="Подсказка" editor="text" tooltip="Всплывающая подсказка при наведении на элемент" virtual="1" />
+    </properties>
+
+    <eventTypes>
+        <eventType code="click" name="Клик мышки" kind="MouseParamEvent" icon="icons/mouseEx16.png" />
+
+        <eventType code="mouseDown" name="Нажатие мышки" kind="MouseParamEvent" icon="icons/mouse16.png" />
+        <eventType code="mouseUp" name="Отжатие мышки" kind="MouseParamEvent" icon="icons/mouse16.png" />
+
+
+        <eventType code="mouseDrag" name="Таскание курсора" kind="MouseEvent" icon="icons/drag16.png" />
+        <eventType code="mouseMove" name="Движение курсора" kind="MouseEvent" icon="icons/cursor16.png" />
+
+        <eventType code="mouseEnter" name="Курсор на объекте" kind="MouseEvent" icon="icons/cursor16.png" />
+        <eventType code="mouseExit" name="Курсор вне объекта" kind="MouseEvent" icon="icons/cursor16.png" />
+
+
+        <eventType code="globalKeyDown" name="Нажатие" kind="GlobalKeyParamEvent" icon="icons/keyGlobal16.png" />
+        <eventType code="globalKeyUp" name="Отжатие" kind="GlobalKeyParamEvent" icon="icons/keyGlobal16.png" />
+        <eventType code="globalKeyPress" name="Клавиатура" kind="GlobalKeyParamEvent" icon="icons/keyboardGlobal16.png" />
+
+        <eventType code="keyDown" name="Нажатие (при фокусе)" kind="KeyParamEvent" icon="icons/key16.png" />
+        <eventType code="keyUp" name="Отжатие (при фокусе)" kind="KeyParamEvent" icon="icons/key16.png" />
+        <eventType code="keyPress" name="Клавиатура (при фокусе)" kind="KeyEvent" icon="icons/keyboard16.png" />
+
+        <eventType code="scroll" name="Прокрутка" kind="ScrollParamEvent" icon="icons/scroll16.png" />
+
+        <eventType code="create" name="Клонирование" kind="ActionEvent" icon="icons/idea16.png" />
+        <eventType code="step" name="Каждый кадр" kind="ActionEvent" icon="icons/step16.png" />
+
+        <eventType code="outside" name="Выход за пределы" kind="ActionEvent" icon="icons/out16.png">
+            <variants>
+                <variant value="">Полностью</variant>
+                <variant value="partly">Частично</variant>
+            </variants>
+        </eventType>
+        <eventType code="destroy" name="Уничтожение" kind="ActionEvent" icon="icons/trash16.gif" />
+
+        <eventType code="collision" name="Столкновение" kind="CollisionParamEvent" idParameter="1" icon="icons/collision16.gif" />
+
+        <eventType code="construct" name="Загрузка компонента" kind="ActionEvent" icon="icons/loadingEvent16.png" />
+    </eventTypes>
+</element>

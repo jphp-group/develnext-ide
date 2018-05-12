@@ -1,0 +1,23 @@
+<element>
+    <init>
+        <property code="singleton" value="1" />
+        <property code="applyToApplication" value="0" />
+        <property code="version" value="1.0" />
+    </init>
+
+    <properties group="general" title="Модуль">
+        <property code="singleton" name="Одиночка (Singleton)" editor="boolean" tooltip="Singleton модуль, для каждой формы будет использован один и тот же экземпляр" />
+        <property code="disabled" name="Отключить" editor="boolean" tooltip="При отключении модуль не будет выполнять все свои скрипты" />
+    </properties>
+
+    <properties group="info" title="Информация">
+        <property code="version" name="Версия" editor="simpleText" tooltip="Версия модуля (например 1.2.3 или 5.3)" />
+        <property code="author" name="Автор" editor="text" tooltip="Автор модуля (название компании, имя человека и т.д.)" />
+        <property code="description" name="Описание" editor="text" tooltip="Подробное описание модуля" />
+    </properties>
+
+    <eventTypes>
+        <eventType code="action" name="Подключение" kind="ObjectEvent" icon="icons/ok16.png" />
+        <eventType code="construct" name="Загрузка модуля" kind="ObjectEvent" icon="icons/loadingEvent16.png" />
+    </eventTypes>
+</element>

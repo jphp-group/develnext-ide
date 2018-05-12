@@ -1,0 +1,34 @@
+<element extends="NodeFormElement">
+    <properties>
+        <property code="text" name="Текст" editor="text" />
+        <property code="textColor" name="Цвет текста" editor="color" />
+        <property code="font" name="Шрифт" editor="font" />
+        <property code="underline" name="Подчеркивать" editor="boolean" />
+        <property code="ellipsisString" name="Текст сокращения" editor="simpleText" />
+
+        <property code="wrapText" name="Автоперенос" editor="boolean" />
+        <property code="textAlignment" name="Выравнивание текста" editor="enum">
+            <variants>
+                <variant value="LEFT">Левое</variant>
+                <variant value="CENTER">Центр</variant>
+                <variant value="RIGHT">Правое</variant>
+                <variant value="JUSTIFY">Растягивать</variant>
+            </variants>
+        </property>
+
+        <property code="alignment" name="Выравнивание" editor="position" />
+
+        <property code="graphic" name="Иконка" editor="image" virtual="1" />
+        <property code="graphicTextGap" name="Отступ иконки" editor="floatSlider" min="0" max="100" />
+        <property code="contentDisplay" name="Отображение иконки" editor="enum" defaultValue="LEFT">
+            <variants>
+                <variant value="TOP">Сверху</variant>
+                <variant value="BOTTOM">Снизу</variant>
+                <variant value="LEFT">Слева</variant>
+                <variant value="RIGHT">Справа</variant>
+                <variant value="GRAPHIC_ONLY">Без текста</variant>
+                <variant value="TEXT_ONLY">Только текст</variant>
+            </variants>
+        </property>
+    </properties>
+</element>

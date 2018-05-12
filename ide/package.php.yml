@@ -1,0 +1,28 @@
+name: develnext-ide
+version: 17.0.0+dev
+type: project
+description: IDE for PHP/JPHP.
+
+plugins: [App]
+
+sources:
+- src
+- src-doc
+- platforms/develnext-desktop-platform/src
+- platforms/develnext-java-platform/src
+- platforms/develnext-php-platform/src
+- platforms/develnext-web-platform/src
+- platforms/develnext-wizard-platform/src
+- ../dn-app-framework/src
+
+includes:
+- index.php
+
+deps:
+  jphp-core: '~1.0.0'
+  jphp-xml-ext: '~1.0.0'
+  jphp-zend-ext: '~1.0.0'
+  jphp-zip-ext: '~1.0.0'
+  jphp-httpclient-ext: '~1.0.0'
+
+

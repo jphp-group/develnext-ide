@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="439.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+      <VBox layoutX="14.0" layoutY="16.0" prefHeight="320.0" prefWidth="411.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </padding>
+         <children>
+              <Label maxWidth="1.7976931348623157E308" text="Шрифт:">
+                  <font>
+                      <Font name="System" size="12.0" />
+                  </font>
+              </Label>
+              <ComboBox id="fontCombobox" editable="true" maxWidth="1.7976931348623157E308" visibleRowCount="30" />
+              <Label maxWidth="1.7976931348623157E308" text="Размер:">
+                  <font>
+                      <Font name="System" size="12.0" />
+                  </font>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+              </Label>
+            <HBox spacing="10.0">
+               <children>
+                    <Slider id="sizeSlider" majorTickUnit="10.0" minorTickCount="10" prefHeight="25.0" prefWidth="355.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="10.0" HBox.hgrow="ALWAYS" />
+                    <TextField id="sizeField" alignment="CENTER" prefHeight="30.0" prefWidth="49.0" />
+               </children>
+            </HBox>
+              <HBox prefHeight="30.0" prefWidth="409.0" spacing="7.0">
+                  <children>
+                      <ToggleButton id="thinWeightButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" selected="true" text="Обычный">
+                          <toggleGroup>
+                              <ToggleGroup fx:id="weight" />
+                          </toggleGroup>
+                          <font>
+                              <Font name="System" size="12.0" />
+                          </font>
+                      </ToggleButton>
+                      <ToggleButton id="italicButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="Наклонный" toggleGroup="$weight">
+                          <font>
+                              <Font name="System Italic" size="12.0" />
+                          </font>
+                      </ToggleButton>
+                      <ToggleButton id="boldWeightButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="Жирный" toggleGroup="$weight">
+                          <font>
+                              <Font name="System Bold" size="12.0" />
+                          </font>
+                      </ToggleButton>
+                      <ToggleButton id="italicBoldWeightButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Жирный + Наклонный" toggleGroup="$weight" HBox.hgrow="ALWAYS">
+                          <font>
+                              <Font name="System Bold Italic" size="12.0" />
+                          </font>
+                      </ToggleButton>
+                  </children>
+              </HBox>
+              <Separator prefHeight="13.0" prefWidth="409.0" />
+              <Label id="testLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Test Text" VBox.vgrow="ALWAYS" />
+            <HBox maxHeight="1.7976931348623157E308" prefHeight="30.0" spacing="5.0">
+               <children>
+                    <Button id="applyButton" defaultButton="true" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="Применить">
+                        <cursor>
+                            <Cursor fx:constant="HAND" />
+                        </cursor>
+                     <padding>
+                        <Insets left="15.0" right="15.0" />
+                     </padding>
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                    </Button>
+                    <Button id="cancelButton" cancelButton="true" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="Отмена">
+                        <cursor>
+                            <Cursor fx:constant="HAND" />
+                        </cursor>
+                     <padding>
+                        <Insets left="15.0" right="15.0" />
+                     </padding>
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                    </Button>
+                  <HBox alignment="TOP_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Button id="genCssButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="Сгенерировать CSS Стиль">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                           <padding>
+                              <Insets left="15.0" right="15.0" />
+                           </padding>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+    </children>
+</AnchorPane>

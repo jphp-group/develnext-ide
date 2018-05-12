@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="dn-web" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox id="content" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" styleClass="dn-web" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </padding>
+         <children>
+            <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="600.0" spacing="10.0">
+               <children>
+                  <ImageView id="categoryIcon" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" />
+                  <VBox spacing="2.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label id="categoryNameLabel" text="CategoryName">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        <Label id="categoryDescriptionLabel" text="CategoryDescription" textFill="#909090" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <Separator maxWidth="1.7976931348623157E308" prefHeight="2.0" prefWidth="419.0" />
+            <HBox id="moderPane" prefHeight="30.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <Button id="addEntryButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" styleClass="icon-plus" text="Добавить статью">
+                     <padding>
+                        <Insets left="15.0" right="15.0" />
+                     </padding>
+                  </Button>
+               </children>
+            </HBox>
+            <VBox id="categoryContent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="70.0" spacing="7.0" styleClass="doc-entries" VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="430.0" prefWidth="698.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView id="image" fitHeight="430.0" fitWidth="698.0" pickOnBounds="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <image>
+            <Image url="/.data/img/splash.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <Label id="version" alignment="TOP_RIGHT" layoutX="400" layoutY="25" prefHeight="-1" prefWidth="200" text="0.0.0" textAlignment="RIGHT" textFill="white">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label id="versionCode" alignment="TOP_RIGHT" layoutX="400" layoutY="43" prefHeight="-1" prefWidth="200" text="Unknown" textAlignment="RIGHT" textFill="white">
+         <font>
+            <Font size="20.0" name="System Bold" />
+         </font>
+      </Label>
+      <HBox layoutY="370" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" id="tipBox" style="-fx-background-color: #1e4e7a;" alignment="CENTER">
+         <children>
+            <Label id="tip" style="-fx-padding: 10px 10px; -fx-font-style: normal; -fx-font-size: 13px;" text="Если у проекта нет главной формы, используйте модуль загрузчик для действий при старте" textAlignment="CENTER" textFill="white">
+            </Label>
+         </children>
+      </HBox>
+      <HBox id="accountPane" layoutX="14.0" layoutY="14.0" spacing="15.0" style="-fx-background-color: white;">
+         <children>
+            <AnchorPane id="accountAvatarImage" prefWidth="50.0" />
+            <VBox HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="Привет">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label id="accountNameLabel" text="User Name" textFill="#25649c">
+                     <font>
+                        <Font size="23.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Label>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
+         </padding>
+         <effect>
+            <DropShadow blurType="GAUSSIAN" color="white" />
+         </effect>
+      </HBox>
+   </children>
+</AnchorPane>
