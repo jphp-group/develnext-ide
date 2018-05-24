@@ -3,8 +3,10 @@ namespace ide\project\templates;
 
 use develnext\bundle\controlfx\ControlFXBundle;
 use develnext\bundle\game2d\Game2DBundle;
+use ide\bundle\AbstractJarBundle;
 use ide\bundle\std\UIDesktopBundle;
 use ide\editors\FormEditor;
+use ide\formats\templates\JPPMPackageFileTemplate;
 use ide\Logger;
 use ide\project\AbstractProjectTemplate;
 use ide\project\behaviours\BackupProjectBehaviour;
@@ -83,24 +85,13 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
             $project->register(new BackupProjectBehaviour(), false);
         }
 
+
         $ideVersionHash = $project->getConfig()->getIdeVersionHash();
         if ($ideVersionHash < 2017022512) {
             $this->migrateFrom16RC2($project);
         }
 
-        /*if ($ideVersionHash < 2018013112) {
-            $this->migrateFrom16x7($project);
-        }*/
-    }
-
-    private function migrateFrom16x7(Project $project)
-    {
-        /** @var GuiFrameworkProjectBehaviour $gui */
-        $gui = $project->getBehaviour(GuiFrameworkProjectBehaviour::class);
-
-        foreach ($gui->getModuleFiles() as $moduleFile) {
-            // convert modules.
-        }
+        $this->makePackageFile($project);
     }
 
     private function migrateFrom16RC2(Project $project)
@@ -219,6 +210,36 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
         $project->getConfig()->setTreeState(['/src/app/forms', '/src/app/modules']);
         $project->getConfig()->setOpenedFiles($openedFiles, $selectedFile);
         $project->getConfig()->save();
+    }
+
+    public function makePackageFile(Project $project)
+    {
+        $file = $project->getFile("package.php.yml");
+
+        if ($file->exists()) return;
+
+        $pkgFile = new JPPMPackageFileTemplate($file);
+
+        /** @var BundleProjectBehaviour $bundle */
+        $bundle = $project->getBehaviour(BundleProjectBehaviour::class);
+
+        $pkgFile->useProject($project);
+        $pkgFile->setPlugins(['App']);
+
+        if ($bundle) {
+            $bundles = $bundle->fetchAllBundles(Project::ENV_ALL);
+
+            $deps = [];
+            foreach ($bundles as $bundle) {
+                if ($bundle instanceof AbstractJarBundle) {
+                    $deps = flow($deps, $bundle->getJPPMDependencies())->toMap();
+                }
+            }
+
+            $pkgFile->setDeps($deps);
+        }
+
+        $pkgFile->save();
     }
 
     /**

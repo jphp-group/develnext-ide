@@ -1,0 +1,321 @@
+<?php
+namespace ide\formats\templates;
+
+use ide\Logger;
+use ide\misc\AbstractMetaTemplate;
+use ide\project\Project;
+use php\format\ProcessorException;
+use php\format\YamlProcessor;
+use php\io\FileStream;
+use php\io\IOException;
+use php\io\Stream;
+use php\lib\fs;
+
+class JPPMPackageFileTemplate extends AbstractMetaTemplate
+{
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $type;
+
+    /**
+     * @var string
+     */
+    private $version = '1.0.0';
+
+    /**
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @var array
+     */
+    private $sources = [];
+
+    /**
+     * @var array
+     */
+    private $includes = [];
+
+    /**
+     * @var array
+     */
+    private $deps = [];
+
+    /**
+     * @var array
+     */
+    private $devDeps = [];
+
+    /**
+     * @var array
+     */
+    private $plugins = [];
+
+    /**
+     * @var array
+     */
+    private $tasks = [];
+
+    /**
+     * @var array
+     */
+    private $extra = [];
+
+    /**
+     * @param Project $project
+     */
+    public function useProject(Project $project)
+    {
+        $this->name = $project->getName();
+        $this->type = 'project';
+
+        $sources = [];
+
+        if ($project->getSrcDirectory()) {
+            $sources[] = $project->getSrcDirectory();
+        }
+
+        if ($project->getSrcGeneratedDirectory()) {
+            $sources[] = $project->getSrcGeneratedDirectory();
+        }
+
+        $this->sources = $sources;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType(string $type): void
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVersion(): string
+    {
+        return $this->version;
+    }
+
+    /**
+     * @param string $version
+     */
+    public function setVersion(string $version): void
+    {
+        $this->version = $version;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSources(): array
+    {
+        return $this->sources;
+    }
+
+    /**
+     * @param array $sources
+     */
+    public function setSources(array $sources): void
+    {
+        $this->sources = $sources;
+    }
+
+    /**
+     * @return array
+     */
+    public function getIncludes(): array
+    {
+        return $this->includes;
+    }
+
+    /**
+     * @param array $includes
+     */
+    public function setIncludes(array $includes): void
+    {
+        $this->includes = $includes;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDeps(): array
+    {
+        return $this->deps;
+    }
+
+    /**
+     * @param array $deps
+     */
+    public function setDeps(array $deps): void
+    {
+        $this->deps = $deps;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDevDeps(): array
+    {
+        return $this->devDeps;
+    }
+
+    /**
+     * @param array $devDeps
+     */
+    public function setDevDeps(array $devDeps): void
+    {
+        $this->devDeps = $devDeps;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPlugins(): array
+    {
+        return $this->plugins;
+    }
+
+    /**
+     * @param array $plugins
+     */
+    public function setPlugins(array $plugins): void
+    {
+        $this->plugins = $plugins;
+    }
+
+    /**
+     * @return array
+     */
+    public function getExtra(): array
+    {
+        return $this->extra;
+    }
+
+    /**
+     * @param array $extra
+     */
+    public function setExtra(array $extra): void
+    {
+        $this->extra = $extra;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTasks(): array
+    {
+        return $this->tasks;
+    }
+
+    /**
+     * @param array $tasks
+     */
+    public function setTasks(array $tasks): void
+    {
+        $this->tasks = $tasks;
+    }
+
+
+    public function render(Stream $out)
+    {
+        $data = [
+            'name' => $this->name
+        ];
+
+        if (isset($this->type)) $data['type'] = $this->type;
+        if (isset($this->version)) $data['version'] = $this->version;
+        if (isset($this->description)) $data['description'] = $this->description;
+        if (isset($this->plugins)) $data['plugins'] = $this->plugins;
+
+        if (isset($this->deps)) $data['deps'] = $this->deps;
+        if (isset($this->devDeps)) $data['devDeps'] = $this->devDeps;
+
+        if (isset($this->sources)) $data['sources'] = $this->sources;
+        if (isset($this->includes)) $data['includes'] = $this->includes;
+
+        if (isset($this->tasks)) $data['tasks'] = $this->tasks;
+
+        if (isset($this->extra)) {
+            $data = flow($data, $this->extra)->toMap();
+        }
+
+        $out->writeFormatted($data, 'yaml', YamlProcessor::SERIALIZE_PRETTY_FLOW);
+    }
+
+    public function load()
+    {
+        if (fs::isFile($this->file)) {
+            try {
+                $this->setProperties(fs::parseAs($this->file, "yaml"));
+            } catch (ProcessorException | IOException $e) {
+                Logger::warn("Failed to load $this->metaFile, {$e->getMessage()}");
+            }
+        }
+    }
+
+    public function save()
+    {
+        if (!$this->file) {
+            throw new \Exception("Unable to save, file is not assigned");
+        }
+
+        fs::ensureParent($this->file);
+
+        $out = new FileStream($this->file, "w+");
+        try {
+            $this->render($out);
+        } finally {
+            $out->close();
+        }
+    }
+}

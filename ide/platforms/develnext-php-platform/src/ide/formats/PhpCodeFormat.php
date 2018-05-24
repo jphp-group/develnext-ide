@@ -20,6 +20,7 @@ class PhpCodeFormat extends AbstractFormat
      *
      * @param array $options
      * @return AbstractEditor
+     * @throws \Exception
      */
     public function createEditor($file, array $options = [])
     {

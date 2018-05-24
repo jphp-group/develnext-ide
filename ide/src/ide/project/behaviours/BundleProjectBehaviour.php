@@ -551,6 +551,7 @@ class BundleProjectBehaviour extends AbstractProjectBehaviour
     /**
      * @param bool $hidden
      * @return \ide\bundle\AbstractBundle[]
+     * @throws \Exception
      */
     public function getPublicBundles($hidden = false)
     {
@@ -569,6 +570,7 @@ class BundleProjectBehaviour extends AbstractProjectBehaviour
     /**
      * @param bool $hidden
      * @return IdeLibraryBundleResource[]
+     * @throws \Exception
      */
     public function getPublicBundleResources($hidden = false)
     {
@@ -587,6 +589,7 @@ class BundleProjectBehaviour extends AbstractProjectBehaviour
     /**
      * @param AbstractBundle|string $bundleOrClass
      * @return IdeLibraryBundleResource|null
+     * @throws \Exception
      */
     public function getResourceOfBundle($bundleOrClass)
     {
@@ -604,6 +607,7 @@ class BundleProjectBehaviour extends AbstractProjectBehaviour
 
     /**
      * @param string[] $classes
+     * @throws \Exception
      */
     public function setBundles(array $classes)
     {
@@ -632,6 +636,7 @@ class BundleProjectBehaviour extends AbstractProjectBehaviour
      * @param string $env
      * @param string|AbstractBundle $class
      * @param bool $canRemove
+     * @throws \Exception
      */
     public function addBundle($env, $class, $canRemove = true)
     {
@@ -680,6 +685,7 @@ class BundleProjectBehaviour extends AbstractProjectBehaviour
     /**
      * @param AbstractBundle|string $class
      * @param bool $force true to remove that cannot be removed.
+     * @throws \Exception
      */
     public function removeBundle($class, $force = false)
     {
@@ -823,7 +829,7 @@ class BundleProjectBehaviour extends AbstractProjectBehaviour
                 $uiItem->graphic = ($resource && $resource->getIcon()) ? Ide::get()->getImage($resource->getIcon(), [16, 16]) : ico('bundle16');
                 $uiItem->padding = [7, 12];
                 $uiItem->classes->add('dn-simple-toggle-button');
-                $uiItem->tooltipText = $bundle->getDescription();
+                $uiItem->tooltipText = $resource ? $resource->getDescription() : $bundle->getDescription();
                 $uiItem->on('action', function () use ($resource) {
                     $this->showBundleDetailDialog($resource);
                 });

@@ -442,22 +442,6 @@ class Project
     }
 
     /**
-     * @param string $root path
-     */
-    public function addSourceRoot($root)
-    {
-        $this->sourceRoots[FileUtils::hashName($root)] = $root;
-    }
-
-    /**
-     * @param string $root path
-     */
-    public function removeSourceRoot($root)
-    {
-        $this->sourceRoots[FileUtils::hashName($root)] = $root;
-    }
-
-    /**
      * @param $type
      * @param callable $handler (ProjectModule $module, $first, $remove)
      */
@@ -650,14 +634,6 @@ class Project
         } else {
             return FileUtils::deleteDirectory($file);
         }
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getSourceRoots()
-    {
-        return Flow::of([$this->rootDir])->append($this->sourceRoots)->toArray();
     }
 
     /**
@@ -1094,26 +1070,6 @@ class Project
     {
         foreach ($this->ignoreRules as $rule) {
             if (File::of($path)->matches($rule)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param string $file
-     *
-     * @return bool
-     */
-    public function isContainsFile($file)
-    {
-        $hash = FileUtils::hashName($file);
-
-        foreach ($this->getSourceRoots() as $root) {
-            $rootHash = FileUtils::hashName($root);
-
-            if (Str::pos($hash, $rootHash) === 0) {
                 return true;
             }
         }
