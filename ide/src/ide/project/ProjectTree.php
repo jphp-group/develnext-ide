@@ -319,6 +319,13 @@ class ProjectTree
         }
     }
 
+    public function removeIgnorePaths(array $paths)
+    {
+        foreach ($paths as $path) {
+            unset($this->ignorePaths[$path]);
+        }
+    }
+
     public function addIgnoreFilter(callable $callback)
     {
         $this->ignoreFilters[] = $callback;

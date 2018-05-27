@@ -1510,6 +1510,7 @@ class Ide extends Application
 
     /**
      * @return AccountManager
+     * @throws \Exception
      */
     public static function accountManager()
     {

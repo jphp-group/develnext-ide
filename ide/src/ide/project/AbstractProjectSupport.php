@@ -32,4 +32,13 @@ abstract class AbstractProjectSupport
     {
         // nop.
     }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public function getCode()
+    {
+        return (new \ReflectionClass($this))->getShortName();
+    }
 }

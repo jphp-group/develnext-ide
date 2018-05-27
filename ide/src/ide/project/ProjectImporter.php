@@ -1,8 +1,11 @@
 <?php
 namespace ide\project;
 
+use compress\ZipArchive;
+use compress\ZipArchiveEntry;
 use ide\utils\FileUtils;
 use php\compress\ZipFile;
+use php\io\Stream;
 
 class ProjectImporter
 {
@@ -15,14 +18,14 @@ class ProjectImporter
     
     public function extract($projectDir)
     {
-        $zip = new ZipFile($this->file);
+        $zip = new ZipArchive($this->file);
 
-        foreach ($zip->statAll() as $stat) {
-            if ($stat['directory']) {
-                FileUtils::deleteDirectory("{$projectDir}/{$stat['name']}");
+        $zip->readAll(function (ZipArchiveEntry $entry, Stream $stream) use ($projectDir) {
+            if ($entry->isDirectory()) {
+                FileUtils::deleteDirectory("{$projectDir}/{$entry->name}");
+            } else {
+                FileUtils::copyFile($stream, "{$projectDir}/{$entry->name}");
             }
-        }
-
-        $zip->unpack($projectDir);
+        });
     }
 }

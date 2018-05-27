@@ -12,7 +12,7 @@ class TextCodeFormat extends AbstractFormat
 {
     private $exts = [
         'txt' => 1, 'log' => 1, 'ini' => 1, 'conf' => 1, 'gitignore' => 1, 'csv' => 1, 'html' => 1, 'xml' => 1, '' => 1,
-        'bat' => 1, 'sh' => 1
+        'bat' => 1, 'sh' => 1, 'yml' => 1, 'json' => 1,
     ];
 
     /**

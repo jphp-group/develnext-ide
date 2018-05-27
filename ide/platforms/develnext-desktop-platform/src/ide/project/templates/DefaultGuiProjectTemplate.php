@@ -1,13 +1,8 @@
 <?php
 namespace ide\project\templates;
 
-use develnext\bundle\controlfx\ControlFXBundle;
-use develnext\bundle\game2d\Game2DBundle;
-use ide\bundle\AbstractJarBundle;
-use ide\bundle\std\UIDesktopBundle;
 use ide\editors\FormEditor;
 use ide\formats\templates\JPPMPackageFileTemplate;
-use ide\Logger;
 use ide\project\AbstractProjectTemplate;
 use ide\project\behaviours\BackupProjectBehaviour;
 use ide\project\behaviours\BundleProjectBehaviour;
@@ -17,7 +12,7 @@ use ide\project\behaviours\PhpProjectBehaviour;
 use ide\project\behaviours\RunBuildProjectBehaviour;
 use ide\project\behaviours\ShareProjectBehaviour;
 use ide\project\Project;
-use ide\project\ProjectFile;
+use ide\project\supports\JPPMProjectSupport;
 use ide\systems\FileSystem;
 use ide\utils\FileUtils;
 use ide\utils\Json;
@@ -55,11 +50,14 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
         return 'desktop';
     }
 
+    public function openProject(Project $project)
+    {
+        $this->makePackageFile($project);
+    }
+
     public function recoveryProject(Project $project)
     {
-        if (!$project->hasBehaviour(BundleProjectBehaviour::class)) {
-            $project->register(new BundleProjectBehaviour(), false);
-        }
+        $this->makePackageFile($project);
 
         if (!$project->hasBehaviour(PhpProjectBehaviour::class)) {
             $project->register(new PhpProjectBehaviour(), false);
@@ -91,7 +89,9 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
             $this->migrateFrom16RC2($project);
         }
 
-        $this->makePackageFile($project);
+        if ($ideVersionHash < 2018013112) {
+            $this->migrateFrom16x7($project);
+        }
     }
 
     private function migrateFrom16RC2(Project $project)
@@ -212,6 +212,16 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
         $project->getConfig()->save();
     }
 
+    public function migrateFrom16x7(Project $project)
+    {
+        /** @var JPPMProjectSupport $jppm */
+        if ($jppm = $project->findSupport('jppm')) {
+            if ($project->hasBehaviour(BundleProjectBehaviour::class)) {
+                $project->removeBehaviour(BundleProjectBehaviour::class);
+            }
+        }
+    }
+
     public function makePackageFile(Project $project)
     {
         $file = $project->getFile("package.php.yml");
@@ -220,24 +230,16 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
 
         $pkgFile = new JPPMPackageFileTemplate($file);
 
-        /** @var BundleProjectBehaviour $bundle */
-        $bundle = $project->getBehaviour(BundleProjectBehaviour::class);
-
         $pkgFile->useProject($project);
         $pkgFile->setPlugins(['App']);
+        $pkgFile->setDeps([
+            'dn-app-framework' => '*',
+            'dn-debug-bundle' => '*',
+            'jphp-gui-desktop-ext' => '*',
+            'jphp-zend-ext' => '*',
+        ]);
 
-        if ($bundle) {
-            $bundles = $bundle->fetchAllBundles(Project::ENV_ALL);
-
-            $deps = [];
-            foreach ($bundles as $bundle) {
-                if ($bundle instanceof AbstractJarBundle) {
-                    $deps = flow($deps, $bundle->getJPPMDependencies())->toMap();
-                }
-            }
-
-            $pkgFile->setDeps($deps);
-        }
+        $pkgFile->setIncludes(['JPHP-INF/.bootstrap']);
 
         $pkgFile->save();
     }
@@ -250,7 +252,9 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
     public function makeProject(Project $project)
     {
         /** @var BundleProjectBehaviour $bundle */
-        $bundle = $project->register(new BundleProjectBehaviour());
+        //$bundle = $project->register(new BundleProjectBehaviour());
+
+        $this->makePackageFile($project);
 
         /** @var PhpProjectBehaviour $php */
         $php = $project->register(new PhpProjectBehaviour());
@@ -270,7 +274,7 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
         $project->on('create', function () use ($gui, $bundle, $php, $project) {
             $php->setImportType('package');
 
-            $bundle->addBundle(Project::ENV_ALL, UIDesktopBundle::class, false);
+            //$bundle->addBundle(Project::ENV_ALL, UIDesktopBundle::class, false);
             //$bundle->addBundle(Project::ENV_ALL, ControlFXBundle::class);
             //$bundle->addBundle(Project::ENV_ALL, Game2DBundle::class);
 

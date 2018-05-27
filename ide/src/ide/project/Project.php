@@ -156,6 +156,11 @@ class Project
     private $listHandlers = [];
 
     /**
+     * @var ProjectRunDebugManager
+     */
+    private $runDebugManager;
+
+    /**
      * Project constructor.
      *
      * @param string $rootDir
@@ -171,6 +176,7 @@ class Project
         $mainForm = Ide::get()->getMainForm();
 
         $this->tree = new ProjectTree($this);
+        $this->runDebugManager = new ProjectRunDebugManager($this);
         $this->indexer = new ProjectIndexer($this);
         $this->refactorManager = new ProjectRefactorManager($this);
 
@@ -702,6 +708,26 @@ class Project
         unset($this->handlers[$event][$group]);
     }
 
+
+    /**
+     * @param string $group
+     */
+    public function offGroup(string $group)
+    {
+        $events = [];
+
+        foreach ($this->handlers as $event => $groups) {
+            foreach ($groups as $g => $callback) {
+                if ($g === $group) {
+                    $events[] = $event;
+                    break;
+                }
+            }
+        }
+
+        foreach ($events as $event) $this->off($event, $group);
+    }
+
     /**
      * @param $event
      * @param array ...$args
@@ -759,6 +785,16 @@ class Project
         return $behaviour;
     }
 
+    public function removeBehaviour(string $type)
+    {
+        if ($behaviour = $this->behaviours[$type]) {
+            unset($this->behaviours[$type]);
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * @return ProjectIndexer
      */
@@ -784,10 +820,20 @@ class Project
     }
 
     /**
+     * @return ProjectRunDebugManager
+     */
+    public function getRunDebugManager(): ProjectRunDebugManager
+    {
+        return $this->runDebugManager;
+    }
+
+    /**
      * Вызывать при создании проекта.
      */
     public function create()
     {
+        $this->refreshSupports();
+
         //FileSystem::open($this->getMainProjectFile());
         $this->trigger(__FUNCTION__);
     }
@@ -873,15 +919,47 @@ class Project
         foreach ($ide->getProjectSupports() as $support) {
             $cls = reflect::typeOf($support);
 
-            if (!isset($this->supports[$cls]) && $support->isFit($this)) {
-                Logger::info("Link support '$cls' to project");
-                $support->onLink($this);
-                $this->supports[$cls] = $support;
+            if (!isset($this->supports[$support->getCode()])) {
+                if ($support->isFit($this)) {
+                    Logger::info("Link support '{$support->getCode()}' to project");
+                    $support->onLink($this);
+                    $this->supports[$support->getCode()] = $support;
+                } else {
+                    Logger::debug("Support '{$support->getCode()} is not fitted for the project'");
+                }
             }
         }
 
         $time = Time::millis() - $time;
         Logger::info("Refreshing project supports is done, time = {$time}ms.");
+    }
+
+    /**
+     * @param string $code
+     * @return AbstractProjectSupport
+     * @throws Exception
+     */
+    public function findSupport(string $code): ?AbstractProjectSupport
+    {
+        if ($support = $this->supports[$code]) {
+            return $support;
+        }
+
+        $ide = Ide::get();
+
+        foreach ($ide->getProjectSupports() as $support) {
+            if ($code === $support->getCode()) {
+                if (!isset($this->supports[$support->getCode()]) && $support->isFit($this)) {
+                    Logger::info("Link support '{$support->getCode()}' to project");
+                    $support->onLink($this);
+                    $this->supports[$support->getCode()] = $support;
+
+                    return $support;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**

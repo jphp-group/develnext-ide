@@ -64,40 +64,10 @@ class UIDesktopBundle extends AbstractJarBundle
     public function onAdd(Project $project, AbstractBundle $owner = null)
     {
         parent::onAdd($project, $owner);
-
-        $format = Ide::get()->getRegisteredFormat(GuiFormFormat::class);
-
-        if ($format) {
-            $format->registerInternalList('.dn/bundle/uiDesktop/formComponents');
-        } else {
-            Logger::error("Unable to register components, GuiFormFormat is not found.");
-        }
-
-        if ($bDatabase = IdeBehaviourDatabase::get()) {
-            $bDatabase->registerInternalList('.dn/bundle/uiDesktop/behaviours');
-        }
-
-        if ($aManager = ActionManager::get()) {
-            $aManager->registerInternalList('.dn/bundle/uiDesktop/actionTypes');
-        }
     }
 
     public function onRemove(Project $project, AbstractBundle $owner = null)
     {
         parent::onRemove($project, $owner);
-
-        $format = Ide::get()->getRegisteredFormat(GuiFormFormat::class);
-
-        if ($format) {
-            $format->unregisterInternalList('.dn/bundle/uiDesktop/formComponents');
-        }
-
-        if ($bDatabase = IdeBehaviourDatabase::get()) {
-            $bDatabase->unregisterInternalList('.dn/bundle/uiDesktop/behaviours');
-        }
-
-        if ($aManager = ActionManager::get()) {
-            $aManager->unregisterInternalList('.dn/bundle/uiDesktop/actionTypes');
-        }
     }
 }

@@ -592,6 +592,25 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
 
     public function doOpen()
     {
+        // Set config for prototype forms.
+        foreach ($this->getFormEditors() as $editor) {
+            $usagePrototypes = $editor->getPrototypeUsageList();
+
+            foreach ($usagePrototypes as $factoryId => $ids) {
+                $formEditor = $this->getFormEditor($factoryId);
+
+                if (!$formEditor) {
+                    Logger::warn("Cannot find form editor for factory '$factoryId'.");
+                    continue;
+                }
+
+                if ($formEditor && !$formEditor->getConfig()->get('form.withPrototypes')) {
+                    $formEditor->getConfig()->set('form.withPrototypes', true);
+                    $formEditor->saveConfig();
+                }
+            }
+        }
+
         $tree = $this->project->getTree();
         $tree->addIgnoreExtensions([
             'behaviour', 'axml', 'module', 'fxml'
@@ -636,10 +655,6 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
 
     public function doRecover()
     {
-        if (!$this->project->hasBehaviour(BundleProjectBehaviour::class)) {
-            $this->project->register(new BundleProjectBehaviour());
-        }
-
         $bundle = BundleProjectBehaviour::get();
 
         if ($bundle) {
@@ -656,25 +671,6 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
         $this->_recoverDirectories();
 
         $this->project->defineFile('src/.system/application.conf', new GuiApplicationConfFileTemplate($this->project));
-
-        // Set config for prototype forms.
-        foreach ($this->getFormEditors() as $editor) {
-            $usagePrototypes = $editor->getPrototypeUsageList();
-
-            foreach ($usagePrototypes as $factoryId => $ids) {
-                $formEditor = $this->getFormEditor($factoryId);
-
-                if (!$formEditor) {
-                    Logger::warn("Cannot find form editor for factory '$factoryId'.");
-                    continue;
-                }
-
-                if ($formEditor && !$formEditor->getConfig()->get('form.withPrototypes')) {
-                    $formEditor->getConfig()->set('form.withPrototypes', true);
-                    $formEditor->saveConfig();
-                }
-            }
-        }
     }
 
     public function reloadStylesheetIfModified()
@@ -770,7 +766,7 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
             $template->setFxSplash($this->splashData['src']);
         }
 
-        $this->project->defineFile($this->project->getSrcDirectory() . '/JPHP-INF/launcher.conf', $template, true);
+        //$this->project->defineFile($this->project->getSrcDirectory() . '/JPHP-INF/launcher.conf', $template, true);
         $this->makeApplicationConf();
     }
 
@@ -928,19 +924,19 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
      */
     public function getCurrentSkin(): ?ProjectSkin
     {
-       $skinDir = $this->project->getSrcFile('.theme/skin');
+        $skinDir = $this->project->getSrcFile('.theme/skin');
 
-       if (!fs::isDir($skinDir)) return null;
-       if (!fs::isFile("$skinDir/skin.json")) return null;
-       if (!fs::isFile("$skinDir/skin.css")) return null;
+        if (!fs::isDir($skinDir)) return null;
+        if (!fs::isFile("$skinDir/skin.json")) return null;
+        if (!fs::isFile("$skinDir/skin.css")) return null;
 
-       try {
-           $skin = ProjectSkin::createFromDir($skinDir);
-           return $skin;
-       } catch (IOException $e) {
-           Logger::warn("Unable to read skin information, {$e->getMessage()}");
-           return null;
-       }
+        try {
+            $skin = ProjectSkin::createFromDir($skinDir);
+            return $skin;
+        } catch (IOException $e) {
+            Logger::warn("Unable to read skin information, {$e->getMessage()}");
+            return null;
+        }
     }
 
     public function updateSpriteManager()
@@ -1123,7 +1119,7 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
             : null;
     }
 
-        public function createForm($name, $namespace = null)
+    public function createForm($name, $namespace = null)
     {
         if ($this->hasForm($name)) {
             $editor = $this->getFormEditor($name);

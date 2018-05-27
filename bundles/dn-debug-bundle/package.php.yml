@@ -1,0 +1,10 @@
+name: dn-debug-bundle
+version: 0.1.0
+
+plugins: [Hub]
+
+sources:
+- src
+
+includes:
+- '.inc/debug.preloader.php'

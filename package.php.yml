@@ -1,2 +1,6 @@
 name: develnext
 version: 17.0.0+dev
+
+bundles:
+- dn-game2d-bundle
+- dn-debug-bundle

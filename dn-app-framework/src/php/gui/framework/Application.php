@@ -185,6 +185,28 @@ class Application
     }
 
     /**
+     * @return string
+     */
+    public function getMode()
+    {
+        $mode = 'prod';
+
+        if ($value = System::getProperty('environment')) {
+            $mode = $value;
+        }
+
+        return $mode;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDevMode()
+    {
+        return "dev" === $this->getMode();
+    }
+
+    /**
      * @return Configuration
      */
     public function getConfig(): ?Configuration

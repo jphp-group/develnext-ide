@@ -434,4 +434,27 @@ class MainForm extends AbstractIdeForm
             $this->contentSplit->items->remove($this->bottom);
         }
     }
+
+    /**
+     * @return BuildProgressForm
+     */
+    public function showCLI(): BuildProgressForm
+    {
+        $dialog = new BuildProgressForm();
+        $dialog->reduceHeader();
+        $dialog->reduceFooter();
+        $dialog->removeProgressbar();
+
+        $this->showBottom($dialog->layout);
+
+        $dialog->opacity = 0.01;
+        $dialog->show();
+        $dialog->hide();
+
+        $dialog->closeButton->on('action', function () {
+            $this->hideBottom();
+        }, __CLASS__);
+
+        return $dialog;
+    }
 }

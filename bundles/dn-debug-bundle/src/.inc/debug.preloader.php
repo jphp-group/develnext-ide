@@ -1,30 +1,29 @@
 <?php
 
-use php\format\JsonProcessor;
-use php\framework\Logger;
-use php\io\File;
-use php\io\IOException;
-use php\io\Stream;
-use php\lang\ClassLoader;
-use php\lang\Environment;
-use php\lang\Module;
-use php\lang\SourceMap;
-use php\lib\fs;
-use php\lib\str;
+use php\format\{
+    JsonProcessor
+};
+
+use php\framework\{
+    Logger
+};
+
+use php\io\{
+    File, IOException, Stream
+};
+
+use php\lang\{
+    ClassLoader, Environment, Module, SourceMap, System, ThreadPool
+};
+
+use php\lib\{
+    fs, str
+};
+
 use php\time\Time;
-use php\util\Scanner;
-use php\util\SharedValue;
-
-define('DEVELNEXT_PROJECT_DEBUG', true);
-
-try {
-    Stream::putContents("application.pid", getmypid());
-} catch (IOException $e) {
-    \php\lang\System::err()->write("Failed to create application.pid file.");
-    exit(1);
-}
-
-Logger::setLevel(Logger::LEVEL_DEBUG);
+use php\util\{
+    Scanner, SharedValue
+};
 
 class DebugClassLoader extends ClassLoader
 {
@@ -39,11 +38,6 @@ class DebugClassLoader extends ClassLoader
     protected $cacheDir;
 
     /**
-     * @var \php\lang\ThreadPool
-     */
-    protected $threadPool;
-
-    /**
      * @var array
      */
     protected $ignoreCacheFiles = [];
@@ -55,14 +49,12 @@ class DebugClassLoader extends ClassLoader
      */
     public function __construct()
     {
-        $this->cacheDir = "./vendor/.cache/";
+        $this->cacheDir = "./.dn/.cache/";
         $this->_lock = new SharedValue();
 
         if (!fs::exists($this->cacheDir) && !fs::makeDir($this->cacheDir)) {
             $this->cacheDir = null;
         }
-
-        $this->threadPool = \php\lang\ThreadPool::create(1, 5, 7 * 1000);
 
         $this->readCacheIgnore();
     }
@@ -98,11 +90,6 @@ class DebugClassLoader extends ClassLoader
         return $this->ignoreCacheFiles["$name.php"];
     }
 
-    public function __destruct()
-    {
-        $this->threadPool->shutdown();
-    }
-
     public function loadClass($name)
     {
         $name = str::replace($name, '\\', '/');
@@ -128,9 +115,9 @@ class DebugClassLoader extends ClassLoader
         }
 
         try {
-            $this->threadPool->execute(function () use ($filename) {
+            if (fs::isFile("$filename.sourcemap")) {
                 $this->tryLoadSourceMap($filename);
-            });
+            }
 
             $module = new Module($filename);
             $module->call();
@@ -177,5 +164,17 @@ class DebugClassLoader extends ClassLoader
     }
 }
 
-$debugClassLoader = new DebugClassLoader();
-$debugClassLoader->register(true);
+if (System::getProperty('environment') === 'dev') {
+    define('DEVELNEXT_PROJECT_DEBUG', true);
+
+    try {
+        Stream::putContents("application.pid", getmypid());
+    } catch (IOException $e) {
+        System::err()->write("Failed to create application.pid file.");
+        exit(1);
+    }
+
+    Logger::setLevel(Logger::LEVEL_DEBUG);
+    $debugClassLoader = new DebugClassLoader();
+    $debugClassLoader->register(true);
+}

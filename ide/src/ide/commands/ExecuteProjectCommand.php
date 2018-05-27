@@ -195,24 +195,30 @@ class ExecuteProjectCommand extends AbstractCommand
 
     protected function createExecuteProcess(Project $project): Process
     {
-        $classPaths = flow($this->behaviour->getSourceDirectories(), $this->behaviour->getProfileModules(['jar']))
-            ->toArray();
+        $startConfig = $project->getRunDebugManager()->get('start');
 
-        $args = [
-            'java',
-            '-cp',
-            str::join($classPaths, File::PATH_SEPARATOR),
-            '-XX:+UseG1GC', '-Xms128M', '-Xmx512m', '-Dfile.encoding=UTF-8', '-Djphp.trace=true',
-            'org.develnext.jphp.ext.javafx.FXLauncher'
-        ];
+        if ($startConfig) {
+            return $startConfig['makeStartProcess']();
+        } else {
+            $classPaths = flow($this->behaviour->getSourceDirectories(), $this->behaviour->getProfileModules(['jar']))
+                ->toArray();
 
-        Logger::debug("Run -> " . str::join($args, ' '));
+            $args = [
+                'java',
+                '-cp',
+                str::join($classPaths, File::PATH_SEPARATOR),
+                '-XX:+UseG1GC', '-Xms128M', '-Xmx512m', '-Dfile.encoding=UTF-8', '-Djphp.trace=true',
+                'org.develnext.jphp.ext.javafx.FXLauncher'
+            ];
 
-        return new Process(
-            $args,
-            $project->getRootDir(),
-            Ide::get()->makeEnvironment()
-        );
+            Logger::debug("Run -> " . str::join($args, ' '));
+
+            return new Process(
+                $args,
+                $project->getRootDir(),
+                Ide::get()->makeEnvironment()
+            );
+        }
     }
 
     public function onExecute($e = null, AbstractEditor $editor = null)

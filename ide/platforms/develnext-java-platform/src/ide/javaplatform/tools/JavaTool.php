@@ -34,11 +34,12 @@ class JavaTool extends AbstractTool
 
     /**
      * @return bool
+     * @throws \php\lang\IllegalStateException
      */
     public function isAvailable()
     {
         if (Ide::get()->isWindows()) {
-            return fs::isFile($this->getBinPath() . '/bin');
+            return fs::isFile($this->getBinPath() . '/java.exe');
         } else {
             return fs::isFile($this->getBinPath() . '/java');
         }

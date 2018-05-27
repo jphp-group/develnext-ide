@@ -1,7 +1,6 @@
 <?php
 namespace ide\systems;
 
-use ide\forms\MainForm;
 use ide\forms\MessageBoxForm;
 use ide\forms\OpenProjectForm;
 use ide\Ide;
@@ -13,8 +12,6 @@ use ide\project\ProjectConsoleOutput;
 use ide\project\ProjectImporter;
 use ide\ui\Notifications;
 use ide\utils\FileUtils;
-use php\gui\UXApplication;
-use php\gui\UXButton;
 use php\gui\UXDialog;
 use php\gui\UXDirectoryChooser;
 use php\io\File;
@@ -242,6 +239,7 @@ class ProjectSystem
      * @param bool $showMigrationDialog
      * @param bool $showWindowKind
      * @return Project|null
+     * @throws \Exception
      */
     static function open($fileName, $showDialogAlreadyOpened = true, $showMigrationDialog = true, $showWindowKind = false)
     {

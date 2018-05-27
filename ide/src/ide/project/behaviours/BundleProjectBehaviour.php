@@ -98,7 +98,7 @@ class BundleProjectBehaviour extends AbstractProjectBehaviour
     public function inject()
     {
         // Do not save bundles conf via project.
-        $this->project->addIdeConfigConfigurer(__CLASS__, function (IdeConfiguration $conf) {
+        /*$this->project->addIdeConfigConfigurer(__CLASS__, function (IdeConfiguration $conf) {
             if (str::startsWith($conf->getShortName(), "bundles/")) {
                 $conf->setAutoSave(false);
             }
@@ -119,7 +119,7 @@ class BundleProjectBehaviour extends AbstractProjectBehaviour
         $this->project->on('updateSettings', [$this, 'doUpdateSettings']);
         $this->project->on('create', [$this, 'doCreate']);
 
-        $this->project->on('createEditor', [$this, 'doCreateEditor']);
+        $this->project->on('createEditor', [$this, 'doCreateEditor']);*/
     }
 
     public function doCreate()

@@ -188,7 +188,9 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
                     'defaultPackages' => [$this->project->getPackageName()]
                 ];
 
-                $this->project->loadDirectoryForInspector($this->project->getSrcFile(""), $options);
+                if ($this->project->getSrcDirectory() != null) {
+                    $this->project->loadDirectoryForInspector($this->project->getSrcFile(""), $options);
+                }
 
                 if ($this->project->getSrcGeneratedDirectory() != null) {
                     $this->project->loadDirectoryForInspector($this->project->getSrcFile("", true), $options);
