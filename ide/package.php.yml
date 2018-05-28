@@ -39,3 +39,6 @@ deps:
 
 app:
   jvm-args: ['-Ddevelnext.noCodeCache=true']
+  build:
+    file-name: 'develnext-lib'
+    type: 'multi-jar'

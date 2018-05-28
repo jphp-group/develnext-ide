@@ -53,3 +53,17 @@ function task_startIde(Event $e)
 {
     Tasks::runExternal('./ide', 'start', $e->args(), ...$e->flags());
 }
+
+/**
+ * @jppm-task build-ide
+ */
+function task_buildIde(Event $e)
+{
+    Tasks::runExternal('./ide', 'build', $e->args(), ...$e->flags());
+    Tasks::copy('./ide/build/develnext-lib.jar', './ide/build/libs/');
+    Tasks::deleteFile('./ide/build/develnext-lib.jar');
+    Tasks::copy('./ide/misc', './ide/build/');
+
+    Tasks::runExternal('./dn-launcher', 'build', $e->args(), ...$e->flags());
+    Tasks::copy('./dn-launcher/build/DevelNext.jar', './ide/build');
+}

@@ -1,0 +1,11 @@
+name: dn-launcher
+version: 0.1.0
+
+plugins:
+- App
+- Gradle
+
+app:
+  main-class: 'org.develnext.ide.Launcher'
+  build:
+    file-name: 'DevelNext'

@@ -6,7 +6,7 @@ use ide\Ide;
 use ide\project\AbstractProjectSupport;
 use ide\project\behaviours\PhpProjectBehaviour;
 use ide\project\Project;
-use ide\systems\ProjectSystem;
+use ide\systems\IdeSystem;
 use php\lang\Process;
 use php\lib\fs;
 
@@ -98,6 +98,9 @@ class JPPMProjectSupport extends AbstractProjectSupport
 
     public function install(Project $project)
     {
+        $project->loadDirectoryForInspector(IdeSystem::getOwnFile("stubs/dn-php-stub"));
+        $project->loadDirectoryForInspector(IdeSystem::getOwnFile("stubs/dn-jphp-stub"));
+
         $oldInspectDirs = $this->getVendorInspectDirs($project);
 
         $process = (new Process(['cmd', '/c', 'jppm', 'install'], $project->getRootDir(), Ide::get()->makeEnvironment()))
@@ -148,6 +151,9 @@ class JPPMProjectSupport extends AbstractProjectSupport
         foreach ($this->getVendorInspectDirs($project) as $dir) {
             $project->unloadDirectoryForInspector($dir);
         }
+
+        $project->unloadDirectoryForInspector(IdeSystem::getOwnFile("stubs/dn-php-stub"));
+        $project->unloadDirectoryForInspector(IdeSystem::getOwnFile("stubs/dn-jphp-stub"));
     }
 
     public function getCode()
