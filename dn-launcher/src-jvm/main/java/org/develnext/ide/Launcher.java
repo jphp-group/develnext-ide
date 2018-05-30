@@ -75,7 +75,19 @@ public class Launcher {
 
         String[] jvmArgs = fetchJvmArgs();
 
-        jvmArgs = concatArrays(new String[]{ "java" }, jvmArgs);
+        String javaBin = "java";
+
+        String java_home = System.getenv("JAVA_HOME");
+
+        if (java_home != null) {
+            if (new File(java_home, "/bin/java.exe").isFile()) {
+                javaBin = new File(java_home, "/bin/java.exe").getCanonicalPath();
+            } else if (new File(java_home, "/bin/java").isFile()) {
+                javaBin = new File(java_home, "/bin/java").getCanonicalPath();
+            }
+        }
+
+        jvmArgs = concatArrays(new String[]{ javaBin }, jvmArgs);
 
         StringBuilder classPaths = new StringBuilder(
                 new File(rootDir.getAbsolutePath() + "/libs/*").getAbsolutePath()
@@ -126,6 +138,7 @@ public class Launcher {
 
         String[] args = concatArrays(jvmArgs, new String[]{
                 "-Ddevelnext.launcher=root",
+                "-Denvironment=" + System.getProperty("environment", "prod"),
                 "-Ddevelnext.path=" + rootDir.getAbsolutePath(), "org.develnext.jphp.ext.javafx.FXLauncher"
         });
 
