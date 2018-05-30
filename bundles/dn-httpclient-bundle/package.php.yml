@@ -1,0 +1,26 @@
+
+name: dn-httpclient-bundle
+version: 1.0.0
+author: DevelNext
+
+plugins: [Hub, Doc]
+
+sources:
+- src/vendor/develnext.bundle.httpclient.HttpClientBundle
+
+config:
+  ignore:
+    - './out/**'
+
+doc:
+  url-prefix: 'https://github.com/jphp-compiler/develnext/blob/master/bundles/%name%/api-docs/'
+  langs: {en: English, ru: Русский}
+
+ide-bundle:
+  name: HTTP Client
+  class: develnext\bundle\httpclient\HttpClientBundle
+  icon: develnext/bundle/httpclient/http32.png
+  description: Пакет для http запросов к веб ресурсам.
+  description-file: develnext/bundle/httpclient/description.html
+  platforms: [desktop, web]
+  group: network

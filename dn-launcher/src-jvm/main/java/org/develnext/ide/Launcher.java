@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class Launcher {
     public static final String[] defaultJvmArgs = {
@@ -61,7 +65,7 @@ public class Launcher {
         }
     }
 
-    public void start() throws URISyntaxException, IOException {
+    public void start() throws URISyntaxException, IOException, InterruptedException {
         if (!isJava8FxExists()) {
             JOptionPane.showMessageDialog(null, "Oracle/Open Java Runtime 8+ required with JavaFX", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -71,20 +75,68 @@ public class Launcher {
 
         String[] jvmArgs = fetchJvmArgs();
 
-        jvmArgs = concatArrays(new String[]{"java"}, jvmArgs);
+        jvmArgs = concatArrays(new String[]{ "java" }, jvmArgs);
+
+        StringBuilder classPaths = new StringBuilder(
+                new File(rootDir.getAbsolutePath() + "/libs/*").getAbsolutePath()
+        );
+
+        File[] sources = new File(rootDir, "/sources").listFiles(File::isDirectory);
+
+        if (sources != null) {
+            for (File source : sources) {
+                if ("platforms".equals(source.getName())) {
+                    File[] platforms = source.listFiles(File::isDirectory);
+                    for (File platform : platforms) {
+                        classPaths.append(File.pathSeparator).append(platform.getAbsolutePath());
+                    }
+                } else {
+                    classPaths.append(File.pathSeparator).append(source.getAbsolutePath());
+                }
+            }
+        }
+
+        if (new File(rootDir, "/vendor/paths.json").isFile()) {
+            JSONParser parser = new JSONParser();
+            try {
+                Object obj = parser.parse(new FileReader(new File(rootDir, "/vendor/paths.json")));
+
+                JSONObject jsonObject = (JSONObject) obj;
+
+                if (jsonObject.containsKey("classPaths")) {
+                    jsonObject = (JSONObject) jsonObject.get("classPaths");
+
+                    if (jsonObject.containsKey("")) {
+                        // loop array
+                        JSONArray classPathsJson = (JSONArray) jsonObject.get("");
+                        Iterator<String> iterator = classPathsJson.iterator();
+                        while (iterator.hasNext()) {
+                            classPaths.append(File.pathSeparator)
+                                    .append(new File(rootDir, "/vendor/" + iterator.next()).getAbsolutePath());
+                        }
+                    }
+                }
+            } catch (ParseException|IOException e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
+        }
+
+        jvmArgs = concatArrays(jvmArgs, new String[] { "-cp", classPaths.toString() });
 
         String[] args = concatArrays(jvmArgs, new String[]{
                 "-Ddevelnext.launcher=root",
-                "-Ddevelnext.path=" + rootDir.getAbsolutePath(), "-cp", rootDir.getAbsolutePath() + "/libs/*", "org.develnext.jphp.ext.javafx.FXLauncher"
+                "-Ddevelnext.path=" + rootDir.getAbsolutePath(), "org.develnext.jphp.ext.javafx.FXLauncher"
         });
 
-        System.out.print(join(args, " "));
+        System.out.println(join(args, " "));
 
         processBuilder = new ProcessBuilder(args);
-        processBuilder.start();
+        int exit = processBuilder.inheritIO().start().waitFor();
+        System.exit(exit);
     }
 
-    public static void main(String[] args) throws URISyntaxException, IOException {
+    public static void main(String[] args) throws URISyntaxException, IOException, InterruptedException {
         new Launcher().start();
     }
 

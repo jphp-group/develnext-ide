@@ -59,11 +59,15 @@ function task_startIde(Event $e)
  */
 function task_buildIde(Event $e)
 {
-    Tasks::runExternal('./ide', 'build', $e->args(), ...$e->flags());
-    Tasks::copy('./ide/build/develnext-lib.jar', './ide/build/libs/');
-    Tasks::deleteFile('./ide/build/develnext-lib.jar');
+    Tasks::runExternal("./ide", "install");
+
+    Tasks::copy("./ide/vendor", "./ide/build/vendor/");
     Tasks::copy('./ide/misc', './ide/build/');
 
-    Tasks::runExternal('./dn-launcher', 'build', $e->args(), ...$e->flags());
+    Tasks::deleteFile('./dn-launcher/build');
+    Tasks::runExternal('./dn-launcher', 'build');
+    Tasks::deleteFile("./ide/build/DevelNext.jar");
     Tasks::copy('./dn-launcher/build/DevelNext.jar', './ide/build');
+
+    Tasks::runExternal('./ide', 'copySourcesToBuild');
 }

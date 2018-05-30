@@ -4,3 +4,15 @@ version: 17.0.0+dev
 bundles:
 - dn-game2d-bundle
 - dn-debug-bundle
+- dn-jsoup-bundle
+- dn-mail-bundle
+- dn-systemtray-bundle
+- dn-zip-bundle
+- dn-httpclient-bundle
+- dn-hotkey-bundle
+- dn-jfoenix-bundle
+- dn-sql-bundle
+- dn-sqlite-bundle
+- dn-mysql-bundle
+- dn-pgsql-bundle
+- dn-firebirdsql-bundle

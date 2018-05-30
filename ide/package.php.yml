@@ -38,6 +38,7 @@ deps:
   develnext-gui-tabs-ext: '~1.0.0'
 
 app:
+  disable-launcher: true
   jvm-args: ['-Ddevelnext.noCodeCache=true']
   build:
     file-name: 'develnext-lib'

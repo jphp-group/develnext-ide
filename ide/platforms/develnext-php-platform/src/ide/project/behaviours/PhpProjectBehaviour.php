@@ -246,6 +246,14 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
 
     public function doPreCompile($env, callable $log = null)
     {
+        $result = fs::clean("{$this->project->getRootDir()}/{$this->project->getSrcGeneratedDirectory()}");
+
+        if ($result['error']) {
+            foreach ($result['error'] as $file) {
+                Logger::error("Failed to delete file: $file");
+            }
+        }
+
         $directories = [$this->project->getSrcFile(""), $this->project->getSrcFile("", true)];
 
         $cacheIgnore = [];
@@ -275,7 +283,7 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
         if ($this->inspector) {
             $packageName = $this->project->getPackageName();
 
-            $file = $this->project->getSrcFile(".packages/$packageName.pkg", true);
+            $file = $this->project->getSrcFile("JPHP-INF/packages/$packageName", true);
             fs::ensureParent($file);
             fs::delete($file);
 

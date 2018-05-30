@@ -7,7 +7,7 @@ use ide\systems\IdeSystem;
 use php\gui\UXDialog;
 use php\lang\System;
 
-$cache = true;//!IdeSystem::isDevelopment();
+$cache = false;//!IdeSystem::isDevelopment();
 
 if (System::getProperty('develnext.noCodeCache')) {
     $cache = false;

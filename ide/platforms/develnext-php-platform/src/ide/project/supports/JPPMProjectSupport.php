@@ -1,14 +1,22 @@
 <?php
 namespace ide\project\supports;
 
+use function alert;
+use ide\bundle\AbstractBundle;
+use ide\bundle\AbstractJarBundle;
 use ide\formats\templates\JPPMPackageFileTemplate;
 use ide\Ide;
+use ide\Logger;
 use ide\project\AbstractProjectSupport;
 use ide\project\behaviours\PhpProjectBehaviour;
 use ide\project\Project;
 use ide\systems\IdeSystem;
 use php\lang\Process;
+use php\lang\System;
 use php\lib\fs;
+use php\lib\reflect;
+use function uiLater;
+use function var_dump;
 
 /**
  * Class JPPMProjectSupport
@@ -22,6 +30,16 @@ class JPPMProjectSupport extends AbstractProjectSupport
     protected $pkgTemplate;
 
     /**
+     * @var array
+     */
+    protected $projectIdeBundles = [];
+
+    /**
+     * @var array
+     */
+    protected $allIdeBundles = [];
+
+    /**
      * @param Project $project
      * @return bool
      */
@@ -33,6 +51,7 @@ class JPPMProjectSupport extends AbstractProjectSupport
 
     /**
      * @param Project $project
+     * @return mixed|void
      */
     public function onLink(Project $project)
     {
@@ -51,19 +70,28 @@ class JPPMProjectSupport extends AbstractProjectSupport
             $this->pkgTemplate->save();
         }, __CLASS__);
 
-        $this->pkgTemplate->setSources(['src', 'src_generated']);
+        $this->pkgTemplate->setSources(['src_generated', 'src']);
         $project->setSrcDirectory('src');
         $project->setSrcGeneratedDirectory('src_generated');
+
+        $this->pkgTemplate->setIncludes(['JPHP-INF/.bootstrap']);
+
+        if ($project->getSrcFile("JPHP-INF/launcher.conf")->exists()) {
+            fs::delete($project->getSrcFile("JPHP-INF/launcher.conf"));
+        }
+
+        $this->pkgTemplate->save();
 
         $project->getRunDebugManager()->add('start', [
             'title' => 'Запустить',
             'makeStartProcess' => function () use ($project) {
-                $process = new Process(['cmd', '/c', 'jppm', 'app:run', '-l'], $project->getRootDir(), Ide::get()->makeEnvironment());
+                $process = new Process(['cmd', '/c', 'jppm', 'app:run'], $project->getRootDir(), Ide::get()->makeEnvironment());
                 return $process;
             },
         ]);
 
         $this->install($project);
+        $this->installToIDE($project);
     }
 
     public function getVendorInspectDirs(Project $project)
@@ -118,6 +146,52 @@ class JPPMProjectSupport extends AbstractProjectSupport
         }
     }
 
+    public function installToIDE(Project $project)
+    {
+        foreach (fs::scan("{$project->getRootDir()}/vendor", ['excludeFiles' => true], 1) as $dep) {
+            $dep = fs::name($dep);
+
+            if (fs::isFile("{$project->getRootDir()}/vendor/{$dep}/package.php.yml")) {
+                $pkgData = fs::parse("{$project->getRootDir()}/vendor/{$dep}/package.php.yml");
+
+                if ($data = $pkgData['ide-bundle']) {
+                    if (!$this->allIdeBundles[$dep]) {
+                        $this->allIdeBundles[$dep] = $data;
+                        System::addClassPath("{$project->getRootDir()}/vendor/{$dep}/src");
+                    }
+
+                    if (!$this->projectIdeBundles[$dep]) {
+                        $bundleClass = $data['class'];
+
+                        if ($bundleClass) {
+                            Logger::info("Add jar bundle: $dep -> $bundleClass");
+
+                            /** @var AbstractJarBundle $bundle */
+                            $bundle = new $bundleClass();
+                            $bundle->onAdd($project);
+                            $data['bundle'] = $bundle;
+                        }
+
+                        $this->projectIdeBundles[$dep] = $data;
+                    }
+                }
+            }
+        }
+
+        $projectIdeBundles = $this->projectIdeBundles;
+
+        foreach ($projectIdeBundles as $dep => $data) {
+            if (!$this->pkgTemplate->getDeps()[$dep]) {
+                if ($bundle = $data['bundle']) {
+                    Logger::info("Remove jar bundle: $dep -> " . reflect::typeOf($bundle));
+
+                    $bundle->onRemove($project);
+                    unset($projectIdeBundles[$dep]);
+                }
+            }
+        }
+    }
+
     public function addDep(string $name, string $version = '*')
     {
         $this->pkgTemplate->setDeps(flow($this->pkgTemplate->getDeps(), [$name => $version])->toMap());
@@ -138,6 +212,7 @@ class JPPMProjectSupport extends AbstractProjectSupport
 
     /**
      * @param Project $project
+     * @return mixed|void
      * @throws \Exception
      */
     public function onUnlink(Project $project)
@@ -146,7 +221,6 @@ class JPPMProjectSupport extends AbstractProjectSupport
         $project->offGroup(__CLASS__);
 
         $this->pkgTemplate->save();
-        $this->pkgTemplate = null;
 
         foreach ($this->getVendorInspectDirs($project) as $dir) {
             $project->unloadDirectoryForInspector($dir);
@@ -154,6 +228,19 @@ class JPPMProjectSupport extends AbstractProjectSupport
 
         $project->unloadDirectoryForInspector(IdeSystem::getOwnFile("stubs/dn-php-stub"));
         $project->unloadDirectoryForInspector(IdeSystem::getOwnFile("stubs/dn-jphp-stub"));
+
+        $projectIdeBundles = $this->projectIdeBundles;
+
+        foreach ($projectIdeBundles as $dep => $data) {
+            if (!$this->pkgTemplate->getDeps()[$dep]) {
+                if ($bundle = $data['bundle']) {
+                    $bundle->onRemove($project);
+                }
+            }
+        }
+
+        $this->projectIdeBundles = [];
+        $this->pkgTemplate = null;
     }
 
     public function getCode()

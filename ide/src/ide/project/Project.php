@@ -936,6 +936,15 @@ class Project
 
     /**
      * @param string $code
+     * @return bool
+     */
+    public function hasSupport(string $code): bool
+    {
+        return isset($this->supports[$code]);
+    }
+
+    /**
+     * @param string $code
      * @return AbstractProjectSupport
      * @throws Exception
      */
@@ -950,7 +959,7 @@ class Project
         foreach ($ide->getProjectSupports() as $support) {
             if ($code === $support->getCode()) {
                 if (!isset($this->supports[$support->getCode()]) && $support->isFit($this)) {
-                    Logger::info("Link support '{$support->getCode()}' to project");
+                    Logger::info("Link support '{$support->getCode()}' to project from Project::findSupport()");
                     $support->onLink($this);
                     $this->supports[$support->getCode()] = $support;
 
@@ -1219,6 +1228,10 @@ class Project
 
         if ($save) {
             $this->save();
+        }
+
+        foreach ($this->supports as $support) {
+            $support->onUnlink($this);
         }
 
         $this->ideConfigs = [];

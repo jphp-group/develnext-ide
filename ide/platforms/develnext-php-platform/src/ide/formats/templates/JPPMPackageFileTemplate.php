@@ -9,6 +9,7 @@ use php\format\YamlProcessor;
 use php\io\FileStream;
 use php\io\IOException;
 use php\io\Stream;
+use php\lang\System;
 use php\lib\fs;
 
 class JPPMPackageFileTemplate extends AbstractMetaTemplate
@@ -272,20 +273,20 @@ class JPPMPackageFileTemplate extends AbstractMetaTemplate
             'name' => $this->name
         ];
 
-        if (isset($this->type)) $data['type'] = $this->type;
+        if ($this->type) $data['type'] = $this->type;
         if (isset($this->version)) $data['version'] = $this->version;
-        if (isset($this->description)) $data['description'] = $this->description;
-        if (isset($this->plugins)) $data['plugins'] = $this->plugins;
+        if ($this->description) $data['description'] = $this->description;
+        if ($this->plugins) $data['plugins'] = $this->plugins;
 
-        if (isset($this->deps)) $data['deps'] = $this->deps;
-        if (isset($this->devDeps)) $data['devDeps'] = $this->devDeps;
+        if ($this->deps) $data['deps'] = $this->deps;
+        if ($this->devDeps) $data['devDeps'] = $this->devDeps;
 
-        if (isset($this->sources)) $data['sources'] = $this->sources;
-        if (isset($this->includes)) $data['includes'] = $this->includes;
+        if ($this->sources) $data['sources'] = $this->sources;
+        if ($this->includes) $data['includes'] = $this->includes;
 
-        if (isset($this->tasks)) $data['tasks'] = $this->tasks;
+        if ($this->tasks) $data['tasks'] = $this->tasks;
 
-        if (isset($this->extra)) {
+        if ($this->extra) {
             $data = flow($data, $this->extra)->toMap();
         }
 

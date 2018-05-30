@@ -57,7 +57,9 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
 
     public function recoveryProject(Project $project)
     {
-        $this->makePackageFile($project);
+        $ideVersionHash = $project->getConfig()->getIdeVersionHash();
+
+        $this->makePackageFile($project, $ideVersionHash < 2017022512);
 
         if (!$project->hasBehaviour(PhpProjectBehaviour::class)) {
             $project->register(new PhpProjectBehaviour(), false);
@@ -83,8 +85,6 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
             $project->register(new BackupProjectBehaviour(), false);
         }
 
-
-        $ideVersionHash = $project->getConfig()->getIdeVersionHash();
         if ($ideVersionHash < 2017022512) {
             $this->migrateFrom16RC2($project);
         }
@@ -215,14 +215,14 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
     public function migrateFrom16x7(Project $project)
     {
         /** @var JPPMProjectSupport $jppm */
-        if ($jppm = $project->findSupport('jppm')) {
+        //if ($jppm = $project->hasSupport('jppm')) {
             if ($project->hasBehaviour(BundleProjectBehaviour::class)) {
                 $project->removeBehaviour(BundleProjectBehaviour::class);
             }
-        }
+        //}
     }
 
-    public function makePackageFile(Project $project)
+    public function makePackageFile(Project $project, bool $addGame2D = false)
     {
         $file = $project->getFile("package.php.yml");
 
@@ -232,14 +232,48 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
 
         $pkgFile->useProject($project);
         $pkgFile->setPlugins(['App']);
-        $pkgFile->setDeps([
-            'dn-app-framework' => '*',
-            'dn-debug-bundle' => '*',
+
+        $deps = [
+            'dn-app-framework' => '~1.0.0',
+            'dn-debug-bundle' => '~0.1.0',
             'jphp-gui-desktop-ext' => '*',
             'jphp-zend-ext' => '*',
-        ]);
+        ];
 
-        $pkgFile->setIncludes(['JPHP-INF/.bootstrap']);
+        $bundles = [
+            'develnext.bundle.game2d.Game2DBundle' => ['dn-game2d-bundle', '~1.0.0'],
+            'ide.bundle.std.JPHPGuiDesktopBundle' => ['dn-game2d-bundle', '~1.0.0'],
+            'develnext.bundle.jsoup.JsoupBundle' => ['dn-jsoup-bundle', '~1.0.0'],
+            'develnext.bundle.hotkey.HotKeyBundle' => ['dn-hotkey-bundle', '~1.0.0'],
+            'develnext.bundle.sql.FireBirdSqlBundle' => ['dn-firebirdsql-bundle', '~1.0.0'],
+            'develnext.bundle.httpclient.HttpClientBundle' => ['dn-httpclient-bundle', '~1.0.0'],
+            'develnext.bundle.jfoenix.JFoenixBundle' => ['dn-jfoenix-bundle', '~1.0.0'],
+            'develnext.bundle.mail.MailBundle' => ['dn-mail-bundle', '~1.0.0'],
+            'develnext.bundle.sql.MysqlBundle' => ['dn-mysql-bundle', '~1.0.0'],
+            'develnext.bundle.sql.PgSqlBundle' => ['dn-pgsql-bundle', '~1.0.0'],
+            'develnext.bundle.sql.SqliteBundle' => ['dn-sqlite-bundle', '~1.0.0'],
+            'develnext.bundle.systemtray.SystemTrayBundle' => ['dn-systemtray-bundle', '~1.0.0'],
+            'develnext.bundle.zip.ZipBundle' => ['dn-zip-bundle', '~1.0.0'],
+        ];
+
+        if ($addGame2D) {
+            $deps['dn-game2d-bundle'] = '*';
+        }
+
+        foreach ($project->getIdeFile("bundles/")->findFiles() as $file) {
+            if ($file->isFile() && fs::ext($file) === 'conf') {
+                $bundleName = fs::nameNoExt($file);
+
+                if ($bundles[$bundleName]) {
+                    [$name, $version] = $bundles[$bundleName];
+                    $deps[$name] = $version;
+
+                    $file->delete();
+                }
+            }
+        }
+
+        $pkgFile->setDeps($deps);
 
         $pkgFile->save();
     }

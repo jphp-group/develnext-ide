@@ -23,7 +23,8 @@ class JavaFXProjectSupport extends AbstractProjectSupport
     public function isFit(Project $project)
     {
         /** @var JPPMProjectSupport $jppm */
-        if ($jppm = $project->findSupport('jppm')) {
+        if ($project->hasSupport('jppm')) {
+            $jppm = $project->findSupport('jppm');
             return $jppm->hasDep('jphp-gui-ext') || $jppm->hasDep('dn-app-framework');
         } else {
             return false;

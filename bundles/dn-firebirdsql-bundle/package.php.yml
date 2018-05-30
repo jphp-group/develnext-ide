@@ -1,0 +1,29 @@
+
+name: dn-firebirdsql-bundle
+version: 1.0.0
+author: DevelNext
+
+plugins: [Hub, Doc]
+
+deps:
+  jphp-firbirdsql-ext: '*'
+  dn-sql-bundle: '%version%'
+
+sources:
+- src/vendor/develnext.bundle.sql.FireBirdSqlBundle
+
+config:
+  ignore:
+    - './out/**'
+doc:
+  url-prefix: 'https://github.com/jphp-compiler/develnext/blob/master/bundles/%name%/api-docs/'
+  langs: {en: English, ru: Русский}
+
+ide-bundle:
+  name: FireBird SQL
+  class: develnext\bundle\sql\FireBirdSqlBundle
+  icon: develnext/bundle/mysql/mysql.png
+  description: Пакет для работы с бд FireBird 2+.
+  description-file: develnext/bundle/sql/firebird/description.html
+  platforms: [desktop, web]
+  group: database

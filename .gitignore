@@ -6,6 +6,7 @@
 *.iml
 *.ipr
 *.iws
+*.jar
 /api/
 /classes/
 /build/
@@ -30,7 +31,6 @@ vendor/
 out/
 
 package.*.yml
-package-lock.php.yml
 !package.php.yml
 
 .gradle/

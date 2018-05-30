@@ -49,7 +49,7 @@ class DebugClassLoader extends ClassLoader
      */
     public function __construct()
     {
-        $this->cacheDir = "./.dn/.cache/";
+        $this->cacheDir = "./.dn/cache/";
         $this->_lock = new SharedValue();
 
         if (!fs::exists($this->cacheDir) && !fs::makeDir($this->cacheDir)) {

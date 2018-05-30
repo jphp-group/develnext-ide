@@ -85,10 +85,7 @@ class Application
     {
         $this->startTime = Time::now();
 
-       // System::setProperty("prism.lcdtext", "false");
-        if (Stream::exists('res://.debug/preloader.php')) {
-            include 'res://.debug/preloader.php';
-        }
+        // System::setProperty("prism.lcdtext", "false");
 
         if ($configPath === null) {
             $configPath = 'res://.system/application.conf';
