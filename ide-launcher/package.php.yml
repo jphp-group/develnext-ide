@@ -1,9 +1,0 @@
-name: develnext-launcher
-version: 0.0.0
-
-plugins: [Gradle, App]
-
-app:
-  main-class: 'php.pkg.develnextlauncher.Launcher'
-  build:
-    file-name: DevelNext

@@ -1,6 +1,7 @@
 <?php
 namespace ide;
 
+use function flow;
 use ide\systems\IdeSystem;
 use ide\utils\FileUtils;
 use php\io\File;
@@ -164,7 +165,9 @@ class IdeClassLoader extends ClassLoader
 
     protected function loadClassFromPath($name, File $fileCompiled = null)
     {
-        foreach ([""] + $this->classPaths as $path) {
+        $classPaths = $this->classPaths;
+
+        foreach (flow([""], $classPaths) as $path) {
             try {
                 $t = Time::millis();
 

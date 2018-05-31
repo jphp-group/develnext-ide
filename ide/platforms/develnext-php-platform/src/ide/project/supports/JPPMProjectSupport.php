@@ -9,6 +9,7 @@ use ide\Ide;
 use ide\Logger;
 use ide\project\AbstractProjectSupport;
 use ide\project\behaviours\PhpProjectBehaviour;
+use ide\project\control\CommonProjectControlPane;
 use ide\project\Project;
 use ide\systems\IdeSystem;
 use php\lang\Process;
