@@ -4,7 +4,7 @@ DevelNext IDE (version 17+) with the JPPM support.
 
 ## How to run?
 
-1. Install the last version of JPPM.
+1. Install **Java Development Kit 10** and the last version of JPPM.
 2. Prepare IDE dependencies:
 ```bash
 jppm prepare-ide
@@ -15,7 +15,7 @@ jppm start-ide
 ```
 
 ## How to build?
-1. Install the last version of JPPM.
+1. Install **Java Development Kit 10** and the last version of JPPM.
 2. Prepare IDE dependencies:
 ```bash
 jppm prepare-ide

@@ -14,7 +14,6 @@ import java.lang.reflect.Field;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import com.sun.javafx.scene.control.skin.TabPaneSkin;
 import javafx.collections.ListChangeListener;
 import javafx.css.StyleOrigin;
 import javafx.css.StyleableProperty;
@@ -24,6 +23,7 @@ import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.skin.TabPaneSkin;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
