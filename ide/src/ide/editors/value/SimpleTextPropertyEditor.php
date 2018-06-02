@@ -13,6 +13,7 @@ use php\gui\UXTextField;
 use php\gui\UXTooltip;
 use php\gui\UXWindow;
 use php\xml\DomElement;
+use function uiLater;
 
 /**
  * Class SimpleTextPropertyEditor
@@ -58,7 +59,9 @@ class SimpleTextPropertyEditor extends ElementPropertyEditor
             $tooltip->text = $this->tooltip;
             UiUtils::setWatchingFocusable($tooltip);
 
-            $this->textField->tooltip = $tooltip;
+            uiLater(function () use ($tooltip) {
+                $this->textField->tooltip = $tooltip;
+            });
         }
     }
 

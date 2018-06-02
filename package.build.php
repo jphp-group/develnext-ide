@@ -1,5 +1,15 @@
 <?php
+
+use compress\ArchiveEntry;
+use compress\Bzip2InputStream;
+use compress\GzipInputStream;
+use compress\Lz4InputStream;
+use compress\TarArchive;
+use compress\ZipArchive;
 use packager\Event;
+use packager\cli\Console;
+use php\io\Stream;
+use php\lib\fs;
 
 function task_publish(Event $e)
 {
@@ -70,4 +80,44 @@ function task_buildIde(Event $e)
     Tasks::copy('./dn-launcher/build/DevelNext.jar', './ide/build');
 
     Tasks::runExternal('./ide', 'copySourcesToBuild');
+
+    $os = $e->isFlag('linux') ? 'linux' : 'win';
+
+    $jrePath = $e->package()->getAny("jre.$os");
+
+    if ($jrePath) {
+        if (fs::isDir("./tools/build/jre/$os")) {
+            Tasks::copy("./tools/build/jre/$os", "./ide/build/jre");
+        } else {
+            switch (fs::ext($jrePath)) {
+                case 'xz':
+                    $arch = new TarArchive(new Lz4InputStream($jrePath));
+                    break;
+                case 'gz':
+                    $arch = new TarArchive(new GzipInputStream($jrePath));
+                    break;
+                case 'bz2':
+                    $arch = new TarArchive(new Bzip2InputStream($jrePath));
+                    break;
+                case 'zip':
+                    $arch = new ZipArchive($jrePath);
+                    break;
+
+                default:
+                    Console::error("Unable to unpack '$jrePath', unknown archive format");
+                    exit(-1);
+            }
+
+            $arch->readAll(function (ArchiveEntry $e, ?Stream $stream) use ($os) {
+                if ($stream) {
+                    Console::print("-> copy $e->name to jre dir ...");
+                    fs::ensureParent("./tools/build/jre/$os/$e->name");
+                    fs::copy($stream, "./tools/build/jre/$os/$e->name", null, 1024 * 1024 * 8);
+                    Console::log(".. done.");
+                }
+            });
+
+            Tasks::copy("./tools/build/jre/$os", "./ide/build/jre");
+        }
+    }
 }

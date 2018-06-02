@@ -22,9 +22,9 @@ public class Launcher {
     protected String[] fetchJvmArgs() {
         String[] jvmArgs = defaultJvmArgs;
 
-        if (new File(rootDir, "/DevelNext.l4j.ini").exists()) {
+        if (new File(rootDir, "/DevelNext.conf").exists()) {
             try {
-                Scanner scanner = new Scanner(new FileInputStream(new File(rootDir, "/DevelNext.l4j.ini")), "UTF-8");
+                Scanner scanner = new Scanner(new FileInputStream(new File(rootDir, "/DevelNext.conf")), "UTF-8");
 
                 Set<String> newJvmArgs = new TreeSet<String>();
 
@@ -76,8 +76,13 @@ public class Launcher {
         String[] jvmArgs = fetchJvmArgs();
 
         String javaBin = "java";
-
         String java_home = System.getenv("JAVA_HOME");
+
+        if (!Boolean.getBoolean("dn.dontUseLocalJre")) {
+            if (new File(rootDir, "/jre/bin").isDirectory()) {
+                java_home = new File(rootDir, "/jre/").getAbsolutePath();
+            }
+        }
 
         if (java_home != null) {
             if (new File(java_home, "/bin/java.exe").isFile()) {
