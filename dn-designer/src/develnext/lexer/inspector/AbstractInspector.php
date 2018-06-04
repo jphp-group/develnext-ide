@@ -6,6 +6,7 @@ use develnext\lexer\inspector\entry\ConstantEntry;
 use develnext\lexer\inspector\entry\FunctionEntry;
 use develnext\lexer\inspector\entry\SnippetEntry;
 use develnext\lexer\inspector\entry\TypeEntry;
+use ide\Logger;
 use ide\misc\EventHandlerBehaviour;
 use ide\utils\FileUtils;
 use php\io\Stream;

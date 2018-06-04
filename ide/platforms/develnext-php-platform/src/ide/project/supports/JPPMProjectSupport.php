@@ -2,11 +2,14 @@
 namespace ide\project\supports;
 
 use function alert;
+use framework\core\Event;
+use framework\core\Promise;
 use ide\bundle\AbstractBundle;
 use ide\bundle\AbstractJarBundle;
 use ide\formats\templates\JPPMPackageFileTemplate;
 use ide\Ide;
 use ide\Logger;
+use ide\misc\FileWatcher;
 use ide\project\AbstractProjectSupport;
 use ide\project\behaviours\PhpProjectBehaviour;
 use ide\project\control\CommonProjectControlPane;
@@ -16,6 +19,7 @@ use php\lang\Process;
 use php\lang\System;
 use php\lib\fs;
 use php\lib\reflect;
+use Throwable;
 use function uiLater;
 use function var_dump;
 
@@ -29,6 +33,11 @@ class JPPMProjectSupport extends AbstractProjectSupport
      * @var JPPMPackageFileTemplate
      */
     protected $pkgTemplate;
+
+    /**
+     * @var FileWatcher
+     */
+    protected $pkgFileWatcher;
 
     /**
      * @var array
@@ -60,7 +69,24 @@ class JPPMProjectSupport extends AbstractProjectSupport
             'package-lock.php.yml'
         ]);
 
-        $this->pkgTemplate = new JPPMPackageFileTemplate($project->getFile('package.php.yml'));
+        $pkgFile = $project->getFile('package.php.yml');
+        $this->pkgTemplate = new JPPMPackageFileTemplate($pkgFile);
+        $this->pkgFileWatcher = new FileWatcher($pkgFile);
+
+        $this->pkgFileWatcher->on('change', function (Event $event) use ($project) {
+            if ($event->data['newTime'] <= 0) {
+                $project->refreshSupports();
+            } else {
+                $oldDeps = $this->pkgTemplate->getDeps();
+                $this->pkgTemplate->load();
+                $newDeps = $this->pkgTemplate->getDeps();
+
+                if ($oldDeps != $newDeps) {
+                    $this->install($project);
+                    $this->installToIDE($project);
+                }
+            }
+        });
 
         $project->on('changeName', function ($oldName, $newName) {
             $this->pkgTemplate->setName($newName);
@@ -68,7 +94,7 @@ class JPPMProjectSupport extends AbstractProjectSupport
         }, __CLASS__);
 
         $project->on('save', function () {
-            $this->pkgTemplate->save();
+            //$this->pkgTemplate->save();
         }, __CLASS__);
 
         $this->pkgTemplate->setSources(['src_generated', 'src']);
@@ -93,6 +119,36 @@ class JPPMProjectSupport extends AbstractProjectSupport
 
         $this->install($project);
         $this->installToIDE($project);
+
+        $this->pkgFileWatcher->start();
+    }
+
+    public function getVendorInspectDirsForDep(Project $project, string $depName)
+    {
+        $result = [];
+
+        $dir = "{$project->getRootDir()}/vendor/$depName";
+        $pkgFile = "$dir/package.php.yml";
+
+        if (fs::isFile($pkgFile)) {
+            $pkgData = fs::parse($pkgFile);
+
+            if (is_array($pkgData['sources'])) {
+                foreach ($pkgData['sources'] as $src) {
+                    if (fs::isDir("$dir/$src")) {
+                        $result["$dir/$src"] = "$dir/$src";
+                    }
+                }
+            }
+
+            $sdkDir = "$dir/sdk";
+
+            if (fs::isDir($sdkDir)) {
+                $result[$sdkDir] = $sdkDir;
+            }
+        }
+
+        return $result;
     }
 
     public function getVendorInspectDirs(Project $project)
@@ -130,21 +186,29 @@ class JPPMProjectSupport extends AbstractProjectSupport
         $project->loadDirectoryForInspector(IdeSystem::getOwnFile("stubs/dn-php-stub"));
         $project->loadDirectoryForInspector(IdeSystem::getOwnFile("stubs/dn-jphp-stub"));
 
-        $oldInspectDirs = $this->getVendorInspectDirs($project);
+        $promisses = [];
+        foreach (fs::scan("{$project->getFile("vendor/")}", ['excludeFiles' => true]) as $dir) {
+            $pkgName = fs::name($dir);
 
-        $process = (new Process(['cmd', '/c', 'jppm', 'install'], $project->getRootDir(), Ide::get()->makeEnvironment()))
-            ->inheritIO()->startAndWait();
-
-        $newInspectDirs = $this->getVendorInspectDirs($project);
-        foreach ($newInspectDirs as $dir) {
-            $project->loadDirectoryForInspector($dir);
-        }
-
-        foreach ($oldInspectDirs as $dir) {
-            if (!$newInspectDirs[$dir]) {
-                $project->unloadDirectoryForInspector($dir);
+            if (!$this->pkgTemplate->getDeps()[$pkgName]) {
+                foreach ($this->getVendorInspectDirsForDep($project, $pkgName) as $inspectDir) {
+                    $promisses[] = $project->unloadDirectoryForInspector($inspectDir);
+                }
             }
         }
+
+        Promise::all($promisses)->then(function () use ($project) {
+            $process = (new Process(['cmd', '/c', 'jppm', 'install'], $project->getRootDir(), Ide::get()->makeEnvironment()))
+                ->inheritIO()->startAndWait();
+
+            $newInspectDirs = $this->getVendorInspectDirs($project);
+
+            foreach ($newInspectDirs as $dir) {
+                $project->loadDirectoryForInspector($dir);
+            }
+        })->catch(function (Throwable $e) {
+            Logger::exception("Failed to install", $e);
+        });
     }
 
     public function installToIDE(Project $project)
@@ -242,6 +306,8 @@ class JPPMProjectSupport extends AbstractProjectSupport
 
         $this->projectIdeBundles = [];
         $this->pkgTemplate = null;
+        $this->pkgFileWatcher->free();
+        $this->pkgFileWatcher = null;
     }
 
     public function getCode()
