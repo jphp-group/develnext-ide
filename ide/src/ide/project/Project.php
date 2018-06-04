@@ -3,6 +3,7 @@ namespace ide\project;
 
 use develnext\lexer\inspector\AbstractInspector;
 use Exception;
+use framework\core\Promise;
 use ide\formats\AbstractFileTemplate;
 use ide\formats\IdeFormatOwner;
 use ide\forms\MainForm;
@@ -21,6 +22,7 @@ use php\lib\Str;
 use php\time\Time;
 use php\util\Flow;
 use script\TimerScript;
+use Throwable;
 
 /**
  * Class Project
@@ -1410,8 +1412,10 @@ class Project
         }
     }
 
-    public function unloadDirectoryForInspector($path)
+    public function unloadDirectoryForInspector($path): Promise
     {
+        Logger::debug("Unload directory for inspector: $path");
+
         $inspectors = $this->inspectors;
 
         if (!$inspectors) {
@@ -1419,11 +1423,21 @@ class Project
         }
 
         if (!$this->inspectorLoaderThreadPoll->isShutdown()) {
-            $this->inspectorLoaderThreadPoll->execute(function () use ($path, $inspectors) {
-                foreach ($inspectors as $one) {
-                    $one->unloadDirectory($path);
-                }
+            return new Promise(function ($resolve, $reject) use ($path, $inspectors) {
+                $this->inspectorLoaderThreadPoll->execute(function () use ($path, $inspectors, $resolve, $reject) {
+                    try {
+                        foreach ($inspectors as $one) {
+                            $one->unloadDirectory($path);
+                        }
+
+                        $resolve();
+                    } catch (Throwable $e) {
+                        $reject($e);
+                    }
+                });
             });
+        } else {
+            return Promise::reject(new Exception("Unable to unloadDirectoryForInspector(), inspectors are empty."));
         }
     }
 

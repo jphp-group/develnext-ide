@@ -14,6 +14,7 @@ use php\lang\System;
 use php\lib\fs;
 use php\lib\str;
 use php\time\Time;
+use php\time\Timer;
 use php\util\Configuration;
 
 /**
@@ -699,6 +700,7 @@ class Application
         Logger::info("Application shutdown");
 
         UXApplication::shutdown();
+        Timer::shutdownAll();
     }
 
     public function isShutdown()
