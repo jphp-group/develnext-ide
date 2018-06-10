@@ -17,6 +17,7 @@ use ide\project\Project;
 use ide\systems\IdeSystem;
 use php\lang\Process;
 use php\lang\System;
+use php\lib\arr;
 use php\lib\fs;
 use php\lib\reflect;
 use Throwable;
@@ -74,14 +75,18 @@ class JPPMProjectSupport extends AbstractProjectSupport
         $this->pkgFileWatcher = new FileWatcher($pkgFile);
 
         $this->pkgFileWatcher->on('change', function (Event $event) use ($project) {
-            if ($event->data['newTime'] <= 0) {
-                $project->refreshSupports();
-            } else {
+            if ($event->data['newTime'] >= 0) {
                 $oldDeps = $this->pkgTemplate->getDeps();
-                $this->pkgTemplate->load();
-                $newDeps = $this->pkgTemplate->getDeps();
+                $oldDevDeps = $this->pkgTemplate->getDevDeps();
+                $oldPlugins = $this->pkgTemplate->getPlugins();
 
-                if ($oldDeps != $newDeps) {
+                $this->pkgTemplate->load();
+
+                $newDeps = $this->pkgTemplate->getDeps();
+                $newDevDeps = $this->pkgTemplate->getDevDeps();
+                $newPlugins = $this->pkgTemplate->getPlugins();
+
+                if ($oldDeps != $newDeps || $oldDevDeps != $newDevDeps || $oldPlugins != $newPlugins) {
                     $this->install($project);
                     $this->installToIDE($project);
                 }
@@ -101,21 +106,11 @@ class JPPMProjectSupport extends AbstractProjectSupport
         $project->setSrcDirectory('src');
         $project->setSrcGeneratedDirectory('src_generated');
 
-        $this->pkgTemplate->setIncludes(['JPHP-INF/.bootstrap']);
-
         if ($project->getSrcFile("JPHP-INF/launcher.conf")->exists()) {
             fs::delete($project->getSrcFile("JPHP-INF/launcher.conf"));
         }
 
         $this->pkgTemplate->save();
-
-        $project->getRunDebugManager()->add('start', [
-            'title' => 'Запустить',
-            'makeStartProcess' => function () use ($project) {
-                $process = new Process(['cmd', '/c', 'jppm', 'app:run'], $project->getRootDir(), Ide::get()->makeEnvironment());
-                return $process;
-            },
-        ]);
 
         $this->install($project);
         $this->installToIDE($project);
@@ -213,6 +208,29 @@ class JPPMProjectSupport extends AbstractProjectSupport
 
     public function installToIDE(Project $project)
     {
+        $plugins = $this->pkgTemplate->getPlugins();
+
+        if (arr::has((array)$plugins, 'App')) {
+            $project->getRunDebugManager()->add('jppm start', [
+                'title' => 'jppm start',
+                'makeStartProcess' => function () use ($project) {
+                    $process = new Process(['cmd', '/c', 'jppm', 'start'], $project->getRootDir(), Ide::get()->makeEnvironment());
+                    return $process;
+                },
+            ]);
+
+            $project->getRunDebugManager()->add('jppm build', [
+                'title' => 'jppm build',
+                'makeStartProcess' => function () use ($project) {
+                    $process = new Process(['cmd', '/c', 'jppm', 'build'], $project->getRootDir(), Ide::get()->makeEnvironment());
+                    return $process;
+                },
+            ]);
+        } else {
+            $project->getRunDebugManager()->remove('jppm start');
+            $project->getRunDebugManager()->remove('jppm build');
+        }
+
         foreach (fs::scan("{$project->getRootDir()}/vendor", ['excludeFiles' => true], 1) as $dep) {
             $dep = fs::name($dep);
 
