@@ -2,6 +2,7 @@
 namespace ide\project\templates;
 
 use ide\formats\ProjectFormat;
+use ide\formats\templates\JPPMPackageFileTemplate;
 use ide\Ide;
 use ide\project\AbstractProjectTemplate;
 use ide\project\behaviours\BackupProjectBehaviour;
@@ -10,22 +11,15 @@ use ide\project\behaviours\PhpProjectBehaviour;
 use ide\project\control\CommonProjectControlPane;
 use ide\project\Project;
 use ide\project\ProjectModule;
+use ide\utils\FileUtils;
 
 class PhpProjectTemplate extends AbstractProjectTemplate
 {
-    /**
-     * @var ProjectModule
-     */
-    private $providedModules = [];
-
-
     /**
      * PhpProjectTemplate constructor.
      */
     public function __construct()
     {
-        $this->providedModules[] = new ProjectModule(Ide::get()->findLibFile('dn-php-stub'), 'jarfile', true);
-        $this->providedModules[] = new ProjectModule(Ide::get()->findLibFile('dn-jphp-stub'), 'jarfile', true);
     }
 
     public function getName()
@@ -45,10 +39,6 @@ class PhpProjectTemplate extends AbstractProjectTemplate
 
     public function openProject(Project $project)
     {
-        foreach ($this->providedModules as $module) {
-            $project->addModule($module);
-        }
-
         /** @var ProjectFormat $registeredFormat */
         $registeredFormat = $project->getRegisteredFormat(ProjectFormat::class);
 
@@ -57,6 +47,27 @@ class PhpProjectTemplate extends AbstractProjectTemplate
                 new CommonProjectControlPane(),
             ]);
         }
+    }
+
+    public function makePackageFile(Project $project)
+    {
+        $file = $project->getFile("package.php.yml");
+
+        if ($file->exists()) return;
+
+        $pkgFile = new JPPMPackageFileTemplate($file);
+
+        $pkgFile->useProject($project);
+        $pkgFile->setPlugins(['App']);
+        $pkgFile->setIncludes(['index.php']);
+
+        $deps = [
+            'jphp-core' => '*',
+        ];
+
+        $pkgFile->setDeps($deps);
+
+        $pkgFile->save();
     }
 
     /**
@@ -76,6 +87,11 @@ class PhpProjectTemplate extends AbstractProjectTemplate
         $project->setIgnoreRules([
             '*.tmp'
         ]);
+
+        $project->makeDirectory("src");
+        FileUtils::putAsync($project->getFile("src/index.php"), "<?php\r\recho 'Hello World';\r");
+
+        $this->makePackageFile($project);
 
         return $project;
     }
@@ -101,8 +117,5 @@ class PhpProjectTemplate extends AbstractProjectTemplate
         if (!$project->getRegisteredFormat(ProjectFormat::class)) {
             $project->registerFormat(new ProjectFormat());
         }
-
-        $project->setSrcDirectory("");
-        $project->setSrcGeneratedDirectory(null);
     }
 }

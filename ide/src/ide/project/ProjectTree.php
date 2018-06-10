@@ -312,6 +312,16 @@ class ProjectTree
         }
     }
 
+    /**
+     * @param array $exts
+     */
+    public function removeIgnoreExtensions(array $exts)
+    {
+        foreach ($exts as $ext) {
+            unset($this->ignoreExts[$ext]);
+        }
+    }
+
     public function addIgnorePaths(array $paths)
     {
         foreach ($paths as $path) {

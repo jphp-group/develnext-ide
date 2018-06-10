@@ -110,8 +110,8 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
 
         $this->project->registerInspector('php', $this->inspector);
 
-        $this->project->on('close', [$this, 'doClose']);
-        $this->project->on('open', [$this, 'doOpen']);
+        //$this->project->on('close', [$this, 'doClose']);
+        //$this->project->on('open', [$this, 'doOpen']);
         $this->project->on('save', [$this, 'doSave']);
         $this->project->on('preCompile', [$this, 'doPreCompile']);
         $this->project->on('compile', [$this, 'doCompile']);
@@ -208,30 +208,6 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
         $this->uiByteCodeCheckbox = null;
         $this->globalUseImports = null;
         $this->uiImportTypesSelect = null;
-    }
-
-    public function doOpen()
-    {
-        $tree = $this->project->getTree();
-        $tree->addIgnoreExtensions([
-            'source', 'sourcemap'
-        ]);
-
-        $tree->addIgnorePaths([
-            self::GENERATED_DIRECTORY
-        ]);
-
-
-        $this->project->eachSrcFile(function (ProjectFile $file) {
-            if (str::endsWith($file, '.php.source')) {
-                FileUtils::copyFileAsync($file, fs::pathNoExt($file));
-                fs::delete($file);
-            }
-        });
-
-        $this->project->clearIdeCache('bytecode');
-
-        $this->refreshInspector();
     }
 
     public function doSave()

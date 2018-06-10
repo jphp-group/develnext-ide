@@ -20,6 +20,7 @@ use php\lib\fs;
 use php\lib\reflect;
 use php\lib\Str;
 use php\time\Time;
+use php\time\Timer;
 use php\util\Flow;
 use script\TimerScript;
 use Throwable;
@@ -76,6 +77,11 @@ class Project
      * @var AbstractProjectSupport[]
      */
     protected $supports = [];
+
+    /**
+     * @var Timer
+     */
+    protected $supportRefreshTimer;
 
     /**
      * @var array
@@ -896,6 +902,12 @@ class Project
         $this->doTick();
 
         $this->tickTimer->start();
+
+        $this->supportRefreshTimer = Timer::every('2.5s', function () {
+            if (!Ide::get()->isIdle()) {
+                $this->refreshSupports();
+            }
+        });
     }
 
     /**
@@ -904,7 +916,7 @@ class Project
     public function refreshSupports()
     {
         $time = Time::millis();
-        Logger::info("Refresh project supports ...");
+        //Logger::info("Refresh project supports ...");
 
         $ide = Ide::get();
 
@@ -919,21 +931,22 @@ class Project
         }
 
         foreach ($ide->getProjectSupports() as $support) {
-            $cls = reflect::typeOf($support);
-
             if (!isset($this->supports[$support->getCode()])) {
                 if ($support->isFit($this)) {
                     Logger::info("Link support '{$support->getCode()}' to project");
                     $support->onLink($this);
                     $this->supports[$support->getCode()] = $support;
                 } else {
-                    Logger::debug("Support '{$support->getCode()} is not fitted for the project'");
+                    //Logger::debug("Support '{$support->getCode()} is not fitted for the project'");
                 }
             }
         }
 
         $time = Time::millis() - $time;
-        Logger::info("Refreshing project supports is done, time = {$time}ms.");
+
+        if ($time > 1000) {
+            Logger::info("Refreshing project supports is done, time = {$time}ms.");
+        }
     }
 
     /**
@@ -1219,6 +1232,11 @@ class Project
     {
         Logger::info("Close project ...");
         $this->trigger(__FUNCTION__);
+
+        if ($this->supportRefreshTimer) {
+            $this->supportRefreshTimer->cancel();
+            $this->supportRefreshTimer = null;
+        }
 
         FileSystem::setClickOnAddTab(null);
 

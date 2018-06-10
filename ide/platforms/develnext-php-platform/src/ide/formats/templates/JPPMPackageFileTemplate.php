@@ -165,9 +165,9 @@ class JPPMPackageFileTemplate extends AbstractMetaTemplate
     /**
      * @param array $sources
      */
-    public function setSources(array $sources): void
+    public function setSources($sources): void
     {
-        $this->sources = $sources;
+        $this->sources = (array) $sources;
     }
 
     /**
@@ -181,9 +181,9 @@ class JPPMPackageFileTemplate extends AbstractMetaTemplate
     /**
      * @param array $includes
      */
-    public function setIncludes(array $includes): void
+    public function setIncludes($includes): void
     {
-        $this->includes = $includes;
+        $this->includes = (array) $includes;
     }
 
     /**
@@ -197,9 +197,9 @@ class JPPMPackageFileTemplate extends AbstractMetaTemplate
     /**
      * @param array $deps
      */
-    public function setDeps(array $deps): void
+    public function setDeps($deps): void
     {
-        $this->deps = $deps;
+        $this->deps = (array) $deps;
     }
 
     /**
@@ -213,9 +213,9 @@ class JPPMPackageFileTemplate extends AbstractMetaTemplate
     /**
      * @param array $devDeps
      */
-    public function setDevDeps(array $devDeps): void
+    public function setDevDeps($devDeps): void
     {
-        $this->devDeps = $devDeps;
+        $this->devDeps = (array) $devDeps;
     }
 
     /**
@@ -229,9 +229,9 @@ class JPPMPackageFileTemplate extends AbstractMetaTemplate
     /**
      * @param array $plugins
      */
-    public function setPlugins(array $plugins): void
+    public function setPlugins($plugins): void
     {
-        $this->plugins = $plugins;
+        $this->plugins = (array) $plugins;
     }
 
     /**

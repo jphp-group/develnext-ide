@@ -232,6 +232,7 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
 
         $pkgFile->useProject($project);
         $pkgFile->setPlugins(['App']);
+        $pkgFile->setIncludes(['JPHP-INF/.bootstrap']);
 
         $deps = [
             'dn-app-framework' => '~1.0.0',

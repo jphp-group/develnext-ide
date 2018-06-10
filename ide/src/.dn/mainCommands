@@ -8,6 +8,8 @@ ide\commands\CloseProjectCommand
 ide\commands\LaunchNewIDECommand
 ide\commands\ExitCommand
 
+ide\commands\RunTaskCommand
+
 ide\commands\IdeLogShowCommand
 ide\commands\IdeSandboxShowCommand
 
