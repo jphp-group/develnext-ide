@@ -70,6 +70,11 @@ class BuildProgressForm extends AbstractIdeForm implements ProjectConsoleOutput
     /** @var SharedQueue */
     protected $tasks;
 
+    /**
+     * @var bool
+     */
+    protected $ignoreExit1 = false;
+
     protected function init()
     {
         $this->icon->image = ico('wait32')->image;
@@ -130,6 +135,22 @@ class BuildProgressForm extends AbstractIdeForm implements ProjectConsoleOutput
                 }
             }
         });
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIgnoreExit1(): bool
+    {
+        return $this->ignoreExit1;
+    }
+
+    /**
+     * @param bool $ignoreExit1
+     */
+    public function setIgnoreExit1(bool $ignoreExit1)
+    {
+        $this->ignoreExit1 = $ignoreExit1;
     }
 
     public function reduceHeader()
@@ -466,10 +487,13 @@ class BuildProgressForm extends AbstractIdeForm implements ProjectConsoleOutput
 
         $func = function() use ($self, $exitValue, $onExit, $hasError) {
             if ($exitValue) {
-                $self->addConsoleLine('');
-                $self->addConsoleLine('(!) Ошибка запуска, что-то пошло не так', 'red');
-                $self->addConsoleLine('   --> возможно ошибка в вашей программе или ошибка IDE...', 'gray');
-                $self->addConsoleLine('');
+                if ($exitValue === 1 && $this->ignoreExit1) {
+                } else {
+                    $self->addConsoleLine('');
+                    $self->addConsoleLine('(!) Ошибка запуска, что-то пошло не так', 'red');
+                    $self->addConsoleLine('   --> возможно ошибка в вашей программе или ошибка IDE...', 'gray');
+                    $self->addConsoleLine('');
+                }
             }
 
             if ($onExit) {

@@ -44,8 +44,8 @@ class RunBuildProjectBehaviour extends AbstractProjectBehaviour
      */
     public function inject()
     {
-        Ide::get()->registerCommand($this->createExecuteCommand());
-        Ide::get()->registerCommand($this->createBuildCommand());
+        //Ide::get()->registerCommand($this->createExecuteCommand());
+        //Ide::get()->registerCommand($this->createBuildCommand());
     }
 
     /**

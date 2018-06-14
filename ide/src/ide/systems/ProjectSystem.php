@@ -24,6 +24,7 @@ use php\lib\Items;
 use php\lib\Str;
 use script\TimerScript;
 use timer\AccurateTimer;
+use function var_dump;
 
 /**
  * Class ProjectSystem
