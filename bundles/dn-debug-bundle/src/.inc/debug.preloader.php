@@ -167,6 +167,8 @@ class DebugClassLoader extends ClassLoader
 if (System::getProperty('environment') === 'dev') {
     define('DEVELNEXT_PROJECT_DEBUG', true);
 
+    echo "[DEBUG] Make 'application.pid' file \n";
+
     try {
         Stream::putContents("application.pid", getmypid());
     } catch (IOException $e) {

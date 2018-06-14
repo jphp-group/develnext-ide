@@ -34,6 +34,7 @@ deps:
   jphp-zip-ext: '~1.0.0'
   jphp-compress-ext: '~1.0.0'
   jphp-parser-ext: '~1.0.0'
+  jphp-process-ext: '*'
   develnext-designer: '~1.0.0'
   develnext-gui-tabs-ext: '~1.0.0'
 

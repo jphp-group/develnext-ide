@@ -5,9 +5,11 @@ namespace ide\commands;
 use function alert;
 use function dump;
 use function flow;
+use framework\core\Promise;
 use ide\editors\AbstractEditor;
 use ide\forms\BuildProgressForm;
 use ide\Ide;
+use ide\Logger;
 use ide\misc\AbstractCommand;
 use ide\project\Project;
 use ide\systems\FileSystem;
@@ -21,13 +23,18 @@ use php\gui\UXMenuItem;
 use php\gui\UXSplitMenuButton;
 use php\lang\Process;
 use const PHP_INT_MAX;
+use function pre;
+use process\ProcessHandle;
+use function sizeof;
 use function uiLater;
+use function uiLaterAndWait;
 use function var_dump;
 
 class RunTaskCommand extends AbstractCommand
 {
     private $taskSelect;
-    private $runButton;
+    private $stopButton;
+
     /**
      * @var UXHBox
      */
@@ -45,6 +52,11 @@ class RunTaskCommand extends AbstractCommand
     {
         parent::__construct();
 
+        $this->stopButton = $this->makeGlyphButton();
+        $this->stopButton->graphic = Ide::get()->getImage('icons/square16.png');
+        $this->stopButton->tooltipText = 'Остановить';
+        $this->stopButton->enabled = false;
+
         $this->panel = $panel = new UXHBox([], 4);
         $this->taskSelect = $taskSelect = new UXSplitMenuButton('[не выбрано]', Ide::getImage($this->getIcon()));
 
@@ -58,46 +70,107 @@ class RunTaskCommand extends AbstractCommand
         });*/
 
         $panel->add($taskSelect);
+        $panel->add($this->stopButton);
 
-        Ide::get()->on('openProject', function (Project $project) {
-            $project->getRunDebugManager()->on('change', function () {
-                $this->update();
+        Ide::get()->bind('openProject', function (Project $project) {
+            $project->getRunDebugManager()->on('change', function () use ($project) {
+                $this->update($project);
             });
 
-            $this->update();
+            $this->update($project);
         });
 
-        Ide::get()->on('closeProject', function (Project $project) {
+        Ide::get()->bind('closeProject', function (Project $project) {
             $project->getRunDebugManager()->off('change', __CLASS__);
-            $this->update();
+            $this->update($project);
         });
     }
 
-    public function update()
+    public function update(?Project $project = null)
     {
-        if ($project = Ide::project()) {
+        $project = $project ?: Ide::project();
+
+        if ($project) {
             $items = $project->getRunDebugManager()->getItems();
 
             $this->taskSelect->items->clear();
 
             $i = 0;
+
             foreach ($items as $key => $item) {
                 uiLater(function () use ($key, $item, $items, $i) {
                     $menuItem = new UXMenuItem($item['title'] ?? $key);
 
-                    $menuItem->graphic = Ide::getImage($this->getIcon());
+                    $menuItem->graphic = Ide::getImage($item['icon'] ?? $this->getIcon());
+
                     $handler = function () use ($item, $key, $menuItem) {
                         $this->taskSelect->text = $menuItem->text;
+                        $this->taskSelect->graphic = Ide::getImage($item['icon'] ?? $this->getIcon());
 
                         $this->taskSelect->on('action', function () use ($item) {
                             ProjectSystem::saveOnlyRequired();
 
-                            /** @var Process $process */
-                            $process = $item['makeStartProcess']();
-                            $process = $process->start();
-
                             $dialog = Ide::get()->getMainForm()->showCLI();
-                            $dialog->watchProcess($process);
+
+                            $stopFunc = $item['stopFunc'];
+                            $this->stopButton->enabled = true;
+                            $this->taskSelect->enabled = false;
+
+                            $startProcess = function () use ($item, $dialog, $stopFunc) {
+                                /** @var Process $process */
+                                $process = $item['makeStartProcess']();
+                                $process = $process->start();
+
+                                $dialog->watchProcess($process);
+                                $dialog->setStopProcedure(function () use ($stopFunc, $process) {
+                                    $handle = new ProcessHandle($process);
+
+                                    if ($parent = $handle->parent()) {
+                                        $parent->destroy();
+                                    }
+
+                                    $handle->destroy();
+
+                                    $this->taskSelect->enabled = true;
+                                    $this->stopButton->enabled = false;
+                                });
+
+                                $dialog->setOnExitProcess(function () {
+                                    $this->taskSelect->enabled = true;
+                                    $this->stopButton->enabled = false;
+                                });
+
+                                $this->stopButton->on('action', function () use ($stopFunc, $process, $dialog) {
+                                    $handle = new ProcessHandle($process);
+                                    $dialog->setIgnoreExit1(true);
+
+                                    if ($descendants = $handle->descendants()) {
+                                        foreach ($descendants as $proc) {
+                                            if (!$proc->destroy()) {
+                                                $proc->destroyForcibly();
+                                            }
+                                        }
+                                    }
+
+                                    if (!$handle->destroy()) {
+                                        $handle->destroyForcibly();
+                                    }
+
+                                    $this->stopButton->enabled = false;
+                                });
+                            };
+
+                            if ($prepareFunc = $item['prepareFunc']) {
+                                $result = $prepareFunc($dialog);
+
+                                if ($result instanceof Promise) {
+                                    $result->then($startProcess);
+                                } else {
+                                    $startProcess();
+                                }
+                            } else {
+                                $startProcess();
+                            }
                         }, __CLASS__);
                     };
                     $menuItem->on('action', $handler);
@@ -109,7 +182,9 @@ class RunTaskCommand extends AbstractCommand
                 $i++;
             }
 
-            $this->taskSelect->visible = $this->taskSelect->managed = $this->taskSelect->items->count() > 0;
+            $this->taskSelect->visible = $this->taskSelect->managed = sizeof($items) > 0;
+        } else {
+            Logger::warn("Unable to update tasks, project is not opened.");
         }
     }
 
@@ -166,8 +241,6 @@ class RunTaskCommand extends AbstractCommand
 
     public function makeUiForHead()
     {
-        $this->update();
-
         return $this->panel;
     }
 
