@@ -22,6 +22,19 @@ class PHPProjectSupport extends AbstractProjectSupport
     protected $inspector;
 
     /**
+     * @return PHPInspector
+     */
+    public function getInspector(): PHPInspector
+    {
+        return $this->inspector;
+    }
+
+    public function getCode()
+    {
+        return 'php';
+    }
+
+    /**
      * @param Project $project
      * @return mixed
      */
@@ -106,6 +119,7 @@ class PHPProjectSupport extends AbstractProjectSupport
     {
         $this->inspector = new PHPInspector();
         $this->registerTreeMenu($project);
+        $project->registerInspector('php', $this->inspector);
 
         $project->on('open', function () use ($project) {
             $tree = $project->getTree();
@@ -134,9 +148,11 @@ class PHPProjectSupport extends AbstractProjectSupport
      */
     public function onUnlink(Project $project)
     {
+        $project->unregisterInspector('php');
+
         $project->offGroup(__CLASS__);
-        $this->inspector = null;
         $this->inspector->free();
+        $this->inspector = null;
 
         $tree = $project->getTree();
         $tree->removeIgnoreExtensions([

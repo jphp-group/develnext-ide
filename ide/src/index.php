@@ -5,6 +5,7 @@ use ide\IdeClassLoader;
 use ide\Logger;
 use ide\systems\IdeSystem;
 use php\gui\UXDialog;
+use php\gui\UXNode;
 use php\lang\System;
 
 $cache = false;//!IdeSystem::isDevelopment();
@@ -28,14 +29,24 @@ $app = new Ide();
 $app->addStyle('/.theme/style.css');
 $app->launch();
 
+/**
+ * @param $code
+ * @param array ...$args
+ * @return string|UXNode
+ */
 function _($code, ...$args) {
-    static $l10n;
+    $ideLocalizer = Ide::get()->getLocalizer();
 
-    if (!$l10n) {
-        $l10n = Ide::get()->getL10n();
+    if (!$ideLocalizer->language) {
+        return $code;
     }
 
-    return $l10n->get($code, ...$args);
+    if ($code instanceof UXNode) {
+        $ideLocalizer->translateNode($code, ...$args);
+        return $code;
+    } else {
+        return $ideLocalizer->translate($code, $args);
+    }
 }
 
 function dump($arg)

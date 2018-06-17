@@ -214,7 +214,7 @@ class MainForm extends AbstractIdeForm
      */
     public function doShowing()
     {
-        Ide::get()->getL10n()->translateNode($this->mainMenu);
+        _($this->mainMenu);
     }
 
     public function show()
@@ -242,16 +242,18 @@ class MainForm extends AbstractIdeForm
             //$item->enabled = !$ideLanguage || $language->getCode() != $ideLanguage->getCode();
 
             $item->on('action', function () use ($language, $item, $menu) {
-                $msg = new MessageBoxForm($language->getRestartMessage(), [$language->getRestartYes(), $language->getRestartNo()]);
+                /*$msg = new MessageBoxForm($language->getRestartMessage(), [$language->getRestartYes(), $language->getRestartNo()]);
                 $msg->makeWarning();
-                $msg->showDialog();
+                $msg->showDialog();*/
 
                 $menu->graphic = Ide::get()->getImage(new UXImage($language->getIcon()));
                 Ide::get()->setUserConfigValue('ide.language', $language->getCode());
+                Ide::get()->getLocalizer()->language = $language->getCode();
+                $language->load(Ide::get()->getLocalizer());
 
-                if ($msg->getResultIndex() == 0) {
+                /*if ($msg->getResultIndex() == 0) {
                     Ide::get()->restart();
-                }
+                }*/
             });
 
             $menu->items->add($item);

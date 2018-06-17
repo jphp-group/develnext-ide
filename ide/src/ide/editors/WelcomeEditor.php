@@ -42,9 +42,7 @@ class WelcomeEditor extends AbstractEditor
     {
         $loader = new UXLoader();
 
-        $layout = $loader->load('res://.forms/blocks/_Welcome.fxml');
-
-        Ide::get()->getL10n()->translateNode($layout);
+        $layout = _($loader->load('res://.forms/blocks/_Welcome.fxml'));
 
         $layout->lookup('#createProjectButton')->on('click', function () {
             Ide::get()->executeCommand(NewProjectCommand::class);

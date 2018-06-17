@@ -1,6 +1,7 @@
 <?php
 namespace ide\editors;
 
+use develnext\lexer\inspector\AbstractInspector;
 use Files;
 use ide\autocomplete\AutoComplete;
 use ide\autocomplete\php\PhpAutoComplete;
@@ -16,11 +17,14 @@ use ide\Logger;
 use ide\misc\AbstractCommand;
 use ide\misc\EventHandlerBehaviour;
 use ide\project\behaviours\PhpProjectBehaviour;
+use ide\project\Project;
 use ide\scripts\AbstractScriptComponent;
 use ide\systems\FileSystem;
 use ide\utils\FileUtils;
 use ide\utils\Json;
 use ide\utils\UiUtils;
+use function is_array;
+use function is_string;
 use php\format\JsonProcessor;
 use php\gui\designer\UXAbstractCodeArea;
 use php\gui\designer\UXCodeAreaScrollPane;
@@ -245,6 +249,24 @@ class CodeEditor extends AbstractEditor
 
         if ($options['autoComplete'] instanceof AutoComplete) {
             $this->autoComplete = new AutoCompletePane($this->textArea, $options['autoComplete']);
+        } else if (is_array($options['autoComplete'])) {
+            if ($project = Ide::project()) {
+                $bindId = str::random();
+
+                if ($inspector = $project->getInspector($options['autoComplete']['context'])) {
+                    $class = $options['autoComplete']['class'];
+                    $this->autoComplete = new AutoCompletePane($this->textArea, new $class($inspector));
+                } else {
+                    $project->on('registerInspector', function ($context, AbstractInspector $inspector) use ($options, $bindId, $project) {
+                        if ($context === $options['autoComplete']['context']) {
+                            $class = $options['autoComplete']['class'];
+                            $this->autoComplete = new AutoCompletePane($this->textArea, new $class($inspector));
+                            $project->off('registerInspector', $bindId);
+                        }
+
+                    }, $bindId);
+                }
+            }
         }
 
         $this->resetSettings();

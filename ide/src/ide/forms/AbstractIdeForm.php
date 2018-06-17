@@ -52,10 +52,8 @@ class AbstractIdeForm extends AbstractForm
     {
         parent::init();
 
-        $l10n = Ide::get()->getL10n();
-
-        $this->title = $l10n->translate($this->title);
-        $l10n->translateNode($this->layout);
+        $this->title = _($this->title);
+        _($this->layout);
     }
 
 }

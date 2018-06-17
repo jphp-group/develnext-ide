@@ -1482,6 +1482,7 @@ class Project
      */
     public function registerInspector($context, AbstractInspector $inspector)
     {
+        $this->trigger('registerInspector', $context, $inspector);
         $this->inspectors[str::lower($context)] = $inspector;
     }
 
@@ -1490,6 +1491,7 @@ class Project
      */
     public function unregisterInspector($context)
     {
+        $this->trigger('unregisterInspector', $context);
         unset($this->inspectors[str::lower($context)]);
     }
 }

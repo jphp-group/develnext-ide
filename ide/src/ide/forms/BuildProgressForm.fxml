@@ -44,10 +44,9 @@
                      </padding>
                      <styleClass>
                         <String fx:value="icon-square" />
-                        <String fx:value="foobar" />
                      </styleClass>
                   </Button>
-                  <CheckBox id="closeAfterDoneCheckbox" mnemonicParsing="false" selected="true" text="Закрыть после выполнения" />
+                  <CheckBox id="closeAfterDoneCheckbox" visible="false" managed="false" mnemonicParsing="false" selected="true" text="Закрыть после выполнения" />
                   <Separator orientation="VERTICAL">
                   </Separator>
                   <Hyperlink id="message" textFill="red" />

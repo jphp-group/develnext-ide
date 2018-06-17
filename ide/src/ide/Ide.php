@@ -1,6 +1,7 @@
 <?php
 namespace ide;
 
+use framework\localization\Localizer;
 use ide\account\AccountManager;
 use ide\account\ServiceManager;
 use ide\bundle\AbstractBundle;
@@ -10,6 +11,7 @@ use ide\formats\AbstractFormat;
 use ide\formats\IdeFormatOwner;
 use ide\forms\MainForm;
 use ide\forms\SplashForm;
+use ide\l10n\IdeLocalizer;
 use ide\l10n\L10n;
 use ide\library\IdeLibrary;
 use ide\misc\AbstractCommand;
@@ -145,9 +147,9 @@ class Ide extends Application
     protected $idle = false;
 
     /**
-     * @var L10n
+     * @var IdeLocalizer
      */
-    protected $l10n;
+    protected $localizer;
 
     /**
      * @var IdeLanguage[]
@@ -181,6 +183,7 @@ class Ide extends Application
 
         $this->library = new IdeLibrary($this);
         $this->toolManager = new IdeToolManager();
+        $this->localizer = new IdeLocalizer();
 
         $this->asyncThreadPool = ThreadPool::createCached();
     }
@@ -380,6 +383,11 @@ class Ide extends Application
         }
 
         return $this->l10n;
+    }
+
+    public function getLocalizer(): IdeLocalizer
+    {
+        return $this->localizer;
     }
 
     /**
@@ -659,10 +667,11 @@ class Ide extends Application
         $this->language = $this->languages[$ideLanguage];
 
         if ($this->language) {
-            $this->language->load();
+            $this->localizer->language = $this->language->getCode();
+            $this->language->load($this->localizer);
 
             if ($altLanguage = $this->languages[$this->language->getAltLang()]) {
-                $altLanguage->load();
+                $altLanguage->load($this->localizer);
             }
         }
 

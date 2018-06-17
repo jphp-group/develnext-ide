@@ -94,6 +94,8 @@ class JPPMProjectSupport extends AbstractProjectSupport
                 if ($oldDeps != $newDeps || $oldDevDeps != $newDevDeps || $oldPlugins != $newPlugins) {
                     $this->install($project);
                     $this->installToIDE($project);
+
+                    $project->refreshSupports();
                 }
             }
         });
@@ -213,100 +215,6 @@ class JPPMProjectSupport extends AbstractProjectSupport
 
     public function installToIDE(Project $project)
     {
-        $plugins = $this->pkgTemplate->getPlugins();
-
-        if (arr::has((array)$plugins, 'App')) {
-            $prepareFunc = function ($output): Promise {
-                return new Promise(function ($resolve, $reject) use ($output) {
-                    try {
-                        ProjectSystem::compileAll(Project::ENV_DEV, $output, "Prepare project ...", function () use ($resolve) {
-                            $resolve(true);
-                        });
-                    } catch (Throwable $e) {
-                        $reject($e);
-                    }
-                });
-            };
-            $project->getRunDebugManager()->add('jppm start', [
-                'title' => 'Запустить',
-                'prepareFunc' => $prepareFunc,
-                'makeStartProcess' => function () use ($project) {
-                    $env = Ide::get()->makeEnvironment();
-                    $process = new Process(['cmd', '/c', 'jppm', 'start'], $project->getRootDir(), $env);
-                    return $process;
-                },
-                'stopFunc' => function ($process) use ($project) {
-                    $appPidFile = $project->getFile("application.pid");
-
-                    $ide = Ide::get();
-                    $mainForm = Ide::get()->getMainForm();
-                    $mainForm->showPreloader('Подождите, останавливаем программу ...');
-
-                    $proc = function () use ($appPidFile, $ide, $mainForm, $process) {
-                        try {
-                            $pid = fs::get($appPidFile);
-
-                            if ($pid) {
-                                if ($ide->isWindows()) {
-                                    $result = `taskkill /PID $pid`;
-                                } else {
-                                    $result = `kill -9 $pid`;
-                                }
-
-                                if (!$result) {
-                                    Notifications::showExecuteUnableStop();
-                                }
-                            } else {
-                                if ($process instanceof Process) {
-                                    $process->destroy();
-                                }
-
-                                Notifications::showExecuteUnableStop();
-                            }
-                        } catch (IOException $e) {
-                            Logger::exception('Cannot stop process', $e);
-                            Notifications::showExecuteUnableStop();
-                        } finally {
-                        }
-
-                        $appPidFile->delete();
-                        $mainForm->hidePreloader();
-                    };
-
-                    if ($appPidFile->exists()) {
-                        $proc();
-                    } else {
-                        $time = 0;
-
-                        $timer = new AccurateTimer(100, function () use ($appPidFile, $proc, &$time) {
-                            $time += 100;
-
-                            if ($appPidFile->exists() || $time > 1000 * 25) {
-                                $proc();
-                                return true;
-                            }
-
-                            return false;
-                        });
-                        $timer->start();
-                    }
-                }
-            ]);
-
-            $project->getRunDebugManager()->add('jppm build', [
-                'title' => 'Собрать',
-                'prepareFunc' => $prepareFunc,
-                'icon' => 'icons/boxArrow16.png',
-                'makeStartProcess' => function () use ($project) {
-                    $process = new Process(['cmd', '/c', 'jppm', 'build'], $project->getRootDir(), Ide::get()->makeEnvironment());
-                    return $process;
-                },
-            ]);
-        } else {
-            $project->getRunDebugManager()->remove('jppm start');
-            $project->getRunDebugManager()->remove('jppm build');
-        }
-
         foreach (fs::scan("{$project->getRootDir()}/vendor", ['excludeFiles' => true], 1) as $dep) {
             $dep = fs::name($dep);
 
@@ -367,6 +275,22 @@ class JPPMProjectSupport extends AbstractProjectSupport
     public function hasDep(string $name): bool
     {
         return isset($this->pkgTemplate->getDeps()[$name]);
+    }
+
+    /**
+     * @return FileWatcher
+     */
+    public function getPkgFileWatcher(): FileWatcher
+    {
+        return $this->pkgFileWatcher;
+    }
+
+    /**
+     * @return JPPMPackageFileTemplate
+     */
+    public function getPkgTemplate(): JPPMPackageFileTemplate
+    {
+        return $this->pkgTemplate;
     }
 
     /**
