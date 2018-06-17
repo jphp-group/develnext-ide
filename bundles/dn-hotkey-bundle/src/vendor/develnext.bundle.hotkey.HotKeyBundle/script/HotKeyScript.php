@@ -69,8 +69,11 @@ class HotKeyScript extends AbstractScript
 
         if ($this->manager) {
             if ($key) {
+                $this->manager->reset();
                 $this->manager->register($key, function () {
-                    $this->trigger('action');
+                    if (!$this->disabled) {
+                        $this->trigger('action');
+                    }
                 });
             } else {
                 $this->manager->reset();
