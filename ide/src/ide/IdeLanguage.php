@@ -1,6 +1,7 @@
 <?php
 namespace ide;
 
+use framework\localization\Localizer;
 use ide\l10n\L10n;
 use ide\systems\IdeSystem;
 use php\lib\fs;
@@ -13,7 +14,6 @@ use php\util\Configuration;
 class IdeLanguage
 {
     private $code;
-    private $l10n;
     private $directory;
 
     private $title;
@@ -26,8 +26,6 @@ class IdeLanguage
     function __construct($code, $directory)
     {
         $this->code = $code;
-        $this->l10n = new L10n();
-        $this->l10n->setLanguage($code);
 
         $this->directory = $directory;
 
@@ -129,23 +127,9 @@ class IdeLanguage
         return null;
     }
 
-    /**
-     * @param L10n $altLanguage
-     * @return mixed
-     */
-    public function getL10n(L10n $altLanguage = null)
-    {
-        if ($altLanguage) {
-            $this->l10n->setAlternatives([$altLanguage]);
-            return $this->l10n;
-        } else {
-            return $this->l10n;
-        }
-    }
-
-    public function load() {
+    public function load(Localizer $localizer) {
         if (fs::isFile($file = "$this->directory/messages.ini")) {
-            $this->l10n->putFile($file);
+            $localizer->load($this->code, $file);
         }
     }
 }

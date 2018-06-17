@@ -14,6 +14,7 @@ use ide\misc\AbstractCommand;
 use ide\project\Project;
 use ide\systems\FileSystem;
 use ide\systems\ProjectSystem;
+use php\gui\event\UXEvent;
 use php\gui\layout\UXHBox;
 use php\gui\UXComboBox;
 use php\gui\UXContextMenu;
@@ -98,7 +99,7 @@ class RunTaskCommand extends AbstractCommand
             $i = 0;
 
             foreach ($items as $key => $item) {
-                uiLater(function () use ($key, $item, $items, $i) {
+                uiLaterAndWait(function () use ($key, $item, $items, $i) {
                     $menuItem = new UXMenuItem($item['title'] ?? $key);
 
                     $menuItem->graphic = Ide::getImage($item['icon'] ?? $this->getIcon());
@@ -182,8 +183,9 @@ class RunTaskCommand extends AbstractCommand
                 $i++;
             }
 
-            $this->taskSelect->visible = $this->taskSelect->managed = sizeof($items) > 0;
+            $this->panel->visible = $this->taskSelect->managed = sizeof($items) > 0;
         } else {
+            $this->panel->visible = false;
             Logger::warn("Unable to update tasks, project is not opened.");
         }
     }
@@ -225,8 +227,14 @@ class RunTaskCommand extends AbstractCommand
         return 'Пуск';
     }
 
+    public function getAccelerator()
+    {
+        return 'F9';
+    }
+
     public function onExecute($e = null, AbstractEditor $editor = null)
     {
+        $this->taskSelect->trigger('action', UXEvent::makeMock($this->taskSelect));
     }
 
     public function getIcon()
@@ -241,6 +249,7 @@ class RunTaskCommand extends AbstractCommand
 
     public function makeUiForHead()
     {
+        $this->update();
         return $this->panel;
     }
 

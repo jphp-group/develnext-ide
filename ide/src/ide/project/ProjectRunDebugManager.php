@@ -37,9 +37,9 @@ class ProjectRunDebugManager extends Component
      */
     public function add(string $code, array $config)
     {
+        $this->items[$code] = $config;
         $this->trigger(new Event('add', $this, null, ['code' => $code, 'config' => $config]));
         $this->trigger(new Event('change', $this));
-        $this->items[$code] = $config;
     }
 
     public function get(string $code): ?array
@@ -62,8 +62,15 @@ class ProjectRunDebugManager extends Component
 
     public function remove(string $code)
     {
+        unset($this->items[$code]);
+
         $this->trigger(new Event('remove', $this, null, ['code' => $code]));
         $this->trigger(new Event('change', $this));
-        unset($this->items[$code]);
+    }
+
+    public function clear()
+    {
+        $this->items = [];
+        $this->trigger(new Event('change', $this));
     }
 }

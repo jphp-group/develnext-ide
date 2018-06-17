@@ -105,13 +105,6 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
      */
     public function inject()
     {
-        $this->inspectorThreadPool = ThreadPool::createSingle();
-        $this->inspector = new PHPInspector();
-
-        $this->project->registerInspector('php', $this->inspector);
-
-        //$this->project->on('close', [$this, 'doClose']);
-        //$this->project->on('open', [$this, 'doOpen']);
         $this->project->on('save', [$this, 'doSave']);
         $this->project->on('preCompile', [$this, 'doPreCompile']);
         $this->project->on('compile', [$this, 'doCompile']);
@@ -174,34 +167,9 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
         $menu->add(new TreeCreatePhpClassMenuCommand($this->project->getTree()), 'new');
     }
 
-    protected function refreshInspector()
-    {
-        if ($this->inspector) {
-            $this->inspector->setExtensions(['php']);
-
-            (new Thread(function () {
-                $package = $this->getProjectPackage();
-
-                $this->inspector->putPackage($this->project->getPackageName(), $package);
-
-                $options = [
-                    'defaultPackages' => [$this->project->getPackageName()]
-                ];
-
-                if ($this->project->getSrcDirectory() != null) {
-                    $this->project->loadDirectoryForInspector($this->project->getSrcFile(""), $options);
-                }
-
-                if ($this->project->getSrcGeneratedDirectory() != null) {
-                    $this->project->loadDirectoryForInspector($this->project->getSrcFile("", true), $options);
-                }
-            }))->start();
-        }
-    }
-
     public function doClose()
     {
-        $this->inspectorThreadPool->shutdown();
+        //$this->inspectorThreadPool->shutdown();
         //$this->inspector->free();
 
         $this->uiSettings = null;
@@ -216,8 +184,6 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
             $this->setIdeConfigValue(self::OPT_COMPILE_BYTE_CODE, $this->uiByteCodeCheckbox->selected);
             $this->setImportType(arr::keys(static::$importTypes)[$this->uiImportTypesSelect->selectedIndex]);
         }
-
-        $this->refreshInspector();
     }
 
     public function doPreCompile($env, callable $log = null)
