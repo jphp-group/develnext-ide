@@ -16,7 +16,7 @@ class SaveProjectForLibraryCommand extends AbstractProjectCommand
 {
     public function getName()
     {
-        return _('menu.project.save.in.library');
+        return 'menu.project.save.in.library';
     }
 
     public function getIcon()

@@ -64,6 +64,19 @@ function task_startIde(Event $e)
     Tasks::runExternal('./ide', 'start', $e->args(), ...$e->flags());
 }
 
+function task_fetchMessages($e)
+{
+    fs::scan('./ide/src', [
+        'excludeDirs' => true,
+        'extensions' => ['php'],
+        'callback' => function ($filename) {
+            $content = fs::get($filename);
+
+
+        }
+    ]);
+}
+
 /**
  * @jppm-task build-ide
  */

@@ -310,7 +310,7 @@ class FormEditor extends AbstractModuleEditor
             'withoutCommands' => true, 'embedded' => true
         ], PhpCodeFormat::class);
 
-        $this->codeEditor->register(AbstractCommand::make('Скрыть', 'icons/close16.png', function () {
+        $this->codeEditor->register(AbstractCommand::make('command.hide::Скрыть', 'icons/close16.png', function () {
             $this->codeEditor->save();
 
             Ide::get()->setUserConfigValue(get_class($this) . ".multipleEditor", false);

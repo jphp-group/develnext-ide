@@ -25,7 +25,7 @@ class TreeEditFileCommand extends AbstractMenuCommand
 
     public function getName()
     {
-        return "Редактировать";
+        return "command.edit::Редактировать";
     }
 
     public function onExecute($e = null, AbstractEditor $editor = null)

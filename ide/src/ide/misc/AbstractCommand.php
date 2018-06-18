@@ -109,12 +109,12 @@ abstract class AbstractCommand extends Module
         $action = $this->makeAction();
         $button->on('action', $action);
 
-        return $button;
+        return _($button);
     }
 
     public function makeMenuItem()
     {
-        $item = new UXMenuItem($this->getName());
+        $item = _(new UXMenuItem($this->getName()));
         $item->graphic = Ide::get()->getImage($this->getIcon());
         $item->accelerator = $this->getAccelerator();
 

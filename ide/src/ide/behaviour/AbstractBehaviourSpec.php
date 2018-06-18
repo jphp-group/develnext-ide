@@ -19,12 +19,12 @@ use php\xml\XmlProcessor;
  */
 abstract class AbstractBehaviourSpec
 {
-    const GROUP_MAIN = 'Главное';
-    const GROUP_INPUT = 'Управление';
-    const GROUP_ANIMATION = 'Анимация';
-    const GROUP_EFFECT = 'Эффекты';
-    const GROUP_LOGIC = 'Логика';
-    const GROUP_GAME = 'Игровое';
+    const GROUP_MAIN = 'behaviour.group.main::Главное';
+    const GROUP_INPUT = 'behaviour.group.input::Управление';
+    const GROUP_ANIMATION = 'behaviour.group.animation::Анимация';
+    const GROUP_EFFECT = 'behaviour.group.effects::Эффекты';
+    const GROUP_LOGIC = 'behaviour.group.logic::Логика';
+    const GROUP_GAME = 'behaviour.group.game::Игровое';
 
     /**
      * @var bool

@@ -48,6 +48,11 @@ class AbstractIdeForm extends AbstractForm
         }, __CLASS__);
     }
 
+    public function showPreloader($text = '')
+    {
+        parent::showPreloader(_($text));
+    }
+
     protected function init()
     {
         parent::init();

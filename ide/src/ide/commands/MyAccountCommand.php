@@ -60,7 +60,7 @@ class MyAccountCommand extends AbstractCommand
 
     public function getName()
     {
-        return _('account.my');
+        return 'account.my';
     }
 
     public function onExecute($e = null, AbstractEditor $editor = null)

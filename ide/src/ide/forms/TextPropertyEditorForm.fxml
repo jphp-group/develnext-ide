@@ -13,10 +13,10 @@
    <children>
       <VBox layoutX="10.0" layoutY="10.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <TextArea id="textArea" promptText="{prompt.enter.text}" VBox.vgrow="ALWAYS" />
+            <TextArea id="textArea" promptText="prompt.enter.text" VBox.vgrow="ALWAYS" />
             <HBox minHeight="-Infinity" prefHeight="30.0" spacing="5.0">
                <children>
-                  <Button id="applyButton" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="{btn.apply}">
+                  <Button id="applyButton" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="btn.apply">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -27,7 +27,7 @@
                         <Insets left="15.0" right="15.0" />
                      </padding>
                   </Button>
-                  <Button id="cancelButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="{btn.cancel}">
+                  <Button id="cancelButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="btn.cancel">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -40,7 +40,7 @@
                   </Button>
                   <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
                      <children>
-                        <Button id="copyButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="icon-copy" text="{btn.copy}">
+                        <Button id="copyButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="icon-copy" text="btn.copy">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>

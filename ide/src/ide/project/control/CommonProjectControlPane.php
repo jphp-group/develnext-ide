@@ -49,12 +49,12 @@ class CommonProjectControlPane extends AbstractProjectControlPane
 
     public function getName()
     {
-        return "Проект";
+        return "project.editor.title";
     }
 
     public function getDescription()
     {
-        return "Главные настройки";
+        return "project.editor.description";
     }
 
     public function getIcon()

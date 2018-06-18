@@ -27,7 +27,7 @@ class TreeCreateFileCommand extends AbstractMenuCommand
 
     public function getName()
     {
-        return "Файл";
+        return "entity.file::Файл";
     }
 
     public function onExecute($e = null, AbstractEditor $editor = null)

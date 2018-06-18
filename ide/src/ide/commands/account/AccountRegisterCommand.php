@@ -10,7 +10,7 @@ class AccountRegisterCommand extends AbstractCommand
 {
     public function getName()
     {
-        return "Зарегистрироваться";
+        return "command.register::Зарегистрироваться";
     }
 
     public function getCategory()

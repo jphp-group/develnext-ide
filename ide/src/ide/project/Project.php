@@ -3,7 +3,6 @@ namespace ide\project;
 
 use develnext\lexer\inspector\AbstractInspector;
 use Exception;
-use framework\core\Promise;
 use ide\formats\AbstractFileTemplate;
 use ide\formats\IdeFormatOwner;
 use ide\forms\MainForm;
@@ -13,6 +12,7 @@ use ide\IdeException;
 use ide\Logger;
 use ide\systems\FileSystem;
 use ide\utils\FileUtils;
+use php\concurrent\Promise;
 use php\io\File;
 use php\lang\ThreadPool;
 use php\lib\arr;
@@ -1448,7 +1448,7 @@ class Project
                             $one->unloadDirectory($path);
                         }
 
-                        $resolve();
+                        $resolve(true);
                     } catch (Throwable $e) {
                         $reject($e);
                     }

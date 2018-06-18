@@ -66,8 +66,8 @@ class ActionArgumentsDialog extends AbstractIdeForm
         $type = $action->getType();
 
         $this->icon->image = Ide::get()->getImage($type->getIcon())->image;
-        $this->title =  $this->titleLabel->text = $type->getTitle();
-        $this->descriptionLabel->text = $type->getDescription();
+        $this->title = $this->titleLabel->text = _($type->getTitle());
+        $this->descriptionLabel->text = _($type->getDescription());
 
         $attributeLabels = $type->attributeLabels();
 
@@ -129,7 +129,7 @@ class ActionArgumentsDialog extends AbstractIdeForm
 
         UXVBox::setMargin($panel, [0, 0, 10]);
 
-        $node = new UXLabelEx($text);
+        $node = _(new UXLabelEx($text));
         $node->padding = [10, 15];
         $node->wrapText = true;
         $node->textColor = UXColor::of('gray');
@@ -161,7 +161,7 @@ class ActionArgumentsDialog extends AbstractIdeForm
         $ui = $editor->makeUi($label);
 
         if (!$editor->isInline()) {
-            $labelUi = new UXLabel("$label:");
+            $labelUi = new UXLabel(_($label) . ":");
         } else {
             $labelUi = null;
         }

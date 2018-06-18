@@ -44,7 +44,7 @@
                                              <children>
                                                 <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="55.0" prefWidth="318.0">
                                                    <children>
-                                                      <Label maxWidth="1.7976931348623157E308" prefWidth="355.0" text="{project.new.name}:">
+                                                      <Label maxWidth="1.7976931348623157E308" prefWidth="355.0" text="project.new.name">
                                                          <font>
                                                             <Font name="System Bold" size="12.0" />
                                                          </font>
@@ -58,7 +58,7 @@
                                                 </VBox>
                                                 <VBox prefWidth="183.0">
                                                    <children>
-                                                      <Label text="{project.new.package.name}:">
+                                                      <Label text="project.new.package.name">
                                                          <font>
                                                             <Font size="12.0" />
                                                          </font>
@@ -75,7 +75,7 @@
                                           <Separator prefWidth="200.0" />
                                           <VBox maxWidth="1.7976931348623157E308" prefHeight="48.0">
                                              <children>
-                                                <Label maxWidth="1.7976931348623157E308" text="{project.path}" />
+                                                <Label maxWidth="1.7976931348623157E308" text="project.path" />
                                                 <HBox spacing="10.0">
                                                    <children>
                                                       <TextField id="nameField" maxWidth="1.7976931348623157E308" prefHeight="31.0" HBox.hgrow="ALWAYS">

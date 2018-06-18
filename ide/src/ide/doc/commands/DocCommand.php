@@ -25,7 +25,7 @@ class DocCommand extends AbstractCommand
 
     public function getName()
     {
-        return 'Справка';
+        return 'command.help::Справка';
     }
 
     public function getCategory()

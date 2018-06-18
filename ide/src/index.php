@@ -32,7 +32,7 @@ $app->launch();
 /**
  * @param $code
  * @param array ...$args
- * @return string|UXNode
+ * @return UXNode|string
  */
 function _($code, ...$args) {
     $ideLocalizer = Ide::get()->getLocalizer();
@@ -43,6 +43,15 @@ function _($code, ...$args) {
 
     if ($code instanceof UXNode) {
         $ideLocalizer->translateNode($code, ...$args);
+        return $code;
+    } else if ($code instanceof \php\gui\UXMenuItem) {
+        $ideLocalizer->translateMenuItem($code, ...$args);
+        return $code;
+    } else if ($code instanceof \php\gui\UXMenu) {
+        $ideLocalizer->translateMenu($code, ...$args);
+        return $code;
+    } else if ($code instanceof \php\gui\UXTab) {
+        $ideLocalizer->translateTab($code, ...$args);
         return $code;
     } else {
         return $ideLocalizer->translate($code, $args);

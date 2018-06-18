@@ -24,7 +24,7 @@
             <HBox prefHeight="32.0" prefWidth="640.0" spacing="10.0">
                <children>
                   <ImageView id="icon" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" />
-                  <Label maxWidth="1.7976931348623157E308" prefHeight="32.0" text="{project.open.title}" HBox.hgrow="ALWAYS">
+                  <Label maxWidth="1.7976931348623157E308" prefHeight="32.0" text="project.open.title" HBox.hgrow="ALWAYS">
                      <font>
                         <Font name="Tahoma" size="17.0" />
                      </font>
@@ -34,17 +34,17 @@
             <Separator prefHeight="9.0" prefWidth="661.0" />
             <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="617.0" spacing="10.0">
                <children>
-                  <Button id="openButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="{project.open.file}">
+                  <Button id="openButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="project.open.file">
                      <padding>
                         <Insets left="15.0" right="15.0" />
                      </padding>
                   </Button>
-                  <Label prefHeight="24.0" text="{project.open.file.desc}" textFill="#6f6f6f" />
+                  <Label prefHeight="24.0" text="project.open.file.desc" textFill="#6f6f6f" />
                </children>
             </HBox>
             <TabPane id="tabPane" maxHeight="1.7976931348623157E308" styleClass="dn-style" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
               <tabs>
-                <Tab text="{project.open.favorites}">
+                <Tab text="project.open.favorites">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -73,7 +73,7 @@
                         </AnchorPane>
                   </content>
                 </Tab>
-                <Tab text="{project.open.demos}">
+                <Tab text="project.open.demos">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -82,7 +82,7 @@
                         </AnchorPane>
                   </content>
                 </Tab>
-                  <Tab styleClass="icon-library" text="{project.open.library}">
+                  <Tab styleClass="icon-library" text="project.open.library">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -91,7 +91,7 @@
                         </AnchorPane>
                      </content>
                   </Tab>
-                  <Tab text="{project.open.public}">
+                  <Tab text="project.open.public">
                     <content>
                       <AnchorPane id="sharedPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -104,7 +104,7 @@
             </TabPane>
             <VBox>
                <children>
-                  <Label prefHeight="24.0" text="{project.open.favorite.directory}:" />
+                  <Label prefHeight="24.0" text="project.open.favorite.directory" />
                   <HBox prefHeight="31.0" prefWidth="640.0" spacing="10.0">
                      <children>
                         <Button id="pathButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="...">

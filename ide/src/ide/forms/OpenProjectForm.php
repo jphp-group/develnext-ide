@@ -206,7 +206,7 @@ class OpenProjectForm extends AbstractIdeForm
         $openLink = new UXHyperlink(_('project.open.action'));
         $openLink->style = UiUtils::fontSizeStyle();
         $openLink->on('click', function () use ($item) {
-            $this->showPreloader(_('project.open.wait'));
+            $this->showPreloader('project.open.wait');
             $form = new SharedProjectDetailForm($item['uid']);
 
             if ($form->showDialog()) {
@@ -217,7 +217,8 @@ class OpenProjectForm extends AbstractIdeForm
         });
         $actions->add($openLink);
 
-        $deleteLink = new UXHyperlink(_('project.open.action.delete'));
+        $deleteLink = _(new UXHyperlink('project.open.action.delete'));
+
         $deleteLink->style = UiUtils::fontSizeStyle();
         $deleteLink->on('click', function () use ($item, $name) {
             if (MessageBoxForm::confirmDelete($name, $this)) {
@@ -234,8 +235,8 @@ class OpenProjectForm extends AbstractIdeForm
         });
         $actions->add($deleteLink);
 
-        $actions->add(new UXLabel(_("project.open.view.count") . ": {$item['viewCount']}"));
-        $actions->add(new UXLabel(_("project.open.download.count") . ": {$item['downloadCount']}"));
+        $actions->add(_(new UXLabel("project.open.view.count"), $item['viewCount']));
+        $actions->add(_(new UXLabel("project.open.download.count"), $item['downloadCount']));
 
         $title = new UXVBox([$titleName, $titleDescription, $actions]);
         $title->spacing = 0;
@@ -253,7 +254,7 @@ class OpenProjectForm extends AbstractIdeForm
         $searchText = str::lower($searchText);
         $emptyText = $this->projectListHelper->getEmptyListText();
 
-        $this->projectListHelper->setEmptyListText(_('project.open.searching'));
+        $this->projectListHelper->setEmptyListText('project.open.searching');
         $this->projectListHelper->clear();
 
         $th = new Thread(function () use ($emptyText, $searchText) {
@@ -439,7 +440,7 @@ class OpenProjectForm extends AbstractIdeForm
                 }
 
                 if (!FileUtils::deleteDirectory($directory)) {
-                    Notifications::error(_('project.open.error.delete.title'), _('project.open.error.delete.description'));
+                    Notifications::error('project.open.error.delete.title', 'project.open.error.delete.description');
                     $this->update($this->projectQueryField->text);
                 }
             }
@@ -465,7 +466,7 @@ class OpenProjectForm extends AbstractIdeForm
             $file = $node ? $node->data('file') : null;
 
             if ($file && $file->exists()) {
-                $this->showPreloader(_('project.open.wait'));
+                $this->showPreloader('project.open.wait');
 
                 waitAsync(100, function () use ($file) {
                     try {
@@ -522,7 +523,7 @@ class OpenProjectForm extends AbstractIdeForm
 
             $name = FileUtils::stripExtension(File::of($selected->getPath())->getName());
 
-            $this->showPreloader(_('project.open.wait'));
+            $this->showPreloader('project.open.wait');
 
             waitAsync(100, function () use ($path, $name, $selected) {
                 try {

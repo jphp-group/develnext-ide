@@ -19,7 +19,7 @@ class ExportProjectCommand extends AbstractProjectCommand
 {
     public function getName()
     {
-        return _('menu.project.save.as.archive');
+        return 'menu.project.save.as.archive';
     }
 
     public function getIcon()

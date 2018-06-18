@@ -458,6 +458,7 @@ class FileSystem
         $tab->userData = $editor;
 
         $tab->closable = $editor->isCloseable();
+        $tab = _($tab);
 
         /** @var MainForm $mainForm */
         $mainForm = Ide::get()->getMainForm();

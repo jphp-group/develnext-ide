@@ -9,7 +9,7 @@ class OfficialSiteCommand extends AbstractCommand
 {
     public function getName()
     {
-        return _('menu.help.site');
+        return 'menu.help.site';
     }
 
     public function isAlways()

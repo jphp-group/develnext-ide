@@ -23,7 +23,7 @@ class AccountInfoCommand extends AbstractCommand
 {
     public function getName()
     {
-        return "Редактировать";
+        return "command.edit::Редактировать";
     }
 
     public function getIcon()

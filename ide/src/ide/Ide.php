@@ -184,6 +184,7 @@ class Ide extends Application
         $this->library = new IdeLibrary($this);
         $this->toolManager = new IdeToolManager();
         $this->localizer = new IdeLocalizer();
+        $this->localizer->setUseDefaultValuesForLang('ru');
 
         $this->asyncThreadPool = ThreadPool::createCached();
     }
@@ -210,7 +211,7 @@ class Ide extends Application
 
                     if (!$showError) {
                         $showError = true;
-                        $notify = Notifications::error(_('error.unknown.title'), _('error.unknown.message'));
+                        $notify = Notifications::error('error.unknown.title', 'error.unknown.message');
 
                         $notify->on('click', function () use ($e) {
                             $dialog = new UXAlert('ERROR');
@@ -654,7 +655,7 @@ class Ide extends Application
 
                 Logger::info("Add ide language '$code', path = $path");
 
-                $this->languages[$code] = new IdeLanguage($code, $path);
+                $this->languages[$code] = new IdeLanguage($this->localizer, $code, $path);
             }
         }, 1);
 
@@ -668,11 +669,6 @@ class Ide extends Application
 
         if ($this->language) {
             $this->localizer->language = $this->language->getCode();
-            $this->language->load($this->localizer);
-
-            if ($altLanguage = $this->languages[$this->language->getAltLang()]) {
-                $altLanguage->load($this->localizer);
-            }
         }
 
         $this->setUserConfigValue('ide.language', $ideLanguage);
