@@ -23,7 +23,7 @@ class BackupCleanMasterCommand extends AbstractCommand
 
     public function getName()
     {
-        return 'Удалить все мастер-копии';
+        return 'delete.all.master.backups::Удалить все мастер-копии';
     }
 
     public function getCategory()

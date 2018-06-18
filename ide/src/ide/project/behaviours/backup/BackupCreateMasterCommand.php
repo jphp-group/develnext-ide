@@ -34,7 +34,7 @@ class BackupCreateMasterCommand extends AbstractCommand
 
     public function getName()
     {
-        return 'Создать мастер-копию';
+        return 'command.create.master.backup::Создать мастер-копию';
     }
 
     public function getAccelerator()

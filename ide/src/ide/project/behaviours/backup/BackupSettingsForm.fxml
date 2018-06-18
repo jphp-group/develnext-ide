@@ -24,12 +24,12 @@
                   <ImageView id="icon" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" />
                   <VBox HBox.hgrow="ALWAYS">
                      <children>
-                        <Label id="titleLabel" text="Настрока архивирования">
+                        <Label id="titleLabel" text="backup.settings::Настрока архивирования">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Label text="Автоматическое создание резервных копий проекта" textFill="#757575" />
+                        <Label text="backup.settings.description::Автоматическое создание резервных копий проекта" textFill="#757575" />
                      </children>
                   </VBox>
                </children>
@@ -39,30 +39,30 @@
                <children>
                   <VBox spacing="5.0">
                      <children>
-                        <CheckBox id="autoCloseCheckbox" mnemonicParsing="false" text="Архивирование проекта при его закрытии" />
+                        <CheckBox id="autoCloseCheckbox" mnemonicParsing="false" text="backup.option.archive.on.project.close::Архивирование проекта при его закрытии" />
                      </children>
                   </VBox>
                   <VBox spacing="5.0">
                      <children>
-                        <CheckBox id="autoCheckbox" mnemonicParsing="false" text="Архивирование проекта по расписанию" />
+                        <CheckBox id="autoCheckbox" mnemonicParsing="false" text="backup.option.archive.is.scheduled::Архивирование проекта по расписанию" />
                      </children>
                   </VBox>
                   <VBox spacing="5.0">
                      <children>
-                        <Label text="Интервал создания авто-копий (в минутах):" />
+                        <Label text="backup.option.archive.interval.for.auto.copies::Интервал создания авто-копий (в минутах):" />
                         <Slider id="autoIntervalSlider" blockIncrement="1.0" majorTickUnit="1.0" max="30.0" min="1.0" minorTickCount="1" showTickLabels="true" snapToTicks="true" />
                      </children>
                   </VBox>
                   <Separator prefWidth="200.0" />
                   <VBox spacing="5.0">
                      <children>
-                        <Label text="Максимум авто-копий за сессию:" />
+                        <Label text="backup.option.max.auto.at.session::Максимум авто-копий за сессию:" />
                         <Slider id="autoSessionMaxSlider" blockIncrement="1.0" majorTickUnit="1.0" max="30.0" min="1.0" minorTickCount="1" showTickLabels="true" snapToTicks="true" />
                      </children>
                   </VBox>
                   <VBox spacing="5.0">
                      <children>
-                        <Label text="Максимум авто-копий всего:" />
+                        <Label text="backup.option.max.all.auto::Максимум авто-копий всего:" />
                         <Slider id="autoMaxSlider" blockIncrement="1.0" majorTickUnit="1.0" max="30.0" min="1.0" minorTickCount="1" showTickLabels="true" snapToTicks="true" />
                      </children>
                   </VBox>
@@ -74,7 +74,7 @@
             <Separator prefWidth="200.0" />
             <HBox id="dialogFooter" alignment="CENTER_LEFT" prefHeight="35.0" spacing="10.0">
                <children>
-                  <Button id="saveButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" styleClass="icon-ok" text="Сохранить">
+                  <Button id="saveButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" styleClass="icon-ok" text="command.save::Сохранить">
                      <padding>
                         <Insets left="15.0" right="15.0" />
                      </padding>
@@ -82,7 +82,7 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Button>
-                  <Button id="cancelButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="Отмена">
+                  <Button id="cancelButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="btn.cancel">
                      <padding>
                         <Insets left="15.0" right="15.0" />
                      </padding>

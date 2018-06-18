@@ -52,12 +52,12 @@ class BackupProjectControlPane extends AbstractProjectControlPane
 
     public function getName()
     {
-        return "Архив проекта";
+        return "backup.project.archive::Архив проекта";
     }
 
     public function getDescription()
     {
-        return "Резервные копии";
+        return "backup.copies::Резервные копии";
     }
 
     public function getIcon()
@@ -128,8 +128,8 @@ class BackupProjectControlPane extends AbstractProjectControlPane
         $masterList->height = $masterList->fixedCellSize * 4 + 2;
         UXVBox::setVgrow($list, 'ALWAYS');
 
-        $label1 = new UXLabel("Мастер-копии");
-        $label2 = new UXLabel("Автоматические копии");
+        $label1 = _(new UXLabel("backup.master.copies::Мастер-копии"));
+        $label2 = _(new UXLabel("backup.auto.copies::Автоматические копии"));
 
         $label1->font->bold = $label2->font->bold = true;
 
@@ -193,7 +193,7 @@ class BackupProjectControlPane extends AbstractProjectControlPane
         };
 
         $box = UiUtils::makeCommandPane([
-            SimpleSingleCommand::makeWithText('Сделать мастер-копию', 'icons/backup16.png', function () {
+            SimpleSingleCommand::makeWithText('backup.command.create.master.copy::Сделать мастер-копию', 'icons/backup16.png', function () {
                 $this->behaviour->makeMasterBackupRequest();
             }),
             '-',

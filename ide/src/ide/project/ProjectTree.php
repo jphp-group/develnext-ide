@@ -83,7 +83,7 @@ class ProjectTree
         $this->project = $project;
         $this->contextMenu = new ContextMenu();
 
-        $this->contextMenu->addGroup('new', 'Создать');
+        $this->contextMenu->addGroup('new', 'command.create::Создать');
         $this->contextMenu->add(new TreeCreateDirectoryCommand($this));
         $this->contextMenu->addSeparator();
         $this->contextMenu->add(new TreeEditFileCommand($this));

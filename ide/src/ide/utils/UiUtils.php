@@ -108,6 +108,8 @@ class UiUtils
                     $ui = $command->makeGlyphButton();
                     $ui->text = $command->getName();
                 }
+
+                $ui = _($ui);
             }
 
             if ($ui) {

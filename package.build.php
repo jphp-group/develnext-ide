@@ -9,7 +9,10 @@ use compress\ZipArchive;
 use packager\Event;
 use packager\cli\Console;
 use php\io\Stream;
+use php\lib\arr;
 use php\lib\fs;
+use php\lib\str;
+use php\util\Regex;
 
 function task_publish(Event $e)
 {
@@ -64,17 +67,64 @@ function task_startIde(Event $e)
     Tasks::runExternal('./ide', 'start', $e->args(), ...$e->flags());
 }
 
+/**
+ * @jppm-task fetch-messages
+ * @jppm-description Fetch all language messages from sources
+ */
 function task_fetchMessages($e)
 {
+    $buildPath = $e->package()->getConfigBuildPath();
+
+    $regex = new Regex('(\\"|\\\')([a-z]+\\.[a-z\\.]+)((\\:\\:)(.+?))?(\\\'|\\")');
+
+    $ignoreExts = [
+        'php', 'tmp', 'conf', 'ini', 'json', 'source', 'css', 'pid', 'log', 'lock', 'ws', 'gradle', 'xml',
+        'axml', 'behaviour', ''
+    ];
+    $ignoreExts = arr::combine($ignoreExts, $ignoreExts);
+
+    $ignores = [
+        'app.hash'    => 1, 'develnext.endpoint' => 1, 'os.name' => 1, 'os.user' => 1, 'os.version' => 1, 'java.version' => 1,
+        'user.home'   => 1, 'hub.develnext.org' => 1, 'develnext.org' => 1, 'develnext.path' => 1, 'splash.avatar' => 1,
+        'splash.name' => 1, 'script.name' => 1, 'script.desc' => 1, 'script.author' => 1, 'user.language' => 1,
+        'ide.language' => 1,
+    ];
+
+    $data = [];
+    $ruData = fs::parse("./ide/misc/languages/ru/messages.ini");
+
     fs::scan('./ide/src', [
         'excludeDirs' => true,
-        'extensions' => ['php'],
-        'callback' => function ($filename) {
+        'extensions'  => ['php', 'fxml', 'conf'],
+        'callback'    => function ($filename) use ($regex, $ignoreExts, $ignores, &$data, &$ruData) {
+            //echo "-> ", $filename, "\n";
             $content = fs::get($filename);
 
+            $r = $regex->with($content); //->withFlags('');
 
+            foreach ($r->all() as $groups) {
+                $var = $groups[2];
+
+                if ($ignores[$var]) continue;
+                if (str::count($var, '.') === 1 && $ignoreExts[fs::ext($var)]) continue;
+
+                $data[$var] = '';
+
+                if (!$ruData[$var]) {
+                    $ruData[$var] = $groups[5] ?? $var;
+                }
+            }
         }
     ]);
+
+    Tasks::createFile("$buildPath/messages.ini");
+    //Tasks::createFile("$buildPath/messages.ru.ini");
+
+    ksort($data);
+    ksort($ruData);
+
+    //fs::format("$buildPath/messages.ini", $data);
+    fs::format("$buildPath/messages.ini", $ruData);
 }
 
 /**

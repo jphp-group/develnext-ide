@@ -52,6 +52,8 @@ class ShareProjectArea extends AbstractFormArea
         $this->urlLink->on('action', function () {
             browse($this->urlLink->text);
         });
+
+        _($this);
     }
 
     public function setData(array $data = null)
@@ -94,7 +96,7 @@ class ShareProjectArea extends AbstractFormArea
     public function doCopyButtonAction()
     {
         UXClipboard::setText($this->urlLink->text);
-        Ide::get()->toast('Ссылка успешно скопирована.');
+        Ide::get()->toast('message.link.successful.copied::Ссылка успешно скопирована.');
     }
 
     /**
@@ -109,14 +111,14 @@ class ShareProjectArea extends AbstractFormArea
     public function reUpload($silent = false)
     {
         if (Ide::get()->isSnapshotVersion()) {
-            MessageBoxForm::warning("Данная функция недоступна в SNAPSHOT версии среды");
+            MessageBoxForm::warning("message.this.functions.not.available.in.snapshot::Данная функция недоступна в SNAPSHOT версии среды");
             return;
         }
 
         $project = Ide::project();
         $project->save();
 
-        $this->showPreloader('Загружаем проект на hub.develnext.org ...');
+        $this->showPreloader('message.uploading.project.to.hub::Загружаем проект на hub.develnext.org ...');
 
         $file = Ide::get()->createTempFile('.zip');
 
@@ -136,7 +138,9 @@ class ShareProjectArea extends AbstractFormArea
                         $this->refresh();
 
                         uiLater(function () {
-                            Notifications::show('Изменения загружены', 'Измненения в проекте были успешно загружены на hub.develnext.org');
+                            Notifications::show(
+                                'common.changes.uploaded::Изменения загружены',
+                                'message.project.was.successful.uploaded.to.hub::Измненения в проекте были успешно загружены на hub.develnext.org');
                         });
                     }
                 } else {
@@ -146,14 +150,22 @@ class ShareProjectArea extends AbstractFormArea
 
                         if ($message === 'FileSizeLimit') {
                             $mb = round($arg / 1024 / 1024, 2);
-                            Notifications::warning('Проект не загружен', "Проект слишком большой для загрузки, максимум разрешено $mb mb!");
+                            Notifications::warning('project.not.uploaded::Проект не загружен',
+                                _("project.size.is.big.for.upload::Проект слишком большой для загрузки, максимум разрешено {0} mb!", $mb));
                         } else {
                             if ($response->isAccessDenied()) {
-                                Notifications::warning('Доступ запрещен', 'У вас нет доступа на запись к этому проекту, попробуйте его загрузить по новой.');
+                                Notifications::warning(
+                                    'common.access.denied::Доступ запрещен',
+                                    'message.you.have.not.access.for.project::У вас нет доступа на запись к этому проекту, попробуйте его загрузить по новой.'
+                                );
                             } else if ($response->isNotFound()) {
-                                Notifications::warning('Проект не найден', 'По неясной причине проект не был найден, попробуйте его загрузить по новой.');
+                                Notifications::warning('project.not.found::Проект не найден',
+                                    'message.project.cannot.upload.unknown::По неясной причине проект не был найден, попробуйте его загрузить по новой.');
                             } else {
-                                Notifications::error('Проект не загружен', 'Произошла непредвиденная ошибка, возможно сервис временно недоступен, попробуйте позже.');
+                                Notifications::error(
+                                    'project.not.uploaded::Проект не загружен',
+                                    'message.unknown.error.service.not.available::Произошла непредвиденная ошибка, возможно сервис временно недоступен, попробуйте позже.'
+                                );
                             }
                         }
                     }
@@ -166,9 +178,9 @@ class ShareProjectArea extends AbstractFormArea
 
             if (!$silent) {
                 if ($res->isConflict()) {
-                    Notifications::error('Проект не загружен', 'У вас уже есть проект с таким именем, измените название проекта.');
+                    Notifications::error('project.not.uploaded::Проект не загружен', 'message.you.already.have.project.with.name::У вас уже есть проект с таким именем, измените название проекта.');
                 } else {
-                    Notifications::error('Проект не загружен', 'Произошла непредвиденная ошибка, возможно сервис временно недоступен, попробуйте позже.');
+                    Notifications::error('project.not.uploaded::Проект не загружен', 'message.unknown.error.service.not.available::Произошла непредвиденная ошибка, возможно сервис временно недоступен, попробуйте позже.');
                 }
             }
         });
@@ -179,7 +191,7 @@ class ShareProjectArea extends AbstractFormArea
      */
     public function doReUploadButtonAction()
     {
-        if (!MessageBoxForm::confirm('Вы точно хотите загрузить изменения в проекте на develnext.org?', $this)) {
+        if (!MessageBoxForm::confirm('message.confirm.to.upload.project.changes.to.hub::Вы точно хотите загрузить изменения в проекте на develnext.org?', $this)) {
             return;
         }
 
@@ -212,7 +224,7 @@ class ShareProjectArea extends AbstractFormArea
     public function doShareButtonAction()
     {
         if (Ide::get()->isSnapshotVersion()) {
-            MessageBoxForm::warning("Данная функция недоступна в SNAPSHOT версии среды");
+            MessageBoxForm::warning("message.this.functions.not.available.in.snapshot::Данная функция недоступна в SNAPSHOT версии среды");
             return;
         }
 
@@ -221,11 +233,11 @@ class ShareProjectArea extends AbstractFormArea
             return;
         }
 
-        if (!MessageBoxForm::confirm('Вы точно хотите загрузить проект на develnext.org?', $this)) {
+        if (!MessageBoxForm::confirm('message.confirm.to.upload.project.to.hub::Вы точно хотите загрузить проект на develnext.org?', $this)) {
             return;
         }
 
-        $this->showPreloader('Сохраняем проект ...');
+        $this->showPreloader('message.saving.project::Сохраняем проект ...');
 
         $file = Ide::get()->createTempFile('.zip');
 
@@ -233,28 +245,28 @@ class ShareProjectArea extends AbstractFormArea
 
         $project->export($file);
 
-        $this->showPreloader('Загружаем проект на hub.develnext.org ...');
+        $this->showPreloader('message.uploading.project.to.hub::Загружаем проект на hub.develnext.org ...');
 
         $failedCallback = function (ServiceResponse $response) {
             if ($response->isConflict()) {
-                Notifications::error('Проект не загружен', 'У вас уже есть проект с таким именем, измените название проекта.');
+                Notifications::error('project.not.uploaded::Проект не загружен', 'message.you.already.have.project.with.name::У вас уже есть проект с таким именем, измените название проекта.');
             } else {
                 list($message, $arg) = str::split($response->result(), ':');
 
                 switch ($message) {
                     case 'FileSizeLimit':
                         $mb = round($arg / 1024 / 1024, 2);
-                        Notifications::warning('Проект не загружен', "Проект слишком большой для загрузки, максимум разрешено $mb mb!");
+                        Notifications::warning('project.not.uploaded::Проект не загружен', _("project.size.is.big.for.upload::Проект слишком большой для загрузки, максимум разрешено {0} mb!", $mb));
                         break;
                     case 'LimitSpacePerDay':
-                        Notifications::warning('Проект не загружен', "Вы исчерпали лимит загрузок на сегодня, попробуйте удалить большие ненужные проекты!");
+                        Notifications::warning('project.not.uploaded::Проект не загружен', "message.limit.space.per.day::Вы исчерпали лимит загрузок на сегодня, попробуйте удалить большие ненужные проекты!");
                         break;
                     case 'CountLimit':
-                        Notifications::warning('Проект не загружен', "Вы загрузили слишком много проектов, максимум разрешено {$response->data()} шт. в день!");
+                        Notifications::warning('project.not.uploaded::Проект не загружен', _("message.project.count.limit::Вы загрузили слишком много проектов, максимум разрешено {0} шт. в день!", $response->data()));
                         break;
                     default:
                         Logger::error("Unable to upload project {$response->toLog()}");
-                        Notifications::error('Проект не загружен', 'Что-то пошло не так, попробуйте позже, возможно сервис недоступен.');
+                        Notifications::error('project.not.uploaded::Проект не загружен', 'message.unknown.error.service.not.available');
                 }
             }
             
@@ -271,7 +283,7 @@ class ShareProjectArea extends AbstractFormArea
             $response->on('fail', $failedCallback);
 
             $response->on('success', function (ServiceResponse $response) use ($projectUid, $failedCallback) {
-                Notifications::show('Проект загружен', 'Ваш проект был успешно загружен и опубликован на hub.develnext.org', 'SUCCESS');
+                Notifications::show('project.is.uploaded::Проект загружен', 'message.project.is.uploaded.to.hub::Ваш проект был успешно загружен и опубликован на hub.develnext.org', 'SUCCESS');
 
                 Ide::project()->getIdeServiceConfig()->set("projectArchive.uid", $projectUid);
 

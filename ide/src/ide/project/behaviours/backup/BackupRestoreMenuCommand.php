@@ -9,7 +9,7 @@ class BackupRestoreMenuCommand extends BackupMenuCommand
 {
     public function getName()
     {
-        return 'Восстановить';
+        return 'command.restore::Восстановить';
     }
 
     public function getIcon()

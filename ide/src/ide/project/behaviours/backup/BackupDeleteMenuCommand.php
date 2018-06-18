@@ -6,7 +6,7 @@ class BackupDeleteMenuCommand extends BackupMenuCommand
 {
     public function getName()
     {
-        return 'Удалить';
+        return 'command.delete::Удалить';
     }
 
     public function getIcon()

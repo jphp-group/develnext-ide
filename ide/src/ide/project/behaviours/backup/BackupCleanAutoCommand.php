@@ -23,7 +23,7 @@ class BackupCleanAutoCommand extends AbstractCommand
 
     public function getName()
     {
-        return 'Удалить все автоматические копии';
+        return 'command.delete.all.auto.backups::Удалить все автоматические копии';
     }
 
     public function getCategory()

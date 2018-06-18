@@ -49,7 +49,8 @@ class MyAccountCommand extends AbstractCommand
         }, __CLASS__);
 
         Ide::accountManager()->on('update', function ($data) {
-            $this->accountButton->text = $data ? $data['login'] : _('account.log.in');
+            $this->accountButton->text = $data ? $data['login'] : 'account.log.in';
+            $this->accountButton = _($this->accountButton);
 
             Ide::service()->file()->loadImage($data['avatarId'], $this->accountImage, 'noAvatar.jpg');
         }, __CLASS__);

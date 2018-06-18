@@ -153,7 +153,7 @@ class ContextMenu
 
     public function addGroup($code, $title, $icon = null)
     {
-        $menuItem = new UXMenu($title, Ide::get()->getImage($icon));
+        $menuItem = _(new UXMenu($title, Ide::get()->getImage($icon)));
         $this->root->items->add($menuItem);
 
         $this->groups[$code] = $menuItem;

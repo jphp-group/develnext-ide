@@ -34,7 +34,7 @@ class BackupSettingsMenuCommand extends AbstractCommand
 
     public function getName()
     {
-        return 'Настройки архивирования';
+        return 'backup.settings::Настройки архивирования';
     }
 
     public function getIcon()
@@ -53,7 +53,7 @@ class BackupSettingsMenuCommand extends AbstractCommand
             $config->setProperties($form->getResult());
             $config->save();
 
-            Ide::toast('Настройки архивирования успешно сохранены.');
+            Ide::toast('backup.message.settings.are.saved::Настройки архивирования успешно сохранены.');
         }
     }
 }

@@ -105,7 +105,7 @@ class ShareProjectBehaviour extends AbstractProjectBehaviour
 
     public function doMakeSettings(CommonProjectControlPane $editor)
     {
-        $title = new UXLabel('Синхронизация с ');
+        $title = _(new UXLabel('share.sync.with.hub::Синхронизация с'));
         $title->font = $title->font->withBold();
 
         $colon = new UXLabel(': ');
@@ -118,10 +118,10 @@ class ShareProjectBehaviour extends AbstractProjectBehaviour
             browse('https://hub.develnext.org');
         });
 
-        $titleFlow = new UXHBox([$title, $link, $colon]);
+        $titleFlow = new UXHBox([$title, new UXLabel(' '), $link, $colon]);
 
         $this->uiAuthPane = $authPane = new NeedAuthPane();
-        $authPane->setTitle('Синхронизация недоступна');
+        $authPane->setTitle('share.sync.not.available::Синхронизация недоступна');
 
         $this->uiSyncPane = $syncPane = new ShareProjectArea([$this, 'doUpdateSettings']);
 
