@@ -114,7 +114,7 @@ class ListMenu extends UXListView
     {
         $view->text = null;
 
-        $titleName = new UXLabel($this->getNameOfItem($page));
+        $titleName = _(new UXLabel($this->getNameOfItem($page)));
         $titleName->classes->add('dn-list-menu-title');
 
         if ($this->isNameThin()) {
@@ -123,7 +123,7 @@ class ListMenu extends UXListView
 
         $titleName->style .= UiUtils::fontSizeStyle() . ";";
 
-        $titleDescription = new UXLabel($this->getDescriptionOfItem($page));
+        $titleDescription = _(new UXLabel($this->getDescriptionOfItem($page)));
         $titleDescription->classes->add('dn-list-menu-description');
         $titleDescription->style .= UiUtils::fontSizeStyle() . ";";
 

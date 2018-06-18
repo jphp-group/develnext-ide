@@ -29,7 +29,7 @@ class TreeDeleteFileCommand extends AbstractMenuCommand
 
     public function getName()
     {
-        return "Удалить";
+        return "command.delete::Удалить";
     }
 
     public function onExecute($e = null, AbstractEditor $editor = null)

@@ -12,7 +12,7 @@ class SaveProjectCommand extends AbstractProjectCommand
 {
     public function getName()
     {
-        return _('menu.project.save');
+        return 'menu.project.save';
     }
 
     public function getIcon()

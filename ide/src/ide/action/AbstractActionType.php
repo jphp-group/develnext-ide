@@ -22,7 +22,7 @@ abstract class AbstractActionType
 
     function getGroup()
     {
-        return 'Другое';
+        return 'action.type.other::Другое';
     }
 
     function getSubGroup()

@@ -3,8 +3,6 @@ namespace ide\project\supports;
 
 use function alert;
 use framework\core\Event;
-use framework\core\Promise;
-use ide\bundle\AbstractBundle;
 use ide\bundle\AbstractJarBundle;
 use ide\formats\templates\JPPMPackageFileTemplate;
 use ide\Ide;
@@ -17,6 +15,7 @@ use ide\project\Project;
 use ide\systems\IdeSystem;
 use ide\systems\ProjectSystem;
 use ide\ui\Notifications;
+use php\concurrent\Promise;
 use php\io\IOException;
 use php\lang\Process;
 use php\lang\System;

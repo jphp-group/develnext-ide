@@ -14,7 +14,7 @@ class CloseProjectCommand extends AbstractProjectCommand
 {
     public function getName()
     {
-        return _('menu.project.close');
+        return 'menu.project.close';
     }
 
     public function onExecute($e = null, AbstractEditor $editor = null)

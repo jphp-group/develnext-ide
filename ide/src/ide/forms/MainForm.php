@@ -249,7 +249,6 @@ class MainForm extends AbstractIdeForm
                 $menu->graphic = Ide::get()->getImage(new UXImage($language->getIcon()));
                 Ide::get()->setUserConfigValue('ide.language', $language->getCode());
                 Ide::get()->getLocalizer()->language = $language->getCode();
-                $language->load(Ide::get()->getLocalizer());
 
                 /*if ($msg->getResultIndex() == 0) {
                     Ide::get()->restart();

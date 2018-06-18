@@ -55,8 +55,10 @@ class RunTaskCommand extends AbstractCommand
 
         $this->stopButton = $this->makeGlyphButton();
         $this->stopButton->graphic = Ide::get()->getImage('icons/square16.png');
-        $this->stopButton->tooltipText = 'Остановить';
+        $this->stopButton->tooltipText = 'command.stop';
         $this->stopButton->enabled = false;
+        $this->stopButton = _($this->stopButton);
+
 
         $this->panel = $panel = new UXHBox([], 4);
         $this->taskSelect = $taskSelect = new UXSplitMenuButton('[не выбрано]', Ide::getImage($this->getIcon()));
@@ -100,12 +102,13 @@ class RunTaskCommand extends AbstractCommand
 
             foreach ($items as $key => $item) {
                 uiLaterAndWait(function () use ($key, $item, $items, $i) {
-                    $menuItem = new UXMenuItem($item['title'] ?? $key);
+                    $menuItem = _(new UXMenuItem($item['title'] ?? $key));
 
                     $menuItem->graphic = Ide::getImage($item['icon'] ?? $this->getIcon());
 
                     $handler = function () use ($item, $key, $menuItem) {
-                        $this->taskSelect->text = $menuItem->text;
+                        $this->taskSelect->text = $item['title'] ?? $key;
+                        $this->taskSelect = _($this->taskSelect);
                         $this->taskSelect->graphic = Ide::getImage($item['icon'] ?? $this->getIcon());
 
                         $this->taskSelect->on('action', function () use ($item) {
@@ -224,7 +227,7 @@ class RunTaskCommand extends AbstractCommand
 
     public function getName()
     {
-        return 'Пуск';
+        return 'command.start';
     }
 
     public function getAccelerator()

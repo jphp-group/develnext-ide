@@ -13,13 +13,15 @@ class AccountLoginCommand extends AbstractCommand
 {
     public function getName()
     {
-        return "Войти";
+        return "command.login::Войти";
     }
 
     public function getCategory()
     {
         return 'account';
     }
+
+
 
     public function onExecute()
     {

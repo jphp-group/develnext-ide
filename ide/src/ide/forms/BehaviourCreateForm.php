@@ -95,7 +95,7 @@ class BehaviourCreateForm extends AbstractIdeForm
 
             if ($this->alreadyAddedBehaviours[get_class($spec)]) {
                 $titleName->style .= '-fx-text-fill: gray';
-                $titleName->text .= ' (уже добавлено)';
+                $titleName->text .= ' (' . _('hint.already.added::уже добавлено') . ')';
             }
 
             $titleDescription = new UXLabel($spec->getDescription());
@@ -184,7 +184,7 @@ class BehaviourCreateForm extends AbstractIdeForm
 
         foreach ($groupedSpecs as $name => $list) {
             $tab = new UXTab();
-            $tab->text = $name;
+            $tab->text = _($name);
             $tab->style = UiUtils::fontSizeStyle();
             $tab->userData = new SharedValue($list);
 

@@ -13,7 +13,7 @@ class Notifications
 {
     static function show($title, $message, $type = 'NOTICE')
     {
-        $notify = new UXTrayNotification($title, $message, $type);
+        $notify = new UXTrayNotification(_($title), _($message), $type);
         $notify->location = 'TOP_RIGHT';
         $notify->animationType = 'POPUP';
         $notify->verGap = 30;

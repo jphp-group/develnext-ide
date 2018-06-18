@@ -36,14 +36,14 @@ class AccountLogoutCommand extends AbstractCommand
     {
         $email = Ide::accountManager()->getAccountData()['login'];
 
-        $dialog = new MessageBoxForm("Вы точно хотите выйти из своего аккаунта, $email?", ['Да', 'Нет']);
+        $dialog = new MessageBoxForm("Вы точно хотите выйти из своего аккаунта, $email?", ['btn.yes', 'btn.no']);
 
         if ($dialog->showDialog()) {
-            if ($dialog->getResult() == 'Да') {
+            if ($dialog->getResult() == _('btn.yes')) {
                 Ide::service()->account()->logout();
                 Ide::accountManager()->setAccessToken(null);
 
-                Ide::get()->getMainForm()->toast('Вы успешно вышли из аккаунта');
+                Ide::get()->getMainForm()->toast(_('account.logout.is.successful::Вы успешно вышли из аккаунта'));
             }
         }
     }

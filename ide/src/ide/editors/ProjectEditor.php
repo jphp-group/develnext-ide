@@ -76,7 +76,7 @@ class ProjectEditor extends AbstractEditor
 
     public function getTitle()
     {
-        return 'Проект';
+        return 'project.editor.title';
     }
 
     public function getTabStyle()

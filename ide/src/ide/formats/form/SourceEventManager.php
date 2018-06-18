@@ -2,6 +2,7 @@
 namespace ide\formats\form;
 
 use ide\formats\form\event\AbstractEventKind;
+use ide\Ide;
 use ide\Logger;
 use ide\misc\EventHandlerBehaviour;
 use ide\project\behaviours\PhpProjectBehaviour;
@@ -410,15 +411,19 @@ class SourceEventManager
                 if ($php->getImportType() == 'package') {
                     $packages = [];
 
-                    foreach ($imports as $import) {
-                        if ($type = $php->getInspector()->findType($import)) {
-                            if ($type->packages) {
-                                $package = arr::first($type->packages);
-                            } else {
-                                $package = $import;
-                            }
+                    $phpInspector = Ide::project()->getInspector('php');
 
-                            $packages[$package] = $package;
+                    if ($phpInspector) {
+                        foreach ($imports as $import) {
+                            if ($type = $phpInspector->findType($import)) {
+                                if ($type->packages) {
+                                    $package = arr::first($type->packages);
+                                } else {
+                                    $package = $import;
+                                }
+
+                                $packages[$package] = $package;
+                            }
                         }
                     }
 

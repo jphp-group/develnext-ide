@@ -13,7 +13,7 @@ class NewProjectCommand extends AbstractCommand
 {
     public function getName()
     {
-        return _('menu.project.new');
+        return 'menu.project.new';
     }
 
     public function getIcon()

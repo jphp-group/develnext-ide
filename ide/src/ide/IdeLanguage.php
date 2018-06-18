@@ -1,8 +1,10 @@
 <?php
 namespace ide;
 
+use framework\core\Event;
 use framework\localization\Localizer;
 use ide\l10n\L10n;
+use ide\misc\FileWatcher;
 use ide\systems\IdeSystem;
 use php\lib\fs;
 use php\util\Configuration;
@@ -23,7 +25,17 @@ class IdeLanguage
 
     private $altLang;
 
-    function __construct($code, $directory)
+    /**
+     * @var array
+     */
+    private $sources = [];
+
+    /**
+     * @var Localizer
+     */
+    private $localizer;
+
+    function __construct(Localizer $localizer, $code, $directory)
     {
         $this->code = $code;
 
@@ -37,6 +49,10 @@ class IdeLanguage
         $this->restartMessage = $config->get('restart.message');
         $this->restartYes = $config->get('restart.yes');
         $this->restartNo = $config->get('restart.no');
+
+        $this->localizer = $localizer;
+
+        $this->addSource("$directory/messages.ini");
     }
 
     /**
@@ -127,9 +143,23 @@ class IdeLanguage
         return null;
     }
 
-    public function load(Localizer $localizer) {
-        if (fs::isFile($file = "$this->directory/messages.ini")) {
-            $localizer->load($this->code, $file);
+    public function addSource(string $source)
+    {
+        $this->sources[$source] = $fw = new FileWatcher($source);
+        $fw->start();
+        $fw->on('change', function (Event $event) use ($source) {
+            $newTime = $event->data['newTime'];
+            $oldTime = $event->data['oldTime'];
+
+            if ($newTime > 0) {
+                uiLater(function () use ($source) {
+                    $this->localizer->load($this->code, $source);
+                });
+            }
+        });
+
+        if (fs::isFile($source)) {
+            $this->localizer->load($this->code, $source);
         }
     }
 }

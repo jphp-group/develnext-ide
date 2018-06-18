@@ -229,26 +229,26 @@ class ActionConstructorForm extends AbstractIdeForm
 
         $contextMenu = new ContextMenu();
 
-        $contextMenu->addCommand(AbstractCommand::make('Редактировать', 'icons/edit16.png', function () {
+        $contextMenu->addCommand(AbstractCommand::make('command.edit', 'icons/edit16.png', function () {
             $this->actionEdit();
         }));
 
         $contextMenu->addSeparator();
 
-        $contextMenu->addCommand(AbstractCommand::make('Вставить', 'icons/paste16.png', function () {
+        $contextMenu->addCommand(AbstractCommand::make('command.paste', 'icons/paste16.png', function () {
             $this->actionPaste();
         }, 'Ctrl+V'));
 
-        $contextMenu->addCommand(AbstractCommand::make('Вырезать', 'icons/cut16.png', function () {
+        $contextMenu->addCommand(AbstractCommand::make('command.cut', 'icons/cut16.png', function () {
             $this->actionCopy();
             $this->actionDelete();
         }, 'Ctrl+X'));
 
-        $contextMenu->addCommand(AbstractCommand::make('Копировать', 'icons/copy16.png', function () {
+        $contextMenu->addCommand(AbstractCommand::make('command.copy', 'icons/copy16.png', function () {
             $this->actionCopy();
         }, 'Ctrl+C'));
 
-        $contextMenu->addCommand(AbstractCommand::make('Удалить', 'icons/delete16.png', function () {
+        $contextMenu->addCommand(AbstractCommand::make('command.delete', 'icons/delete16.png', function () {
             $this->actionDelete();
         }, 'Delete'));
 
@@ -366,7 +366,7 @@ class ActionConstructorForm extends AbstractIdeForm
     protected function listCellFactory(UXListCell $cell, Action $action = null, $empty)
     {
         if ($action) {
-            $titleName = new UXLabel($action->getTitle());
+            $titleName = new UXLabel(_($action->getTitle()));
             $titleName->style = '-fx-font-weight: bold; -fx-text-fill: #383838; ' . UiUtils::fontSizeStyle();
 
             if ($action->getDescription()) {
@@ -560,7 +560,7 @@ class ActionConstructorForm extends AbstractIdeForm
         foreach ($buildTabs as $group => $tab) {
             $t = new UXTab();
             $t->data('group', $group);
-            $t->text = $tab->text;
+            $t->text = _($tab->text);
             $t->closable = false;
             $t->content = new UXScrollPane($tab->content);
             $t->content->fitToWidth = true;
@@ -613,7 +613,7 @@ class ActionConstructorForm extends AbstractIdeForm
             $tab = new UXTab();
             $tab->style = '-fx-cursor: hand;';
             $tab->closable = false;
-            $tab->text = $actionType->getGroup();
+            $tab->text = _($actionType->getGroup());
 
             $flowPane = new UXFlowPane();
             $flowPane->hgap = $flowPane->vgap = 6;
@@ -635,7 +635,7 @@ class ActionConstructorForm extends AbstractIdeForm
 
         if (!$subGroups[$actionType->getGroup()][$subGroup]) {
             if ($subGroup) {
-                $label = new UXLabel($subGroup);
+                $label = new UXLabel(_($subGroup));
                 $label->font = UXFont::of($label->font, $label->font->size, 'BOLD');
 
                 if ($subGroups[$actionType->getGroup()]) {
@@ -662,12 +662,12 @@ class ActionConstructorForm extends AbstractIdeForm
         }
 
         $btn = new UXButton();
-        $btn->tooltipText = $actionType->getTitle() . " \n -> " . $actionType->getDescription();
+        $btn->tooltipText = _($actionType->getTitle()) . " \n -> " . _($actionType->getDescription());
         $btn->graphic = Ide::get()->getImage($actionType->getIcon());
         $btn->height = 29;
         $btn->maxWidth = 99999;
         $btn->alignment = 'CENTER_LEFT';
-        $btn->text = $actionType->getTitle();
+        $btn->text = _($actionType->getTitle());
         $btn->style = UiUtils::fontSizeStyle();
         $btn->data('type', get_class($actionType));
 

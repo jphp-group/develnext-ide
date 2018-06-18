@@ -11,24 +11,24 @@ use php\xml\DomElement;
 
 abstract class AbstractSimpleActionType extends AbstractActionType
 {
-    const GROUP_OTHER = 'Другок';
-    const GROUP_APP = 'Система';
-    const GROUP_MEDIA = 'Медиа';
-    const GROUP_GAME = 'Игра';
-    const GROUP_CONTROL = 'Управление';
-    const GROUP_CONDITIONS = 'Условия';
-    const GROUP_SCRIPT = 'Другое';
+    const GROUP_OTHER = 'action.type.other::Другое';
+    const GROUP_APP = 'action.type.system::Система';
+    const GROUP_MEDIA = 'action.type.media::Медиа';
+    const GROUP_GAME = 'action.type.game::Игра';
+    const GROUP_CONTROL = 'action.type.control::Управление';
+    const GROUP_CONDITIONS = 'action.type.conditions::Условия';
+    const GROUP_SCRIPT = 'action.type.other::Другое';
 
-    const SUB_GROUP_WINDOW = 'Форма';
-    const SUB_GROUP_COMPONENT = 'Объект';
-    const SUB_GROUP_MOVING = 'Движение';
-    const SUB_GROUP_COMMON = 'Главное';
-    const SUB_GROUP_DECOR = 'Декорация';
-    const SUB_GROUP_ANIMATION = 'Анимация';
-    const SUB_GROUP_DATA = 'Данные';
-    const SUB_GROUP_AUDIO = 'Аудио';
-    const SUB_GROUP_ADDITIONAL = 'Другое';
-    const SUB_GROUP_BEHAVIOUR = 'Поведение';
+    const SUB_GROUP_WINDOW = 'action.type.group.form::Форма';
+    const SUB_GROUP_COMPONENT = 'action.type.group.object::Объект';
+    const SUB_GROUP_MOVING = 'action.type.group.moving::Движение';
+    const SUB_GROUP_COMMON = 'action.type.group.common::Главное';
+    const SUB_GROUP_DECOR = 'action.type.group.decoration::Декорация';
+    const SUB_GROUP_ANIMATION = 'action.type.group.animation::Анимация';
+    const SUB_GROUP_DATA = 'action.type.group.data::Данные';
+    const SUB_GROUP_AUDIO = 'action.type.group.audio::Аудио';
+    const SUB_GROUP_ADDITIONAL = 'action.type.group.additional::Другое';
+    const SUB_GROUP_BEHAVIOUR = 'action.type.group.behaviour::Поведение';
 
     /**
      * @return array
