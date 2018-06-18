@@ -122,7 +122,7 @@ class GuiFrameworkProjectBehaviour_ProjectTreeMenuCommand extends AbstractMenuCo
 
     public function getName()
     {
-        return "Весь проект";
+        return "command.all.project::Весь проект";
     }
 
     public function onExecute($e = null, AbstractEditor $editor = null)
@@ -908,13 +908,13 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
             } catch (ZipException $e) {
                 uiLaterAndWait(function () use ($e) {
                     MessageBoxForm::warning(
-                        "Ошибка установки скина, невозможно распаковать архив с файлами скина.\n\n -> {$e->getMessage()}"
+                        _("message.gui.skin.error.cannot.unpack.skin.archive::Ошибка установки скина, невозможно распаковать архив с файлами скина.") . "\n\n -> {$e->getMessage()}"
                     );
                 });
             }
         } else {
             uiLaterAndWait(function () {
-                MessageBoxForm::warning('Данный скин невозможно применить к проекту данного типа.');
+                MessageBoxForm::warning('message.gui.skin.cannot.apply.to.project::Данный скин невозможно применить к проекту данного типа.');
             });
         }
     }

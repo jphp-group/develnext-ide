@@ -36,12 +36,12 @@
       <HBox id="dialogFooter" alignment="CENTER_RIGHT" prefHeight="35.0" spacing="10.0">
          <children>
             <Label id="helpLabel" maxWidth="1.7976931348623157E308" text="Long help text" textFill="#949494" HBox.hgrow="ALWAYS" />
-            <Button id="cancelButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="Отмена">
+            <Button id="cancelButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="btn.cancel::Отмена">
                <padding>
                   <Insets left="15.0" right="15.0" />
                </padding>
             </Button>
-            <Button id="saveButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" styleClass="icon-ok" text="Далее">
+            <Button id="saveButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" styleClass="icon-ok" text="btn.next::Далее">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>

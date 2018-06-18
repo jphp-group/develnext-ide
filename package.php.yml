@@ -23,5 +23,9 @@ bundles:
 - dn-pgsql-bundle
 - dn-firebirdsql-bundle
 
+localization:
+  source-dir: './ide/misc/languages'
+  languages: [ru, en]
+
 jre:
   win: './tools/jre-win64-10.0.1.tar.bz2'

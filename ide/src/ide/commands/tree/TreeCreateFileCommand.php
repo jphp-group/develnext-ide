@@ -34,8 +34,13 @@ class TreeCreateFileCommand extends AbstractMenuCommand
     {
         $file = $this->tree->getSelectedFullPath();
 
-        $dialog = new InputMessageBoxForm('Создание файла', 'Введите название для файла (вместе с расширением):', '* Только валидное имя для файла');
-        $dialog->setPattern(new Regex('[^\\?\\<\\>\\*\\:\\|\\"]{1,}', 'i'), 'Данное название некорректное');
+        $dialog = new InputMessageBoxForm(
+            'file.creation::Создание файла',
+            'file.enter.name.with.ext::Введите название для файла (вместе с расширением):',
+            'file.only.valid.name.hint::* Только валидное имя для файла'
+        );
+
+        $dialog->setPattern(new Regex('[^\\?\\<\\>\\*\\:\\|\\"]{1,}', 'i'), 'message.current.name.is.invalid::Данное название некорректное');
 
         $dialog->showDialog();
         $name = $dialog->getResult();
@@ -45,7 +50,7 @@ class TreeCreateFileCommand extends AbstractMenuCommand
             $dir = fs::normalize($dir);
 
             if (fs::exists($dir)) {
-                UXDialog::showAndWait('Файл или папка с таким названием уже существует.', 'ERROR');
+                UXDialog::showAndWait(_('message.file.or.dir.already.exists::Файл или папка с таким названием уже существует.'), 'ERROR');
                 $this->onExecute($e, $editor);
                 return;
             }
@@ -57,7 +62,7 @@ class TreeCreateFileCommand extends AbstractMenuCommand
                 FileUtils::put($dir, '');
 
                 if (!fs::isFile($dir)) {
-                    UXDialog::showAndWait("Невозможно создать файл с таким названием.\n -> $dir", 'ERROR');
+                    UXDialog::showAndWait(_("message.cannot.create.file.with.name::Невозможно создать файл с таким названием.") . "\n -> {$dir}", 'ERROR');
                 } else {
                     $this->tree->expandSelected();
                 }

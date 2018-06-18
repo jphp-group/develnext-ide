@@ -301,8 +301,8 @@ class BackupProjectBehaviour extends AbstractProjectBehaviour
 
     public function makeMasterBackupRequest()
     {
-        $input = new InputMessageBoxForm('Создание мастер-копии', 'Введите название копии:');
-        $input->setPattern(Regex::of('.+'), 'Введите название');
+        $input = new InputMessageBoxForm('backup.creation::Создание мастер-копии', 'backup.enter.name::Введите название копии');
+        $input->setPattern(Regex::of('.+'), 'enter.name::Введите название');
 
         retry:
         if ($input->showDialog()) {
@@ -311,7 +311,7 @@ class BackupProjectBehaviour extends AbstractProjectBehaviour
             $oldBackup = $this->getMasterBackup($name);
 
             if ($oldBackup) {
-                if (!MessageBoxForm::confirm("Мастер-копия '$name' уже существует, хотите перезаписать её?")) {
+                if (!MessageBoxForm::confirm(_("backup.message.confirm.rewrite::Мастер-копия ({0}) уже существует, хотите перезаписать её?", $name))) {
                     goto retry;
                 } else {
                     $this->deleteBackup($oldBackup);
@@ -321,9 +321,9 @@ class BackupProjectBehaviour extends AbstractProjectBehaviour
             $this->makeMasterBackup($name, '');
 
             if (!$oldBackup) {
-                Ide::toast("Резервная мастер-копия ($name) успешно создана.");
+                Ide::toast(_("backup.master.creation.is.successful::Резервная мастер-копия ({0}) успешно создана.", $name));
             } else {
-                Ide::toast("Резервная мастер-копия ($name) успешно обновлена.");
+                Ide::toast(_("backup.master.updation.is.successful::Резервная мастер-копия ({0}) успешно обновлена.", $name));
             }
 
             $this->refreshRequest();
@@ -333,7 +333,7 @@ class BackupProjectBehaviour extends AbstractProjectBehaviour
     public function makeAutoBackupRequest()
     {
         $backup = $this->makeAutoBackup();
-        Ide::toast('Резервная копия (' . $backup->getName() . ') успешно создана.');
+        Ide::toast(_('backup.creation.is.successful::Резервная копия ({0}) успешно создана.', $backup->getName()));
         $this->refreshRequest();
     }
 
@@ -352,9 +352,9 @@ class BackupProjectBehaviour extends AbstractProjectBehaviour
      */
     public function clearMasterBackupRequest()
     {
-        if (MessageBoxForm::confirmDelete('мастер-копии')) {
+        if (MessageBoxForm::confirmDelete('backup.master.copies::мастер-копии')) {
             $this->clearBackup('master');
-            Ide::toast('Все мастер-копии были удалены.');
+            Ide::toast('backup.message.all.master.copies.are.deleted::Все мастер-копии были удалены.');
 
             $this->refreshRequest();
         }
@@ -364,9 +364,9 @@ class BackupProjectBehaviour extends AbstractProjectBehaviour
      */
     public function clearAutoBackupRequest()
     {
-        if (MessageBoxForm::confirmDelete('автоматические копии')) {
+        if (MessageBoxForm::confirmDelete('backup.auto.copies::автоматические копии')) {
             $this->clearBackup('auto');
-            Ide::toast('Все автоматические копии были удалены.');
+            Ide::toast('backup.message.all.auto.copies.are.deleted::Все автоматические копии были удалены.');
 
             $this->refreshRequest();
         }
@@ -388,10 +388,10 @@ class BackupProjectBehaviour extends AbstractProjectBehaviour
      */
     public function deleteBackupRequest(Backup $backup)
     {
-        if (MessageBoxForm::confirmDelete("копию " . $backup->getName())) {
+        if (MessageBoxForm::confirmDelete(_("backup.delete.target.copy::копию {0}", $backup->getName()))) {
             $this->deleteBackup($backup);
 
-            Ide::toast("Резервная копия '{$backup->getName()}' успешно удалена.");
+            Ide::toast(_("backup.message.copy.is.deleted.successful::Резервная копия {0} успешно удалена.", $backup->getName()));
 
             $this->refreshRequest();
         }
@@ -511,14 +511,14 @@ class BackupProjectBehaviour extends AbstractProjectBehaviour
      */
     public function restoreFromBackupRequest(Backup $backup)
     {
-        if (MessageBoxForm::confirm('Вы уврены, что хотите восстановить выбранный бэкап?')) {
-            Ide::get()->getMainForm()->showPreloader('Подождите ...');
+        if (MessageBoxForm::confirm('backup.message.confirm.to.restore::Вы уверены, что хотите восстановить выбранный бэкап?')) {
+            Ide::get()->getMainForm()->showPreloader('message.waiting::Подождите ...');
 
             waitAsync(500, function () use ($backup) {
                 $project = $this->restoreFromBackup($backup);
 
                 if ($project) {
-                    Ide::toast("Проект был успешно восстановлен из бэкапа - {$backup->getName()}");
+                    Ide::toast(_("backup.project.is.restored.from.backup.successful::Проект был успешно восстановлен из бэкапа - {0}", $backup->getName()));
 
                     uiLater(function () use ($project) {
                         /** @var ProjectEditor $projectEditor */
@@ -559,10 +559,10 @@ class BackupProjectBehaviour extends AbstractProjectBehaviour
 
     public function makeMenu()
     {
-        Ide::get()->getMainForm()->defineMenuGroup('backup', 'Архив проекта');
+        Ide::get()->getMainForm()->defineMenuGroup('backup', 'backup.project.archive::Архив проекта');
 
         Ide::get()->registerCommand(new BackupCreateMasterCommand($this));
-        $command = SimpleSingleCommand::makeForMenu('Список копий проекта', null, function () {
+        $command = SimpleSingleCommand::makeForMenu('backup.project.copy.list::Список копий проекта', null, function () {
             /** @var ProjectEditor $projectEditor */
             if ($projectEditor = FileSystem::open($this->project->getMainProjectFile())) {
                 $projectEditor->navigate(BackupProjectControlPane::class);

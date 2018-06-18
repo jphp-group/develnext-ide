@@ -44,7 +44,7 @@ class NeedAuthPane extends UXAnchorPane
      */
     public function setTitle($value)
     {
-        $this->lookup('#title')->text = $value;
+        $this->lookup('#title')->text = _($value);
     }
 
     /**

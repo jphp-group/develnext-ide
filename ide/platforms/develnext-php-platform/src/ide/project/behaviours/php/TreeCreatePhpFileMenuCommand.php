@@ -28,15 +28,19 @@ class TreeCreatePhpFileMenuCommand extends AbstractMenuCommand
 
     public function getName()
     {
-        return "PHP Файл";
+        return "entity.php.file::PHP Файл";
     }
 
     public function onExecute($e = null, AbstractEditor $editor = null)
     {
         $file = $this->tree->getSelectedFullPath();
 
-        $dialog = new InputMessageBoxForm('Создание php файла', 'Введите название для php файла', '* Только валидное имя для файла');
-        $dialog->setPattern(new Regex('^[\\w\\d\\_\\-\\.\\+\\=\\ \\@\\/\\,\\\\]{1,}$', 'i'), 'Данное название некорректное');
+        $dialog = new InputMessageBoxForm(
+            'php.file.creation::Создание php файла',
+            'php.file.enter.name::Введите название для php файла',
+            'php.file.only.valid.name.hint::* Только валидное имя для файла'
+        );
+        $dialog->setPattern(new Regex('^[\\w\\d\\_\\-\\.\\+\\=\\ \\@\\/\\,\\\\]{1,}$', 'i'), 'message.current.name.is.invalid::Данное название некорректное');
 
         $dialog->showDialog();
         $name = $dialog->getResult();
@@ -51,7 +55,7 @@ class TreeCreatePhpFileMenuCommand extends AbstractMenuCommand
             $f = fs::normalize($f);
 
             if (fs::exists($f)) {
-                UXDialog::showAndWait('Файл или папка с таким названием уже существует.', 'ERROR');
+                UXDialog::showAndWait(_('message.file.or.dir.already.exists'), 'ERROR');
                 $this->onExecute($e, $editor);
                 return;
             }
@@ -59,7 +63,7 @@ class TreeCreatePhpFileMenuCommand extends AbstractMenuCommand
             FileUtils::put($f, "<?php \n\n");
 
             if (!fs::isFile($f)) {
-                UXDialog::showAndWait("Невозможно создать файл с таким названием.\n -> $f", 'ERROR');
+                UXDialog::showAndWait(_("message.cannot.create.file.with.name::Невозможно создать файл с таким названием.") . "\n -> {$f}", 'ERROR');
             } else {
                 $this->tree->expandSelected();
                 FileSystem::open($f);

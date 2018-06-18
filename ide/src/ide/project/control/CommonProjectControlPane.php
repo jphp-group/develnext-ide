@@ -149,9 +149,13 @@ class CommonProjectControlPane extends AbstractProjectControlPane
     {
         if (Ide::project()) {
             retry:
-            $dialog = new InputMessageBoxForm('Переименование проекта', 'Введите новое название для проекта', '* Только валидное имя для файла');
+            $dialog = new InputMessageBoxForm(
+                'project.renaming::Переименование проекта',
+                'project.enter.new.name::Введите новое название для проекта',
+                'project.only.valid.name.hint::* Только валидное имя для файла'
+            );
 
-            $dialog->setPattern(new Regex('[^\\?\\<\\>\\*\\:\\|\\"]{1,}', 'i'), 'Данное название некорректное');
+            $dialog->setPattern(new Regex('[^\\?\\<\\>\\*\\:\\|\\"]{1,}', 'i'), 'message.current.name.is.invalid::Данное название некорректное');
 
             $dialog->showDialog();
             $name = $dialog->getResult();
@@ -164,7 +168,7 @@ class CommonProjectControlPane extends AbstractProjectControlPane
                 $success = Ide::project()->setName($name);
 
                 if (!$success) {
-                    UXDialog::showAndWait("Невозможно дать проекту введенное имя '$name', попробуйте другое.", 'ERROR');
+                    UXDialog::showAndWait(_("message.cannot.set.name.for.project::Невозможно дать проекту введенное имя ({0}), попробуйте другое.", $name), 'ERROR');
                     goto retry;
                 } else {
                     $this->projectNameLabel->text = $name;

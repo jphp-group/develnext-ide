@@ -194,7 +194,7 @@ class MainForm extends AbstractIdeForm
         }
 
         if ($menu == null) {
-            $menu = new UXMenu($text);
+            $menu = _(new UXMenu($text));
             $menu->id = "menu$id";
 
             if ($prepend) {
@@ -203,7 +203,7 @@ class MainForm extends AbstractIdeForm
                 $this->mainMenu->menus->add($menu);
             }
         } else {
-            $menu->text = $text;
+            $menu->text = _($text);
         }
 
         return $menu;

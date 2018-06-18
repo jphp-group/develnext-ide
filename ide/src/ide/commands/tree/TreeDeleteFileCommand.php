@@ -39,7 +39,10 @@ class TreeDeleteFileCommand extends AbstractMenuCommand
         if ($file) {
             $name = fs::name($file);
 
-            $msg = new MessageBoxForm("Вы уверены, что хотите удалить [$name]?", ['Да, удалить', 'Нет, отмена']);
+            $msg = new MessageBoxForm(
+                _("message.confirm.delete::Вы уверены, что хотите удалить [{0}]?", $name),
+                ['btn.yes.delete::Да, удалить', 'btn.no.cancel']
+            );
             $msg->makeWarning();
 
             if ($msg->showDialog()) {
@@ -58,7 +61,7 @@ class TreeDeleteFileCommand extends AbstractMenuCommand
                     }
 
                     if (!$success) {
-                        UXDialog::showAndWait("Ошибка удаления $file", 'ERROR');
+                        UXDialog::showAndWait(_("error.delete::Ошибка удаления {0}", $file), 'ERROR');
                     }
                 }
             }
@@ -73,7 +76,7 @@ class TreeDeleteFileCommand extends AbstractMenuCommand
         $item->disable = !$file;
 
         if ($file) {
-            $item->text = $this->getName() . ' [' . $file->getName() . ']';
+            $item->text = _($this->getName()) . ' [' . $file->getName() . ']';
         }
     }
 }

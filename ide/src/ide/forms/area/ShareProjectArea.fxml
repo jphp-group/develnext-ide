@@ -12,7 +12,7 @@
             <children>
                 <HBox id="nonSyncPane" alignment="CENTER_LEFT" prefHeight="35.0" spacing="10.0">
                     <children>
-                        <Button id="shareButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="Загрузить">
+                        <Button id="shareButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="command.upload::Загрузить">
                             <padding>
                                 <Insets left="15.0" right="15.0" />
                             </padding>
@@ -21,20 +21,21 @@
                                 <String fx:value="flat-button" />
                             </styleClass>
                         </Button>
-                        <Label text="Вы можете загрузить проект на develnext.org и поделиться ссылкой на него" textFill="#616161" />
+                        <Label text="share.about.hub.text::Вы можете загрузить проект на develnext.org и поделиться ссылкой на него" textFill="#616161" />
                     </children>
                 </HBox>
                 <VBox id="syncPane" spacing="10.0">
                     <children>
                   <HBox alignment="CENTER_LEFT" spacing="5.0">
                      <children>
-                        <Label text="Последнее обновление:" textFill="#909090" />
+                        <Label text="share.last.update::Последнее обновление" textFill="#909090" />
+                        <Label text=":" textFill="#909090" />
                         <Label id="updatedAtLabel" text="Today, 12:00" />
                      </children>
                   </HBox>
                         <HBox alignment="CENTER_LEFT" prefHeight="35.0" spacing="10.0">
                             <children>
-                                <Button id="uploadButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="Загрузить изменения">
+                                <Button id="uploadButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="command.upload.changes::Загрузить изменения">
                                     <padding>
                                         <Insets left="15.0" right="15.0" />
                                     </padding>
@@ -43,7 +44,7 @@
                                         <String fx:value="flat-button" />
                                     </styleClass>
                                 </Button>
-                                <Button id="сontrolButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="Настройки">
+                                <Button id="сontrolButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="common.settings::Настройки">
                                     <padding>
                                         <Insets left="15.0" right="15.0" />
                                     </padding>

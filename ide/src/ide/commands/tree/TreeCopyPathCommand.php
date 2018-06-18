@@ -33,10 +33,10 @@ class TreeCopyPathCommand extends AbstractMenuCommand
     public function getName()
     {
         if ($this->asRes) {
-            return "Скопировать 'res://' путь";
+            return "command.copy.res.path::Скопировать `res://` путь";
         }
 
-        return "Скопировать путь";
+        return "command.copy.path::Скопировать путь";
     }
 
     public function onExecute($e = null, AbstractEditor $editor = null)
@@ -63,9 +63,9 @@ class TreeCopyPathCommand extends AbstractMenuCommand
             UXClipboard::setText($path);
 
             if ($this->asRes) {
-                Ide::toast("Путь res:// '$name' скопирован в буффер обмена.");
+                Ide::toast(_("message.res.path.is.copied.to.clipboard::Путь res:// ({0}) скопирован в буффер обмена.", $name));
             } else {
-                Ide::toast("Путь '$name' скопирован в буффер обмена.");
+                Ide::toast(_("message.path.is.copied.to.clipboard::Путь ({0}) скопирован в буффер обмена.", $name));
             }
         }
     }

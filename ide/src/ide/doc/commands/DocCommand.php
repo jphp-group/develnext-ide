@@ -58,6 +58,7 @@ class DocCommand extends AbstractCommand
     {
         $button = $this->makeGlyphButton();
         $button->text = $this->getName();
+        $button = _($button);
         $button->maxHeight = 999;
         $button->padding = [0, 15];
 
@@ -66,9 +67,11 @@ class DocCommand extends AbstractCommand
 
         $searchButton = new UXButton();
         $searchButton->classes->addAll(['icon-flat-search']);
-        $searchButton->tooltipText = 'Поиск по документации';
+        $searchButton->tooltipText = 'doc.search.hint::Поиск по документации';
         $searchButton->maxHeight = 999;
         $searchButton->width = 35;
+
+        $searchButton = _($searchButton);
 
         $input = $this->makeSearchInputUi();
 
@@ -87,7 +90,7 @@ class DocCommand extends AbstractCommand
         $searchHandle = function () use ($input) {
             $q = URL::encode($input->text);
 
-            Ide::get()->getMainForm()->toast('Сейчас произойдет редирект на страницу поиска ...');
+            Ide::get()->getMainForm()->toast(_('toast.now.will.be.redirect.to.doc::Сейчас произойдет редирект на страницу поиска ...'));
             browse("https://hub.develnext.org/wiki/?q=$q");
         };
 
@@ -109,7 +112,7 @@ class DocCommand extends AbstractCommand
 
     public function onExecute($e = null, AbstractEditor $editor = null)
     {
-        Ide::get()->getMainForm()->toast('Сейчас произойдет редирект на страницу ...');
+        Ide::get()->getMainForm()->toast('toast.now.will.be.redirect.to.page::Сейчас произойдет редирект на страницу ...');
         browse('https://hub.develnext.org/wiki/');
     }
 }

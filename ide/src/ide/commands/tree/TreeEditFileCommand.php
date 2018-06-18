@@ -44,7 +44,7 @@ class TreeEditFileCommand extends AbstractMenuCommand
                     try {
                         $desktop->open($file);
                     } catch (\Exception $e) {
-                        UXDialog::showAndWait('Невозможно отредактировать файл', 'ERROR');
+                        UXDialog::showAndWait(_('message.cannot.edit.file::Невозможно отредактировать файл'), 'ERROR');
                     }
                 }
             }

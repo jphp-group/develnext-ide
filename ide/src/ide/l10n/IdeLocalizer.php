@@ -52,7 +52,10 @@ class IdeLocalizer extends Localizer
             $tooltip = $node->tooltipText;
 
             $node->text = $this->translate($text, $args);
-            $node->tooltipText = $this->translate($tooltip, $args);
+
+            if ($tooltip) {
+                $node->tooltipText = $this->translate($tooltip, $args);
+            }
 
             if ($l10nBind = $node->data('l10n-bind-id')) {
                 $this->off('after-change-language', $l10nBind);
@@ -60,7 +63,10 @@ class IdeLocalizer extends Localizer
 
             $l10nBind = $this->bind('after-change-language', function () use ($node, $args, $text, $tooltip) {
                 $node->text = $this->translate($text, $args);
-                $node->tooltipText = $this->translate($tooltip, $args);
+
+                if ($tooltip) {
+                    $node->tooltipText = $this->translate($tooltip, $args);
+                }
             });
 
             $node->data('l10n-bind-id', $l10nBind);
@@ -172,7 +178,7 @@ class IdeLocalizer extends Localizer
 
     public function translate($message, array $args = []): string
     {
-        if (!str::contains($message, '{')) {
+        if (!str::startsWith($message, '{')) {
             if (str::contains($message, "::")) {
                 [$message, $def] = str::split($message, '::', 2);
 

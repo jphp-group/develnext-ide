@@ -38,10 +38,10 @@ class InputMessageBoxForm extends AbstractIdeForm
     {
         parent::__construct();
 
-        $this->title = $title;
-        $this->titleLabel->text = $title;
-        $this->qLabel->text = $question;
-        $this->helpLabel->text = $helpText;
+        $this->title = _($title);
+        $this->titleLabel->text = _($title);
+        $this->qLabel->text = _($question);
+        $this->helpLabel->text = _($helpText);
     }
 
     /**
@@ -51,7 +51,7 @@ class InputMessageBoxForm extends AbstractIdeForm
     public function setPattern(Regex $pattern, $errorText)
     {
         $this->pattern = $pattern;
-        $this->patternErrorText = $errorText;
+        $this->patternErrorText = _($errorText);
     }
 
     /**

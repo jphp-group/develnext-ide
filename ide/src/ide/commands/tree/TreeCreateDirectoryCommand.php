@@ -25,15 +25,20 @@ class TreeCreateDirectoryCommand extends AbstractMenuCommand
 
     public function getName()
     {
-        return "Создать папку";
+        return "command.create.dir::Создать папку";
     }
 
     public function onExecute($e = null, AbstractEditor $editor = null)
     {
         $file = $this->tree->getSelectedFullPath();
 
-        $dialog = new InputMessageBoxForm('Создание папки', 'Введите название для папки:', '* Только валидное имя для папки');
-        $dialog->setPattern(new Regex('[^\\?\\<\\>\\*\\:\\|\\"]{1,}', 'i'), 'Данное название некорректное');
+        $dialog = new InputMessageBoxForm(
+            'dir.creation::Создание папки',
+            'dir.enter.name::Введите название для папки',
+            'dir.only.valid.name.hint::* Только валидное имя для папки'
+        );
+
+        $dialog->setPattern(new Regex('[^\\?\\<\\>\\*\\:\\|\\"]{1,}', 'i'), 'message.current.name.is.invalid::Данное название некорректное');
 
         $dialog->showDialog();
         $name = $dialog->getResult();
@@ -42,13 +47,13 @@ class TreeCreateDirectoryCommand extends AbstractMenuCommand
             $dir = $file->isDirectory() ? "$file/$name" : "{$file->getParent()}/$name";
 
             if (fs::exists($dir)) {
-                UXDialog::showAndWait('Файл или папка с таким названием уже существует.', 'ERROR');
+                UXDialog::showAndWait(_('message.file.or.dir.already.exists::Файл или папка с таким названием уже существует.'), 'ERROR');
                 $this->onExecute($e, $editor);
                 return;
             }
 
             if (!fs::makeDir($dir)) {
-                UXDialog::showAndWait('Невозможно создать папку с таким названием.');
+                UXDialog::showAndWait(_('message.cannot.create.dir.with.name::Невозможно создать папку с таким названием.'));
             } else {
                 $this->tree->expandSelected();
             }

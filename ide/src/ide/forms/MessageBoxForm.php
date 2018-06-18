@@ -1,6 +1,7 @@
 <?php
 namespace ide\forms;
 
+use function flow;
 use ide\forms\mixins\DialogFormMixin;
 use ide\Ide;
 use ide\utils\UiUtils;
@@ -56,7 +57,7 @@ class MessageBoxForm extends AbstractIdeForm
     {
         parent::__construct();
 
-        $this->text = $text;
+        $this->text = _($text);
         $this->buttons = $buttons;
         $this->owner = $owner instanceof UXNode ? $owner->form : ($owner instanceof UXWindow ? $owner : $this->owner);
         $this->iconImage = 'icons/question32.png';
@@ -131,7 +132,7 @@ class MessageBoxForm extends AbstractIdeForm
                 continue;
             }
 
-            $ui = new UXButton($button);
+            $ui = new UXButton(_($button));
             $ui->maxHeight = 10000;
             $ui->minWidth = 90;
             $ui->height = 30;
@@ -158,7 +159,7 @@ class MessageBoxForm extends AbstractIdeForm
 
     static function confirm($message, $owner = null)
     {
-        $dialog = new static($message, ['Да', 'Нет, отмена'], $owner);
+        $dialog = new static($message, ['btn.yes', 'btn.no.cancel'], $owner);
 
         return $dialog->showDialog() && $dialog->getResultIndex() == 0;
     }
@@ -166,17 +167,19 @@ class MessageBoxForm extends AbstractIdeForm
     static function confirmDelete($what, $owner = null)
     {
         if (is_array($what)) {
-            $what = str::join($what, ", ");
+            $what = flow($what)->map('_')->toString(", ");
+        } else {
+            $what = _($what);
         }
 
-        $dialog = new static("Вы уверены, что хотите удалить '$what'?", ['Да, удалить', 'Нет'], $owner);
+        $dialog = new static(_("message.confirm.to.delete::Вы уверены, что хотите удалить ({0})?", $what), ['btn.yes.delete::Да, удалить', 'btn.no'], $owner);
 
         return $dialog->showDialog() && $dialog->getResultIndex() == 0;
     }
 
     static function confirmExit($owner = null)
     {
-        $dialog = new static("Вы уверены, что хотите выйти?", ['Да, выйти', 'Нет'], $owner);
+        $dialog = new static("message.confirm.to.exit::Вы уверены, что хотите выйти?", ['btn.yes.exit::Да, выйти', 'btn.no'], $owner);
 
         return $dialog->showDialog() && $dialog->getResultIndex() == 0;
     }

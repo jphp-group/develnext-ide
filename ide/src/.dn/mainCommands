@@ -19,3 +19,5 @@ ide\commands\VkGroupCommand
 
 ide\commands\CheckUpdatesCommand
 ide\commands\AboutCommand
+
+ide\doc\commands\DocCommand
