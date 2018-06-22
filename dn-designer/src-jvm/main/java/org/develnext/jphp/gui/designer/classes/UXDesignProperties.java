@@ -47,6 +47,7 @@ public class UXDesignProperties extends BaseObject {
     protected Map<String, TitledPane> groups = new LinkedHashMap<>();
     protected Map<String, ObservableList<PropertyValue>> properties = new LinkedHashMap<>();
     protected Invoker onChangeHandler;
+    protected Invoker propertyNameGetter;
 
     public UXDesignProperties(Environment env, ClassEntity clazz) {
         super(env, clazz);
@@ -130,12 +131,9 @@ public class UXDesignProperties extends BaseObject {
 
     @Signature
     public void addProperty(String groupCode, String code, String name, UXDesignPropertyEditor editor) {
-        ObservableList<PropertyValue> propertyValues = properties.get(code);
-
-        if (propertyValues == null) {
-            propertyValues = FXCollections.observableArrayList();
-            properties.put(code, propertyValues);
-        }
+        ObservableList<PropertyValue> propertyValues = properties.computeIfAbsent(
+                code, k -> FXCollections.observableArrayList()
+        );
 
         editor.setCode(code);
         editor.setName(name);
@@ -152,6 +150,11 @@ public class UXDesignProperties extends BaseObject {
     }
 
     @Signature
+    public void setPropertyNameGetter(@Nullable Invoker invoker) {
+        this.propertyNameGetter = invoker;
+    }
+
+    @Signature
     public void onChange(@Nullable Invoker invoker) {
         this.onChangeHandler = invoker;
     }
@@ -164,7 +167,7 @@ public class UXDesignProperties extends BaseObject {
     }
 
     public class PropertyValue {
-        protected final String name;
+        protected String name;
         protected final UXDesignPropertyEditor editor;
 
         public PropertyValue(String name, UXDesignPropertyEditor editor) {
@@ -191,9 +194,13 @@ public class UXDesignProperties extends BaseObject {
                     TrueMemory.valueOf(empty)
             );
         }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 
-    public static class PropertyTableView extends TableView<PropertyValue> {
+    public class PropertyTableView extends TableView<PropertyValue> {
         protected final TableColumn nameColumn;
         protected final TableColumn valueColumn;
 
@@ -226,7 +233,13 @@ public class UXDesignProperties extends BaseObject {
             nameColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures, ObservableValue>() {
                 @Override
                 public ObservableValue call(TableColumn.CellDataFeatures param) {
-                    return new SimpleStringProperty(((PropertyValue) param.getValue()).getName());
+                    String name = ((PropertyValue) param.getValue()).getName();
+
+                    if (propertyNameGetter != null) {
+                        name = propertyNameGetter.callAny(name).toString();
+                    }
+
+                    return new SimpleStringProperty(name);
                 }
             });
 

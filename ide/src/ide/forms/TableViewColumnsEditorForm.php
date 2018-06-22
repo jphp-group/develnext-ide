@@ -9,6 +9,7 @@ use ide\editors\value\SimpleTextPropertyEditor;
 use ide\editors\value\TextPropertyEditor;
 use ide\forms\mixins\DialogFormMixin;
 use ide\forms\mixins\SavableFormMixin;
+use ide\Ide;
 use php\gui\designer\UXDesignProperties;
 use php\gui\event\UXDragEvent;
 use php\gui\event\UXEvent;
@@ -124,7 +125,7 @@ class TableViewColumnsEditorForm extends AbstractIdeForm
             }
         });
 
-        $this->properties = new UXDesignProperties();
+        $this->properties = _(new UXDesignProperties());
         $this->properties->target = new \stdClass();
         $this->properties->addGroup('general', 'Свойства колонки');
 

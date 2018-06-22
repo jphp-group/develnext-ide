@@ -93,29 +93,33 @@ function task_fetchMessages($e)
     $data = [];
     $ruData = fs::parse("./ide/misc/languages/ru/messages.ini");
 
-    fs::scan('./ide/src', [
-        'excludeDirs' => true,
-        'extensions'  => ['php', 'fxml', 'conf'],
-        'callback'    => function ($filename) use ($regex, $ignoreExts, $ignores, &$data, &$ruData) {
-            //echo "-> ", $filename, "\n";
-            $content = fs::get($filename);
+    $dirs = ["./ide/src", "./ide/platforms"];
 
-            $r = $regex->with($content); //->withFlags('');
+    foreach ($dirs as $dir) {
+        fs::scan($dir, [
+            'excludeDirs' => true,
+            'extensions'  => ['php', 'fxml', 'conf', 'xml'],
+            'callback'    => function ($filename) use ($regex, $ignoreExts, $ignores, &$data, &$ruData) {
+                //echo "-> ", $filename, "\n";
+                $content = fs::get($filename);
 
-            foreach ($r->all() as $groups) {
-                $var = $groups[2];
+                $r = $regex->with($content); //->withFlags('');
 
-                if ($ignores[$var]) continue;
-                if (str::count($var, '.') === 1 && $ignoreExts[fs::ext($var)]) continue;
+                foreach ($r->all() as $groups) {
+                    $var = $groups[2];
 
-                $data[$var] = '';
+                    if ($ignores[$var]) continue;
+                    if (str::count($var, '.') === 1 && $ignoreExts[fs::ext($var)]) continue;
 
-                if (!$ruData[$var]) {
-                    $ruData[$var] = $groups[5] ?? $var;
+                    $data[$var] = '';
+
+                    if (!$ruData[$var]) {
+                        $ruData[$var] = $groups[5] ?? $var;
+                    }
                 }
             }
-        }
-    ]);
+        ]);
+    }
 
     Tasks::createFile("$buildPath/messages.ini");
     //Tasks::createFile("$buildPath/messages.ru.ini");

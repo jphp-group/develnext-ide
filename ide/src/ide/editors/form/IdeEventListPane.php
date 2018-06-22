@@ -152,6 +152,15 @@ class IdeEventListPane
     public function setHintNode($hintNode)
     {
         $this->hintNode = $hintNode;
+
+        if ($hintNode instanceof UXNode) {
+            $bindId = $this->hintNode->data('l10n-bind-id');
+
+            if ($bindId) {
+                Ide::get()->getLocalizer()->off('after-change-language', $bindId);
+            }
+        }
+
         $this->hintNodeText = $hintNode->text;
     }
 
@@ -432,7 +441,7 @@ class IdeEventListPane
         $prevKind = null;
 
         foreach ($this->eventTypes as $type) {
-            $menuItem = new UXMenuItem($type['name'], Ide::get()->getImage($type['icon']));
+            $menuItem = _(new UXMenuItem($type['name'], Ide::get()->getImage($type['icon'])));
 
             /** @var AbstractEventKind $kind */
             $kind = $type['kind'];
@@ -454,7 +463,7 @@ class IdeEventListPane
                     $onAction($type, $type['code'], $bind);
                 });
             } else {
-                $menuItem = new UXMenu($menuItem->text, $menuItem->graphic);
+                $menuItem = _(new UXMenu($menuItem->text, $menuItem->graphic));
             }
 
             if ($prevKind && get_class($prevKind) != get_class($type['kind'])) {
@@ -476,7 +485,7 @@ class IdeEventListPane
                         }
 
                         if (is_array($param)) {
-                            $subItem = new UXMenu($name);
+                            $subItem = _(new UXMenu($name));
                             $menuItem->items->add($subItem);
 
                             $appendVariants($param, $subItem);
@@ -489,7 +498,7 @@ class IdeEventListPane
                             $code .= "-$param";
                         }
 
-                        $item = new UXMenuItem($name);
+                        $item = _(new UXMenuItem($name));
 
                         if ($param === false) {
                             $item->disable = true;
@@ -528,7 +537,7 @@ class IdeEventListPane
 
     protected function makeEventTypePane()
     {
-        $addButton = new UXButton("Добавить событие");
+        $addButton = new UXButton("ui.command.add.event::Добавить событие");
         $addButton->height = 30;
         $addButton->maxWidth = 10000;
         $addButton->style = '-fx-font-weight: bold;' . UiUtils::fontSizeStyle();
@@ -542,7 +551,7 @@ class IdeEventListPane
         $changeButton->size = [25, 25];
         $changeButton->style = UiUtils::fontSizeStyle();
         $changeButton->graphic = Ide::get()->getImage('icons/exchange16.png');
-        $changeButton->tooltipText = 'Поменять событие';
+        $changeButton->tooltipText = 'ui.command.change.event::Поменять событие';
 
         $changeButton->on('action', function (UXEvent $event) {
             $this->doChangeEvent($event);
@@ -553,19 +562,19 @@ class IdeEventListPane
         $deleteButton->size = [25, 25];
         $deleteButton->graphic = Ide::get()->getImage('icons/delete16.png');
 
-        $editButton = new UXButton("Редактировать");
+        $editButton = new UXButton("command.edit::Редактировать");
         $editButton->graphic = Ide::get()->getImage('icons/edit16.png');
         $editButton->height = 25;
         $editButton->maxWidth = 10000;
         $editButton->style = UiUtils::fontSizeStyle();
         UXHBox::setHgrow($editButton, 'ALWAYS');
 
-        $otherButtons = new UXHBox([$deleteButton, $changeButton, $editButton]);
+        $otherButtons = new UXHBox([_($deleteButton), _($changeButton), _($editButton)]);
         $otherButtons->spacing = 3;
         $otherButtons->height = 25;
         $otherButtons->maxWidth = 10000;
 
-        $actions = new UXVBox([$addButton, $otherButtons]);
+        $actions = new UXVBox([_($addButton), $otherButtons]);
         $actions->style = UiUtils::fontSizeStyle();
         $actions->fillWidth = true;
         $actions->spacing = 4;
@@ -632,7 +641,7 @@ class IdeEventListPane
 
                 $cell->text = null;
 
-                $constructorLink = new UXHyperlink('Изменить');
+                $constructorLink = _(new UXHyperlink('command.change::Изменить'));
                 $constructorLink->style = '-fx-text-fill: gray';
 
                 $constructorLink->on('action', function ($event) use ($item, $deleteButton, $constructorLink, $eventContextMenu) {
@@ -652,7 +661,7 @@ class IdeEventListPane
 
                 $phpLink = new UXHyperlink('php');
 
-                $name = new UXLabel($eventType['name']);
+                $name = _(new UXLabel($eventType['name']));
                 $name->style = UiUtils::fontSizeStyle() . "; -fx-font-weight: bold;";
 
                 if ($codeEmpty && !$actionCount) {
@@ -673,9 +682,13 @@ class IdeEventListPane
                 $methodNameLabel->textColor = UXColor::of('gray');
 
                 if ($param) {
-                    $paramLabel = new UXLabel("($param)");
-                    $paramLabel->style = '-fx-font-style: italic';
-                    $paramLabel->textColor = UXColor::of('#2f6eb2');
+                    $paramLabel = new UXHBox([new UXLabel("("), _(new UXLabel($param)), new UXLabel(")")]);
+
+                    foreach ($paramLabel->children as $l) {
+                        $l->style = '-fx-font-style: italic';
+                        $l->textColor = UXColor::of('#2f6eb2');
+                    }
+
                     $paramLabel->paddingRight = 3;
 
                     $line = new UXHBox([$paramLabel, $constructorLink]);
@@ -788,10 +801,10 @@ class IdeEventListPane
                     $countLabel->font->bold = true;
                     $countLabel->style = "-fx-font-size: 10px;";
 
-                    $this->hintNode->graphic = new UXHBox([new UXLabel($this->hintNodeText), $countLabel]);
+                    $this->hintNode->graphic = new UXHBox([_(new UXLabel($this->hintNodeText)), $countLabel]);
                     $this->hintNode->graphic->spacing = 2;
                 } else {
-                    $this->hintNode->graphic = new UXLabel($this->hintNodeText);
+                    $this->hintNode->graphic = _(new UXLabel($this->hintNodeText));
                     $this->hintNode->graphic->textColor = 'gray';
                     $this->hintNode->text = "";
                 }
@@ -806,7 +819,7 @@ class IdeEventListPane
         $selected = Items::first($this->uiList->selectedItems);
 
         if ($selected) {
-            if (MessageBoxForm::confirmDelete('событие ' . $selected['type']['name'], $this->ui)) {
+            if (MessageBoxForm::confirmDelete(_('ui.entity.event.target::событие') . ' ' . $selected['type']['name'], $this->ui)) {
                 if ($bind = $this->manager->removeBind($this->targetId, $selected['eventCode'])) {
                     if ($this->actionEditor) {
                         $this->actionEditor->removeMethod($bind['className'], $bind['methodName']);
@@ -926,7 +939,7 @@ class IdeEventListPaneOpenInConstructorCommand extends AbstractMenuCommand
 
     public function getName()
     {
-        return 'Открыть в конструкторе';
+        return 'ui.command.open.in.wizard::Открыть в конструкторе';
     }
 
     public function getIcon()
@@ -963,7 +976,7 @@ class IdeEventListPaneOpenInPhpEditorCommand extends AbstractMenuCommand
 
     public function getName()
     {
-        return 'Открыть в php-редакторе';
+        return 'ui.command.open.in.php.editor::Открыть в php-редакторе';
     }
 
     public function getIcon()
@@ -1004,7 +1017,7 @@ class IdeEventListPaneAddCommand extends AbstractMenuCommand
 
     public function getName()
     {
-        return 'Добавить событие';
+        return 'ui.command.add.event::Добавить событие';
     }
 
     public function getIcon()
@@ -1034,7 +1047,7 @@ class IdeEventListPaneChangeCommand extends AbstractMenuCommand
 
     public function getName()
     {
-        return 'Поменять событие';
+        return 'ui.command.change.event::Поменять событие';
     }
 
     public function getIcon()
@@ -1074,7 +1087,7 @@ class IdeEventListPaneDeleteCommand extends AbstractMenuCommand
 
     public function getName()
     {
-        return 'Удалить';
+        return 'command.delete::Удалить';
     }
 
     public function getIcon()
@@ -1115,7 +1128,7 @@ class IdeEventListPaneScriptHelperCommand extends AbstractMenuCommand
 
     public function getName()
     {
-        return 'Сгенерировать скрипт';
+        return 'command.generate.script::Сгенерировать скрипт';
     }
 
     public function getIcon()

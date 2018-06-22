@@ -43,7 +43,7 @@ abstract class AbstractScriptComponent extends AbstractFormElement
                 $editor = $editorFactory();
 
                 if ($editor) {
-                    $properties->addProperty($property['group'], $property['code'], $property['name'], $editor);
+                    $properties->addProperty($property['group'], $property['code'], _($property['name']), $editor);
                 }
             }
         }

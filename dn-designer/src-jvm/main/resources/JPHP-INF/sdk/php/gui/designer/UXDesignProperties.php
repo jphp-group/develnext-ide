@@ -26,6 +26,14 @@ class UXDesignProperties
     }
 
     /**
+     * @param $nameTitle
+     * @param $valueTitle
+     */
+    public function setColumnTitles($nameTitle, $valueTitle)
+    {
+    }
+
+    /**
      * @param $code
      * @param $title
      * @return UXTitledPane
@@ -64,7 +72,13 @@ class UXDesignProperties
      */
     public function addProperty($groupCode, $code, $name, UXDesignPropertyEditor $editor)
     {
+    }
 
+    /**
+     * @param callable|null $getter
+     */
+    public function setPropertyNameGetter(?callable $getter)
+    {
     }
 
     /**

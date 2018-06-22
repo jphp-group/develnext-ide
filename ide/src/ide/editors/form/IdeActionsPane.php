@@ -127,7 +127,7 @@ class IdeActionsPane extends UXHBox
         $ui->add($emptyButton);
         $ui->add(new UXSeparator('VERTICAL'));
 
-        $xTitle = new UXLabel('Сетка [X,Y]:');
+        $xTitle = _(new UXLabel('ui.editor.grid.option::Сетка [X,Y]:'));
         $xTitle->maxHeight = 999;
         $xInput = $this->snapXInput = new UXTextField();
         $xInput->width = 35;
@@ -197,7 +197,7 @@ class IdeActionsPane extends UXHBox
     protected function makeZoomPane()
     {
         $this->add(new UXSeparator('VERTICAL'));
-        $this->add($label = new UXLabel("Масштаб:"));
+        $this->add($label = _(new UXLabel("ui.editor.scale.option::Масштаб:")));
         $label->maxHeight = 999;
 
         $zoomSelect = $this->zoomSelect = new UXComboBox();

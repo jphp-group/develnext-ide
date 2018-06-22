@@ -211,13 +211,13 @@ class IdeTabPane
         }
 
         if ($this->eventListPane) {
-            $this->tab('eventList', 'События', $content ?: $this->eventListPane->makeUi(), false);
+            $this->tab('eventList', 'ui.editor.events.tab::События', $content ?: $this->eventListPane->makeUi(), false);
         }
     }
 
     public function addEventListPane(IdeEventListPane $pane)
     {
-        $tab = $this->tab('eventList', 'События', $pane->makeUi(), false);
+        $tab = $this->tab('eventList', 'ui.editor.events.tab::События', $pane->makeUi(), false);
 
         $pane->setHintNode($tab);
         $this->eventListPane = $pane;
@@ -253,13 +253,13 @@ class IdeTabPane
         }
 
         if ($this->behaviourPane) {
-            $this->tab('behaviours', 'Поведения', $content->content ?: $this->behaviourPane->makeUi(''));
+            $this->tab('behaviours', 'ui.editor.behaviours.tab::Поведения', $content->content ?: $this->behaviourPane->makeUi(''));
         }
     }
 
     public function addBehaviourPane(IdeBehaviourPane $pane)
     {
-        $tab = $this->tab('behaviours', 'Поведения', $pane->makeUi(''));
+        $tab = $this->tab('behaviours', 'ui.editor.behaviours.tab::Поведения', $pane->makeUi(''));
 
         $pane->setHintNode($tab);
         $this->behaviourPane = $pane;
@@ -281,13 +281,13 @@ class IdeTabPane
     public function showPropertiesPane()
     {
         if ($this->propertiesPane) {
-            $this->tab('properties', 'Свойства', $this->propertiesPane->makeUi());
+            _($this->tab('properties', 'ui.editor.properties.tab::Свойства', $this->propertiesPane->makeUi()));
         }
     }
 
     public function addPropertiesPane(IdePropertiesPane $pane)
     {
-        $this->tab('properties', 'Свойства', $pane->makeUi());
+        _($this->tab('properties', 'ui.editor.properties.tab::Свойства', $pane->makeUi()));
 
         $this->propertiesPane = $pane;
 

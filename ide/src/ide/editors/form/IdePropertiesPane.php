@@ -104,7 +104,13 @@ class IdePropertiesPane
                 $this->trigger('change');
             });
 
-            $this->ui->children->addAll($properties->getGroupPanes());
+            $groupPanes = $properties->getGroupPanes();
+
+            foreach ($groupPanes as $pane) {
+                $pane = _($pane);
+            }
+
+            $this->ui->children->addAll($groupPanes);
         }
     }
 

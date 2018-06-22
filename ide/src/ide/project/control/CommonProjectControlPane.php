@@ -68,7 +68,7 @@ class CommonProjectControlPane extends AbstractProjectControlPane
     public function makeUi()
     {
         $loader = new UXLoader();
-        $ui = $loader->load(Stream::of(AbstractForm::DEFAULT_PATH . 'blocks/_ProjectTab.fxml'));
+        $ui = _($loader->load(Stream::of(AbstractForm::DEFAULT_PATH . 'blocks/_ProjectTab.fxml')));
         $ui->maxWidth = 99999;
 
         $binder = new EventBinder($ui, $this);
