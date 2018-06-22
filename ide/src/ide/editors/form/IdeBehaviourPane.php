@@ -94,6 +94,15 @@ class IdeBehaviourPane
     public function setHintNode($hintNode)
     {
         $this->hintNode = $hintNode;
+
+        if ($hintNode instanceof UXNode) {
+            $bindId = $this->hintNode->data('l10n-bind-id');
+
+            if ($bindId) {
+                Ide::get()->getLocalizer()->off('after-change-language', $bindId);
+            }
+        }
+
         $this->hintNodeText = $hintNode->text;
     }
 
@@ -104,7 +113,7 @@ class IdeBehaviourPane
         if ($this->pane) {
             $pane = $this->pane;
         } else {
-            $pane = $this->pane = new UXDesignProperties();
+            $pane = $this->pane = _(new UXDesignProperties());
         }
 
         $behaviours = $this->behaviourManager->getBehaviours($targetId);
@@ -169,20 +178,21 @@ class IdeBehaviourPane
                     $countLabel->textColor = 'blue';
                     $countLabel->font = $countLabel->font->withSize(10)->withBold();
 
-                    $this->hintNode->graphic = new UXHBox([new UXLabel($this->hintNodeText), $countLabel]);
+                    $this->hintNode->graphic = new UXHBox([_(new UXLabel($this->hintNodeText)), $countLabel]);
                     $this->hintNode->graphic->spacing = 2;
                 } else {
-                    $this->hintNode->graphic = new UXLabel($this->hintNodeText);
+                    $this->hintNode->graphic = _(new UXLabel($this->hintNodeText));
                     $this->hintNode->graphic->textColor = 'gray';
                     $this->hintNode->text = "";
                 }
+
             } else {
                 $this->hintNode->text = "{$this->hintNodeText} [{$box->children->count}]";
             }
         }
 
         if ($box->children->count == 0) {
-            $hint = new UXLabel('Поведений нет.');
+            $hint = _(new UXLabel('ui.behaviour.list.empty::Поведений нет.'));
             $hint->padding = 10;
             $hint->style = '-fx-font-style: italic';
 
@@ -215,27 +225,24 @@ class IdeBehaviourPane
         $button->on('click', function (UXEvent $e) use ($spec, $pane) {
             $targetId = $this->targetId;
 
-            $msg = new MessageBoxForm('Вы уверены, что хотите удалить поведение "' . $spec->getName() . '"?', ['yes' => 'Да, удалить', 'no' => 'Нет']);
-
             uiLater(function () use ($pane) {
                 $pane->expanded = !$pane->expanded;
             });
 
-            if ($msg->showDialog()) {
-                if ($msg->getResult() == 'yes') {
-                    $this->trigger('remove', [$targetId, $spec]);
+            if (MessageBoxForm::confirmDelete($spec->getName())) {
+                $this->trigger('remove', [$targetId, $spec]);
 
-                    $this->behaviourManager->removeBehaviour($targetId, $spec->getType());
-                    $this->behaviourManager->save();
+                $this->behaviourManager->removeBehaviour($targetId, $spec->getType());
+                $this->behaviourManager->save();
 
-                    $this->makeUi($targetId, $this->lastUi);
-                }
+                $this->makeUi($targetId, $this->lastUi);
             }
         });
 
         $scLab = new UXLabel('', ico('scriptHelper16'));
         $scLab->cursor = 'HAND';
-        $scLab->tooltipText = 'Сгенерировать скрипт';
+        $scLab->tooltipText = 'command.generate.script::Сгенерировать скрипт';
+        _($scLab);
 
         $scLab->on('click', function (UXEvent $e) use ($spec, $behaviour, $pane) {
             uiLater(function () use ($pane) {
@@ -257,15 +264,15 @@ class IdeBehaviourPane
             $dlg->showDialog();
         });
 
-        $box->add($scLab);
-        $box->add($button);
+        $box->add(_($scLab));
+        $box->add(_($button));
 
         $pane->graphic->add($box);
     }
 
     protected function initButtonAdd(UXPane $pane, $targetId)
     {
-        $button = new UXButton('Добавить поведение');
+        $button = new UXButton('ui.behaviour.command.add::Добавить поведение');
         $button->graphic = ico('plugin16');
 
         $button->height = 30;
@@ -276,7 +283,7 @@ class IdeBehaviourPane
             $target = $this->behaviourManager->getTarget($targetId);
 
             if (!$target) {
-                UXDialog::showAndWait('Незарегистрированный тип компонента', 'ERROR');
+                UXDialog::showAndWait(_('ui.behaviour.message.unknown.component.type::Незарегистрированный тип компонента'), 'ERROR');
                 return;
             }
 
@@ -312,7 +319,7 @@ class IdeBehaviourPane
             }
         });
 
-        $pane->add($button);
+        $pane->add(_($button));
     }
 
     private function initProperties($class, UXDesignProperties $pane, array $properties)

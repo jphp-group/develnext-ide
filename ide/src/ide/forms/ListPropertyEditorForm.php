@@ -5,6 +5,7 @@ use ide\editors\value\BooleanPropertyEditor;
 use ide\editors\value\ImagePropertyEditor;
 use ide\editors\value\TextPropertyEditor;
 use ide\forms\mixins\DialogFormMixin;
+use ide\Ide;
 use php\gui\designer\UXDesignProperties;
 use php\gui\framework\AbstractForm;
 use php\gui\layout\UXVBox;
@@ -60,7 +61,7 @@ class ListPropertyEditorForm extends AbstractIdeForm
 
     public function setDefaultProperties()
     {
-        $properties = new UXDesignProperties();
+        $properties = _(new UXDesignProperties());
         $properties->addGroup('general', 'Свойства элемента');
 
         $properties->target = new \stdClass();

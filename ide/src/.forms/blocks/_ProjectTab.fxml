@@ -19,7 +19,7 @@
                   </Button>
                   <VBox>
                      <children>
-                        <Label text="Имя проекта:" textFill="#a8a8a8" />
+                        <Label text="project.name::Имя проекта" textFill="#a8a8a8" />
                         <Label id="projectNameLabel" text="Project Name">
                            <font>
                               <Font name="System Bold" size="16.0" />
@@ -34,7 +34,7 @@
             </HBox>
             <HBox alignment="BOTTOM_LEFT" prefHeight="42.0" spacing="10.0">
                <children>
-                  <Button id="openProjectDirButton" mnemonicParsing="false" prefHeight="25.0" styleClass="icon-open" text="Открыть">
+                  <Button id="openProjectDirButton" mnemonicParsing="false" prefHeight="25.0" styleClass="icon-open" text="command.open::Открыть">
                      <padding>
                         <Insets left="5.0" right="5.0" />
                      </padding>

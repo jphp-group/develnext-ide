@@ -45,8 +45,8 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
     const GENERATED_DIRECTORY = 'src_generated';
 
     private static $importTypes = [
-        'simple' => 'Имена классов (use namespace\\ClassName)',
-        'package' => 'Имена пакетов (use package)'
+        'simple' => 'php.use.type.simple.option::Имена классов (use namespace\\ClassName)',
+        'package' => 'php.use.type.package.option::Имена пакетов (use package)'
     ];
 
     /**
@@ -527,26 +527,26 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
     {
         if ($this->uiSettings) {
             $this->uiByteCodeCheckbox->selected = $this->getIdeConfigValue(self::OPT_COMPILE_BYTE_CODE, true);
-            $this->uiImportTypesSelect->value   = static::$importTypes[$this->getImportType()];
+            $this->uiImportTypesSelect->value   = _(static::$importTypes[$this->getImportType()]);
         }
     }
 
     public function doMakeSettings(CommonProjectControlPane $editor)
     {
-        $title = new UXLabel('Исходный php код:');
+        $title = _(new UXLabel('php.source.code::Исходный php код:'));
         $title->font = $title->font->withBold();
 
         $opts = new UXHBox();
         $opts->spacing = 10;
         $opts->alignment = 'BOTTOM_LEFT';
 
-        $this->uiByteCodeCheckbox = $byteCodeCheckbox = new UXCheckbox('Компилировать в байткод (+ защита от декомпиляции)');
+        $this->uiByteCodeCheckbox = $byteCodeCheckbox = new UXCheckbox('php.option.compile.to.bytecode::Компилировать в байткод (+ защита от декомпиляции)');
         $byteCodeCheckbox->padding = 5;
         $this->uiByteCodeCheckbox->on('mouseUp', [$this, 'doSave']);
-        $byteCodeCheckbox->tooltipText = 'Компиляция будет происходить только во время итоговой сборки проекта.';
-        $opts->add($byteCodeCheckbox);
+        $byteCodeCheckbox->tooltipText = 'php.option.compile.to.bytecode.help::Компиляция будет происходить только во время итоговой сборки проекта.';
+        $opts->add(_($byteCodeCheckbox));
 
-        $importTitle = new UXLabel('Метод импортирования классов:');
+        $importTitle = _(new UXLabel('php.option.use.type.for.classes::Метод импортирования классов:'));
         $importTypeSelect = new UXComboBox(static::$importTypes);
 
         $importTypeSelect->on('action', function () {
@@ -555,7 +555,7 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
             });
         });
 
-        $this->uiImportTypesSelect = $importTypeSelect;
+        $this->uiImportTypesSelect = _($importTypeSelect);
 
         $importTypeSelect->padding = 5;
         $importTypeSelect->minWidth = 350;

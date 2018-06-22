@@ -4,6 +4,7 @@ use ide\Ide;
 use ide\IdeClassLoader;
 use ide\Logger;
 use ide\systems\IdeSystem;
+use php\gui\designer\UXDesignProperties;
 use php\gui\UXDialog;
 use php\gui\UXNode;
 use php\lang\System;
@@ -52,7 +53,10 @@ function _($code, ...$args) {
         return $code;
     } else if ($code instanceof \php\gui\UXTab) {
         $ideLocalizer->translateTab($code, ...$args);
+
         return $code;
+    } else if ($code instanceof UXDesignProperties) {
+        return $ideLocalizer->translateDesignProperties($code);
     } else {
         return $ideLocalizer->translate($code, $args);
     }

@@ -444,7 +444,8 @@ class GameSpriteEditor extends AbstractEditor
 
         $this->spritePane = new IdeSpritePane();
 
-        $this->designProperties = $properties = new UXDesignProperties();
+        $this->designProperties = $properties = _(new UXDesignProperties());
+
         $this->createProperties($properties);
         //$this->element->createProperties($properties);
 

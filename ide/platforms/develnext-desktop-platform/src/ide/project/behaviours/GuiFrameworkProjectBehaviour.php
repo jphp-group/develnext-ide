@@ -409,7 +409,8 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
     public function doUpdateSettings(CommonProjectControlPane $editor = null)
     {
         if ($this->uiSplashLabel) {
-            $this->uiSplashLabel->text = $this->splashData['src'] ?: '(Нет изображения)';
+            $this->uiSplashLabel->text = $this->splashData['src'] ?: 'entity.image.empty::(Нет изображения)';
+            $this->uiSplashLabel = _($this->uiSplashLabel);
         }
 
         if ($this->uiSplashOnTop) {
@@ -423,12 +424,12 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
 
     public function doMakeSettings(CommonProjectControlPane $editor)
     {
-        $title = new UXLabel('Заставка (Splash):');
+        $title = _(new UXLabel('gui.option.splash::Заставка (Splash):'));
         $title->font = $title->font->withBold();
 
-        $label = new UXLabel('(Нет изображения)');
+        $label = _(new UXLabel('entity.image.empty::(Нет изображения)'));
         $label->textColor = 'gray';
-        $button = new UXButton('Выбрать');
+        $button = _(new UXButton('command.choose::Выбрать'));
         $button->classes->add('icon-open');
 
         $this->uiSplashLabel = $label;
@@ -438,7 +439,8 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
 
             if ($dialog->showDialog()) {
                 $this->splashData['src'] = $dialog->getResult() ? "/{$dialog->getResult()}" : null;
-                $label->text = $this->splashData['src'] ?: '(Нет изображения)';
+                $label->text = $this->splashData['src'] ?: 'entity.image.empty::(Нет изображения)';
+                $label = _($label);
 
                 $this->saveLauncherConfig();
             }
@@ -447,9 +449,10 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
         $UXHBox = new UXHBox([$button, $label], 10);
         $UXHBox->alignment = 'CENTER_LEFT';
 
-        $this->uiSplashOnTop = $fxSplashOnTop = new UXCheckbox('Заставка всегда поверх окон');
-        $this->uiSplashAutoHide = $fxSplashAutoHide = new UXCheckbox('Автоматически скрывать заставку после старта');
-        $fxSplashAutoHide->tooltipText = 'Чтобы скрыть заставку через код используйте app()->hideSplash()';
+        $this->uiSplashOnTop = $fxSplashOnTop = _(new UXCheckbox('gui.option.splash.always.on.top::Заставка всегда поверх окон'));
+        $fxSplashAutoHide = new UXCheckbox('gui.option.splash.hide.after.start::Автоматически скрывать заставку после старта');
+        $fxSplashAutoHide->tooltipText = 'gui.option.splash.hide.after.start.help::Чтобы скрыть заставку через код используйте app()->hideSplash()';
+        $this->uiSplashAutoHide = _($fxSplashAutoHide);
 
         $fxSplashOnTop->on('mouseUp', function () {
             $this->splashData['alwaysOnTop'] = $this->uiSplashOnTop->selected;

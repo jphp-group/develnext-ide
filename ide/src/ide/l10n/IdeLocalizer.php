@@ -1,11 +1,17 @@
 <?php
 namespace ide\l10n;
 
+use function alert;
 use framework\core\Event;
 use framework\localization\Localizer;
+use ide\Ide;
 use ide\Logger;
+use php\gui\designer\UXDesignProperties;
 use php\gui\framework\DataUtils;
+use php\gui\UXComboBox;
+use php\gui\UXComboBoxBase;
 use php\gui\UXLabeled;
+use php\gui\UXListView;
 use php\gui\UXMenu;
 use php\gui\UXMenuBar;
 use php\gui\UXMenuItem;
@@ -16,6 +22,7 @@ use php\gui\UXTabPane;
 use php\gui\UXTextInputControl;
 use php\lib\str;
 use php\util\Regex;
+use function pre;
 
 /**
  * Class IdeLocalizer
@@ -39,6 +46,34 @@ class IdeLocalizer extends Localizer
     public function setUseDefaultValuesForLang($useDefaultValuesForLang)
     {
         $this->useDefaultValuesForLang = $useDefaultValuesForLang;
+    }
+
+    /**
+     * @param UXDesignProperties $properties
+     * @return UXDesignProperties
+     */
+    public function translateDesignProperties(UXDesignProperties $properties)
+    {
+        $panes = $properties->getGroupPanes();
+        foreach ($panes as $pane) {
+            $pane = $this->translateNode($pane);
+        }
+
+        $properties->setPropertyNameGetter(function ($name) {
+            return $this->translate($name);
+        });
+
+        if ($l10nBind = $properties->{'l10n-bind-id'}) {
+            $this->off('after-change-language', $l10nBind);
+        }
+
+        $l10nBind = $this->bind('after-change-language', function () use ($properties, $panes) {
+            $properties->update();
+        });
+
+        $properties->{'l10n-bind-id'} = $l10nBind;
+
+        return $properties;
     }
 
     /**
@@ -85,6 +120,32 @@ class IdeLocalizer extends Localizer
             $l10nBind = $this->bind('after-change-language', function () use ($node, $args, $text, $promptText) {
                 $node->text = $this->translate($text, $args);
                 $node->promptText = $this->translate($promptText, $args);
+            });
+
+            $node->data('l10n-bind-id', $l10nBind);
+        } else if ($node instanceof UXComboBox) {
+            $items = flow($node->items)->toArray();
+
+            $selected = $node->selectedIndex;
+            foreach ($items as $i => $item) {
+                $node->items[$i] = $this->translate($item, $args);
+            }
+            $node->selectedIndex = $selected;
+
+            if ($l10nBind = $node->data('l10n-bind-id')) {
+                $this->off('after-change-language', $l10nBind);
+            }
+
+            $l10nBind = $this->bind('after-change-language', function () use ($node, $args, $items) {
+                $selected = $node->selectedIndex;
+                $newItems = [];
+
+                foreach ($items as $i => $item) {
+                    $newItems[$i] = $this->translate($item, $args);
+                }
+
+                $node->items->setAll($newItems);
+                $node->selectedIndex = $selected;
             });
 
             $node->data('l10n-bind-id', $l10nBind);

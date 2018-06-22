@@ -1303,7 +1303,8 @@ class FormEditor extends AbstractModuleEditor
         $codeTab->tooltip = UXTooltip::of($this->codeFile);
 
         $designerTab = new UXTab();
-        $designerTab->text = 'Дизайн';
+        $designerTab->text = 'ui.editor.design.tab::Дизайн';
+        _($designerTab);
 
         $designerTab->content = $designer;
 
@@ -2279,7 +2280,8 @@ class FormEditor extends AbstractModuleEditor
     {
         Logger::info("Initialize element = " . get_class($element));
 
-        $properties = new UXDesignProperties();
+        $properties = _(new UXDesignProperties());
+
         $element->createProperties($properties);
 
         if (!$properties->getGroupPanes()) {
@@ -2391,7 +2393,8 @@ class FormEditor extends AbstractModuleEditor
             $this->leftPaneUi->hideBehaviourPane();
             $this->leftPaneUi->hideEventListPane();
 
-            $properties = new UXDesignProperties();
+            $properties = _(new UXDesignProperties());
+
             $properties->addGroup('prototype', 'Клон');
             $properties->addGroup('general', 'Главное');
 
