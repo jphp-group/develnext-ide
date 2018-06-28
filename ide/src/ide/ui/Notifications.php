@@ -25,10 +25,10 @@ class Notifications
     static function attachException(UXTrayNotification $notify, \Exception $e) {
         $notify->on('click', function () use ($e) {
             $dialog = new UXAlert('ERROR');
-            $dialog->title = 'Ошибка';
-            $dialog->headerText = 'Произошла ошибка в DevelNext, сообщите об этом авторам';
+            $dialog->title = _('entity.error::Ошибка');
+            $dialog->headerText = _('message.error.occurs.in.develnext::Произошла ошибка в DevelNext, сообщите об этом авторам');
             $dialog->contentText = $e->getMessage();
-            $dialog->setButtonTypes(['Выход из DevelNext', 'Продолжить']);
+            $dialog->setButtonTypes([_('btn.exit.from.develnext::Выход из DevelNext'), _('command.resume::Продолжить')]);
             $pane = new UXAnchorPane();
             $pane->maxWidth = 100000;
 
@@ -43,7 +43,7 @@ class Notifications
             $dialog->expanded = true;
 
             switch ($dialog->showAndWait()) {
-                case 'Выход из DevelNext':
+                case _('btn.exit.from.develnext::Выход из DevelNext'):
                     Ide::get()->shutdown();
                     break;
             }
@@ -53,7 +53,7 @@ class Notifications
     static function error($title, $message)
     {
         if ($message == "Validation") {
-            return self::show($title, "Введите корректные данные", "ERROR");
+            return self::show($title, "message.enter.correct.data::Введите корректные данные", "ERROR");
         }
 
         return self::show($title, $message, 'ERROR');
@@ -71,17 +71,18 @@ class Notifications
 
     static function showAccountWelcome()
     {
-        static::show('Приветствие', 'Добро пожаловать в социальную сеть DevelNext для разработчиков', 'INFORMATION');
+        static::show('title.welcome::Приветствие', 'message.welcome.to.social.of.develnext::Добро пожаловать в социальную сеть DevelNext для разработчиков', 'INFORMATION');
     }
 
     static function showAccountUnavailable()
     {
-        static::show('Аккаунт недоступен', 'Работа с аккаунтом временно недоступна, приносим свои извинения.', 'WARNING');
+        static::show('message.account.not.available::Аккаунт недоступен',
+            'message.account.not.available.text::Работа с аккаунтом временно недоступна, приносим свои извинения.', 'WARNING');
     }
 
     public static function showAccountAuthWelcome(array $data)
     {
-        static::show('Добро пожаловать', 'Приветствуем тебя, ' . $data['login'] . ".");
+        static::show('title.welcome::Добро пожаловать', _('Приветствуем тебя, {0}.', $data['login']));
     }
 
     public static function showException(\Exception $e)
