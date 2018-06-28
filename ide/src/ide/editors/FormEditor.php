@@ -1297,10 +1297,11 @@ class FormEditor extends AbstractModuleEditor
         });
 
         $codeTab = new UXTab();
-        $codeTab->text = 'Исходный код [' . fs::name($this->codeFile) . ']';
+        $codeTab->text = '{ui.editor.sources.tab::Исходный код} [' . fs::name($this->codeFile) . ']';
         $codeTab->content = $this->codeEditorUi;
         $codeTab->graphic = Ide::get()->getImage($this->codeEditor->getIcon());
         $codeTab->tooltip = UXTooltip::of($this->codeFile);
+        _($codeTab);
 
         $designerTab = new UXTab();
         $designerTab->text = 'ui.editor.design.tab::Дизайн';

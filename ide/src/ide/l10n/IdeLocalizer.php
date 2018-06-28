@@ -239,7 +239,7 @@ class IdeLocalizer extends Localizer
 
     public function translate($message, array $args = []): string
     {
-        if (!str::startsWith($message, '{')) {
+        if (!str::startsWith($message, '{') && !str::endsWith($message, '}')) {
             if (str::contains($message, "::")) {
                 [$message, $def] = str::split($message, '::', 2);
 

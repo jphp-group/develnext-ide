@@ -46,12 +46,12 @@ class DocCommand extends AbstractCommand
     protected function makeSearchInputUi()
     {
         $input = new UXTextField();
-        $input->promptText = 'поиск в справке';
+        $input->promptText = 'doc.search.in.help::поиск в справке';
         $input->width = 170;
         $input->maxHeight = 999;
         $input->font = UXFont::of($input->font->family, 15);
 
-        return $input;
+        return _($input);
     }
 
     public function makeUiForRightHead()
