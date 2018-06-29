@@ -23,7 +23,7 @@ class GlobalKeyParamEventKind extends KeyEventKind
             'F6' => 'F6', 'F7' => 'F7', 'F8' => 'F8', 'F9' => 'F9', 'F10' => 'F10', 'F11' => 'F11', 'F12' => 'F12',
         ];
 
-        $multimedia = [
+        /*$multimedia = [
             'Играть' => 'Play',
             'Запись' => 'Record',
             'Перемотка' => 'Rewind',
@@ -33,21 +33,21 @@ class GlobalKeyParamEventKind extends KeyEventKind
             'Прибавить громкость' => 'VolumeUp',
             'Убавить громкость' => 'VolumeDown',
             'Выключить звук' => 'Mute'
-        ];
+        ];*/
 
         $others = [
-            'Пробел' => 'Space',
+            'ui.event.key.space::Пробел' => 'Space',
             'Enter' => 'Enter',
             'Delete' => 'Delete',
-            'Таб' => 'Tab',
+            'ui.event.key.tab::Таб' => 'Tab',
             'Print Screen' => 'PrintScreen',
         ];
 
         $directions = [
-            'Лево' => 'Left',
-            'Право' => 'Right',
-            'Верх' => 'Up',
-            'Низ' => 'Down',
+            'ui.event.key.left::Лево' => 'Left',
+            'ui.event.key.right::Право' => 'Right',
+            'ui.event.key.up::Верх' => 'Up',
+            'ui.event.key.down::Низ' => 'Down',
             '-',
             'A (left)' => 'A',
             'D (right)' => 'D',
@@ -56,11 +56,11 @@ class GlobalKeyParamEventKind extends KeyEventKind
         ];
 
         $variants = [
-            'Направление' => $directions,
-            'Буквы' => $letters,
-            'Цифры' => $digits,
-            'Функциональные' => $funcKeys,
-            'Другие' => $others,
+            'ui.event.direction.keys::Направление' => $directions,
+            'ui.event.letter.keys::Буквы' => $letters,
+            'ui.event.digit.keys::Цифры' => $digits,
+            'ui.event.function.keys::Функциональные' => $funcKeys,
+            'ui.event.other.keys::Другие' => $others,
         ];
 
         $ctrLetters = [];
@@ -92,16 +92,16 @@ class GlobalKeyParamEventKind extends KeyEventKind
         }
 
         return [
-            'Пробел' => 'Space',
+            'ui.event.space.key::Пробел' => 'Space',
             'Enter' => 'Enter',
             'Escape' => 'Esc',
             '-',
-            'Направления' => $directions,
-            'Цифры' => $digits,
-            'Буквы' => $letters,
-            'Функциональные' => $funcKeys,
+            'ui.event.direction.keys::Направление' => $directions,
+            'ui.event.digit.keys::Цифры' => $digits,
+            'ui.event.letter.keys::Буквы' => $letters,
+            'ui.event.func.keys::Функциональные' => $funcKeys,
             //'Мультимедиа' => $multimedia,
-            'Другие' => [
+            'ui.event.other.keys::Другие' => [
                 'Таб' => 'Tab',
                 'Backspace' => 'Backspace',
                 'Delete' => 'Delete',
