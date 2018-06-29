@@ -35,7 +35,7 @@ class AbstractEditorsProjectControlPaneEditCommand extends AbstractMenuCommand
 
     public function getName()
     {
-        return 'Редактировать';
+        return 'command.edit::Редактировать';
     }
 
     public function getIcon()
@@ -67,7 +67,7 @@ class AbstractEditorsProjectControlPaneCloneCommand extends AbstractMenuCommand
 
     public function getName()
     {
-        return 'Клонировать';
+        return 'command.clone::Клонировать';
     }
 
     public function getIcon()
@@ -186,7 +186,7 @@ abstract class AbstractEditorsProjectControlPane extends AbstractProjectControlP
     protected function makeUi()
     {
         $pane = new FlowListViewDecorator();
-        $pane->setEmptyListText($this->getName() . '. Список пуст.');
+        $pane->setEmptyListText($this->getName() . '. ' . _('list.is.empty::Список пуст') . '.');
         $pane->setMultipleSelection(true);
 
         $pane->addMenuCommand(new AbstractEditorsProjectControlPaneEditCommand($this));
@@ -221,7 +221,7 @@ abstract class AbstractEditorsProjectControlPane extends AbstractProjectControlP
                     });
 
                     if (fs::exists($file)) {
-                        UXDialog::show('Ошибка удаления, что-то пошло не так', 'ERROR');
+                        UXDialog::show(_('message.error.of.removing::Ошибка удаления, что-то пошло не так'), 'ERROR');
                         return true;
                     } else {
                         if ($project = Ide::project()) {
@@ -263,7 +263,7 @@ abstract class AbstractEditorsProjectControlPane extends AbstractProjectControlP
 
     protected function makeActionsUi()
     {
-        $addButton = new UXButton('Добавить');
+        $addButton = _(new UXButton('command.add::Добавить'));
         $addButton->classes->add('icon-plus');
         $addButton->font = $addButton->font->withBold();
         $addButton->maxHeight = 999;
@@ -272,7 +272,7 @@ abstract class AbstractEditorsProjectControlPane extends AbstractProjectControlP
             $this->trigger('updateCount');
         });
 
-        $editButton = new UXButton('Редактировать');
+        $editButton = _(new UXButton('command.edit::Редактировать'));
         $editButton->classes->add('icon-edit');
         $editButton->maxHeight = 999;
         $editButton->enabled = false;
@@ -280,7 +280,7 @@ abstract class AbstractEditorsProjectControlPane extends AbstractProjectControlP
             $this->doEdit();
         });
 
-        $cloneButton = new UXButton('Клонировать');
+        $cloneButton = _(new UXButton('command.clone::Клонировать'));
         $cloneButton->classes->add('icon-copy');
         $cloneButton->maxHeight = 999;
         $cloneButton->enabled = false;
@@ -292,7 +292,9 @@ abstract class AbstractEditorsProjectControlPane extends AbstractProjectControlP
         $delButton->classes->add('icon-trash2');
         $delButton->maxHeight = 999;
         $delButton->enabled = false;
-        $delButton->text = 'Удалить';
+        $delButton->text = 'command.delete::Удалить';
+
+        _($delButton);
 
         $delButton->on('action', function () {
             $this->list->removeBySelections();

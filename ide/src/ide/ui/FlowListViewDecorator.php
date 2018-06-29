@@ -475,7 +475,7 @@ class FlowListViewDecorator implements \Countable
     {
         $this->pane->children->clear();
 
-        $object = new UXLabel(_($this->emptyListText));
+        $object = _(new UXLabel($this->emptyListText));
         $object->classes->addAll(['empty-list-text', 'dn-list-hint']);
 
         $this->pane->children->add($object);

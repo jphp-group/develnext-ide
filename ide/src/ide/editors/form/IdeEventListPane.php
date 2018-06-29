@@ -261,7 +261,7 @@ class IdeEventListPane
     {
         $menu = new ContextMenu();
 
-        $menu->addCommand(AbstractCommand::makeWithText('Открыть в конструкторе', 'icons/wizard16.png', function () use ($list) {
+        $menu->addCommand(AbstractCommand::makeWithText('ui.command.open.in.wizard::Открыть в конструкторе', 'icons/wizard16.png', function () use ($list) {
             $selected = Items::first($list->selectedItems);
 
             if ($selected) {
@@ -274,7 +274,7 @@ class IdeEventListPane
 
         $menu->addSeparator();
 
-        $menu->addCommand(AbstractCommand::makeWithText('Открыть в php-редакторе', 'icons/phpFile16.png', function () use ($list) {
+        $menu->addCommand(AbstractCommand::makeWithText('ui.command.open.in.php.editor::Открыть в php-редакторе', 'icons/phpFile16.png', function () use ($list) {
             $selected = Items::first($list->selectedItems);
 
             if ($selected) {
@@ -304,12 +304,12 @@ class IdeEventListPane
         $editorType = Ide::get()->getUserConfigValue(CodeEditor::class . '.editorOnDoubleClick');
 
         if ($request && !$editorType) {
-            $buttons = ['constructor' => 'Конструктор', 'php' => 'PHP редактор'];
+            $buttons = ['constructor' => _('ui.event.wizard::Конструктор'), 'php' => _('ui.event.php.editor::PHP редактор')];
 
-            $dialog = new MessageBoxForm('Какой использовать редактор для редактирования событий?', $buttons, $this->ui);
+            $dialog = new MessageBoxForm('message.confirm.ui.event.choose.editor::Какой использовать редактор для редактирования событий?', $buttons, $this->ui);
 
             UXApplication::runLater(function () use ($dialog) {
-                $dialog->toast('Используйте "Конструктор" если вы новичок!');
+                $dialog->toast('message.use.wizard.if.you.beginer::Используйте "Конструктор" если вы новичок!');
             });
 
             if ($dialog->showDialogWithFlag()) {
