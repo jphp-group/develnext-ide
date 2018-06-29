@@ -295,12 +295,12 @@ class ObjectListEditor
         $this->comboBox->items->add($undef);
 
         if ($this->senderCode) {
-            $this->addItem(new ObjectListEditorItem('Текущий объект (self)', null, $this->senderCode));
-            $this->addItem(new ObjectListEditorItem('Целевой объект (target)', null, $this->targetCode));
-            $this->addItem(new ObjectListEditorItem('Созданный объект ($instance)', null, "~instance"));
+            $this->addItem(new ObjectListEditorItem('ui.object.list.self::Текущий объект (self)', null, $this->senderCode));
+            $this->addItem(new ObjectListEditorItem('ui.object.list.target::Целевой объект (target)', null, $this->targetCode));
+            $this->addItem(new ObjectListEditorItem('ui.object.list.instance::Созданный объект ($instance)', null, "~instance"));
 
             if (!$this->disableForms) {
-                $this->addItem(new ObjectListEditorItem('Текущая форма', null, $this->senderCode . "Form"));
+                $this->addItem(new ObjectListEditorItem('ui.current.form::Текущая форма', null, $this->senderCode . "Form"));
             }
         }
 
@@ -334,7 +334,7 @@ class ObjectListEditor
                 $moduleEditors = $editor->getModuleEditors();
 
                 if ($moduleEditors && !$this->disableModules) {
-                    $this->addItem(new ObjectListEditorItem('[Модули]', null, ''));
+                    $this->addItem(new ObjectListEditorItem('ui.object.list.modules::[Модули]', null, ''));
 
                     foreach ($moduleEditors as $module => $moduleEditor) {
                         $nodes = $moduleEditor->getComponents();
@@ -356,7 +356,7 @@ class ObjectListEditor
                     $formEditors = $editor->getFormEditors();
 
                     if ($formEditors) {
-                        $this->addItem(new ObjectListEditorItem('Формы модуля', null, '_context'));
+                        $this->addItem(new ObjectListEditorItem('ui.object.list.module.forms::Формы модуля', null, '_context'));
 
                         foreach ($formEditors as $formEditor) {
                             $formsAdded[$formEditor->getTitle()] = $formEditor;
@@ -385,7 +385,7 @@ class ObjectListEditor
                 $formEditors = $gui->getFormEditors();
 
                 if (/*!($editor instanceof FormEditor) || sizeof($formEditors) > 1*/true) {
-                    $this->addItem(new ObjectListEditorItem('[Другие формы]', null, ''));
+                    $this->addItem(new ObjectListEditorItem('ui.object.list.other.forms::[Другие формы]', null, ''));
 
                     foreach ($formEditors as $key => $formEditor) {
                         if (FileUtils::hashName($formEditor->getFile()) == FileUtils::hashName($editor->getFile())) {

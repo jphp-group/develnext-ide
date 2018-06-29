@@ -42,11 +42,11 @@ class SkinManagerForm extends AbstractIdeForm
         parent::init();
 
         $contextMenu = new ContextMenu(null, [
-            SimpleSingleCommand::makeWithText('Выбрать', 'icons/ok16.png', function () {
+            SimpleSingleCommand::makeWithText('command.choose::Выбрать', 'icons/ok16.png', function () {
                 $this->doSelect();
             }),
             '-',
-            SimpleSingleCommand::makeWithText('Экспортировать в файл', 'icons/save16.png', function () {
+            SimpleSingleCommand::makeWithText('command.export.to.file::Экспортировать в файл', 'icons/save16.png', function () {
                 if ($this->list->selectedIndex > 0 && $this->list->selectedItem) {
                     /** @var ProjectSkin $skin */
                     $skin = $this->list->selectedItem->getSkin();
@@ -60,17 +60,17 @@ class SkinManagerForm extends AbstractIdeForm
                             $file = "$file.zip";
                         }
 
-                        $this->showPreloader('Сохранение ...');
+                        $this->showPreloader('message.saving::Сохранение ...');
 
                         FileUtils::copyFileAsync($skin->getFile(), $file, function () {
                             $this->hidePreloader();
-                            $this->toast('Скин успешно сохранен в файл.');
+                            $this->toast(_('message.skin.successfully.saved.to.file::Скин успешно сохранен в файл.'));
                         });
                     }
                 }
             }),
             '-',
-            SimpleSingleCommand::makeWithText('Удалить из библиотеки', 'icons/trash16.gif', function () {
+            SimpleSingleCommand::makeWithText('command.remove.from.library::Удалить из библиотеки', 'icons/trash16.gif', function () {
                 if ($this->list->selectedIndex > 0) {
                     /** @var IdeLibrarySkinResource $skin */
                     $skin = $this->list->selectedItem;
@@ -80,7 +80,7 @@ class SkinManagerForm extends AbstractIdeForm
                         $this->updateList();
                     }
                 } else {
-                    MessageBoxForm::warning("Выберите скин для удаления.");
+                    MessageBoxForm::warning("message.choose.skin.for.removing::Выберите скин для удаления.");
                 }
             })
         ]);
@@ -97,7 +97,7 @@ class SkinManagerForm extends AbstractIdeForm
 
                     if ($skin->getAuthor()) {
                         if ($desc) $desc .= ", ";
-                        $desc .= "автор - " . $skin->getAuthor();
+                        $desc .= _("skin.entity.author::автор") . " - " . $skin->getAuthor();
                     }
 
                     if ($skin->getAuthorSite()) {
@@ -107,11 +107,11 @@ class SkinManagerForm extends AbstractIdeForm
 
                     if ($skin->getVersion()) {
                         if ($desc) $desc .= ", ";
-                        $desc .= "версия {$skin->getVersion()}";
+                        $desc .= _("skin.entity.version::версия") . " {$skin->getVersion()}";
                     }
 
                     if (!$desc) {
-                        $desc = "Описание отсутствует.";
+                        $desc = _("skin.description.empty::Описание отсутствует.");
                     }
 
                     $cell->graphic = new ListExtendedItem($skin->getName(), str::upperFirst($desc), ico('brush16'));
@@ -119,7 +119,7 @@ class SkinManagerForm extends AbstractIdeForm
 
             } else {
                 $cell->text = null;
-                $cell->graphic = $ui = new ListExtendedItem('(Без скина)', 'Убрать скин из проекта', ico('brush16'));
+                $cell->graphic = $ui = new ListExtendedItem(_('ui.design.without.skin::(Без скина)'), _('command.remove.skin.from.project::Убрать скин из проекта'), ico('brush16'));
                 $ui->setTitleThin(true);
             }
         });
@@ -175,7 +175,7 @@ class SkinManagerForm extends AbstractIdeForm
     public function doSelect()
     {
         if ($this->list->selectedIndex < 0) {
-            MessageBoxForm::warning('Выберите скин ...');
+            MessageBoxForm::warning('message.please.choose.skin::Выберите скин ...');
         } else {
             $this->setResult($this->list->selectedItem ? $this->list->selectedItem->getSkin() : ProjectSkin::createEmpty());
             $this->hide();
@@ -201,7 +201,7 @@ class SkinManagerForm extends AbstractIdeForm
                     $destFile = "$skinDir/" . $skin->getUid() . ".zip";
 
                     if (fs::isFile($destFile)) {
-                        if (!MessageBoxForm::confirm("Скин с ID '{$skin->getUid()}' уже существует в библиотеке, хотите заменить его новым?")) {
+                        if (!MessageBoxForm::confirm(_("message.confirm.skin.already.exists.replace.it::Скин с ID ({0}) уже существует в библиотеке, хотите заменить его новым?", $skin->getUid()))) {
                             goto retry;
                         }
                     }
@@ -210,12 +210,12 @@ class SkinManagerForm extends AbstractIdeForm
                     $ideLibrary->updateCategory('skins');
 
                     $this->updateList();
-                    $this->toast('Скин был успешно добавлен');
+                    $this->toast(_('message.skin.successfully.added::Скин был успешно добавлен'));
                 }
             } catch (ZipException $e) {
-                MessageBoxForm::warning("Ошибка чтения zip файла, скин не был добавлен.", $this);
+                MessageBoxForm::warning("message.cannot.read.zip.file.skin.not.added::Ошибка чтения zip файла, скин не был добавлен.", $this);
             } catch (IOException $e) {
-                MessageBoxForm::warning("Ошибка чтения файла, скин не был добавлен.", $this);
+                MessageBoxForm::warning("message.connot.read.file.skin.not.added::Ошибка чтения файла, скин не был добавлен.", $this);
             }
         }
     }

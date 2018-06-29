@@ -18,12 +18,12 @@ class SpritesProjectControlPane extends AbstractEditorsProjectControlPane
 {
     public function getName()
     {
-        return "Спрайты";
+        return "ui.game.sprites::Спрайты";
     }
 
     public function getDescription()
     {
-        return "Игровая графика";
+        return "ui.game.graphics::Игровая графика";
     }
 
     public function getIcon()

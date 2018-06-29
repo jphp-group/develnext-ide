@@ -12,4 +12,4 @@ deps:
 
 gradle:
   deps:
-  - 'org.fxmisc.richtext:richtextfx:0.8.2'
+  - 'org.fxmisc.richtext:richtextfx:0.9.0'

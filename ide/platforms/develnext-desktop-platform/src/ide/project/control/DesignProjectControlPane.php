@@ -47,12 +47,12 @@ class DesignProjectControlPane extends AbstractProjectControlPane
 
     public function getName()
     {
-        return "Внешний вид";
+        return "ui.design::Внешний вид";
     }
 
     public function getDescription()
     {
-        return "CSS стиль и дизайн";
+        return "ui.css.style.and.design::CSS стиль и дизайн";
     }
 
     public function getIcon()
@@ -83,8 +83,11 @@ class DesignProjectControlPane extends AbstractProjectControlPane
 
             $project->_skinChecked = true;
 
+
             if ($skin && $skin->getUid() && !Ide::get()->getLibrary()->getResource('skins', $skin->getUid())) {
-                if (MessageBoxForm::confirm("Проект содержит скин '{$skin->getName()}', которого нет в вашей библиотеке, хотите сохранить его в библиотеку?")) {
+                if (MessageBoxForm::confirm(
+                    _('ui.design.message.project.has.unknown.skin::Проект содержит скин ({0}), которого нет в вашей библиотеке, хотите сохранить его в библиотеку?', $skin->getName())
+                )) {
 
                     $ideLibrary = Ide::get()->getLibrary();
                     $skinFile = $ideLibrary->getResourceDirectory('skins') . "/{$skin->getUid()}.zip";
@@ -108,9 +111,9 @@ class DesignProjectControlPane extends AbstractProjectControlPane
                     $ideLibrary->updateCategory('skins');
 
                     if (fs::isFile($skinFile)) {
-                        Ide::toast('Скин успешно сохранен в библиотеке скинов');
+                        Ide::toast(_('ui.design.message.skin.successfully.saved::Скин успешно сохранен в библиотеке скинов'));
                     } else {
-                        MessageBoxForm::warning('Ошибка сохранения скина');
+                        MessageBoxForm::warning(_('ui.design.message.skin.failed.to.save::Ошибка сохранения скина'));
                     }
                 }
             }
@@ -144,7 +147,7 @@ class DesignProjectControlPane extends AbstractProjectControlPane
             $icon,
             $this->uiSkinName,
             '-',
-            $menu->makeButton('Выбрать скин', ico('brush16'), function () {
+            $menu->makeButton('command.select.skin::Выбрать скин', ico('brush16'), function () {
                 if ($gui = GuiFrameworkProjectBehaviour::get()) {
                     try {
                         $manager = new SkinManagerForm();
@@ -167,7 +170,7 @@ class DesignProjectControlPane extends AbstractProjectControlPane
                 }
             }),
             '-',
-            SimpleSingleCommand::makeWithText('Сохранить CSS как скин', 'icons/save16.png', function () {
+            SimpleSingleCommand::makeWithText('command.save.css.as.skin::Сохранить CSS как скин', 'icons/save16.png', function () {
                 $dialog = new SkinSaveDialogForm($this->editor->getFile());
                 $dialog->showAndWait();
             })
@@ -212,9 +215,11 @@ class DesignProjectControlPane extends AbstractProjectControlPane
                 $this->editor->requestFocus();
             });
 
-            $this->uiSkinName->text = '(Скин не выбран)';
+            $this->uiSkinName->text = 'ui.design.no.skin.selected::(Скин не выбран)';
             $this->uiSkinName->textColor = 'gray';
             $this->uiSkinName->font = UXFont::of('System', UiUtils::fontSize());
+
+            _($this->uiSkinName);
 
             if ($gui = GuiFrameworkProjectBehaviour::get()) {
                 $skin = $gui->getCurrentSkin();
@@ -248,7 +253,7 @@ class DesignProjectControlPane_SkinConvertToTheme extends AbstractMenuCommand
 
     public function getName()
     {
-        return "Конвертировать скин в стили проекта";
+        return "command.convert.skin.to.project.styles::Конвертировать скин в стили проекта";
     }
 
     public function getIcon()
@@ -258,7 +263,7 @@ class DesignProjectControlPane_SkinConvertToTheme extends AbstractMenuCommand
 
     public function onExecute($e = null, AbstractEditor $editor = null)
     {
-        if (MessageBoxForm::confirm('Все стили проекта будут заменены стилями скина, Вы уверены?')) {
+        if (MessageBoxForm::confirm('ui.design.confirm.message.all.styles.replaced.with.skin::Все стили проекта будут заменены стилями скина, Вы уверены?')) {
             $gui = GuiFrameworkProjectBehaviour::get();
             $gui->convertSkinToTheme();
             $this->pane->refresh();
@@ -291,7 +296,7 @@ class DesignProjectControlPane_SkinClearCommand extends AbstractMenuCommand
 
     public function getName()
     {
-        return "(Без скина)";
+        return "ui.design.without.skin::(Без скина)";
     }
 
     public function getIcon()

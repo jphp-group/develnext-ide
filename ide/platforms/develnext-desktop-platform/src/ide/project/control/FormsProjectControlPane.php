@@ -40,12 +40,12 @@ class FormsProjectControlPane extends AbstractEditorsProjectControlPane
 
     public function getName()
     {
-        return "Формы";
+        return "ui.forms::Формы";
     }
 
     public function getDescription()
     {
-        return "Формы и окна";
+        return "ui.forms.and.windows::Формы и окна";
     }
 
     public function getIcon()
@@ -102,7 +102,7 @@ class FormsProjectControlPane extends AbstractEditorsProjectControlPane
     protected function makeAdditionalUi()
     {
         $formListEditor = new FormListEditor();
-        $formListEditor->setEmptyItemText('[Нет]');
+        $formListEditor->setEmptyItemText('ui.form.list.no::[Нет]');
         $formListEditor->build();
 
         $formListEditor->onChange(function ($value) {
@@ -117,14 +117,14 @@ class FormsProjectControlPane extends AbstractEditorsProjectControlPane
         $formListEditor->getUi()->width = 250;
         $this->settingsMainFormCombobox = $formListEditor;
 
-        $label = new UXLabel('* отображается при старте программы');
+        $label = new UXLabel('ui.form.show.on.start::* отображается при старте программы');
         $label->textColor = 'silver';
 
         $box = new UXHBox([$formListEditor->getUi()], 5);
         $box->alignment = 'CENTER_LEFT';
 
         $ui = new UXVBox([
-            new UXLabel('Главная форма:'),
+            _(new UXLabel('{ui.main.form::Главная форма}:')),
             $box
         ]);
 

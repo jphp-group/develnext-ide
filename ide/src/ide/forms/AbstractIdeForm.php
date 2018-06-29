@@ -53,6 +53,12 @@ class AbstractIdeForm extends AbstractForm
         parent::showPreloader(_($text));
     }
 
+    public function toast($message, $timeout = 0)
+    {
+        parent::toast(_($message), $timeout);
+    }
+
+
     protected function init()
     {
         parent::init();

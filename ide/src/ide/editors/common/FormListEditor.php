@@ -15,7 +15,7 @@ class FormListEditor extends ObjectListEditor
         $project = Ide::get()->getOpenedProject();
 
         if ($this->senderCode) {
-            $this->comboBox->items->add(new ObjectListEditorItem('Текущая форма', null, $this->senderCode));
+            $this->comboBox->items->add(new ObjectListEditorItem('ui.current.form::Текущая форма', null, $this->senderCode));
         }
 
         if ($project && $project->hasBehaviour(GuiFrameworkProjectBehaviour::class)) {

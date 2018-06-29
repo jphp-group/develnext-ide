@@ -341,7 +341,7 @@ class ContextMenu
      */
     public function makeButton(string $text = '', UXNode $icon = null, callable $onClick = null)
     {
-        $button = new UXSplitMenuButton($text, $icon);
+        $button = _(new UXSplitMenuButton($text, $icon));
 
         /** @var UXMenuItem $item */
         foreach ($this->getRoot()->items as $item) {
