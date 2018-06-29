@@ -14,12 +14,12 @@ class ModulesProjectControlPane extends AbstractEditorsProjectControlPane
 {
     public function getName()
     {
-        return "Модули";
+        return "ui.modules::Модули";
     }
 
     public function getDescription()
     {
-        return "Модули и скрипты";
+        return "ui.modules.and.scripts::Модули и скрипты";
     }
 
     public function getIcon()

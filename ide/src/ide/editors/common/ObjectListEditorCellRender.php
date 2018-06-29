@@ -21,7 +21,7 @@ class ObjectListEditorCellRender
         $cell->graphic = null;
         $cell->text = null;
 
-        $label = new UXLabel($item->text);
+        $label = _(new UXLabel($item->text));
         $label->graphic = Ide::get()->getImage($item->graphic, [16, 16]);
 
         $label->paddingLeft = $item->level * 10;
@@ -29,7 +29,12 @@ class ObjectListEditorCellRender
         if ($this->hideHint) {
             $cell->graphic = $label;
         } else {
-            $hintLabel = new UXLabel($item->hint ? ": $item->hint" : "");
+            if ($item->hint) {
+                $hintLabel = _(new UXLabel(": \{$item->hint\}"));
+            } else {
+                $hintLabel = new UXLabel("");
+            }
+
             $hintLabel->textColor = UXColor::of('gray');
 
             $cell->graphic = new UXHBox([$label, $hintLabel]);
