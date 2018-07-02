@@ -44,10 +44,10 @@ class GlobalKeyParamEventKind extends KeyEventKind
         ];
 
         $directions = [
-            'ui.event.key.left::Лево' => 'Left',
-            'ui.event.key.right::Право' => 'Right',
-            'ui.event.key.up::Верх' => 'Up',
-            'ui.event.key.down::Низ' => 'Down',
+            'ui.event.key.dir.left::Лево' => 'Left',
+            'ui.event.key.dir.right::Право' => 'Right',
+            'ui.event.key.dir.up::Верх' => 'Up',
+            'ui.event.key.dir.down::Низ' => 'Down',
             '-',
             'A (left)' => 'A',
             'D (right)' => 'D',
@@ -102,7 +102,7 @@ class GlobalKeyParamEventKind extends KeyEventKind
             'ui.event.func.keys::Функциональные' => $funcKeys,
             //'Мультимедиа' => $multimedia,
             'ui.event.other.keys::Другие' => [
-                'Таб' => 'Tab',
+                'ui.event.key.tab::Таб' => 'Tab',
                 'Backspace' => 'Backspace',
                 'Delete' => 'Delete',
                 'Insert' => 'Insert',

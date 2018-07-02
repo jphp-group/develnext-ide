@@ -4,6 +4,6 @@
         <property code="selectedIndex" realCode="selected" min="0" name="Выделенный (индекс)" editor="integer" />
     </properties>
     <eventTypes>
-        <eventType code="action" name="Действие" kind="ide\webplatform\formats\form\event\WebEventKind" icon="icons/ok16.png" />
+        <eventType code="action" name="ui.event.action::Действие" kind="ide\webplatform\formats\form\event\WebEventKind" icon="icons/ok16.png" />
     </eventTypes>
 </element>

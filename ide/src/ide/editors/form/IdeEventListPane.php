@@ -309,7 +309,7 @@ class IdeEventListPane
             $dialog = new MessageBoxForm('message.confirm.ui.event.choose.editor::Какой использовать редактор для редактирования событий?', $buttons, $this->ui);
 
             UXApplication::runLater(function () use ($dialog) {
-                $dialog->toast('message.use.wizard.if.you.beginer::Используйте "Конструктор" если вы новичок!');
+                $dialog->toast('message.use.wizard.if.you.beginer::Используйте `Конструктор` если вы новичок!');
             });
 
             if ($dialog->showDialogWithFlag()) {

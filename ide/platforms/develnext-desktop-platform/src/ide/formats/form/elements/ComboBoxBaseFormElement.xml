@@ -5,6 +5,6 @@
         <property code="editable" name="Редактируемое" editor="boolean" />
     </properties>
     <eventTypes>
-        <eventType code="action" name="Действие" kind="ActionEvent" icon="icons/ok16.png" />
+        <eventType code="action" name="ui.event.action::Действие" kind="ActionEvent" icon="icons/ok16.png" />
     </eventTypes>
 </element>

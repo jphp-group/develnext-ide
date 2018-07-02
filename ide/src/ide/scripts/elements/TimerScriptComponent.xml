@@ -12,6 +12,6 @@
     </properties>
 
     <eventTypes>
-        <eventType code="action" name="Действие" kind="ObjectEvent" icon="icons/ok16.png" />
+        <eventType code="action" name="ui.event.action::Действие" kind="ObjectEvent" icon="icons/ok16.png" />
     </eventTypes>
 </element>
