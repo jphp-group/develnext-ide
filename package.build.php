@@ -75,7 +75,7 @@ function task_fetchMessages($e)
 {
     $buildPath = $e->package()->getConfigBuildPath();
 
-    $regex = new Regex('(\\"|\\\')([a-z]+\\.[a-z\\.]+)((\\:\\:)(.+?))?(\\\'|\\")');
+    $regex = new Regex('(\\"|\\\')([a-z]+\\.[a-z0-9\\.]+)((\\:\\:)(.+?))?(\\\'|\\")');
 
     $ignoreExts = [
         'php', 'tmp', 'conf', 'ini', 'json', 'source', 'css', 'pid', 'log', 'lock', 'ws', 'gradle', 'xml',

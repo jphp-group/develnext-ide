@@ -13,11 +13,11 @@ class KeyParamEventKind extends KeyEventKind
             'J' => 'J', 'K' => 'K', 'L' => 'L', 'M' => 'M', 'N' => 'N', 'O' => 'O', 'P' => 'P', 'Q' => 'Q', 'R' => 'R',
             'S' => 'S', 'T' => 'T', 'U' => 'U', 'V' => 'V', 'W' => 'W', 'X' => 'X', 'Y' => 'Y', 'Z' => 'Z',
             '-',
-            'Любая буква' => 'AnyLetter'
+            'ui.event.key.any.letter::Любая буква' => 'AnyLetter'
         ];
 
         $digits = [
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, '-', 'Любая цифра' => 'AnyDigit'
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, '-', 'ui.event.key.any.digit::Любая цифра' => 'AnyDigit'
         ];
 
         $funcKeys = [
@@ -27,7 +27,7 @@ class KeyParamEventKind extends KeyEventKind
             'F1-F12' => 'AnyF'
         ];
 
-        $multimedia = [
+        /*$multimedia = [
             'Играть' => 'Play',
             'Запись' => 'Record',
             'Перемотка' => 'Rewind',
@@ -37,31 +37,31 @@ class KeyParamEventKind extends KeyEventKind
             'Прибавить громкость' => 'VolumeUp',
             'Убавить громкость' => 'VolumeDown',
             'Выключить звук' => 'Mute'
-        ];
+        ];*/
 
         $others = [
-            'Пробел' => 'Space',
+            'ui.event.key.space::Пробел' => 'Space',
             'Enter' => 'Enter',
             'Delete' => 'Delete',
-            'Таб' => 'Tab',
+            'ui.event.key.tab::Таб' => 'Tab',
             'Print Screen' => 'PrintScreen',
         ];
 
         $directions = [
-            'Лево' => 'Left',
-            'Право' => 'Right',
-            'Верх' => 'Up',
-            'Низ' => 'Down',
+            'ui.event.key.dir.left::Лево' => 'Left',
+            'ui.event.key.dir.right::Право' => 'Right',
+            'ui.event.key.dir.up::Верх' => 'Up',
+            'ui.event.key.dir.down::Низ' => 'Down',
             '-',
-            'Любое направление' => 'AnyDirection'
+            'Любое направление' => 'ui.event.key.any.direction::AnyDirection'
         ];
 
         $variants = [
-            'Направление' => $directions,
-            'Буквы' => $letters,
-            'Цифры' => $digits,
-            'Функциональные' => $funcKeys,
-            'Другие' => $others,
+            'ui.event.direction.keys::Направление' => $directions,
+            'ui.event.letter.keys::Буквы' => $letters,
+            'ui.event.digit.keys::Цифры' => $digits,
+            'ui.event.function.keys::Функциональные' => $funcKeys,
+            'ui.event.other.keys::Другие' => $others,
         ];
 
         $ctrLetters = [];
@@ -93,19 +93,19 @@ class KeyParamEventKind extends KeyEventKind
         }
 
         return [
-            'Любая кнопка' => '',
+            'ui.event.key.any::Любая кнопка' => '',
             '-',
-            'Пробел' => 'Space',
+            'ui.event.key.space::Пробел' => 'Space',
             'Enter' => 'Enter',
             'Escape' => 'Esc',
             '-',
-            'Направление' => $directions,
-            'Цифры' => $digits,
-            'Буквы' => $letters,
-            'Функциональные' => $funcKeys,
+            'ui.event.direction.keys::Направление' => $directions,
+            'ui.event.digit.keys::Цифры' => $digits,
+            'ui.event.letter.keys::Буквы' => $letters,
+            'ui.event.function.keys::Функциональные' => $funcKeys,
             //'Мультимедиа' => $multimedia,
-            'Другие' => [
-                'Таб' => 'Tab',
+            'ui.event.other.keys::Другие' => [
+                'ui.event.key.tab::Таб' => 'Tab',
                 'Backspace' => 'Backspace',
                 'Delete' => 'Delete',
                 'Insert' => 'Insert',
