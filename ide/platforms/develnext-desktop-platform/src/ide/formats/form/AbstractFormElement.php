@@ -236,7 +236,7 @@ abstract class AbstractFormElement
 
     public function getGroup()
     {
-        return 'Главное';
+        return 'ui.group.main::Главное';
     }
 
     public function getDefaultSize()

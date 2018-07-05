@@ -29,7 +29,7 @@ class ScriptHelperMenuCommand extends AbstractMenuCommand
 
     public function getName()
     {
-        return 'Сгенерировать скрипт';
+        return 'command.generate.script::Сгенерировать скрипт';
     }
 
     public function getAccelerator()

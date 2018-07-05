@@ -151,14 +151,16 @@ class ActionConstructorForm extends AbstractIdeForm
         parent::init();
 
         $this->actionTypePaneViewCombobox->items->addAll([
-            'Иконки + текст',
-            'Только иконки'
+            'ui.editor.icons.and.text::Иконки + текст',
+            'ui.editor.only.icons::Только иконки'
         ]);
         $this->actionTypePaneViewCombobox->selectedIndex = 0;
 
         $this->actionTypePaneViewCombobox->on('action', function () {
             $this->setOnlyIcons($this->actionTypePaneViewCombobox->selectedIndex == 1, false);
         });
+
+        _($this->actionTypePaneViewCombobox);
 
         $tabOne = $this->tabs->tabs[0]->text;
         $tabTwo = $this->tabs->tabs[1]->text;
@@ -645,7 +647,7 @@ class ActionConstructorForm extends AbstractIdeForm
                 $tab->data('vbox')->add($label);
 
 
-                $label = new UXLabel($subGroup);
+                $label = new UXLabel(_($subGroup));
                 $label->font = UXFont::of($label->font, $label->font->size, 'BOLD');
                 $tab->data('fbox')->observer('width')->addListener(function ($old, $new) use ($label, $tab) {
                     $label->minWidth = $new - $tab->data('fbox')->paddingLeft - $tab->data('fbox')->paddingRight;

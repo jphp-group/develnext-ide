@@ -15,7 +15,7 @@ namespace ide\formats\form\context {
     {
         public function getName()
         {
-            return 'Удалить';
+            return 'command.delete::Удалить';
         }
 
         public function getAccelerator()

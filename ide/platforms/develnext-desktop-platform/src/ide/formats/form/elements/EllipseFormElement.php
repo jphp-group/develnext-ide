@@ -15,7 +15,7 @@ class EllipseFormElement extends AbstractFormElement
 {
     public function getName()
     {
-        return 'Овал';
+        return 'ui.element.ellipse::Овал';
     }
 
     public function getElementClass()
@@ -35,7 +35,7 @@ class EllipseFormElement extends AbstractFormElement
 
     public function getGroup()
     {
-        return 'Фигуры';
+        return 'ui.group.shapes::Фигуры';
     }
 
     /**

@@ -34,7 +34,7 @@ class PasteMenuCommand extends AbstractMenuCommand
 {
     public function getName()
     {
-        return 'Вставить';
+        return 'command.paste::Вставить';
     }
 
     public function getAccelerator()

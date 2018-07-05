@@ -27,7 +27,7 @@ class ComboBoxFormElement extends AbstractFormElement
 {
     public function getName()
     {
-        return 'Выпадающий список';
+        return 'ui.element.combobox::Выпадающий список';
     }
 
     public function getElementClass()

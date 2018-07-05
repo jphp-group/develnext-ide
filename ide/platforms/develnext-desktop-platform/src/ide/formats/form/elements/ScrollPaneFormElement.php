@@ -30,7 +30,7 @@ class ScrollPaneFormElement extends AbstractFormElement
 {
     public function getGroup()
     {
-        return 'Панели';
+        return 'ui.group.panes::Панели';
     }
 
     public function getElementClass()
@@ -40,7 +40,7 @@ class ScrollPaneFormElement extends AbstractFormElement
 
     public function getName()
     {
-        return 'Контейнер';
+        return 'ui.element.scroll.pane::Контейнер';
     }
 
     public function getIcon()

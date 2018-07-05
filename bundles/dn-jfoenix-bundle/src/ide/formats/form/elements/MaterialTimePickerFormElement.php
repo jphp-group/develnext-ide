@@ -22,7 +22,7 @@ class MaterialTimePickerFormElement extends AbstractFormElement
 
     public function getName()
     {
-        return 'Material Поле для времени';
+        return 'ui.element.material.time.field::Material Поле для времени';
     }
 
     public function getIcon()

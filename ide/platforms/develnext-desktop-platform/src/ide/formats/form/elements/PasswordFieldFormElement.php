@@ -18,7 +18,7 @@ class PasswordFieldFormElement extends AbstractFormElement
      */
     public function getName()
     {
-        return 'Поле для пароля';
+        return 'ui.element.password.field::Поле для пароля';
     }
 
     public function getElementClass()
@@ -33,7 +33,7 @@ class PasswordFieldFormElement extends AbstractFormElement
 
     public function getGroup()
     {
-        return 'Дополнительно';
+        return 'ui.group.additional::Дополнительно';
     }
 
     public function getIdPattern()

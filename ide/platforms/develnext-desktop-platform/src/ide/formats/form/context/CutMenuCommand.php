@@ -15,7 +15,7 @@ class CutMenuCommand extends AbstractMenuCommand
 {
     public function getName()
     {
-        return 'Вырезать';
+        return 'command.cut::Вырезать';
     }
 
     public function getAccelerator()

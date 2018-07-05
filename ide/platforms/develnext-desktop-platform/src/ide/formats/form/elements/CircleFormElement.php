@@ -14,7 +14,7 @@ class CircleFormElement extends AbstractFormElement
 {
     public function getName()
     {
-        return 'Круг';
+        return 'ui.element.circle::Круг';
     }
 
     public function getElementClass()
@@ -34,7 +34,7 @@ class CircleFormElement extends AbstractFormElement
 
     public function getGroup()
     {
-        return 'Фигуры';
+        return 'ui.group.shapes::Фигуры';
     }
 
     /**

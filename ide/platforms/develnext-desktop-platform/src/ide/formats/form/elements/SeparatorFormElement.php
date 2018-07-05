@@ -14,7 +14,7 @@ class SeparatorFormElement extends AbstractFormElement
 {
     public function getName()
     {
-        return 'Разделитель';
+        return 'ui.element.separator::Разделитель';
     }
 
     public function getElementClass()
@@ -34,7 +34,7 @@ class SeparatorFormElement extends AbstractFormElement
 
     public function getGroup()
     {
-        return 'Дополнительно';
+        return 'ui.group.additional::Дополнительно';
     }
 
     /**

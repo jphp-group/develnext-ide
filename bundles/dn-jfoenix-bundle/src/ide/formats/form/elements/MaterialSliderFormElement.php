@@ -18,7 +18,7 @@ class MaterialSliderFormElement extends SliderFormElement
 
     public function getName()
     {
-        return 'Material ' . parent::getName();
+        return 'ui.element.material.slider::Material Ползунок';
     }
 
     public function getElementClass()

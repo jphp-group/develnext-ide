@@ -372,8 +372,9 @@ class FormElementTypePane
             $this->unselectedButton = null;
 
             $this->searchField = $searchField = new UXTextField();
-            $searchField->promptText = 'Поиск компонентов';
+            $searchField->promptText = 'ui.searching.components::Поиск компонентов';
             $searchField->maxWidth = 10000;
+            _($searchField);
 
             $searchField->observer('text')->addListener(function () use ($searchField) {
                 $query = $searchField->text;
@@ -386,7 +387,11 @@ class FormElementTypePane
                 });
             });
 
-            $this->viewSelect = $typeSelect = new UXComboBox(['Иконки + текст', 'Только иконки']);
+            $this->viewSelect = $typeSelect = _(new UXComboBox([
+                'ui.editor.icons.and.text::Иконки + текст',
+                'ui.editor.only.icons::Только иконки'
+            ]));
+
             $typeSelect->maxWidth = 10000;
             $typeSelect->selectedIndex = 0;
 
@@ -439,8 +444,7 @@ class FormElementTypePane
                 $button->graphic->preserveRatio = true;
             }
 
-            $button->tooltipText = $element->getName();
-
+            $button->tooltipText = "{" . $element->getName() . "}";
 
             if ($element instanceof ObjectListEditorItem) {
                 $button->tooltipText .= ": " . $element->element->getName();
@@ -458,7 +462,7 @@ class FormElementTypePane
                 $smallButton->graphic->preserveRatio = true;
             }
 
-            $smallButton->tooltipText = $element->getName();
+            $smallButton->tooltipText = "{" . $element->getName() . "}";
 
 
             if ($element instanceof ObjectListEditorItem) {
@@ -467,8 +471,8 @@ class FormElementTypePane
                 $smallButton->tooltipText .= "\n{$element->getElementClass()}";
             }
 
-            $vbox->add($button);
-            $fbox->add($smallButton);
+            $vbox->add(_($button));
+            $fbox->add(_($smallButton));
 
 
             $dragDetect = function (UXMouseEvent $e) use ($element) {
@@ -500,7 +504,7 @@ class FormElementTypePane
             $this->buttons[] = $smallButton;
         }
 
-        $pane = new UXTitledPane($group, $this->isOnlyIcons() ? $fbox : $vbox);
+        $pane = _(new UXTitledPane($group, $this->isOnlyIcons() ? $fbox : $vbox));
         $pane->data('vbox', $vbox);
         $pane->data('fbox', $fbox);
         $pane->font = UXFont::of($pane->font->family, $pane->font->size, 'BOLD');

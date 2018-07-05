@@ -17,12 +17,12 @@ class MaskTextFieldFormElement extends AbstractFormElement
      */
     public function getName()
     {
-        return 'Поле с маской';
+        return 'ui.element.mask.field::Поле с маской';
     }
 
     public function getGroup()
     {
-        return 'Дополнительно';
+        return 'ui.group.additional::Дополнительно';
     }
 
     public function getElementClass()

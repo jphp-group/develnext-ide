@@ -39,7 +39,7 @@ class MediaViewFormElement extends AbstractFormElement
 
     public function getName()
     {
-        return 'Видео плеер';
+        return 'ui.element.media.view::Видео плеер';
     }
 
     public function getIcon()

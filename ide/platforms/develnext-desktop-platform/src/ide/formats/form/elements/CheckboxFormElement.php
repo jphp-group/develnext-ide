@@ -26,7 +26,7 @@ class CheckboxFormElement extends LabeledFormElement
 {
     public function getName()
     {
-        return 'Флажок';
+        return 'ui.element.checkbox::Флажок';
     }
 
     public function getElementClass()
@@ -49,7 +49,7 @@ class CheckboxFormElement extends LabeledFormElement
      */
     public function createElement()
     {
-        $checkbox = new UXCheckbox($this->getName());
+        $checkbox = new UXCheckbox(_($this->getName()));
         return $checkbox;
     }
 

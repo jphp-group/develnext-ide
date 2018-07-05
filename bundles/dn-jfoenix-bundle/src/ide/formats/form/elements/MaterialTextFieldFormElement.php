@@ -19,7 +19,7 @@ class MaterialTextFieldFormElement extends TextFieldFormElement
 
     public function getName()
     {
-        return 'Material ' . parent::getName();
+        return 'ui.element.material.text.field::Material Поле ввода';
     }
 
     public function getElementClass()

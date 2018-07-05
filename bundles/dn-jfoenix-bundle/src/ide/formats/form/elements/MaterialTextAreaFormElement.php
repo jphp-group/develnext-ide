@@ -20,7 +20,7 @@ class MaterialTextAreaFormElement extends TextAreaFormElement
 
     public function getName()
     {
-        return 'Material ' . parent::getName();
+        return 'ui.element.material.text.area::Material Многострочное поле';
     }
 
     public function getElementClass()

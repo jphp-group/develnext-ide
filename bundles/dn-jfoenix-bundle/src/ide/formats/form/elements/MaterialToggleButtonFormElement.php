@@ -18,7 +18,7 @@ class MaterialToggleButtonFormElement extends ToggleButtonFormElement
 
     public function getName()
     {
-        return 'Material ' . parent::getName();
+        return 'ui.element.material.toggle.button::Material Кнопка-переключатель';
     }
 
     public function getElementClass()

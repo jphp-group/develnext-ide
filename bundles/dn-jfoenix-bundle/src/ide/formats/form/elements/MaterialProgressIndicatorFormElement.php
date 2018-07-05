@@ -18,7 +18,7 @@ class MaterialProgressIndicatorFormElement extends ProgressIndicatorFormElement
 
     public function getName()
     {
-        return 'Material '. parent::getName();
+        return 'ui.element.material.progress.indicator::Material Индикатор загрузки';
     }
 
     public function getElementClass()

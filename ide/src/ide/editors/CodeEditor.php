@@ -650,14 +650,14 @@ class CodeEditor extends AbstractEditor
         if (!$this->embedded) {
             if (!$this->embedded) {
                 if ($this->isTabbed()) {
-                    $this->register(AbstractCommand::make('В отдельном окне', 'icons/tabRight16.png', function () {
+                    $this->register(AbstractCommand::make('editor.in.window::В отдельном окне', 'icons/tabRight16.png', function () {
                         $this->save();
 
                         FileSystem::close($this->file);
                         FileSystem::open($this->file, true, null, true);
                     }));
                 } else {
-                    $this->register(AbstractCommand::make('В виде таба', 'icons/tab16.png', function () {
+                    $this->register(AbstractCommand::make('editor.in.tab::В виде таба', 'icons/tab16.png', function () {
                         $this->save();
 
                         FileSystem::close($this->file);
@@ -667,7 +667,7 @@ class CodeEditor extends AbstractEditor
             }
 
             if (!$this->isTabbed()) {
-                $this->register(AbstractCommand::make('Сохранить (Ctrl + S)', 'icons/save16.png', function () {
+                $this->register(AbstractCommand::make('code.editor.command.save::Сохранить (Ctrl + S)', 'icons/save16.png', function () {
                     $this->save();
                 }));
             }
@@ -675,43 +675,43 @@ class CodeEditor extends AbstractEditor
             $this->register(AbstractCommand::makeSeparator());
         }
 
-        $this->register(AbstractCommand::make('Отменить (Ctrl + Z)', 'icons/undo16.png', function () {
+        $this->register(AbstractCommand::make('code.editor.command.undo::Отменить (Ctrl + Z)', 'icons/undo16.png', function () {
             $this->executeCommand('undo');
         }));
 
-        $this->register(AbstractCommand::make('Вернуть (Ctrl + Shift + Z)', 'icons/redo16.png', function () {
+        $this->register(AbstractCommand::make('code.editor.command.redo::Вернуть (Ctrl + Shift + Z)', 'icons/redo16.png', function () {
             $this->executeCommand('redo');
         }));
 
         $this->register(AbstractCommand::makeSeparator());
 
-        $this->register(AbstractCommand::make('Вырезать (Ctrl + X)', 'icons/cut16.png', function () {
+        $this->register(AbstractCommand::make('code.editor.command.cut::Вырезать (Ctrl + X)', 'icons/cut16.png', function () {
             $this->executeCommand('cut');
         }));
 
-        $this->register(AbstractCommand::make('Копировать (Ctrl + C)', 'icons/copy16.png', function () {
+        $this->register(AbstractCommand::make('code.editor.command.copy::Копировать (Ctrl + C)', 'icons/copy16.png', function () {
             $this->executeCommand('copy');
         }));
 
-        $this->register(AbstractCommand::make('Вставить (Ctrl + V)', 'icons/paste16.png', function () {
+        $this->register(AbstractCommand::make('code.editor.command.paste::Вставить (Ctrl + V)', 'icons/paste16.png', function () {
             $this->executeCommand('paste');
         }));
 
         $this->register(AbstractCommand::makeSeparator());
 
 
-        $this->register(AbstractCommand::makeWithText('Найти', 'icons/search16.png', function () {
+        $this->register(AbstractCommand::makeWithText('command.find::Найти', 'icons/search16.png', function () {
             $this->executeCommand('find');
         }));
 
-        $this->register(AbstractCommand::makeWithText('Заменить', 'icons/replace16.png', function () {
+        $this->register(AbstractCommand::makeWithText('command.replace::Заменить', 'icons/replace16.png', function () {
             $this->executeCommand('replace');
             $this->save();
         }));
 
         $this->register(AbstractCommand::makeSeparator());
 
-        $this->register(AbstractCommand::makeWithText('Настройки', 'icons/settings16.png', function () {
+        $this->register(AbstractCommand::makeWithText('entity.settings::Настройки', 'icons/settings16.png', function () {
             $settingsForm = new CodeEditorSettingsForm();
             $settingsForm->setEditor($this);
             $settingsForm->showAndWait();
@@ -750,14 +750,14 @@ class CodeEditor extends AbstractEditor
         if ($pos == -1) {
             if ($this->findDialogLastIndex == 0) {
                 if (!$silent) {
-                    UXDialog::showAndWait('Ничего не найдено.');
+                    UXDialog::showAndWait(_('message.nothing.found::Ничего не найдено.'));
                     $dialog->show();
                 }
 
                 return null;
             }
 
-            if (!$silent && MessageBoxForm::confirm('Больше ничего не найдено, начать сначала?', $this->textArea)) {
+            if (!$silent && MessageBoxForm::confirm('message.confirm.nothing.found.repeat::Больше ничего не найдено, начать сначала?', $this->textArea)) {
                 $this->findDialogLastIndex = 0;
                 $dialog->show();
                 $this->_findSearchText($dialog, $text, $options);
@@ -796,11 +796,11 @@ class CodeEditor extends AbstractEditor
                 break;
 
             case 'REPLACE_ALL':
-                if (MessageBoxForm::confirm('Вы уверены, что хотите заменить все?')) {
+                if (MessageBoxForm::confirm('message.confirm.replace.all::Вы уверены, что хотите заменить все?')) {
                     $result = $this->_findSearchText($this->getReplaceDialog(), $text, $options, true);
 
                     if (!$result) {
-                        UXDialog::showAndWait('Ничего не найдено.');
+                        UXDialog::showAndWait(_('message.nothing.found::Ничего не найдено.'));
                         break;
                     }
 
@@ -825,7 +825,7 @@ class CodeEditor extends AbstractEditor
 
             case 'REPLACE':
                 if (!$this->textArea->selectedText) {
-                    UXDialog::showAndWait('Ничего не найдено.');
+                    UXDialog::showAndWait('message.nothing.found::Ничего не найдено.');
                     break;
                 }
 
@@ -1050,7 +1050,7 @@ class SetDefaultCommand extends AbstractCommand
 
     public function getName()
     {
-        return 'Использовать по умолчанию';
+        return 'editor.use.by.default::Использовать по умолчанию';
     }
 
     public function makeUiForHead()

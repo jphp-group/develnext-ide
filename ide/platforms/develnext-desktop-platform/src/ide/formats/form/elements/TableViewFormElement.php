@@ -29,12 +29,12 @@ class TableViewFormElement extends LabeledFormElement
 {
     public function getName()
     {
-        return 'Таблица';
+        return 'ui.element.table::Таблица';
     }
 
     public function getGroup()
     {
-        return 'Дополнительно';
+        return 'ui.group.additional::Дополнительно';
     }
 
     public function getElementClass()

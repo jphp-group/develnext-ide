@@ -18,7 +18,7 @@ class MaterialTabPaneFormElement extends TabPaneFormElement
 
     public function getName()
     {
-        return 'Material ' . parent::getName();
+        return 'ui.element.material.tab.pane::Material Панель табов';
     }
 
     public function getElementClass()

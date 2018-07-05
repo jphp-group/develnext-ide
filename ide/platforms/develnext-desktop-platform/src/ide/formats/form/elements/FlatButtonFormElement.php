@@ -26,7 +26,7 @@ class FlatButtonFormElement extends LabeledFormElement
 {
     public function getName()
     {
-        return 'Плоская кнопка';
+        return 'ui.element.flat.button::Плоская кнопка';
     }
 
     public function getElementClass()
@@ -49,7 +49,7 @@ class FlatButtonFormElement extends LabeledFormElement
      */
     public function createElement()
     {
-        $button = new UXFlatButton($this->getName());
+        $button = new UXFlatButton(_($this->getName()));
         $button->textAlignment = 'CENTER';
         $button->alignment = 'CENTER';
         $button->color = '#6680e6';

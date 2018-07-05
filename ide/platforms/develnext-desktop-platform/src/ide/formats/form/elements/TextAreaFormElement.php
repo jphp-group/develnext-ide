@@ -18,7 +18,7 @@ class TextAreaFormElement extends AbstractFormElement
      */
     public function getName()
     {
-        return 'Многострочное поле';
+        return 'ui.element.text.area::Многострочное поле';
     }
 
     public function getElementClass()

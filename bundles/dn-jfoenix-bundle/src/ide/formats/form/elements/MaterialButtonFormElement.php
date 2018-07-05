@@ -17,7 +17,7 @@ class MaterialButtonFormElement extends ButtonFormElement
 
     public function getName()
     {
-        return 'Material Кнопка';
+        return 'ui.element.material.button::Material Кнопка';
     }
 
     public function getElementClass()
@@ -35,8 +35,7 @@ class MaterialButtonFormElement extends ButtonFormElement
      */
     public function createElement()
     {
-        $button = new UXMaterialButton();
-        $button->text = 'Button';
+        $button = new UXMaterialButton(_('ui.element.button'));
         $button->buttonType = 'RAISED';
         $button->style = '-fx-background-color: white;';
 

@@ -26,7 +26,7 @@ class TilePaneFormElement extends AbstractFormElement
 {
     public function getGroup()
     {
-        return 'Панели';
+        return 'ui.group.panes::Панели';
     }
 
     public function getElementClass()
@@ -36,7 +36,7 @@ class TilePaneFormElement extends AbstractFormElement
 
     public function getName()
     {
-        return 'Плиточный слой';
+        return 'ui.element.tile.pane::Плиточный слой';
     }
 
     public function getIcon()

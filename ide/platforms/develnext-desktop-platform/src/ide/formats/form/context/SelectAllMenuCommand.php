@@ -9,7 +9,7 @@ class SelectAllMenuCommand extends AbstractMenuCommand
 {
     public function getName()
     {
-        return 'Выделить все';
+        return 'command.select.all::Выделить все';
     }
 
     public function getAccelerator()

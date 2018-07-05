@@ -26,7 +26,7 @@ class HyperlinkFormElement extends LabeledFormElement
 {
     public function getName()
     {
-        return 'Ссылка';
+        return 'ui.element.hyperlink::Ссылка';
     }
 
     public function getElementClass()
@@ -49,7 +49,7 @@ class HyperlinkFormElement extends LabeledFormElement
      */
     public function createElement()
     {
-        $button = new UXHyperlink($this->getName());
+        $button = new UXHyperlink(_($this->getName()));
         $button->cursor = 'HAND';
 
         return $button;

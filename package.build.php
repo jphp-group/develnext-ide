@@ -93,7 +93,7 @@ function task_fetchMessages($e)
     $data = [];
     $ruData = fs::parse("./ide/misc/languages/ru/messages.ini");
 
-    $dirs = ["./ide/src", "./ide/platforms"];
+    $dirs = ["./ide/src", "./ide/platforms", "./bundles"];
 
     foreach ($dirs as $dir) {
         fs::scan($dir, [

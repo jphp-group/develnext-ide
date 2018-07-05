@@ -12,7 +12,7 @@ class ProgressBarFormElement extends AbstractFormElement
 {
     public function getName()
     {
-        return 'Прогресс';
+        return 'ui.element.progress.bar::Прогресс';
     }
 
     public function getElementClass()

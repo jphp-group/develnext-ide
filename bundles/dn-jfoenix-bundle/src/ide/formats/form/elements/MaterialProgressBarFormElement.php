@@ -20,7 +20,7 @@ class MaterialProgressBarFormElement extends ProgressBarFormElement
 
     public function getName()
     {
-        return 'Material ' . parent::getName();
+        return 'ui.element.material.progress.bar::Material Прогресс';
     }
 
     public function getElementClass()

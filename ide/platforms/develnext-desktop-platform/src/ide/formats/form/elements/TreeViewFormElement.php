@@ -13,7 +13,7 @@ class TreeViewFormElement extends AbstractFormElement
 {
     public function getName()
     {
-        return 'Дерево';
+        return 'ui.element.tree::Дерево';
     }
 
     public function getElementClass()

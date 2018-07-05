@@ -19,12 +19,12 @@ class CanvasFormElement extends AbstractFormElement
 {
     public function getName()
     {
-        return 'Канвас';
+        return 'ui.element.canvas::Канвас';
     }
 
     public function getGroup()
     {
-        return 'Дополнительно';
+        return 'ui.group.additional::Дополнительно';
     }
 
     public function getElementClass()
