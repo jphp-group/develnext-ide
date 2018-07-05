@@ -23,9 +23,9 @@ class ElementLoadContentActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'path' => 'Источник (файл, url, и т.д.)',
-            'sync' => 'В главном потоке'
+            'object' => 'wizard.object::Объект',
+            'path' => 'wizard.path.source::Источник (файл, url, и т.д.)',
+            'sync' => 'wizard.in.main.thread::В главном потоке'
         ];
     }
 
@@ -53,19 +53,19 @@ class ElementLoadContentActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Загрузить контент";
+        return "wizard.command.load.content::Загрузить контент";
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Загрузить контент в объект из источника (файла, url и т.д.)";
+            return "wizard.command.desc.load.content::Загрузить контент в объект из источника (файла, url и т.д.)";
         }
 
         if ($action->sync) {
-            return Str::format("Загрузить контент в объект %s из %s в главном потоке", $action->get('object'), $action->get('path'));
+            return _("wizard.command.desc.param.load.content.in.main.thread::Загрузить контент в объект {0} из {1} в главном потоке.", $action->get('object'), $action->get('path'));
         } else {
-            return Str::format("Загрузить контент в объект %s из %s", $action->get('object'), $action->get('path'));
+            return _("wizard.command.desc.param.load.content::Загрузить контент в объект {0} из {1}.", $action->get('object'), $action->get('path'));
         }
     }
 

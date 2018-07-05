@@ -36,11 +36,11 @@ class DisplaceActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'duration' => 'Продолжительность анимации (млсек, 1 сек = 1000 млсек)',
-            'x' => 'Смещение по X',
-            'y' => 'Смещение по Y',
-            'continue' => 'Не ждать окончания анимации'
+            'object' => 'wizard.object::Объект',
+            'duration' => 'wizard.anim.duration::Продолжительность анимации (млсек, 1 сек = 1000 млсек)',
+            'x' => 'wizard.offset.x::Смещение по X',
+            'y' => 'wizard.offset.y::Смещение по Y',
+            'continue' => 'wizard.no.wait.the.anim.end::Не ждать окончания анимации'
         ];
     }
 
@@ -61,13 +61,13 @@ class DisplaceActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Сдвинуть объект (анимация)";
+        return "wizard.command.anim.displace::Сдвинуть объект (анимация)";
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Анимация сдвига объекта по X и Y";
+            return "wizard.command.desc.anim.displace::Анимация сдвига объекта по X и Y";
         }
 
         $object = $action->get('object');
@@ -76,9 +76,9 @@ class DisplaceActionType extends AbstractSimpleActionType
         $y = $action->get('y');
 
         if ($action->continue) {
-            return Str::format("Сдвинуть объект %s (x: %s, y: %s) за %s млсек", $object, $x, $y, $duration);
+            return _("wizard.command.desc.param.anim.displace::Сдвинуть объект %s (x: %s, y: %s) за %s млсек", $object, $x, $y, $duration);
         } else {
-            return Str::format("Сдвинуть объект %s (x: %s, y: %s) за %s млсек с ожиданием окончания", $object, $x, $y, $duration);
+            return _("wizard.command.desc.param.anim.displace.with.wait::Сдвинуть объект %s (x: %s, y: %s) за %s млсек с ожиданием окончания", $object, $x, $y, $duration);
         }
     }
 

@@ -21,9 +21,9 @@ class ElementSetTextActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'value'  => 'Текст',
-            'relative' => 'Прибавить к существующему тексту'
+            'object' => 'wizard.object::Объект',
+            'value'  => 'wizard.text::Текст',
+            'relative' => 'wizard.append.to.cur.text::Прибавить к существующему тексту'
         ];
     }
 
@@ -51,13 +51,13 @@ class ElementSetTextActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Изменить текст объекта';
+        return 'wizard.command.set.element.text::Изменить текст объекта';
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Добавить или задать текст объекта формы";
+            return "wizard.command.desc.set.element.text::Добавить или задать текст объекта формы";
         }
 
         $text = $action->get('value');
@@ -67,9 +67,9 @@ class ElementSetTextActionType extends AbstractSimpleActionType
         }
 
         if ($action->relative) {
-            return Str::format("Добавить объекту %s текст %s", $action->get('object'), $text);
+            return _("wizard.command.desc.param.set.element.text.rel::Добавить объекту {0} текст {1}.", $action->get('object'), $text);
         } else {
-            return Str::format("Поменять текст объекта %s на %s", $action->get('object'), $text);
+            return _("wizard.command.desc.param.set.element.text::Поменять текст объекта {0} на {1}.", $action->get('object'), $text);
         }
 
     }

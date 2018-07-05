@@ -21,9 +21,9 @@ class ElementSetHeightActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'value' => 'Высота',
-            'relative' => 'Относительно'
+            'object' => 'wizard.object::Объект',
+            'value' => 'wizard.height::Высота',
+            'relative' => 'wizard.relative::Относительно'
         ];
     }
 
@@ -51,21 +51,21 @@ class ElementSetHeightActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Изменить высоту';
+        return 'wizard.command.set.height::Изменить высоту';
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Изменить высоту объекта формы";
+            return "wizard.command.desc.set.height::Изменить высоту объекта формы";
         }
 
         $value = $action->get('value');
 
         if ($action->relative) {
-            return Str::format("Увеличить высоту объекта %s на %s", $action->get('object'), $value);
+            return _("wizard.command.desc.param.set.height.relative::Увеличить высоту объекта {0} на {1}.", $action->get('object'), $value);
         } else {
-            return Str::format("Задать высоту объекта %s на %s", $action->get('object'), $value);
+            return _("wizard.command.desc.param.set.height::Задать высоту объекта {0} на {1}.", $action->get('object'), $value);
         }
     }
 

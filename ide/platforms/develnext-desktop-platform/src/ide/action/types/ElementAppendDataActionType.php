@@ -26,10 +26,10 @@ class ElementAppendDataActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект переменной',
-            'name' => 'Имя переменной',
-            'value' => 'Значение',
-            'asString' => 'Как к строке (а не к числу)',
+            'object' => 'wizard.object.of.var::Объект переменной',
+            'name' => 'wizard.var.name::Имя переменной',
+            'value' => 'wizard.value::Значение',
+            'asString' => 'wizard.as.string::Как к строке (а не к числу)',
         ];
     }
 
@@ -57,18 +57,18 @@ class ElementAppendDataActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Добавить к переменной объекта";
+        return "wizard.command.add.to.object.data::Добавить к переменной объекта";
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Добавить значение к переменной объекта";
+            return "wizard.command.desc.add.to.object.data::Добавить значение к переменной объекта";
         }
 
         $name = $action->get('name');
 
-        return Str::format("Добавить к переменной %s объекта %s -> значение %s", $name, $action->get('object'), $action->get('value'));
+        return _("wizard.command.desc.param.add.to.object.data::Добавить к переменной {0} объекта {1} -> значение {2}.", $name, $action->get('object'), $action->get('value'));
     }
 
     function getIcon(Action $action = null)

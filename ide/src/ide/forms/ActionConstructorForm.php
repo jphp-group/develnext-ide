@@ -161,6 +161,9 @@ class ActionConstructorForm extends AbstractIdeForm
         });
 
         _($this->actionTypePaneViewCombobox);
+        _($this->clearButton);
+        _($this->convertButton);
+        _($this->previewButton);
 
         $tabOne = $this->tabs->tabs[0]->text;
         $tabTwo = $this->tabs->tabs[1]->text;
@@ -228,6 +231,7 @@ class ActionConstructorForm extends AbstractIdeForm
 
         $this->list->setDraggableCellFactory([$this, 'listCellFactory'], [$this, 'listCellDragDone']);
         $this->hintLabel->mouseTransparent = true;
+        _($this->hintLabel);
 
         $contextMenu = new ContextMenu();
 
@@ -372,7 +376,7 @@ class ActionConstructorForm extends AbstractIdeForm
             $titleName->style = '-fx-font-weight: bold; -fx-text-fill: #383838; ' . UiUtils::fontSizeStyle();
 
             if ($action->getDescription()) {
-                $titleDescription = new UXLabel($action->getDescription());
+                $titleDescription = new UXLabel(_($action->getDescription()));
                 $titleDescription->style = '-fx-text-fill: gray; ' . UiUtils::fontSizeStyle();
                 $titleDescription->padding = 0;
             } else {

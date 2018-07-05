@@ -31,7 +31,7 @@
       </HBox>
       <TabPane id="tabs" layoutX="10.0" layoutY="10.0" prefHeight="675.0" prefWidth="872.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
         <tabs>
-          <Tab text="Конструктор">
+          <Tab text="ui.editor.wizard.tab::Конструктор">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="654.0" prefWidth="872.0">
                      <children>

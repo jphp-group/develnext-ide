@@ -20,9 +20,9 @@ class AppendVarActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'name' => 'Имя переменной',
-            'value' => 'Значение',
-            'asString' => 'Как к строке (а не к числу)'
+            'name' => 'wizard.var.name::Имя переменной',
+            'value' => 'wizard.value::Значение',
+            'asString' => 'wizard.as.string::Как к строке (а не к числу)'
         ];
     }
 
@@ -43,13 +43,13 @@ class AppendVarActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Добавить к глобальной переменной";
+        return "wizard.command.add.to.global.var::Добавить к глобальной переменной";
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Добавить к значению глобальной переменной";
+            return "wizard.command.desc.add.to.global.var::Добавить к значению глобальной переменной";
         }
 
         $name = $action->get('name');
@@ -59,9 +59,9 @@ class AppendVarActionType extends AbstractSimpleActionType
         }
 
         if ($action->asString) {
-            return Str::format("Добавить к значению переменной %s строку %s", $name, $action->get('value'));
+            return _("wizard.command.add.to.global.var.as.string::Добавить к значению переменной {0} строку {1}.", $name, $action->get('value'));
         } else {
-            return Str::format("Добавить к значению переменной %s + %s", $name, $action->get('value'));
+            return _("wizard.command.add.to.global.var.as.number::Добавить к значению переменной {0} + {1}.", $name, $action->get('value'));
         }
     }
 

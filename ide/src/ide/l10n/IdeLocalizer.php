@@ -247,6 +247,10 @@ class IdeLocalizer extends Localizer
 
                 if ($this->getUseDefaultValuesForLang() === $this->language) {
                     if ($result === $message) {
+                        foreach ($args as $i => $arg) {
+                            $def = str::replace($def, "\{$i\}", $arg);
+                        }
+
                         return $def;
                     }
                 }

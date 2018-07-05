@@ -29,9 +29,9 @@ class CallScriptActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'script' => 'Скрипт-объект',
-            'async' => 'Выполнять в фоновом потоке',
-            'wait' => 'Ожидать окончания'
+            'script' => 'wizard.script.object::Скрипт-объект',
+            'async' => 'wizard.call.in.background.thread::Выполнять в фоновом потоке',
+            'wait' => 'wizard.wait.the.end::Ожидать окончания'
         ];
     }
 
@@ -69,24 +69,24 @@ class CallScriptActionType extends AbstractSimpleActionType
     function getTitle(Action $action = null)
     {
         return $action
-            ? Str::format("Выполнить `%s`", $action->{'script-type'} == 'object' ? $action->script : $action->get('script'))
-            : "Выполнить скрипт";
+            ? _("wizard.command.param.call.script::Выполнить `{0}`", $action->{'script-type'} == 'object' ? $action->script : $action->get('script'))
+            : "wizard.command.call.script::Выполнить скрипт";
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Выполнить скрипт";
+            return "wizard.command.call.script::Выполнить скрипт";
         }
 
         if ($action->async) {
-            $result = Str::format("Выполнить скрипт %s в фоновом потоке", $action->get('script'));
+            $result = _("wizard.command.desc.param.call.script.as.async::Выполнить скрипт {0} в фоновом потоке ", $action->get('script'));
         } else {
-            $result = Str::format("Выполнить скрипт %s", $action->get('script'));
+            $result = _("wizard.command.desc.param.call.script::Выполнить скрипт {0} ", $action->get('script'));
         }
 
         if ($action->wait) {
-            $result .= ' и ожидать окончания';
+            $result .= _('wizard.command.call.script.wait.the.end::и ожидать окончания');
         }
 
         return $result;

@@ -39,12 +39,12 @@ class CloseBlockActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Конец';
+        return 'wizard.command.end::Конец';
     }
 
     function getDescription(Action $action = null)
     {
-        return "Закрыть блок для условия или цикла";
+        return "wizard.command.desc.end::Закрыть блок для условия или цикла";
     }
 
     function getIcon(Action $action = null)
