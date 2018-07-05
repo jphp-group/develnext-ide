@@ -26,7 +26,7 @@ class ToggleButtonFormElement extends LabeledFormElement
 {
     public function getName()
     {
-        return 'Кнопка-переключатель';
+        return 'ui.element.toggle.button::Кнопка-переключатель';
     }
 
     public function getElementClass()
@@ -49,7 +49,7 @@ class ToggleButtonFormElement extends LabeledFormElement
      */
     public function createElement()
     {
-        $button = new UXToggleButton($this->getName());
+        $button = new UXToggleButton(_($this->getName()));
         return $button;
     }
 

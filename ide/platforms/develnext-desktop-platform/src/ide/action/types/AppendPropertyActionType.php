@@ -21,10 +21,10 @@ class AppendPropertyActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'property' => 'Свойство',
-            'value' => 'Значение',
-            'asString' => 'Как к строке (а не к числу)',
+            'object' => 'wizard.object::Объект',
+            'property' => 'wizard.prop::Свойство',
+            'value' => 'wizard.value::Значение',
+            'asString' => 'wizard.as.string::Как к строке (а не к числу)',
         ];
     }
 
@@ -45,21 +45,21 @@ class AppendPropertyActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Добавить к свойству";
+        return "wizard.command.add.to.prop::Добавить к свойству";
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Добавить значение к свойству объекта";
+            return "wizard.command.desc.add.to.prop::Добавить значение к свойству объекта";
         }
 
         $name = $action->get('property');
 
         if ($this->asString) {
-            return Str::format("Добавить к свойству %s->%s строку %s", $action->get('object'), $name, $action->get('value'));
+            return _("wizard.command.desc.add.to.prop.as.string::Добавить к свойству {0}->{1} строку {2}", $action->get('object'), $name, $action->get('value'));
         } else {
-            return Str::format("Добавить к свойство %s->%s значение %s", $action->get('object'), $name, $action->get('value'));
+            return _("wizard.command.desc.add.to.prop.as.value::Добавить к свойство {0}->{1} значение {2}", $action->get('object'), $name, $action->get('value'));
         }
     }
 

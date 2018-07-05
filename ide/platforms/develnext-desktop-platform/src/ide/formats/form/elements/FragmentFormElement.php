@@ -35,7 +35,7 @@ class FragmentFormElement extends AbstractFormElement
      */
     public function getName()
     {
-        return 'Фрагмент формы';
+        return 'ui.element.form.fragment::Фрагмент формы';
     }
 
     public function getIcon()

@@ -18,7 +18,7 @@ class NumberSpinnerFormElement extends AbstractFormElement
      */
     public function getName()
     {
-        return 'Поле для чисел';
+        return 'ui.element.number.spinner::Поле для чисел';
     }
 
     public function getElementClass()
@@ -33,7 +33,7 @@ class NumberSpinnerFormElement extends AbstractFormElement
 
     public function getGroup()
     {
-        return 'Дополнительно';
+        return 'ui.group.additional::Дополнительно';
     }
 
     public function getIdPattern()

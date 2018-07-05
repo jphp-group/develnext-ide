@@ -17,7 +17,7 @@ class TextFieldFormElement extends AbstractFormElement
      */
     public function getName()
     {
-        return 'Поле ввода';
+        return 'ui.element.text.field::Поле ввода';
     }
 
     public function getElementClass()

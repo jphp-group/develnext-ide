@@ -21,7 +21,7 @@ class MaterialPasswordFieldFormElement extends PasswordFieldFormElement
 
     public function getName()
     {
-        return 'Material ' . parent::getName();
+        return 'ui.element.material.password.field::Material Поле для пароля';
     }
 
     public function getElementClass()

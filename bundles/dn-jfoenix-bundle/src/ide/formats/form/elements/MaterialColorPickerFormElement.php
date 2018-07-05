@@ -19,7 +19,7 @@ class MaterialColorPickerFormElement extends ColorPickerFormElement
 
     public function getName()
     {
-        return 'Material ' . parent::getName();
+        return 'ui.element.material.color.picker::Material Поле для цвета';
     }
 
     public function getElementClass()

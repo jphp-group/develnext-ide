@@ -15,7 +15,7 @@ class SliderFormElement extends AbstractFormElement
 {
     public function getName()
     {
-        return 'Ползунок';
+        return 'ui.element.slider::Ползунок';
     }
 
     public function getElementClass()
@@ -31,11 +31,6 @@ class SliderFormElement extends AbstractFormElement
     public function getIdPattern()
     {
         return "slider%s";
-    }
-
-    public function getGroup()
-    {
-        return 'Главное';
     }
 
     /**

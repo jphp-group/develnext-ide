@@ -25,12 +25,12 @@ class PaginationFormElement extends LabeledFormElement
 {
     public function getName()
     {
-        return 'Пагинация';
+        return 'ui.element.pagination::Пагинация';
     }
 
     public function getGroup()
     {
-        return 'Дополнительно';
+        return 'ui.group.additional::Дополнительно';
     }
 
     public function getElementClass()

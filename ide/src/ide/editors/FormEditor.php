@@ -1950,17 +1950,17 @@ class FormEditor extends AbstractModuleEditor
             $typePanes->side = 'LEFT';
 
             $elementTab = new UXTab();
-            $elementTab->text = 'Объекты';
+            $elementTab->text = 'ui.editor.objects::Объекты';
             $elementTab->content = $scrollPane;
 
-            $typePanes->tabs->add($elementTab);
+            $typePanes->tabs->add(_($elementTab));
 
             $prototypeTab = new UXTab();
-            $prototypeTab->text = 'Прототипы';
+            $prototypeTab->text = 'ui.editor.prototypes::Прототипы';
             $prototypeTab->content = new UXScrollPane($this->prototypeTypePane->getContent());
             $prototypeTab->content->fitToWidth = true;
 
-            $typePanes->tabs->add($prototypeTab);
+            $typePanes->tabs->add(_($prototypeTab));
             $scrollPane = $typePanes;
         }
 
@@ -1991,7 +1991,7 @@ class FormEditor extends AbstractModuleEditor
     {
         $this->contextMenu = new ContextMenu($this, $this->format->getContextCommands());
         $this->contextMenu->addSeparator();
-        $this->contextMenu->addCommand(AbstractCommand::makeWithText('События объекта', null, function () {
+        $this->contextMenu->addCommand(AbstractCommand::makeWithText('ui.object.events::События объекта', null, function () {
             $this->eventListPane->showEventMenu(true, $this->designer->pickedNode);
         }));
 

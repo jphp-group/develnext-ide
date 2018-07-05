@@ -11,7 +11,7 @@ class ToBackMenuCommand extends AbstractMenuCommand
 {
     public function getName()
     {
-        return 'На задний план';
+        return 'command.to.back::На задний план';
     }
 
     public function getIcon()

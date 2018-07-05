@@ -31,7 +31,7 @@ class ImageViewFormElement extends AbstractFormElement
 {
     public function getName()
     {
-        return 'Изображение';
+        return 'ui.element.image::Изображение';
     }
 
     public function getElementClass()

@@ -29,7 +29,7 @@ class RhombusFormElement extends AbstractFormElement
 
     public function getName()
     {
-        return 'Ромб';
+        return 'ui.element.rhombus::Ромб';
     }
 
     public function getIcon()
@@ -44,7 +44,7 @@ class RhombusFormElement extends AbstractFormElement
 
     public function getGroup()
     {
-        return 'Фигуры';
+        return 'ui.group.shapes::Фигуры';
     }
 
     /**

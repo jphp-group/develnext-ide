@@ -24,7 +24,7 @@ class CopyMenuCommand extends AbstractMenuCommand
 {
     public function getName()
     {
-        return 'Копировать';
+        return 'command.copy::Копировать';
     }
 
     public function getAccelerator()

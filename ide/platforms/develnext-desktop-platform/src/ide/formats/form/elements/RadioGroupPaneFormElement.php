@@ -13,12 +13,12 @@ class RadioGroupPaneFormElement extends AbstractFormElement
 {
     public function getName()
     {
-        return 'Переключатели';
+        return 'ui.element.radio.group.pane::Переключатели';
     }
 
     public function getGroup()
     {
-        return 'Дополнительно';
+        return 'ui.group.additional::Дополнительно';
     }
 
     public function getElementClass()

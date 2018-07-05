@@ -20,7 +20,7 @@ class LabelFormElement extends LabeledFormElement
      */
     public function getName()
     {
-        return 'Текст';
+        return 'ui.element.label::Текст';
     }
 
     public function getElementClass()
@@ -43,7 +43,7 @@ class LabelFormElement extends LabeledFormElement
      */
     public function createElement()
     {
-        $element = new UXLabelEx($this->getName());
+        $element = new UXLabelEx(_($this->getName()));
         return $element;
     }
 

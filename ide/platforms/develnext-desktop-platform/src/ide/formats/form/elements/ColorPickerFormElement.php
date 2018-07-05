@@ -14,7 +14,7 @@ class ColorPickerFormElement extends AbstractFormElement
 {
     public function getName()
     {
-        return 'Поле для цвета';
+        return 'ui.element.color.picker::Поле для цвета';
     }
 
     public function getElementClass()
@@ -34,7 +34,7 @@ class ColorPickerFormElement extends AbstractFormElement
 
     public function getGroup()
     {
-        return 'Дополнительно';
+        return 'ui.group.additional::Дополнительно';
     }
 
     /**

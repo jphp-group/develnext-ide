@@ -27,7 +27,7 @@ class TabPaneFormElement extends AbstractFormElement
 {
     public function getGroup()
     {
-        return 'Панели';
+        return 'ui.group.panes::Панели';
     }
 
     public function getElementClass()
@@ -37,7 +37,7 @@ class TabPaneFormElement extends AbstractFormElement
 
     public function getName()
     {
-        return 'Панель табов';
+        return 'ui.element.tab.pane::Панель табов';
     }
 
     public function getIcon()

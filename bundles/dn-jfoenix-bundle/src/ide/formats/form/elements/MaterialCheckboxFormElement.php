@@ -18,7 +18,7 @@ class MaterialCheckboxFormElement extends CheckboxFormElement
 
     public function getName()
     {
-        return 'Material Флажок';
+        return 'ui.element.material.checkbox::Material Флажок';
     }
 
     public function getElementClass()

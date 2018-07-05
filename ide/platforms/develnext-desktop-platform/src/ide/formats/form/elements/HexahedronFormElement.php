@@ -31,7 +31,7 @@ class HexahedronFormElement extends AbstractFormElement
 
     public function getName()
     {
-        return 'Шестигранник';
+        return 'ui.element.hexahedron::Шестигранник';
     }
 
     public function getIcon()
@@ -46,7 +46,7 @@ class HexahedronFormElement extends AbstractFormElement
 
     public function getGroup()
     {
-        return 'Фигуры';
+        return 'ui.group.shapes::Фигуры';
     }
 
     /**

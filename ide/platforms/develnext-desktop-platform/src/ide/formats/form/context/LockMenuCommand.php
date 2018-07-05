@@ -11,7 +11,7 @@ class LockMenuCommand extends AbstractMenuCommand
 {
     public function getName()
     {
-        return 'Блокировать';
+        return 'command.freeze::Блокировать';
     }
 
     public function getIcon()
@@ -35,13 +35,13 @@ class LockMenuCommand extends AbstractMenuCommand
         $designer = $editor->getDesigner();
         $node = items::first($designer->getSelectedNodes());
 
-        $item->text = $this->getName();
+        $item->text = _($this->getName());
 
         if ($node) {
             $item->disable = false;
 
             if ($designer->getNodeLock($node)) {
-                $item->text = 'Разблокировать';
+                $item->text = _('command.unfreeze::Разблокировать');
             }
         } else {
             $item->disable = true;

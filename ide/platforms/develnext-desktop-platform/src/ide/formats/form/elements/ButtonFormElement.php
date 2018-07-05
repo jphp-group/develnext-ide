@@ -25,7 +25,7 @@ class ButtonFormElement extends LabeledFormElement
 {
     public function getName()
     {
-        return 'Кнопка';
+        return 'ui.element.button::Кнопка';
     }
 
     public function getElementClass()
@@ -48,7 +48,7 @@ class ButtonFormElement extends LabeledFormElement
      */
     public function createElement()
     {
-        $button = new UXButton($this->getName());
+        $button = new UXButton(_($this->getName()));
         $button->textAlignment = 'CENTER';
         $button->alignment = 'CENTER';
         return $button;

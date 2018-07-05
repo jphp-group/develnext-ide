@@ -27,7 +27,7 @@ class TitledPaneFormElement extends AbstractFormElement
 {
     public function getGroup()
     {
-        return 'Панели';
+        return 'ui.group.panes::Панели';
     }
 
     public function getElementClass()
@@ -37,7 +37,7 @@ class TitledPaneFormElement extends AbstractFormElement
 
     public function getName()
     {
-        return 'Спойлер';
+        return 'ui.element.spoiler::Спойлер';
     }
 
     public function getIcon()

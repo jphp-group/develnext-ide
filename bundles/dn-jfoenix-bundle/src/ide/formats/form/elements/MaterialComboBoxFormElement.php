@@ -18,7 +18,7 @@ class MaterialComboBoxFormElement extends ComboBoxFormElement
 
     public function getName()
     {
-        return 'Material ' . parent::getName();
+        return 'ui.element.material.combobox::Material Выпадающий список';
     }
 
     public function getElementClass()

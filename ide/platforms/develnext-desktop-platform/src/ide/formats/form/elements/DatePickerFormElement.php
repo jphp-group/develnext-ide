@@ -26,7 +26,7 @@ class DatePickerFormElement extends AbstractFormElement
 {
     public function getName()
     {
-        return 'Поле для даты';
+        return 'ui.element.date.picker::Поле для даты';
     }
 
     public function getElementClass()
@@ -46,7 +46,7 @@ class DatePickerFormElement extends AbstractFormElement
 
     public function getGroup()
     {
-        return 'Дополнительно';
+        return 'ui.group.additional::Дополнительно';
     }
 
     /**

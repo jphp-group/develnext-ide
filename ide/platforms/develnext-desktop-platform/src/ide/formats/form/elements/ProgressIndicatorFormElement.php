@@ -13,7 +13,7 @@ class ProgressIndicatorFormElement extends AbstractFormElement
 {
     public function getName()
     {
-        return 'Индикатор загрузки';
+        return 'ui.element.progress.indicator::Индикатор загрузки';
     }
 
     public function getElementClass()
@@ -23,7 +23,7 @@ class ProgressIndicatorFormElement extends AbstractFormElement
 
     public function getGroup()
     {
-        return 'Дополнительно';
+        return 'ui.group.additional::Дополнительно';
     }
 
     public function getIcon()

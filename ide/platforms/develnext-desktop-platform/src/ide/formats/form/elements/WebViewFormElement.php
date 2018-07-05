@@ -17,7 +17,7 @@ class WebViewFormElement extends AbstractFormElement
      */
     public function getName()
     {
-        return 'Web Браузер';
+        return 'ui.elemenet.web.view::Web Браузер';
     }
 
     public function getElementClass()
@@ -27,7 +27,7 @@ class WebViewFormElement extends AbstractFormElement
 
     public function getGroup()
     {
-        return 'Дополнительно';
+        return 'ui.group.additional::Дополнительно';
     }
 
     public function getIcon()
@@ -47,7 +47,7 @@ class WebViewFormElement extends AbstractFormElement
     {
         $element = new UXWebView();
 
-        Ide::get()->getMainForm()->toast('У браузера есть баги при открытии некоторых страниц');
+        //Ide::get()->getMainForm()->toast('У браузера есть баги при открытии некоторых страниц');
 
         return $element;
     }

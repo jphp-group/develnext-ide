@@ -14,7 +14,7 @@ class ListViewFormElement extends AbstractFormElement
 {
     public function getName()
     {
-        return 'Список';
+        return 'ui.element.list.view::Список';
     }
 
     public function getElementClass()

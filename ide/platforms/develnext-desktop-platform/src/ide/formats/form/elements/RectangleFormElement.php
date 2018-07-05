@@ -15,7 +15,7 @@ class RectangleFormElement extends AbstractFormElement
 {
     public function getName()
     {
-        return 'Прямоугольник';
+        return 'ui.element.rectangle::Прямоугольник';
     }
 
     public function getElementClass()
@@ -35,7 +35,7 @@ class RectangleFormElement extends AbstractFormElement
 
     public function getGroup()
     {
-        return 'Фигуры';
+        return 'ui.group.shapes::Фигуры';
     }
 
     /**

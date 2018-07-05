@@ -11,7 +11,7 @@
    <children>
       <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="521.0" prefHeight="34.0" prefWidth="692.0" spacing="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="193.0">
          <children>
-            <Button id="saveButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="43.0" styleClass="icon-ok" text="Сохранить">
+            <Button id="saveButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="43.0" styleClass="icon-ok" text="command.save::Сохранить">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
@@ -19,14 +19,14 @@
                   <Insets left="15.0" right="15.0" />
                </padding>
             </Button>
-            <Button id="cancelButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="43.0" text="Отмена">
+            <Button id="cancelButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="43.0" text="btn.cancel::Отмена">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
                <padding>
                   <Insets left="15.0" right="15.0" />
                </padding></Button>
-            <CheckBox id="useDefaultCheckbox" mnemonicParsing="false" text="Использовать этот редактор по умолчанию" />
+            <CheckBox id="useDefaultCheckbox" mnemonicParsing="false" text="editor.use.this.by.default::Использовать этот редактор по умолчанию" />
          </children>
       </HBox>
       <TabPane id="tabs" layoutX="10.0" layoutY="10.0" prefHeight="675.0" prefWidth="872.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
@@ -40,12 +40,12 @@
                               <HBox minHeight="27.0" prefHeight="25.0" spacing="5.0">
                                  <children>
                                     <Pane prefHeight="27.0" prefWidth="0.0" />
-                                    <Button id="clearButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="27.0" styleClass="icon-trash" text="Удалить все">
+                                    <Button id="clearButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="27.0" styleClass="icon-trash" text="command.delete.all::Удалить все">
                                        <padding>
                                           <Insets left="15.0" right="15.0" />
                                        </padding>
                                     </Button>
-                                    <Button id="convertButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="27.0" styleClass="icon-convert" text="Перевести в код">
+                                    <Button id="convertButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="27.0" styleClass="icon-convert" text="command.convert.to.code::Перевести в код">
                                        <padding>
                                           <Insets left="15.0" right="15.0" />
                                        </padding>
@@ -53,7 +53,7 @@
                                           <Insets />
                                        </HBox.margin>
                                     </Button>
-                                    <Button id="previewButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="27.0" styleClass="icon-php" text="Как это выглядит в коде?">
+                                    <Button id="previewButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="27.0" styleClass="icon-php" text="command.show.it.as.code::Как это выглядит в коде?">
                                        <padding>
                                           <Insets left="15.0" right="15.0" />
                                        </padding>
@@ -71,7 +71,7 @@
                                     <AnchorPane style="-fx-border-width: 0px;">
                                        <children>
                                           <ListView id="list" fixedCellSize="40.0" style="-fx-border-width: 0; -fx-border-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                          <Label id="hintLabel" layoutX="33.0" layoutY="28.0" text="Перетащите сюда иконки с правой панели ..." textFill="#ababab">
+                                          <Label id="hintLabel" layoutX="33.0" layoutY="28.0" text="wizard.message.drag.icons.from.right.panel::Перетащите сюда иконки с правой панели ..." textFill="#ababab">
                                              <font>
                                                 <Font name="System Italic" size="22.0" />
                                              </font>
@@ -100,7 +100,7 @@
                   </AnchorPane>
             </content>
           </Tab>
-            <Tab text="Исходный код">
+            <Tab text="ui.editor.sources.tab::Исходный код">
               <content>
                 <AnchorPane id="codeContent" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
               </content>

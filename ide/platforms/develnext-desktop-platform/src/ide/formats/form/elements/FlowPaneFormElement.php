@@ -25,7 +25,7 @@ class FlowPaneFormElement extends AbstractFormElement
 {
     public function getGroup()
     {
-        return 'Панели';
+        return 'ui.group.panes::Панели';
     }
 
     public function getElementClass()
@@ -35,7 +35,7 @@ class FlowPaneFormElement extends AbstractFormElement
 
     public function getName()
     {
-        return 'Потоковый слой';
+        return 'ui.element.flow.pane::Потоковый слой';
     }
 
     public function getIcon()

@@ -25,7 +25,7 @@ class VBoxFormElement extends AbstractFormElement
 {
     public function getGroup()
     {
-        return 'Панели';
+        return 'ui.group.panes::Панели';
     }
 
     public function getElementClass()
@@ -35,7 +35,7 @@ class VBoxFormElement extends AbstractFormElement
 
     public function getName()
     {
-        return 'Вертикальный слой';
+        return 'ui.element.vbox::Вертикальный слой';
     }
 
     public function getIcon()
