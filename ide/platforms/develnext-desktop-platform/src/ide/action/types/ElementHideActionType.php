@@ -19,7 +19,7 @@ class ElementHideActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект'
+            'object' => 'wizard.object::Объект'
         ];
     }
 
@@ -47,12 +47,12 @@ class ElementHideActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Скрыть';
+        return 'wizard.command.hide.element::Скрыть';
     }
 
     function getDescription(Action $action = null)
     {
-        return Str::format("Скрыть объект %s", $action ? $action->get('object') : '');
+        return _("wizard.command.desc.hide.element::Скрыть объект {0}.", $action ? $action->get('object') : '');
     }
 
     function getIcon(Action $action = null)

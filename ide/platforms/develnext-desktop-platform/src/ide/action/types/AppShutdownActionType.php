@@ -24,12 +24,12 @@ class AppShutdownActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Выход из программы';
+        return 'wizard.command.app.shutdown::Выход из программы';
     }
 
     function getDescription(Action $action = null)
     {
-        return 'Полностью закрыть все окна программы и выйти из неё';
+        return 'wizard.command.desc.app.shutdown::Полностью закрыть все окна программы и выйти из неё';
     }
 
     function getIcon(Action $action = null)

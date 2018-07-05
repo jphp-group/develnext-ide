@@ -22,7 +22,7 @@ class CommentActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'text' => 'Текст комментария'
+            'text' => 'wizard.comment.text::Текст комментария'
         ];
     }
 
@@ -43,12 +43,12 @@ class CommentActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Комментарий';
+        return 'wizard.command.comment::Комментарий';
     }
 
     function getDescription(Action $action = null)
     {
-        return "Текстовый однострочный комментарий";
+        return "wizard.command.desc.comment::Текстовый однострочный комментарий";
     }
 
     function getIcon(Action $action = null)

@@ -19,7 +19,7 @@ class ElementFocusActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект'
+            'object' => 'wizard.object::Объект'
         ];
     }
 
@@ -47,12 +47,12 @@ class ElementFocusActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Фокус на объект';
+        return 'wizard.command.focus.to.object::Фокус на объект';
     }
 
     function getDescription(Action $action = null)
     {
-        return Str::format("Переместить фокус на объект %s", $action ? $action->get('object') : '');
+        return _("wizard.command.desc.focus.to.object::Переместить фокус на объект {0}.", $action ? $action->get('object') : '');
     }
 
     function getIcon(Action $action = null)

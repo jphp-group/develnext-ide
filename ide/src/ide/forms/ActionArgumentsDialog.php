@@ -161,7 +161,7 @@ class ActionArgumentsDialog extends AbstractIdeForm
         $ui = $editor->makeUi($label);
 
         if (!$editor->isInline()) {
-            $labelUi = new UXLabel(_($label) . ":");
+            $labelUi = _(new UXLabel("\{$label\}" . ":"));
         } else {
             $labelUi = null;
         }

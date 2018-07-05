@@ -19,7 +19,7 @@ class ElementEnabledOffActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект'
+            'object' => 'wizard.object::Объект'
         ];
     }
 
@@ -47,12 +47,12 @@ class ElementEnabledOffActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Сделать недоступным';
+        return 'wizard.command.disable.element::Сделать недоступным';
     }
 
     function getDescription(Action $action = null)
     {
-        return Str::format("Сделать объект %s недоступным", $action ? $action->get('object') : '');
+        return _("wizard.command.desc.disable.element::Сделать объект {0} недоступным.", $action ? $action->get('object') : '');
     }
 
     function getIcon(Action $action = null)

@@ -28,7 +28,7 @@ class FlagArgumentEditor extends AbstractArgumentEditor
      */
     public function makeUi($label = null)
     {
-        $this->checkbox = new UXCheckbox($label);
+        $this->checkbox = _(new UXCheckbox($label));
 
         return $this->checkbox;
     }

@@ -119,7 +119,7 @@ class ActionManager
     public function registerType($type)
     {
         if ($type instanceof AbstractActionType) {
-            $this->actionTypes[reflect::typeOf($type, true)] = $type;
+            $this->actionTypes[] = $type;
             $this->actionTypeByTagName[str::lower($type->getTagName())] = $type;
             $this->lastUpdated = Time::millis();
         } elseif (is_string($type)) {

@@ -20,7 +20,7 @@ class BrowseActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'url' => 'URL (ссылка, вместе с http://)'
+            'url' => 'wizard.url.with.http::URL (ссылка, вместе с http://)'
         ];
     }
 
@@ -36,12 +36,12 @@ class BrowseActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Открыть URL';
+        return 'wizard.command.browse.url::Открыть URL';
     }
 
     function getDescription(Action $action = null)
     {
-        return Str::format("Открыть в браузере ссылку %s", $action ? $action->get('url') : '');
+        return _("wizard.command.desc.browser.url::Открыть в браузере ссылку {0}.", $action ? $action->get('url') : '');
     }
 
     function getIcon(Action $action = null)

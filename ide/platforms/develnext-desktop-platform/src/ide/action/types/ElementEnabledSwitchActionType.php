@@ -19,7 +19,7 @@ class ElementEnabledSwitchActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект'
+            'object' => 'wizard.object::Объект'
         ];
     }
 
@@ -47,12 +47,12 @@ class ElementEnabledSwitchActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Переключить доступность';
+        return 'wizard.command.switch.enable::Переключить доступность';
     }
 
     function getDescription(Action $action = null)
     {
-        return Str::format("Переключить доступность объекта %s", $action ? $action->get('object') : '');
+        return _("wizard.command.desc.switch.enable::Переключить доступность объекта {0}.", $action ? $action->get('object') : '');
     }
 
     function getIcon(Action $action = null)

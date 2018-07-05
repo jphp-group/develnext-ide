@@ -56,10 +56,10 @@ class AppendPropertyActionType extends AbstractSimpleActionType
 
         $name = $action->get('property');
 
-        if ($this->asString) {
-            return _("wizard.command.desc.add.to.prop.as.string::Добавить к свойству {0}->{1} строку {2}", $action->get('object'), $name, $action->get('value'));
+        if ($action->asString) {
+            return _("wizard.command.desc.add.to.prop.as.string::Добавить к свойству {0}->{1} строку {2}.", $action->get('object'), $name, $action->get('value'));
         } else {
-            return _("wizard.command.desc.add.to.prop.as.value::Добавить к свойство {0}->{1} значение {2}", $action->get('object'), $name, $action->get('value'));
+            return _("wizard.command.desc.add.to.prop.as.value::Добавить к свойство {0}->{1} значение {2}.", $action->get('object'), $name, $action->get('value'));
         }
     }
 
@@ -78,7 +78,7 @@ class AppendPropertyActionType extends AbstractSimpleActionType
         $name = $action->get('property');
         $object = $action->get('object');
 
-        if ($this->asString) {
+        if ($action->asString) {
             return "{$object}->{$name} .= {$action->get('value')}";
         } else {
             return "{$object}->{$name} += {$action->get('value')}";

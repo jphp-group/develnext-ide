@@ -58,7 +58,7 @@ function _($code, ...$args) {
     } else if ($code instanceof UXDesignProperties) {
         return $ideLocalizer->translateDesignProperties($code);
     } else {
-        return $ideLocalizer->translate($code, $args);
+        return $ideLocalizer->translate($code, (array)$args);
     }
 }
 

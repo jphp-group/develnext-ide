@@ -64,18 +64,18 @@ class MixedArgumentEditor extends AbstractArgumentEditor
     protected function valueTypeLabels()
     {
         return [
-            'string' => 'Строка',
-            'magicString' => 'Строка с переменными',
-            'object' => 'Объект',
-            'instances' => 'Объекты (клоны)',
-            'form' => 'Форма',
-            'globalVariable' => 'Глобальная переменная',
-            'variable' => 'Переменная',
-            'expr' => 'PHP код',
-            'integer' => 'Число',
-            'float' => 'Дробное число',
-            'boolean' => 'Логика',
-            'score' => 'Счет',
+            'string' => 'argument.type.string::Строка',
+            'magicString' => 'argument.type.template.string::Строка с переменными',
+            'object' => 'argument.type.object::Объект',
+            'instances' => 'argument.type.clones::Объекты (клоны)',
+            'form' => 'argument.type.ui.form::Форма',
+            'globalVariable' => 'argument.type.global.var::Глобальная переменная',
+            'variable' => 'argument.type.var::Переменная',
+            'expr' => 'argument.type.php.code::PHP код',
+            'integer' => 'argument.type.integer::Число',
+            'float' => 'argument.type.float::Дробное число',
+            'boolean' => 'argument.type.boolean::Логика',
+            'score' => 'argument.type.score::Счет',
         ];
     }
 
@@ -172,6 +172,8 @@ class MixedArgumentEditor extends AbstractArgumentEditor
             $this->typeSelect->items->add($this->valueTypeLabels()[$code] ?: $code);
         }
 
+        _($this->typeSelect);
+
         $this->typeSelect->width = 135;
 
         $this->input = new UXTextField();
@@ -212,21 +214,21 @@ class MixedArgumentEditor extends AbstractArgumentEditor
         $this->box->children->clear();
         $this->box->add($this->typeSelect);
 
-        if ($this->typeSelect->selected == $this->valueTypeLabels()['object']) {
+        if ($this->typeSelect->selected == _($this->valueTypeLabels()['object'])) {
             $this->box->add($this->objectListEditor->getUi());
             $this->objectListEditor->getUi()->requestFocus();
 
             if (!$this->value) {
                 $this->objectListEditor->setSelected(null);
             }
-        } elseif ($this->typeSelect->selected == $this->valueTypeLabels()['form']) {
+        } elseif ($this->typeSelect->selected == _($this->valueTypeLabels()['form'])) {
             $this->box->add($this->formListEditor->getUi());
             $this->formListEditor->getUi()->requestFocus();
 
             if (!$this->value) {
                 $this->formListEditor->setSelected(null);
             }
-        } elseif ($this->typeSelect->selected == $this->valueTypeLabels()['instances']) {
+        } elseif ($this->typeSelect->selected == _($this->valueTypeLabels()['instances'])) {
             $this->box->add($this->instancesListEditor->getUi());
             $this->instancesListEditor->getUi()->requestFocus();
 

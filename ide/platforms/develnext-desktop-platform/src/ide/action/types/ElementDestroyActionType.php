@@ -19,7 +19,7 @@ class ElementDestroyActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект'
+            'object' => 'wizard.object::Объект'
         ];
     }
 
@@ -47,16 +47,16 @@ class ElementDestroyActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Уничтожить объект';
+        return 'wizard.command.destroy.object::Уничтожить объект';
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Уничтожить (удалить) объект формы / модуля";
+            return "wizard.command.desc.destroy.object::Уничтожить (удалить) объект формы / модуля";
         }
 
-        return Str::format("Уничтожить (удалить) объект %s", $action->get('object'));
+        return _("wizard.command.desc.param.destroy.object::Уничтожить (удалить) объект {0}.", $action->get('object'));
     }
 
     function getIcon(Action $action = null)

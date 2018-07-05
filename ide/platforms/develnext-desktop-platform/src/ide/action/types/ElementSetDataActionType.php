@@ -25,9 +25,9 @@ class ElementSetDataActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект переменной',
-            'name' => 'Имя переменной',
-            'value' => 'Значение',
+            'object' => 'wizard.object.of.var::Объект переменной',
+            'name' => 'wizard.var.name::Имя переменной',
+            'value' => 'wizard.value::Значение',
         ];
     }
 
@@ -55,18 +55,18 @@ class ElementSetDataActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Задать переменную объекта";
+        return "wizard.command.set.element.data::Задать переменную объекта";
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Задать значение переменной объекта";
+            return "wizard.command.desc.set.element.data::Задать значение переменной объекта";
         }
 
         $name = $action->get('name');
 
-        return Str::format("Переменная %s объекта %s = %s", $name, $action->get('object'), $action->get('value'));
+        return _("wizard.command.desc.param.set.element.data::Переменная {0} объекта {1} = {2}.", $name, $action->get('object'), $action->get('value'));
     }
 
     function getIcon(Action $action = null)

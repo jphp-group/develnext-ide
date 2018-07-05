@@ -47,8 +47,8 @@ class BehaviourDisableActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'behaviour' => 'Поведение',
+            'object' => 'wizard.object::Объект',
+            'behaviour' => 'wizard.behaviour::Поведение',
         ];
     }
 
@@ -81,19 +81,19 @@ class BehaviourDisableActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Отключить поведение';
+        return 'wizard.command.disable.behaviour::Отключить поведение';
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Отключить поведение объекта";
+            return "wizard.command.desc.disable.behaviour::Отключить поведение объекта";
         }
 
         $type = $action->behaviour;
         $spec = $this->manager->getBehaviourSpecByClass($type);
 
-        return Str::format("Отключить поведение `%s` объекта %s", $spec ? $spec->getName() : 'Неизвестное', $action->get('object'));
+        return Str::format("wizard.command.desc.param.disable.behaviour::Отключить поведение `{0}` объекта {1}.", $spec ? $spec->getName() : 'Неизвестное', $action->get('object'));
     }
 
     function getIcon(Action $action = null)
