@@ -2,6 +2,7 @@
 
 use ide\Ide;
 use ide\IdeClassLoader;
+use ide\l10n\LocalizedString;
 use ide\Logger;
 use ide\systems\IdeSystem;
 use php\gui\designer\UXDesignProperties;

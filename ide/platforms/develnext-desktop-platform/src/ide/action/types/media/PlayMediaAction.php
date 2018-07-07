@@ -9,12 +9,16 @@ class PlayMediaAction extends AbstractMediaAction
 {
     function getTitle(Action $action = null)
     {
-        return !$action ? "Воспроизвести" : str::format("Воспроизвести, плеер = %s", $action->get('id'));
+        return !$action
+            ? "wizard.command.play.media::Воспроизвести"
+            : _("wizard.command.param.play.media::Воспроизвести, плеер = {0}.", $action->get('id'));
     }
 
     function getDescription(Action $action = null)
     {
-        return !$action ? "Воспроизвести (play)" : str::format("Воспроизвести (play), плеер = %s", $action->get('id'));
+        return !$action
+            ? "wizard.command.desc.play.media::Воспроизвести (play)"
+            : _("wizard.command.desc.param.play.media::Воспроизвести (play), плеер = {0}.", $action->get('id'));
     }
 
     function getIcon(Action $action = null)

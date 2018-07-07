@@ -20,8 +20,8 @@ class IfConfirmActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'message' => 'Текст вопроса',
-            'not' => 'Отрицание (наоборот, если откажется)'
+            'message' => 'wizard.question.text::Текст вопроса',
+            'not' => 'wizard.logic.negation.by.user::Отрицание (наоборот, если откажется)'
         ];
     }
 
@@ -49,22 +49,22 @@ class IfConfirmActionType extends AbstractSimpleActionType
     function getTitle(Action $action = null)
     {
         if ($action && $action->not) {
-            return 'Если откажется ...';
+            return 'wizard.command.if.not.confirm::Если откажется ...';
         } else {
-            return 'Если согласится ...';
+            return 'wizard.command.if.confirm::Если согласится ...';
         }
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Если пользователь согласится с вопросом";
+            return "wizard.command.desc.if.confirm::Если пользователь согласится с вопросом";
         }
 
         if ($action->not) {
-            return Str::format("Если пользователь НЕ согласится с вопросом %s", $action->get('message'));
+            return _("wizard.command.desc.param.if.not.confirm::Если пользователь НЕ согласится с вопросом {0}.", $action->get('message'));
         } else {
-            return Str::format("Если пользователь согласится с вопросом %s", $action->get('message'));
+            return _("wizard.command.desc.param.if.confirm::Если пользователь согласится с вопросом {0}.", $action->get('message'));
         }
     }
 

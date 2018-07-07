@@ -38,12 +38,12 @@ class ElseActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Иначе ...';
+        return 'wizard.command.else::Иначе ...';
     }
 
     function getDescription(Action $action = null)
     {
-        return "Иначе, т.е. если предыдущее условие не выполнилось";
+        return "wizard.command.desc.else::Иначе, т.е. если предыдущее условие не выполнилось";
     }
 
     function getIcon(Action $action = null)

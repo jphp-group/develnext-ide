@@ -20,7 +20,7 @@ class ShowPreloaderActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'value' => 'Текст загрузки'
+            'value' => 'wizard.text.of.preloader::Текст загрузки'
         ];
     }
 
@@ -41,7 +41,7 @@ class ShowPreloaderActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Показать индикатор загрузки';
+        return 'wizard.command.show.preloader::Показать индикатор загрузки';
     }
 
     function getDescription(Action $action = null)
@@ -52,7 +52,7 @@ class ShowPreloaderActionType extends AbstractSimpleActionType
             $text = Str::sub($text, 0, 37) . '..';
         }
 
-        return Str::format("Показать индикатор загрузки с сообщением %s", $text);
+        return _("wizard.command.desc.show.preloader::Показать индикатор загрузки с сообщением {0} ", $text);
     }
 
     function getIcon(Action $action = null)

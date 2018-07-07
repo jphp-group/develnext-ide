@@ -24,9 +24,9 @@ class IfIntersectActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object1' => 'Объект 1',
-            'object2' => 'Объект 2',
-            'not' => 'Отрицание (все наоборот, не пересекаются)'
+            'object1' => 'wizard.object.1::Объект 1',
+            'object2' => 'wizard.object.2::Объект 2',
+            'not' => 'wizard.logic.negative.not.intersect::Отрицание (все наоборот, не пересекаются)'
         ];
     }
 
@@ -59,19 +59,19 @@ class IfIntersectActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Если объекты пересекаются ...";
+        return "wizard.command.if.objects.intersect::Если объекты пересекаются ...";
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Если объекты пересекаются";
+            return "wizard.command.desc.if.objects.intersect::Если объекты пересекаются";
         }
 
         if ($action->not) {
-            return Str::format("Если объекты %s и %s НЕ пересекаются", $action->get('object1'), $action->get('object2'));
+            return _("wizard.command.desc.param.if.objects.not.intersect::Если объекты {0} и {1} НЕ пересекаются", $action->get('object1'), $action->get('object2'));
         } else {
-            return Str::format("Если объекты %s и %s пересекаются", $action->get('object1'), $action->get('object2'));
+            return _("wizard.command.desc.param.if.objects.intersect::Если объекты {0} и {1} пересекаются", $action->get('object1'), $action->get('object2'));
         }
     }
 

@@ -19,7 +19,7 @@ class ElementShowActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект'
+            'object' => 'wizard.object::Объект'
         ];
     }
 
@@ -47,12 +47,12 @@ class ElementShowActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Показать';
+        return 'wizard.command.show.element::Показать';
     }
 
     function getDescription(Action $action = null)
     {
-        return Str::format("Показать объект %s", $action ? $action->get('object') : '');
+        return _("wizard.command.desc.show.element::Показать объект {0}", $action ? $action->get('object') : '');
     }
 
     function getIcon(Action $action = null)

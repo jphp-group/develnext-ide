@@ -36,11 +36,11 @@ class MoveToActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'duration' => 'Продолжительность анимации (млсек, 1 сек = 1000 млсек)',
-            'x' => 'Позиция X',
-            'y' => 'Позиция Y',
-            'continue' => 'Не ждать окончания анимации'
+            'object' => 'wizard.object::Объект',
+            'duration' => 'wizard.anim.duration::Продолжительность анимации (млсек, 1 сек = 1000 млсек)',
+            'x' => 'wizard.x.position::Позиция X',
+            'y' => 'wizard.y.position::Позиция Y',
+            'continue' => 'wizard.no.wait.the.anim.end::Не ждать окончания анимации'
         ];
     }
 
@@ -61,13 +61,13 @@ class MoveToActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Передвинуть к точке (анимация)";
+        return "wizard.command.anim.move.to.point::Передвинуть к точке (анимация)";
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Анимация линейного перемещения к точке";
+            return "wizard.command.desc.anim.move.to.point::Анимация линейного перемещения к точке";
         }
 
         $object = $action->get('object');
@@ -76,9 +76,9 @@ class MoveToActionType extends AbstractSimpleActionType
         $y = $action->get('y');
 
         if ($action->continue) {
-            return Str::format("Перемещать объект %s к точке (x: %s, y: %s) за %s млсек", $object, $x, $y, $duration);
+            return _("wizard.command.desc.param.anim.move.to.point::Перемещать объект {0} к точке (x: {1}, y: {2}) за {3} млсек", $object, $x, $y, $duration);
         } else {
-            return Str::format("Перемещать объект %s к точке (x: %s, y: %s) за %s млсек с ожиданием окончания", $object, $x, $y, $duration);
+            return _("wizard.command.desc.param.anim.move.to.point.with.wait::Перемещать объект {0} к точке (x: {1}, y: {2}) за {3} млсек с ожиданием окончания", $object, $x, $y, $duration);
         }
     }
 

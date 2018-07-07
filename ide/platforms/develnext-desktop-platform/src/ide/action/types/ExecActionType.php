@@ -21,8 +21,8 @@ class ExecActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'command' => 'Имя или путь к программе',
-            'wait' => 'Ожидать завершения',
+            'command' => 'wizard.shell.command::Имя или путь к программе',
+            'wait' => 'wizard.wait.conclusion::Ожидать закрытия',
         ];
     }
 
@@ -38,16 +38,16 @@ class ExecActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Запустить программу';
+        return 'wizard.command.shell.exec::Запустить программу';
     }
 
     function getDescription(Action $action = null)
     {
         if ($action && $action->wait) {
-            return Str::format("Запустить программу %s и ожидать её завершения", $action ? $action->get('command') : '');
+            return _("wizard.command.desc.shell.exec.wait::Запустить программу {0} и ожидать её завершения", $action ? $action->get('command') : '');
         }
 
-        return Str::format("Запустить программу %s", $action ? $action->get('command') : '');
+        return _("Запустить программу {0} ", $action ? $action->get('command') : '');
     }
 
     function getIcon(Action $action = null)

@@ -21,9 +21,9 @@ class ElementSetWidthActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'value' => 'Ширина',
-            'relative' => 'Относительно'
+            'object' => 'wizard.object::Объект',
+            'value' => 'wizard.width::Ширина',
+            'relative' => 'wizard.relative::Относительно'
         ];
     }
 
@@ -51,21 +51,21 @@ class ElementSetWidthActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Изменить ширину';
+        return 'wizard.command.set.width::Изменить ширину';
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Изменить ширину объекта формы";
+            return "wizard.command.desc.set.width::Изменить ширину объекта формы";
         }
 
         $value = $action->get('value');
 
         if ($action->relative) {
-            return Str::format("Увеличить ширину объекта %s на %s", $action->get('object'), $value);
+            return _("wizard.command.desc.param.set.width.rel::Увеличить ширину объекта {0} на {1}.", $action->get('object'), $value);
         } else {
-            return Str::format("Задать ширину объекта %s на %s", $action->get('object'), $value);
+            return _("wizard.command.desc.param.set.width::Задать ширину объекта {0} на {1}.", $action->get('object'), $value);
         }
     }
 

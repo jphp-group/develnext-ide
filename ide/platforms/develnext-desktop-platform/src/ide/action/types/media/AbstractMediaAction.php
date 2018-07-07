@@ -13,7 +13,7 @@ abstract class AbstractMediaAction extends AbstractSimpleActionType
 
     function getHelpText()
     {
-        return 'В качестве плеера вы можете указать символьный код или же выбрать среди компонентов модуля нужный плеер.';
+        return 'wizard.command.media.help.text::В качестве плеера вы можете указать символьный код или же выбрать среди компонентов модуля нужный плеер.';
     }
 
     function attributes()
@@ -26,7 +26,7 @@ abstract class AbstractMediaAction extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'id' => 'Плеер'
+            'id' => 'wizard.player::Плеер'
         ];
     }
 

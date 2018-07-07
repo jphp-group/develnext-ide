@@ -26,10 +26,10 @@ class IfVarActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'name' => 'Имя переменной',
-            'method' => 'Метод сравнения',
-            'value' => 'Значение (с чем сравнивать)',
-            'not' => 'Отрицание (все наоборот)'
+            'name' => 'wizard.name.of.variable::Имя переменной',
+            'method' => 'wizard.compare.method::Метод сравнения',
+            'value' => 'wizard.value.with.compare::Значение (с чем сравнивать)',
+            'not' => 'wizard.logic.negative.invert::Отрицание (все наоборот)'
         ];
     }
 
@@ -56,16 +56,16 @@ class IfVarActionType extends AbstractSimpleActionType
     function getTitle(Action $action = null)
     {
         if ($action) {
-            return "Если переменная '{$action->get('name')}' ...";
+            return _("wizard.command.param.if.var::Если переменная '{0}' ...", $action->get('name'));
         }
 
-        return 'Если переменная ...';
+        return 'wizard.command.if.var::Если переменная ...';
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Если глобальная переменная";
+            return "wizard.command.desc.if.var::Если глобальная переменная";
         }
 
         $name = $action->get('name');
@@ -77,9 +77,9 @@ class IfVarActionType extends AbstractSimpleActionType
         $method = TextMethodsArgumentEditor::$variants[$action->method];
 
         if ($action->not) {
-            return Str::format("Если глобальная переменная %s НЕ `%s` -> %s ", $name, $method, $action->get('value'));
+            return _("wizard.command.desc.param.if.var.not::Если глобальная переменная {0} НЕ `{1}` -> {2} ", $name, $method, $action->get('value'));
         } else {
-            return Str::format("Если глобальная переменная %s `%s` -> %s ", $name, $method, $action->get('value'));
+            return _("wizard.command.desc.param.if.var::Если глобальная переменная {0} `{1}` -> {2} ", $name, $method, $action->get('value'));
         }
     }
 

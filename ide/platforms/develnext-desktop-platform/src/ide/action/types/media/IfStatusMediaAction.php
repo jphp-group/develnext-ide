@@ -20,8 +20,8 @@ class IfStatusMediaAction extends AbstractMediaAction
     function attributeLabels()
     {
         return [
-            'id' => 'Плеер',
-            'status' => 'Статус плеера'
+            'id' => 'wizard.player::Плеер',
+            'status' => 'wizard.status.of.player::Статус плеера'
         ];
     }
 
@@ -30,12 +30,12 @@ class IfStatusMediaAction extends AbstractMediaAction
         return [
             'status' => ['def' => 'PLAYING', 'editor' => function () {
                 $editor = new MethodsArgumentEditor([
-                    'UNKNOWN' => 'Неизвестно [UNKNOWN]',
-                    'READY' => 'Подготовлен [READY]',
-                    'PLAYING' => 'Играет [PLAYING]',
-                    'PAUSED' => 'На паузе [PAUSED]',
-                    'STOPPED' => 'Остановлен [STOPPED]',
-                    'HALTED' => 'Возникла ошибка [HALTED]',
+                    'UNKNOWN' => 'wizard.player.status.unknown::Неизвестно [UNKNOWN]',
+                    'READY' => 'wizard.player.status.ready::Подготовлен [READY]',
+                    'PLAYING' => 'wizard.player.status.playing::Играет [PLAYING]',
+                    'PAUSED' => 'wizard.player.status.paused::На паузе [PAUSED]',
+                    'STOPPED' => 'wizard.player.status.stopped::Остановлен [STOPPED]',
+                    'HALTED' => 'wizard.player.status.halted::Возникла ошибка [HALTED]',
                 ]);
                 return $editor;
             }],
@@ -46,12 +46,15 @@ class IfStatusMediaAction extends AbstractMediaAction
 
     function getTitle(Action $action = null)
     {
-        return !$action ? "Если плеер" : str::format("Если плеер %s", $action->get('id'));
+        return !$action ?
+            "wizard.command.if.player::Если плеер" : _("wizard.command.param.if.player::Если плеер {0} ", $action->get('id'));
     }
 
     function getDescription(Action $action = null)
     {
-        return !$action ? "Если статус плеера" : str::format("Если статус плеера %s = %s", $action->get('id'), $action->get('status'));
+        return !$action ?
+            "wizard.command.desc.if.player::Если статус плеера"
+            : _("wizard.command.desc.param.if.player::Если статус плеера {0} = {1}.", $action->get('id'), $action->get('status'));
     }
 
     function getIcon(Action $action = null)

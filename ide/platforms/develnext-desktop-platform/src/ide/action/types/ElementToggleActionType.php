@@ -19,7 +19,7 @@ class ElementToggleActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект'
+            'object' => 'wizard.object::Объект'
         ];
     }
 
@@ -47,12 +47,12 @@ class ElementToggleActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Переключить видимость';
+        return 'wizard.command.toggle.visibility::Переключить видимость';
     }
 
     function getDescription(Action $action = null)
     {
-        return Str::format("Переключить видимость объекта %s с видимого на невидимый или наоборот", $action ? $action->get('object') : '');
+        return _("wizard.command.desc.toggle.visibility::Переключить видимость объекта {0} с видимого на невидимый или наоборот", $action ? $action->get('object') : '');
     }
 
     function getIcon(Action $action = null)

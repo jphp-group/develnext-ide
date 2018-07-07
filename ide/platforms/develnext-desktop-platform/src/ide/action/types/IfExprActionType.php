@@ -20,8 +20,8 @@ class IfExprActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'expr' => 'Условие',
-            'not' => 'Отрицание (наоборот, если не выполнится)'
+            'expr' => 'wizard.condition::Условие',
+            'not' => 'wizard.logic.negative.else::Отрицание (наоборот, если не выполнится)'
         ];
     }
 
@@ -42,19 +42,19 @@ class IfExprActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Если ...';
+        return 'wizard.command.if::Если ...';
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Если выполнится условие";
+            return "wizard.command.desc.if::Если выполнится условие";
         }
 
         if ($action->not) {
-            return Str::format("Если НЕ будет (%s)", $action->get('expr'));
+            return _("wizard.command.desc.param.if.not::Если НЕ будет ({0})", $action->get('expr'));
         } else {
-            return Str::format("Если будет (%s)", $action->get('expr'));
+            return _("wizard.command.desc.param.if::Если будет ({0})", $action->get('expr'));
         }
     }
 

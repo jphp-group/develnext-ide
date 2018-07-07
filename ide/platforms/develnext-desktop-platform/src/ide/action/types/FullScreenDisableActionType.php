@@ -20,12 +20,12 @@ class FullScreenDisableActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Отключить полноэкранный режим';
+        return 'wizard.command.disable.fullscreen::Отключить полноэкранный режим';
     }
 
     function getDescription(Action $action = null)
     {
-        return 'Перевести окно в нормальный режим';
+        return 'wizard.command.desc.disable.fullscreen::Перевести окно в нормальный режим';
     }
 
     function getIcon(Action $action = null)

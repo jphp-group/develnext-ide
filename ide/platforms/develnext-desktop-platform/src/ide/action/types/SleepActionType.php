@@ -20,8 +20,8 @@ class SleepActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'value' => 'Интервал паузы в миллисекундах (1 сек = 1000 млсек)',
-            'sync' => 'В главном потоке'
+            'value' => 'wizard.sleep.interval::Интервал паузы в миллисекундах (1 сек = 1000 млсек)',
+            'sync' => 'wizard.in.the.main.thread::В главном потоке'
         ];
     }
 
@@ -37,19 +37,19 @@ class SleepActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Пауза";
+        return "wizard.command.sleep::Пауза";
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Остановить выполнение действий на N миллисекунд";
+            return "wizard.command.desc.sleep::Остановить выполнение действий на N миллисекунд";
         }
 
         if ($action->sync) {
-            return Str::format("Остановить выполнение действий на %s миллисекунд в главном потоке", $action->get('value'));
+            return _("wizard.command.param.desc.sleep.sync::Остановить выполнение действий на {0} миллисекунд в главном потоке", $action->get('value'));
         } else {
-            return Str::format("Остановить выполнение действий на %s миллисекунд", $action->get('value'));
+            return _("wizard.command.param.desc.sleep::Остановить выполнение действий на {0} миллисекунд", $action->get('value'));
         }
     }
 

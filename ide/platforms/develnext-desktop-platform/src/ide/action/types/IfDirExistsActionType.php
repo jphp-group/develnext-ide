@@ -21,8 +21,8 @@ class IfDirExistsActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'file' => 'Путь к папке',
-            'not' => 'Отрицание (наоборт, если не существует)'
+            'file' => 'wizard.path.to.dir::Путь к папке',
+            'not' => 'wizard.logic.negative.not.exists::Отрицание (наоборт, если не существует)'
         ];
     }
 
@@ -49,22 +49,22 @@ class IfDirExistsActionType extends AbstractSimpleActionType
     function getTitle(Action $action = null)
     {
         if (!$action || !$action->not) {
-            return 'Если есть папка ...';
+            return 'wizard.command.if.dir.exists::Если есть папка ...';
         } else {
-            return 'Если нет папки ...';
+            return 'wizard.command.if.dir.not.exists::Если нет папки ...';
         }
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Если существует папка";
+            return "wizard.command.desc.if.dir.exists::Если существует папка";
         }
 
         if ($action->not) {
-            return Str::format("Если НЕ существует папка %s", $action->get('file'));
+            return _("wizard.command.desc.param.if.dir.not.exists::Если НЕ существует папка {0}.", $action->get('file'));
         } else {
-            return Str::format("Если существует папка %s", $action->get('file'));
+            return _("wizard.command.desc.param.if.dir.exists::Если существует папка {0}.", $action->get('file'));
         }
     }
 

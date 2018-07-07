@@ -47,6 +47,7 @@ use php\lib\Items;
 use php\lib\Str;
 use php\util\Flow;
 use php\xml\XmlProcessor;
+use function var_dump;
 
 /**
  * Class ActionConstructorForm
@@ -376,6 +377,7 @@ class ActionConstructorForm extends AbstractIdeForm
             $titleName->style = '-fx-font-weight: bold; -fx-text-fill: #383838; ' . UiUtils::fontSizeStyle();
 
             if ($action->getDescription()) {
+                var_dump($action->getDescription());
                 $titleDescription = new UXLabel(_($action->getDescription()));
                 $titleDescription->style = '-fx-text-fill: gray; ' . UiUtils::fontSizeStyle();
                 $titleDescription->padding = 0;
