@@ -94,7 +94,7 @@ class EnumPropertyEditor extends TextPropertyEditor
             $this->applyValue($value, false);
         });
 
-        $ui = new UXHBox([$this->choiceBox]);
+        $ui = new UXHBox([_($this->choiceBox)]);
 
         if ($this->editable) {
             $this->makeDialogButtonUi();

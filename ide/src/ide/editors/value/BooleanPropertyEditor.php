@@ -37,7 +37,7 @@ class BooleanPropertyEditor extends ElementPropertyEditor
             $this->updateUi($this->checkbox->selected, false, false);
         });
 
-        return new UXHBox([$checkbox, $label]);
+        return new UXHBox([$checkbox, $label], 3);
     }
 
     public function setTooltip($tooltip)
@@ -60,7 +60,7 @@ class BooleanPropertyEditor extends ElementPropertyEditor
     public function updateUi($value, $noRefreshDesign = false, $updateCheckbox = true)
     {
         parent::updateUi($value, $noRefreshDesign);
-        $this->label->text = $value ? 'Да' : 'Нет';
+        $this->label->text = $value ? _('btn.yes') : _('btn.no');
 
         if ($updateCheckbox) {
             $this->checkbox->selected = (bool)$value;

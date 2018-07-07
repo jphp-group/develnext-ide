@@ -183,7 +183,7 @@ class UiUtils
         $tooltip = UXTooltip::of($text);
         self::setWatchingFocusable($tooltip);
 
-        return $tooltip;
+        return _($tooltip);
     }
 
     static function checkIO($message)

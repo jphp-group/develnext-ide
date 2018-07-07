@@ -31,9 +31,9 @@ class GameSetSpeedAnimationActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект со спрайтом',
-            'speed'  => 'Скорость (кадров в сек)',
-            'relative' => 'Относительно',
+            'object' => 'wizard.sprite.object::Объект со спрайтом',
+            'speed'  => 'wizard.2d.speed::Скорость (кадров в сек)',
+            'relative' => 'wizard.relative::Относительно',
         ];
     }
 
@@ -53,22 +53,22 @@ class GameSetSpeedAnimationActionType extends AbstractSimpleActionType
     function getTitle(Action $action = null)
     {
         if ($action && $action->relative) {
-            return "Увеличить скорость анимации";
+            return "wizard.2d.command.inc.speed.anim::Увеличить скорость анимации";
         }
 
-        return 'Задать скорость анимации';
+        return 'wizard.2d.command.set.speed.anim::Задать скорость анимации';
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Изменить скорость анимации";
+            return "wizard.2d.command.desc.set.speed.anim::Изменить скорость анимации";
         }
 
         if ($action->relative) {
-            return "Увеличить скорость анимации объекта {$action->get('object')} на {$action->get('speed')} кадров/сек.";
+            return _("wizard.2d.command.desc.param.inc.speed.anim::Увеличить скорость анимации объекта {0} на {1} кадров/сек.", $action->get('object'), $action->get('speed'));
         } else {
-            return "Изменить скорость анимации объекта {$action->get('object')} на {$action->get('speed')} кадров/сек.";
+            return _("wizard.2d.command.desc.param.set.speed.anim::Изменить скорость анимации объекта {0} на {1} кадров/сек.", $action->get('object'), $action->get('speed'));
         }
     }
 

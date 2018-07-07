@@ -25,6 +25,8 @@ class IdeLanguage
 
     private $altLang;
 
+    private $beta;
+
     /**
      * @var array
      */
@@ -49,6 +51,7 @@ class IdeLanguage
         $this->restartMessage = $config->get('restart.message');
         $this->restartYes = $config->get('restart.yes');
         $this->restartNo = $config->get('restart.no');
+        $this->beta = (bool) $config->get('beta');
 
         $this->localizer = $localizer;
 
@@ -161,5 +164,10 @@ class IdeLanguage
         if (fs::isFile($source)) {
             $this->localizer->load($this->code, $source);
         }
+    }
+
+    public function isBeta(): bool
+    {
+        return $this->beta;
     }
 }

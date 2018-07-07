@@ -46,6 +46,9 @@ function _($code, ...$args) {
     if ($code instanceof UXNode) {
         $ideLocalizer->translateNode($code, ...$args);
         return $code;
+    } else if ($code instanceof \php\gui\UXTooltip) {
+        $ideLocalizer->translateTooltip($code, ...$args);
+        return $code;
     } else if ($code instanceof \php\gui\UXMenuItem) {
         $ideLocalizer->translateMenuItem($code, ...$args);
         return $code;
@@ -59,7 +62,13 @@ function _($code, ...$args) {
     } else if ($code instanceof UXDesignProperties) {
         return $ideLocalizer->translateDesignProperties($code);
     } else {
-        return $ideLocalizer->translate($code, (array)$args);
+        $result = $ideLocalizer->translate($code, (array)$args);
+
+        if (!($result instanceof LocalizedString)) {
+            throw new Exception("$code result is not localized string");
+        }
+
+        return $result;
     }
 }
 

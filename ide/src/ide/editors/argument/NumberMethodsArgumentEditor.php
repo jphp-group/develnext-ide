@@ -14,10 +14,10 @@ use php\lib\Str;
 class NumberMethodsArgumentEditor extends MethodsArgumentEditor
 {
     static $variants = [
-        'equals' => 'Равен',
-        'smaller' => 'Меньше',
-        'greater' => 'Больше',
-        'mod' => 'Делится без остатка'
+        'equals' => 'method.equals::Равен',
+        'smaller' => 'method.smaller::Меньше',
+        'greater' => 'method.greater::Больше',
+        'mod' => 'method.mod::Делится без остатка'
     ];
 
     public function __construct(array $options = [])

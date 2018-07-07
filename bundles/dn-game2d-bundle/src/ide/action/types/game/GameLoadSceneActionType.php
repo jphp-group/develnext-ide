@@ -34,8 +34,8 @@ class GameLoadSceneActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'dest' => 'Сцена',
-            'source' => 'Объект (куда загрузить сцену)'
+            'dest' => 'wizard.2d.scene::Сцена',
+            'source' => 'wizard.object.for.load.2d.scene::Объект (куда загрузить сцену)'
         ];
     }
 
@@ -62,12 +62,12 @@ class GameLoadSceneActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Загрузить сцену";
+        return "wizard.2d.command.load.2d.scene::Загрузить сцену";
     }
 
     function getDescription(Action $action = null)
     {
-        return str::format("Загрузить игровую сцену из формы %s в объект %s", $action ? $action->get('dest') : '', $action ? $action->get('source') : '');
+        return _("wizard.2d.command.desc.load.2d.scene::Загрузить игровую сцену из формы {0} в объект {1} ", $action ? $action->get('dest') : '', $action ? $action->get('source') : '');
     }
 
     function getIcon(Action $action = null)

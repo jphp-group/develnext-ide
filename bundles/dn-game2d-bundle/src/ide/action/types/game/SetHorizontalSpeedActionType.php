@@ -25,7 +25,7 @@ class SetHorizontalSpeedActionType extends AbstractSimpleActionType
 
     function getHelpText()
     {
-        return 'Это действие работает только для игровых объектов с поведением "Объект игровой сцены" внутри игровой комнаты или для объектов с поведением "Игровая сцена"!';
+        return 'wizard.2d.command.set.hor.speed.help.text::Это действие работает только для игровых объектов с поведением `Объект игровой сцены` внутри игровой комнаты или для объектов с поведением `Игровая сцена`!';
     }
 
     function attributes()
@@ -40,9 +40,9 @@ class SetHorizontalSpeedActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'speed' => 'Скорость (м/с)',
-            'relative' => 'Относительно'
+            'object' => 'wizard.object',
+            'speed' => 'wizard.2d.speed.m.s::Скорость (м/с)',
+            'relative' => 'wizard.relative::Относительно'
         ];
     }
 
@@ -61,18 +61,18 @@ class SetHorizontalSpeedActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Задать горизонтальную скорость";
+        return "wizard.2d.command.set.hor.speed::Задать горизонтальную скорость";
     }
 
     function getDescription(Action $action = null)
     {
         if ($action) {
-            return str::format(
-                "Задать %s объекту горозинтальную скорость движения = %s, относительно = %s",
-                $action->get('object'), $action->get('speed'), $action->relative ? 'да' : 'нет'
+            return _(
+                "wizard.2d.command.desc.param.set.hor.speed::Задать {0} объекту горозинтальную скорость движения = {1}, относительно = {2}.",
+                $action->get('object'), $action->get('speed'), $action->relative ? _('btn.yes') : ('btn.no')
             );
         } else {
-            return "Задать объекту горозинтальную скорость движения";
+            return "wizard.2d.command.desc.set.hor.speed::Задать объекту горозинтальную скорость движения";
         }
     }
 

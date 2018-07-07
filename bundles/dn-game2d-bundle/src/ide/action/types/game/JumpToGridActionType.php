@@ -31,9 +31,9 @@ class JumpToGridActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'gridX' => 'Grid X (горизонтальное выравнивание)',
-            'gridY' => 'Grid Y (вертикальное выравнивание)',
+            'object' => 'wizard.object',
+            'gridX' => 'wizard.2d.grid.x.hor::Grid X (горизонтальное выравнивание)',
+            'gridY' => 'wizard.2d.grid.y.ver::Grid Y (вертикальное выравнивание)',
         ];
     }
 
@@ -53,7 +53,7 @@ class JumpToGridActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Выровнять по сетке";
+        return "wizard.2d.command.jump.to.grid::Выровнять по сетке";
     }
 
     function getDescription(Action $action = null)
@@ -62,9 +62,9 @@ class JumpToGridActionType extends AbstractSimpleActionType
             $gridX = $action->get('gridX');
             $gridY = $action->get('gridY');
 
-            return str::format("Выровнять %s объект по сетке (x: %s, y: %s)", $action->get('object'), $gridX, $gridY);
+            return _("wizard.2d.command.desc.param.jump.to.grid::Выровнять {0} объект по сетке (x: {1}, y: {2})", $action->get('object'), $gridX, $gridY);
         } else {
-            return "Выровнять объект по сетке";
+            return "wizard.2d.command.desc.jump.to.grid::Выровнять объект по сетке";
         }
     }
 

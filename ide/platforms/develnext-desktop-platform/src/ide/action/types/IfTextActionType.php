@@ -61,7 +61,7 @@ class IfTextActionType extends AbstractSimpleActionType
     function getTitle(Action $action = null)
     {
         if ($action) {
-            $method = TextMethodsArgumentEditor::$variants[$action->method];
+            $method = _(TextMethodsArgumentEditor::$variants[$action->method]);
 
             if ($method) {
                 return _("wizard.command.param.if.text::Если текст `{0}`", $method);
@@ -77,7 +77,7 @@ class IfTextActionType extends AbstractSimpleActionType
             return "wizard.command.desc.if.text::Если текст";
         }
 
-        $method = TextMethodsArgumentEditor::$variants[$action->method];
+        $method = _(TextMethodsArgumentEditor::$variants[$action->method]);
 
         return _("wizard.command.desc.param.if.text::Если текст {0} `{1}` -> {2} ", $action->get('object'), $method, $action->get('string'));
     }

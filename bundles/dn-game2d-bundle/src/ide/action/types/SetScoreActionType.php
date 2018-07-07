@@ -21,9 +21,9 @@ class SetScoreActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'name' => 'Название счета',
-            'value' => 'Новое значение',
-            'relative' => 'Относительно (т.е. прибавить к текущему значению)',
+            'name' => 'wizard.name.of.score::Название счета',
+            'value' => 'wizard.value',
+            'relative' => 'wizard.relative.with.help::Относительно (т.е. прибавить к текущему значению)',
         ];
     }
 
@@ -53,24 +53,24 @@ class SetScoreActionType extends AbstractSimpleActionType
     function getTitle(Action $action = null)
     {
         if ($action && $action->relative) {
-            return Str::format("Прибавить к счету %s", $action ? $action->get('name') : '');
+            return _("wizard.2d.command.inc.score::Прибавить к счету {0} ", $action ? $action->get('name') : '');
         } else {
-            return Str::format("Изменить счет %s", $action ? $action->get('name') : '');
+            return _("wizard.2d.command.set.score::Изменить счет {0} ", $action ? $action->get('name') : '');
         }
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Изменить счет";
+            return "wizard.2d.command.desc.set.score::Изменить счет";
         }
 
         $name = $action->get('name');
 
         if ($action->relative) {
-            return Str::format("Прибавить к счету %s -> %s", $name, $action->get('value'));
+            return _("wizard.2d.command.desc.param.inc.score::Прибавить к счету {0} -> {1}", $name, $action->get('value'));
         } else {
-            return Str::format("Изменит счет %s на %s", $name, $action->get('value'));
+            return _("wizard.2d.command.desc.param.set.score::Изменит счет {0} на {1}", $name, $action->get('value'));
         }
     }
 

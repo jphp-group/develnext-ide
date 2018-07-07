@@ -26,7 +26,7 @@ class SetGravityActionType extends AbstractSimpleActionType
 
     function getHelpText()
     {
-        return 'Это действие работает только для объектов с поведениями "Объект игровой сцены" и "Игровая сцена"!';
+        return 'wizard.2d.command.set.gravity.help.text::Это действие работает только для объектов с поведениями `Объект игровой сцены` и `Игровая сцена`!';
     }
 
     function attributes()
@@ -41,9 +41,9 @@ class SetGravityActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'x' => 'Гравитация по X (горизонтальная)',
-            'y' => 'Гравитация по Y (вертикальная)'
+            'object' => 'wizard.object',
+            'x' => 'wizard.x.gravity.hor::Гравитация по X (горизонтальная)',
+            'y' => 'wizard.x.gravity.ver::Гравитация по Y (вертикальная)'
         ];
     }
 
@@ -71,15 +71,15 @@ class SetGravityActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Изменить гравитацию";
+        return "wizard.2d.command.set.gravity::Изменить гравитацию";
     }
 
     function getDescription(Action $action = null)
     {
         if ($action) {
-            return str::format("Изменить гравитацию %s объекта на (x: %s, y: %s)", $action->get('object'), $action->get('x'), $action->get('y'));
+            return _("wizard.2d.command.desc.param.set.gravity::Изменить гравитацию {0} объекта на (x: {1}, y: {2})", $action->get('object'), $action->get('x'), $action->get('y'));
         } else {
-            return "Изменить гравитацию объекта";
+            return "wizard.2d.command.desc.set.gravity::Изменить гравитацию объекта";
         }
     }
 

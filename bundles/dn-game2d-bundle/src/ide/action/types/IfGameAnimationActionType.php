@@ -22,9 +22,9 @@ class IfGameAnimationActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'animation' => 'Анимация',
-            'not' => 'Отрицание (наоборт, если не проигрывается)'
+            'object' => 'wizard.object::Объект',
+            'animation' => 'wizard.2d.anim::Анимация',
+            'not' => 'wizard.logic.negative.not.played::Отрицание (наоборт, если не проигрывается)'
         ];
     }
 
@@ -57,19 +57,19 @@ class IfGameAnimationActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Если анимация ...';
+        return 'wizard.2d.command.if.anim::Если анимация ...';
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Если проигрывается анимация";
+            return "wizard.2d.command.desc.if.anim::Если проигрывается анимация";
         }
 
         if ($action->not) {
-            return Str::format("Если НЕ проигрывается анимация %s у объекта %s", $action->get('animation'), $action->get('object'));
+            return _("wizard.2d.command.desc.param.if.not.anim::Если НЕ проигрывается анимация {0} у объекта {1}.", $action->get('animation'), $action->get('object'));
         } else {
-            return Str::format("Если проигрывается анимация %s у объекта %s", $action->get('animation'), $action->get('object'));
+            return _("wizard.2d.command.desc.param.if.anim::Если проигрывается анимация {0} у объекта {1}", $action->get('animation'), $action->get('object'));
         }
     }
 

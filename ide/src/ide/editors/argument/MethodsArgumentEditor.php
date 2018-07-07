@@ -31,7 +31,7 @@ class MethodsArgumentEditor extends AbstractArgumentEditor
     {
         $this->comboBox = new UXComboBox();
 
-        $labelUi = new UXLabel($label);
+        $labelUi = _(new UXLabel($label));
         $labelUi->style = '-fx-font-style: italic;';
         $labelUi->height = 27;
 
@@ -67,7 +67,7 @@ class MethodsArgumentEditor extends AbstractArgumentEditor
         parent::setValue($value, $type);
 
         if ($value) {
-            $this->comboBox->selected = $this->options[$value];
+            $this->comboBox->selected = _($this->options[$value]);
         } else {
             $this->comboBox->selectedIndex = 0;
         }
@@ -88,5 +88,6 @@ class MethodsArgumentEditor extends AbstractArgumentEditor
     {
         $this->comboBox->items->clear();
         $this->comboBox->items->addAll($this->options);
+        _($this->comboBox);
     }
 }
