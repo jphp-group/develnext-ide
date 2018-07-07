@@ -20,8 +20,8 @@ class IfRandomActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'max' => 'Максимум (количество случаев)',
-            'not' => 'Отрицание (наоборт, если не выполнится)'
+            'max' => 'wizard.max.number.cases::Максимум (количество случаев)',
+            'not' => 'wizard.logic.negative.else::Отрицание (наоборт, если не выполнится)'
         ];
     }
 
@@ -55,19 +55,19 @@ class IfRandomActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Если случайность ...';
+        return 'wizard.command.if.random::Если случайность ...';
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Если выполнится случайность";
+            return "wizard.command.desc.if.random::Если выполнится случайность";
         }
 
         if ($action->not) {
-            return Str::format("Если НЕ будет одного случая из %s", $action->get('max'));
+            return _("wizard.command.desc.param.if.random.not::Если НЕ будет одного случая из {0}.", $action->get('max'));
         } else {
-            return Str::format("Если будет один случай из %s", $action->get('max'));
+            return _("wizard.command.desc.param.if.random::Если будет один случай из {0}.", $action->get('max'));
         }
     }
 

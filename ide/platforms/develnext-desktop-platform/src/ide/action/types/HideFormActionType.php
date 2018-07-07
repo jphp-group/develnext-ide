@@ -19,7 +19,7 @@ class HideFormActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'form' => 'Форма'
+            'form' => 'wizard.form::Форма'
         ];
     }
 
@@ -47,16 +47,16 @@ class HideFormActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Закрыть форму';
+        return 'wizard.command.close.form::Закрыть форму';
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Закрыть форму";
+            return "wizard.command.close.form::Закрыть форму";
         }
 
-        return Str::format("Закрыть форму %s", $action->get('form'));
+        return _("wizard.command.desc.close.form::Закрыть форму {0}.", $action->get('form'));
     }
 
     function getIcon(Action $action = null)

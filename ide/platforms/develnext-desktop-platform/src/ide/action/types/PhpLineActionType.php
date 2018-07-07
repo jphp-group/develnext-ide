@@ -19,7 +19,7 @@ class PhpLineActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'expr' => 'Строчка кода на php',
+            'expr' => 'wizard.line.with.php.code::Строчка кода на php',
         ];
     }
 
@@ -35,13 +35,13 @@ class PhpLineActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'PHP код';
+        return 'wizard.command.line.of.php.code::PHP код';
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Строчка кода на php";
+            return "wizard.command.desc.line.of.php.code::Строчка кода на php";
         }
 
         return Str::format("%s", $action->get('expr'));

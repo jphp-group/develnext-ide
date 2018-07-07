@@ -21,8 +21,8 @@ class IfFileExistsActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'file' => 'Путь к файлу',
-            'not' => 'Отрицание (наоборт, если не существует)'
+            'file' => 'wizard.path.to.file::Путь к файлу',
+            'not' => 'wizard.logic.negative.not.exists::Отрицание (наоборт, если не существует)'
         ];
     }
 
@@ -49,22 +49,22 @@ class IfFileExistsActionType extends AbstractSimpleActionType
     function getTitle(Action $action = null)
     {
         if (!$action || !$action->not) {
-            return 'Если есть файл ...';
+            return 'wizard.command.if.file.exists::Если есть файл ...';
         } else {
-            return 'Если нет файла ...';
+            return 'wizard.command.if.file.not.exists::Если нет файла ...';
         }
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Если существует файл";
+            return "wizard.command.desc.if.file.exists::Если существует файл";
         }
 
         if ($action->not) {
-            return Str::format("Если НЕ существует файл %s", $action->get('file'));
+            return _("wizard.command.desc.param.if.file.not.exists::Если НЕ существует файл {0}.", $action->get('file'));
         } else {
-            return Str::format("Если существует файл %s", $action->get('file'));
+            return _("wizard.command.desc.param.if.file.exists::Если существует файл {0}.", $action->get('file'));
         }
     }
 

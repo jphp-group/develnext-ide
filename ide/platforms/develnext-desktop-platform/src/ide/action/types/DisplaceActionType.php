@@ -76,9 +76,9 @@ class DisplaceActionType extends AbstractSimpleActionType
         $y = $action->get('y');
 
         if ($action->continue) {
-            return _("wizard.command.desc.param.anim.displace::Сдвинуть объект %s (x: %s, y: %s) за %s млсек", $object, $x, $y, $duration);
+            return _("wizard.command.desc.param.anim.displace::Сдвинуть объект {0} (x: {1}, y: {2}) за {3} млсек", $object, $x, $y, $duration);
         } else {
-            return _("wizard.command.desc.param.anim.displace.with.wait::Сдвинуть объект %s (x: %s, y: %s) за %s млсек с ожиданием окончания", $object, $x, $y, $duration);
+            return _("wizard.command.desc.param.anim.displace.with.wait::Сдвинуть объект {0} (x: {1}, y: {2}) за {3} млсек с ожиданием окончания", $object, $x, $y, $duration);
         }
     }
 

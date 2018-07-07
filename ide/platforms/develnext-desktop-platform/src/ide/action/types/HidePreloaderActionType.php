@@ -39,7 +39,7 @@ class HidePreloaderActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Скрыть индикатор загрузки';
+        return 'wizard.command.hide.preloader::Скрыть индикатор загрузки';
     }
 
     function getDescription(Action $action = null)

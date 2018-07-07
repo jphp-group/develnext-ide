@@ -21,9 +21,9 @@ class LoadFormActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'form' => 'Название формы',
-            'saveSize' => 'Сохранить размеры',
-            'savePosition' => 'Сохранить позицию',
+            'form' => 'wizard.name.of.form::Название формы',
+            'saveSize' => 'wizard.save.size::Сохранить размеры',
+            'savePosition' => 'wizard.save.position::Сохранить позицию',
         ];
     }
 
@@ -44,26 +44,26 @@ class LoadFormActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Загрузить форму';
+        return 'wizard.command.load.form::Загрузить форму';
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Загрузить форму (а текущую закрыть)";
+            return "wizard.command.desc.load.form::Загрузить форму (а текущую закрыть)";
         }
 
         $arg = '';
 
         if ($action->saveSize) {
-            $arg = ', сохраняя размеры';
+            $arg = _('wizard.command.desc.param.load.form.save.size.param::, сохраняя размеры');
         }
 
         if ($action->savePosition) {
-            $arg .= ', сохраняя позицию';
+            $arg .= _('wizard.command.desc.param.load.form.save.pos.param::, сохраняя позицию');
         }
 
-        return Str::format("Загрузить форму %s, а текущую закрыть%s", $action->get('form'), $arg);
+        return _("wizard.command.desc.param.load.form::Загрузить форму {0}, а текущую закрыть{1}", $action->get('form'), $arg);
     }
 
     function getIcon(Action $action = null)

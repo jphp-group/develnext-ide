@@ -21,9 +21,9 @@ class ElementSetValueActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'value'  => 'Значение',
-            'relative' => 'Прибавить к старому значению'
+            'object' => 'wizard.object::Объект',
+            'value'  => 'wizard.value::Значение',
+            'relative' => 'wizard.append.to.old.value::Прибавить к старому значению'
         ];
     }
 
@@ -52,13 +52,13 @@ class ElementSetValueActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Изменить значение объекта';
+        return 'wizard.command.set.element.value::Изменить значение объекта';
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Добавить или задать основное значение объекта";
+            return "wizard.command.desc.set.element.value::Добавить или задать основное значение объекта";
         }
 
         $text = $action->get('value');
@@ -68,9 +68,9 @@ class ElementSetValueActionType extends AbstractSimpleActionType
         }
 
         if ($action->relative) {
-            return Str::format("Добавить объекту %s значение %s", $action->get('object'), $text);
+            return _("wizard.command.desc.param.set.element.value.rel::Добавить объекту {0} значение {1}.", $action->get('object'), $text);
         } else {
-            return Str::format("Поменять значение объекта %s на %s", $action->get('object'), $text);
+            return _("wizard.command.desc.param.set.element.value::Поменять значение объекта {0} на {1}.", $action->get('object'), $text);
         }
 
     }

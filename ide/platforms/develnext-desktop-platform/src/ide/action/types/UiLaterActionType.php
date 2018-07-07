@@ -33,12 +33,12 @@ class UiLaterActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Выполнить позже";
+        return "wizard.command.ui.later::Выполнить позже";
     }
 
     function getDescription(Action $action = null)
     {
-        return "Выполнить все последующие действия позже в UI потоке";
+        return "wizard.command.desc.ui.later::Выполнить все последующие действия позже в UI потоке";
     }
 
     function getIcon(Action $action = null)

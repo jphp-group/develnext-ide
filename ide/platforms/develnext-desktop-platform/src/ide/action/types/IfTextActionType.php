@@ -24,10 +24,10 @@ class IfTextActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Текст',
-            'method' => 'Метод сравнения',
-            'string' => 'Значение',
-            'not' => 'Отрицание (все наоборот)'
+            'object' => 'wizard.text::Текст',
+            'method' => 'wizard.compare.method::Метод сравнения',
+            'string' => 'wizard.value::Значение',
+            'not' => 'wizard.negative.logic.invert::Отрицание (все наоборот)'
         ];
     }
 
@@ -64,22 +64,22 @@ class IfTextActionType extends AbstractSimpleActionType
             $method = TextMethodsArgumentEditor::$variants[$action->method];
 
             if ($method) {
-                return "Если текст `$method`";
+                return _("wizard.command.param.if.text::Если текст `{0}`", $method);
             }
         }
 
-        return 'Если текст ...';
+        return 'wizard.command.if.text::Если текст ...';
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Если текст";
+            return "wizard.command.desc.if.text::Если текст";
         }
 
         $method = TextMethodsArgumentEditor::$variants[$action->method];
 
-        return Str::format("Если текст %s `%s` -> %s ", $action->get('object'), $method, $action->get('string'));
+        return _("wizard.command.desc.param.if.text::Если текст {0} `{1}` -> {2} ", $action->get('object'), $method, $action->get('string'));
     }
 
     function getIcon(Action $action = null)

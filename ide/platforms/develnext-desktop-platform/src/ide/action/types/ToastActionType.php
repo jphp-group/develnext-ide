@@ -20,7 +20,7 @@ class ToastActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'value' => 'Текст сообщения'
+            'value' => 'wizard.text.of.message::Текст сообщения'
         ];
     }
 
@@ -41,7 +41,7 @@ class ToastActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Всплывающая подсказка';
+        return 'wizard.command.toast::Всплывающая подсказка';
     }
 
     function getDescription(Action $action = null)
@@ -52,7 +52,7 @@ class ToastActionType extends AbstractSimpleActionType
             $text = Str::sub($text, 0, 37) . '..';
         }
 
-        return Str::format("Показать всплывающую подсказку %s", $text);
+        return _("wizard.command.desc.toast::Показать всплывающую подсказку {0} ", $text);
     }
 
     function getIcon(Action $action = null)

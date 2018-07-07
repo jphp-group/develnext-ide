@@ -11,7 +11,7 @@ class OpenMediaAction extends AbstractSimpleActionType
 {
     function getHelpText()
     {
-        return 'В качестве плеера вы можете указать символьный код или же выбрать среди компонентов модуля нужный плеер.';
+        return 'wizard.command.media.help.text::В качестве плеера вы можете указать символьный код или же выбрать среди компонентов модуля нужный плеер.';
     }
 
     function attributes()
@@ -26,9 +26,9 @@ class OpenMediaAction extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'source' => 'Аудио ресурс',
-            'autoplay' => 'Воспроизвести после открытия',
-            'id' => 'Плеер'
+            'source' => 'wizard.audio.resource::Аудио ресурс',
+            'autoplay' => 'wizard.autoplay.after.open::Воспроизвести после открытия',
+            'id' => 'wizard.player::Плеер'
         ];
     }
 
@@ -58,21 +58,21 @@ class OpenMediaAction extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Открыть аудио ресурс";
+        return "wizard.command.open.audio.resource::Открыть аудио ресурс";
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Открыть и воспроизвести аудио ресурс";
+            return "wizard.command.desc.open.audio.resource::Открыть и воспроизвести аудио ресурс";
         }
 
         $source = $action->get('source');
 
         if ($action->autoplay) {
-            return str::format("Открыть аудио ресурс %s и воспроизвести, плеер %s", $source, $action->get('id'));
+            return _("wizard.command.desc.param.open.audio.resource.autoplay::Открыть аудио ресурс {0} и воспроизвести, плеер {1}.", $source, $action->get('id'));
         } else {
-            return str::format("Открыть аудио ресурс %s, плеер %s", $source, $action->get('id'));
+            return _("wizard.command.desc.param.open.audio.resource::Открыть аудио ресурс {0}, плеер {1}.", $source, $action->get('id'));
         }
     }
 

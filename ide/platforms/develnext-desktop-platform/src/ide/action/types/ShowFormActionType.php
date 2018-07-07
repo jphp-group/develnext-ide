@@ -19,7 +19,7 @@ class ShowFormActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'form' => 'Название формы'
+            'form' => 'wizard.name.of.form::Название формы'
         ];
     }
 
@@ -40,16 +40,16 @@ class ShowFormActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Открыть форму';
+        return 'wizard.command.show.form::Открыть форму';
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Открыть форму";
+            return "wizard.command.desc.show.form::Открыть форму";
         }
 
-        return Str::format("Открыть форму %s", $action->get('form'));
+        return _("wizard.command.desc.param.show.form::Открыть форму {0}.", $action->get('form'));
     }
 
     function getIcon(Action $action = null)

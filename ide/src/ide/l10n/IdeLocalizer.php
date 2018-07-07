@@ -24,6 +24,7 @@ use php\lib\str;
 use php\util\Regex;
 use function pre;
 
+
 /**
  * Class IdeLocalizer
  * @package ide\l10n
@@ -239,11 +240,15 @@ class IdeLocalizer extends Localizer
 
     public function translate($message, array $args = []): string
     {
+        if ($message instanceof LocalizedString) {
+            return $message;
+        }
+
         if (!str::startsWith($message, '{') && !str::endsWith($message, '}')) {
             if (str::contains($message, "::")) {
                 [$message, $def] = str::split($message, '::', 2);
 
-                $result = $this->translate($message, $args);
+                $result = (string) $this->translate($message, $args);
 
                 if ($this->getUseDefaultValuesForLang() === $this->language) {
                     if ($result === $message) {
@@ -251,21 +256,21 @@ class IdeLocalizer extends Localizer
                             $def = str::replace($def, "\{$i\}", $arg);
                         }
 
-                        return $def;
+                        return new LocalizedString($def);
                     }
                 }
 
-                return $result;
+                return new LocalizedString($result);
             }
 
-            return parent::translate($message, $args);
+            return new LocalizedString(parent::translate($message, $args));
         }
 
         $regex = new Regex('(\\{.+\\})', '', $message);
-        return $regex->replaceWithCallback(function (Regex $regex) use ($args) {
+        return new LocalizedString($regex->replaceWithCallback(function (Regex $regex) use ($args) {
             $text = $regex->group(1);
             return $this->translate(substr($text, 1, -1), $args);
-        });
+        }));
     }
 
     public function load(string $lang, string $file)

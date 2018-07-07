@@ -20,8 +20,8 @@ class MinimizeFormActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'form' => 'Форма',
-            'restore' => 'Вернуть обратно свернутую форму',
+            'form' => 'wizard.form::Форма',
+            'restore' => 'wizard.restore.minimized.form::Вернуть обратно свернутую форму',
         ];
     }
 
@@ -50,20 +50,20 @@ class MinimizeFormActionType extends AbstractSimpleActionType
     function getTitle(Action $action = null)
     {
         return !$action ?
-            'Свернуть форму'
-            : ($action->restore ? 'Вернуть свернутую форму' : 'Свернуть форму');
+            'wizard.command.minimize.form::Свернуть форму'
+            : ($action->restore ? 'wizard.command.restore.minimize.form::Вернуть свернутую форму' : 'wizard.command.minimize.form::Свернуть форму');
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Свернуть форму в таск бар";
+            return "wizard.command.desc.minimize.form::Свернуть форму в таск бар";
         }
 
         if ($action->restore) {
-            return Str::format("Вернуть свернутую форму %s из таск бара", $action->get('form'));
+            return _("wizard.command.desc.param.restore.minimize.form::Вернуть свернутую форму {0} из таск бара", $action->get('form'));
         } else {
-            return Str::format("Свернуть форму %s в таск бар", $action->get('form'));
+            return _("wizard.command.desc.param.minimize.form::Свернуть форму {0} в таск бар", $action->get('form'));
         }
     }
 

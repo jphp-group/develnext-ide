@@ -9,13 +9,16 @@ class StopMediaAction extends AbstractMediaAction
 {
     function getTitle(Action $action = null)
     {
-        return !$action ? "Стоп" : str::format("Стоп, плеер = %s", $action->get('id'));
+        return !$action
+            ? "wizard.command.stop.media::Стоп"
+            : _("wizard.command.param.stop.media::Стоп, плеер = {0}.", $action->get('id'));
     }
 
     function getDescription(Action $action = null)
     {
-        return !$action ? "Полностью остановить воспроизведение (stop)"
-            : str::format("Остановить воспроизведение (stop), плеер = %s", $action->get('id'));
+        return !$action
+            ? "wizard.command.desc.stop.media::Полностью остановить воспроизведение (stop)"
+            : _("wizard.command.desc.param.stop.media::Остановить воспроизведение (stop), плеер = {0}.", $action->get('id'));
     }
 
     function getIcon(Action $action = null)

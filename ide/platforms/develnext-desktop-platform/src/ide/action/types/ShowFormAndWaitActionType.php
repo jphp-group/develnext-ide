@@ -19,13 +19,13 @@ class ShowFormAndWaitActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'form' => 'Название формы'
+            'form' => 'wizard.name.of.form::Название формы'
         ];
     }
 
     function getHelpText()
     {
-        return "Если у выбранной формы будет выставлен флаг 'Модальность', то все остальные окна будут заблокированы, пока форма не закроется.";
+        return "wizard.command.show.form.and.wait.help.text::Если у выбранной формы будет выставлен флаг 'Модальность', то все остальные окна будут заблокированы, пока форма не закроется.";
     }
 
 
@@ -46,16 +46,16 @@ class ShowFormAndWaitActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Открыть форму и ждать';
+        return 'wizard.command.show.form.and.wait::Открыть форму и ждать';
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Открыть форму и ждать её закрытия";
+            return "wizard.command.desc.show.form.and.wait::Открыть форму и ждать её закрытия";
         }
 
-        return Str::format("Открыть форму %s и ждать её закрытия", $action->get('form'));
+        return _("wizard.command.desc.param.show.form.and.wait::Открыть форму {0} и ждать её закрытия", $action->get('form'));
     }
 
     function getIcon(Action $action = null)

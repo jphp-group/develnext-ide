@@ -22,9 +22,9 @@ class IfPasswordValidActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'input' => 'Источник ввода пароля',
-            'password' => 'Оригинальный пароль (хеш sha1, если не строка)',
-            'not' => 'Отрицание (если пароль неверный)',
+            'input' => 'wizard.source.of.password.input::Источник ввода пароля',
+            'password' => 'wizard.original.password.or.sha1::Оригинальный пароль (хеш sha1, если не строка)',
+            'not' => 'wizard.logic.negative.if.password.invalid::Отрицание (если пароль неверный)',
         ];
     }
 
@@ -57,29 +57,28 @@ class IfPasswordValidActionType extends AbstractSimpleActionType
 
     function getHelpText()
     {
-        return 'Для проверки паролей используется хеширование sha1 (необратимое шифрование),' .
-           ' даже если исходники вашей программы будут открыты, оригинальный пароль никто не узнает!';
+        return 'wizard.command.if.password.help.text::Для проверки паролей используется хеширование sha1 (необратимое шифрование), даже если исходники вашей программы будут открыты, оригинальный пароль никто не узнает!';
     }
 
     function getTitle(Action $action = null)
     {
         if (!$action || !$action->not) {
-            return 'Если пароль верный ...';
+            return 'wizard.command.if.password::Если пароль верный ...';
         } else {
-            return 'Если пароль неверный ...';
+            return 'wizard.command.if.password.invalid::Если пароль неверный ...';
         }
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Если пароль верный";
+            return "wizard.command.desc.if.password::Если пароль верный";
         }
 
         if ($action->not) {
-            return Str::format("Если пароль из %s неверный (%s)", $action->get('input'), $action->get('password'));
+            return _("wizard.command.desc.param.if.password.invalid::Если пароль из {0} неверный ({1})", $action->get('input'), $action->get('password'));
         } else {
-            return Str::format("Если пароль из %s верный (%s)", $action->get('input'), $action->get('password'));
+            return _("wizard.command.desc.param.if.password::Если пароль из {0} верный ({1})", $action->get('input'), $action->get('password'));
         }
     }
 

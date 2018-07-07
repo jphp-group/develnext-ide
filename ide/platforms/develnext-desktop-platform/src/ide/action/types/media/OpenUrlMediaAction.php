@@ -17,9 +17,9 @@ class OpenUrlMediaAction extends OpenMediaAction
     function attributeLabels()
     {
         return [
-            'source' => 'Ссылка на аудио-файл (http, https, ftp)',
-            'autoplay' => 'Воспроизвести после открытия',
-            'id' => 'Плеер'
+            'source' => 'wizard.audio.file.link::Ссылка на аудио-файл (http, https, ftp)',
+            'autoplay' => 'wizard.autoplay.after.open::Воспроизвести после открытия',
+            'id' => 'wizard.player::Плеер'
         ];
     }
 
@@ -40,21 +40,21 @@ class OpenUrlMediaAction extends OpenMediaAction
 
     function getTitle(Action $action = null)
     {
-        return "Открыть аудио ссылку";
+        return "wizard.command.open.audio.link::Открыть аудио ссылку";
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Открыть и воспроизвести аудио ссылку";
+            return "wizard.command.desc.open.audio.link::Открыть и воспроизвести аудио ссылку";
         }
 
         $source = $action->get('source');
 
         if ($action->autoplay) {
-            return str::format("Открыть аудио ссылку %s и воспроизвести, плеер %s", $source, $action->get('id'));
+            return _("wizard.command.desc.param.open.audio.link.autoplay::Открыть аудио ссылку {0} и воспроизвести, плеер {1}.", $source, $action->get('id'));
         } else {
-            return str::format("Открыть аудио ссылку %s, плеер %s", $source, $action->get('id'));
+            return _("wizard.command.desc.param.open.audio.link::Открыть аудио ссылку {0}, плеер {1}.", $source, $action->get('id'));
         }
     }
 

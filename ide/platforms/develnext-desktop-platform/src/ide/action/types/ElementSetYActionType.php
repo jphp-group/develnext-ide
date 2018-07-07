@@ -21,9 +21,9 @@ class ElementSetYActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'value' => 'Позиция Y',
-            'relative' => 'Относительно'
+            'object' => 'wizard.object::Объект',
+            'value' => 'wizard.y.position::Позиция Y',
+            'relative' => 'wizard.relative::Относительно'
         ];
     }
 
@@ -51,21 +51,21 @@ class ElementSetYActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Позиция Y';
+        return 'wizard.command.set.y.position::Позиция Y';
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Изменить позицию Y объекта формы";
+            return "wizard.command.desc.set.y.position::Изменить позицию Y объекта формы";
         }
 
         $value = $action->get('value');
 
         if ($action->relative) {
-            return Str::format("Добавить к позиции Y объекта %s значение %s", $action->get('object'), $value);
+            return _("wizard.command.desc.param.set.y.position.rel::Добавить к позиции Y объекта {0} значение {1}.", $action->get('object'), $value);
         } else {
-            return Str::format("Задать позицию Y объекта %s на %s", $action->get('object'), $value);
+            return _("wizard.command.desc.param.set.y.position::Задать позицию Y объекта {0} на {1}.", $action->get('object'), $value);
         }
 
     }

@@ -35,10 +35,10 @@ class FadeToActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'duration' => 'Продолжительность анимации (млсек, 1 сек = 1000 млсек)',
-            'value' => 'Уровень прозрачности (от 0 до 1)',
-            'continue' => 'Не ждать окончания анимации'
+            'object' => 'wizard.object::Объект',
+            'duration' => 'wizard.anim.duration::Продолжительность анимации (млсек, 1 сек = 1000 млсек)',
+            'value' => 'wizard.opacity.level::Уровень прозрачности (от 0 до 1)',
+            'continue' => 'wizard.no.wait.the.anim.end::Не ждать окончания анимации'
         ];
     }
 
@@ -58,13 +58,13 @@ class FadeToActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Изменение прозрачности (анимация)";
+        return "wizard.command.anim.fadeto::Изменение прозрачности (анимация)";
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Анимация плавного изменения прозрачности объекта";
+            return "wizard.command.desc.anim.fadeto::Анимация плавного изменения прозрачности объекта";
         }
 
         $object = $action->get('object');
@@ -72,9 +72,9 @@ class FadeToActionType extends AbstractSimpleActionType
         $value = $action->get('value');
 
         if ($action->continue) {
-            return Str::format("Изменение прозрачности объекта %s до %s за %s млсек", $object, $value, $duration);
+            return _("wizard.command.desc.param.anim.fadeto::Изменение прозрачности объекта {0} до {1} за {2} млсек", $object, $value, $duration);
         } else {
-            return Str::format("Изменение прозрачности объекта %s  до %s за %s млсек с ожиданием окончания", $object, $value, $duration);
+            return _("wizard.command.desc.param.anim.fadeto.with.wait::Изменение прозрачности объекта {0} до {1} за {2} млсек с ожиданием окончания", $object, $value, $duration);
         }
     }
 

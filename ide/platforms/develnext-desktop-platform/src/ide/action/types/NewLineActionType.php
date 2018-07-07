@@ -41,12 +41,12 @@ class NewLineActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Пустая строка';
+        return 'wizard.command.empty.line::Пустая строка';
     }
 
     function getDescription(Action $action = null)
     {
-        return "Пустая строка без всяких действий";
+        return "wizard.command.desc.empty.line::Пустая строка без всяких действий";
     }
 
     function getIcon(Action $action = null)

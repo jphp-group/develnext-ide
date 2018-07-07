@@ -34,9 +34,9 @@ class FadeOutActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'duration' => 'Продолжительность анимации (млсек, 1 сек = 1000 млсек)',
-            'continue' => 'Не ждать окончания анимации'
+            'object' => 'wizard.object::Объект',
+            'duration' => 'wizard.anim.duration::Продолжительность анимации (млсек, 1 сек = 1000 млсек)',
+            'continue' => 'wizard.no.wait.the.anim.end::Не ждать окончания анимации'
         ];
     }
 
@@ -55,22 +55,22 @@ class FadeOutActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Исчезновение (анимация)";
+        return "wizard.command.anim.fadeout::Исчезновение (анимация)";
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Анимация плавного исчезновения объекта";
+            return "wizard.command.desc.anim.fadeout::Анимация плавного исчезновения объекта";
         }
 
         $object = $action->get('object');
         $duration = $action->get('duration');
 
         if ($action->continue) {
-            return Str::format("Исчезновение объекта %s за %s млсек", $object, $duration);
+            return _("wizard.command.desc.param.anim.fadeout::Исчезновение объекта {0} за {1} млсек", $object, $duration);
         } else {
-            return Str::format("Исчезновение объекта %s за %s млсек с ожиданием окончания", $object, $duration);
+            return _("wizard.command.desc.param.anim.fadeout.with.wait::Исчезновение объекта {0} за {1} млсек с ожиданием окончания", $object, $duration);
         }
     }
 

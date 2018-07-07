@@ -39,12 +39,12 @@ class OpenBlockActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Начало';
+        return 'wizard.command.open.block::Начало';
     }
 
     function getDescription(Action $action = null)
     {
-        return "Открыть блок для условия или цикла";
+        return "wizard.command.desc.open.block::Открыть блок для условия или цикла";
     }
 
     function getIcon(Action $action = null)

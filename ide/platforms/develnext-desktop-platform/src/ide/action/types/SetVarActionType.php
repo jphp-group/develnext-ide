@@ -19,8 +19,8 @@ class SetVarActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'name' => 'Имя переменной',
-            'value' => 'Значение',
+            'name' => 'wizard.name.of.variable::Имя переменной',
+            'value' => 'wizard.value::Значение',
         ];
     }
 
@@ -41,13 +41,13 @@ class SetVarActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Задать глобальную переменную";
+        return "wizard.command.set.gl.var::Задать глобальную переменную";
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Задать значение глобальной переменной";
+            return "wizard.command.desc.set.gl.var::Задать значение глобальной переменной";
         }
 
         $name = $action->get('name');
@@ -56,7 +56,7 @@ class SetVarActionType extends AbstractSimpleActionType
             $name = "\${$name}";
         }
 
-        return Str::format("Переменная %s = %s", $name, $action->get('value'));
+        return _("wizard.command.desc.param.set.gl.var::Переменная {0} = {1} ", $name, $action->get('value'));
     }
 
     function getIcon(Action $action = null)

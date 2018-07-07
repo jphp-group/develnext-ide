@@ -20,7 +20,7 @@ class OpenActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'file' => 'Путь к файлу или папке'
+            'file' => 'wizard.path.to.file.or.dir::Путь к файлу или папке'
         ];
     }
 
@@ -36,12 +36,12 @@ class OpenActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Открыть файл';
+        return 'wizard.command.open.file::Открыть файл';
     }
 
     function getDescription(Action $action = null)
     {
-        return Str::format("Открыть файл / папку %s", $action ? $action->get('file') : '');
+        return _("wizard.command.desc.open.file::Открыть файл / папку {0} ", $action ? $action->get('file') : '');
     }
 
     function getIcon(Action $action = null)

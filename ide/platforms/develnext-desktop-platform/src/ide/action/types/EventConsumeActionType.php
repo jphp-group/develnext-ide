@@ -20,12 +20,12 @@ class EventConsumeActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Прервать последующие события';
+        return 'wizard.command.consume.event::Прервать последующие события';
     }
 
     function getDescription(Action $action = null)
     {
-        return 'Прервать все последующие события и действия';
+        return 'wizard.command.desc.consume.event::Прервать все последующие события и действия';
     }
 
     function getIcon(Action $action = null)

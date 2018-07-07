@@ -20,12 +20,12 @@ class ExitActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Прервать выполнение';
+        return 'wizard.command.return::Прервать выполнение';
     }
 
     function getDescription(Action $action = null)
     {
-        return 'Прервать выполнение действий и выйти из текущего события';
+        return 'wizard.command.desc.return::Прервать выполнение действий и выйти из текущего события';
     }
 
     function getIcon(Action $action = null)

@@ -20,12 +20,12 @@ class FullScreenEnableActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Включить полноэкранный режим';
+        return 'wizard.command.enable.fullscreen::Включить полноэкранный режим';
     }
 
     function getDescription(Action $action = null)
     {
-        return 'Перевести окно в полноэкранный режим';
+        return 'wizard.command.desc.enable.fullscreen::Перевести окно в полноэкранный режим';
     }
 
     function getIcon(Action $action = null)

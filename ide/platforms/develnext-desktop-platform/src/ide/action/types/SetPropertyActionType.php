@@ -20,9 +20,9 @@ class SetPropertyActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'property' => 'Свойство',
-            'value' => 'Значение',
+            'object' => 'wizard.object::Объект',
+            'property' => 'wizard.property::Свойство',
+            'value' => 'wizard.value::Значение',
         ];
     }
 
@@ -43,19 +43,18 @@ class SetPropertyActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Задать свойство";
+        return "wizard.command.set.property::Задать свойство";
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Задать значение свойства объекта";
+            return "wizard.command.desc.set.property::Задать значение свойства объекта";
         }
 
         $name = $action->get('property');
 
-
-        return Str::format("Свойство %s->%s = %s", $action->get('object'), $name, $action->get('value'));
+        return _("wizard.command.desc.param.set.property::Свойство {0}->{1} = {2} ", $action->get('object'), $name, $action->get('value'));
     }
 
     function getIcon(Action $action = null)
