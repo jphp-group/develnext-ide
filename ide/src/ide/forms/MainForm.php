@@ -239,6 +239,10 @@ class MainForm extends AbstractIdeForm
                 $item->text .= ' (' . $language->getTitleEn() . ')';
             }
 
+            if ($language->isBeta()) {
+                $item->text .= ' (Beta Version)';
+            }
+
             //$item->enabled = !$ideLanguage || $language->getCode() != $ideLanguage->getCode();
 
             $item->on('action', function () use ($language, $item, $menu) {

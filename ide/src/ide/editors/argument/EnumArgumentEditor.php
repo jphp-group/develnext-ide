@@ -74,12 +74,12 @@ class EnumArgumentEditor extends AbstractArgumentEditor
 
         $callback = function (UXListCell $cell, $item) {
             if ($item instanceof ObjectListEditorItem) {
-                $cell->text = $item->text;
+                $cell->text = _($item->text);
                 $cell->graphic = Ide::get()->getImage($item->graphic);
                 $cell->padding = 3;
                 $cell->paddingLeft = 3 + $item->level * 10;
             } else {
-                $cell->text = "$item";
+                $cell->text = _("$item");
                 $cell->graphic = null;
             }
         };

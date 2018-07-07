@@ -29,7 +29,7 @@ class JumpToStartActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект'
+            'object' => 'wizard.object'
         ];
     }
 
@@ -47,15 +47,15 @@ class JumpToStartActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Прыгнуть к началу";
+        return "wizard.2d.command.jump.to.start::Прыгнуть к началу";
     }
 
     function getDescription(Action $action = null)
     {
         if ($action) {
-            return str::format("Переместить объект %s к начальной позиции", $action->get('object'));
+            return _("wizard.2d.command.desc.param.jump.to.start::Переместить объект {0} к начальной позиции", $action->get('object'));
         } else {
-            return "Переместить объект к начальной позиции";
+            return "wizard.2d.command.desc.jump.to.start::Переместить объект к начальной позиции";
         }
     }
 

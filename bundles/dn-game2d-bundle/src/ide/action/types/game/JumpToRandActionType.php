@@ -31,9 +31,9 @@ class JumpToRandActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'gridX' => 'Grid X (горизонтальное выравнивание)',
-            'gridY' => 'Grid Y (вертикальное выравнивание)',
+            'object' => 'wizard.object',
+            'gridX' => 'wizard.2d.grid.x.hor::Grid X (горизонтальное выравнивание)',
+            'gridY' => 'wizard.2d.grid.y.ver::Grid Y (вертикальное выравнивание)',
         ];
     }
 
@@ -53,7 +53,7 @@ class JumpToRandActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Прыгнуть в случайное место";
+        return "wizard.2d.command.jump.to.rand.place::Прыгнуть в случайное место";
     }
 
     function getDescription(Action $action = null)
@@ -63,12 +63,12 @@ class JumpToRandActionType extends AbstractSimpleActionType
             $gridY = $action->get('gridY');
 
             if ($gridX <= 1 && $gridY <= 1) {
-                return str::format("Переместить %s объект к случайно выбранной позиции", $action->get('object'));
+                return _("wizard.2d.command.desc.param.jump.to.rand.place::Переместить {0} объект к случайно выбранной позиции", $action->get('object'));
             } else {
-                return str::format("Переместить %s объект к случайно выбранной позиции, с выравниванием (x: %s, y: %s)", $action->get('object'), $gridX, $gridY);
+                return _("wizard.2d.command.desc.param.jump.to.rand.place.grid::Переместить {0} объект к случайно выбранной позиции, с выравниванием (x: {1}, y: {2})", $action->get('object'), $gridX, $gridY);
             }
         } else {
-            return "Переместить объект к случайно выбранной позиции";
+            return "wizard.2d.command.desc.jump.to.rand.place::Переместить объект к случайно выбранной позиции";
         }
     }
 

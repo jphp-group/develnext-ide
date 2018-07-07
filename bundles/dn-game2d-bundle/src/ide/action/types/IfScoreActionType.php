@@ -26,10 +26,10 @@ class IfScoreActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'name' => 'Счет',
-            'method' => 'Метод сравнения',
-            'value' => 'Значение (с чем сравнивать)',
-            'not' => 'Отрицание (все наоборот)'
+            'name' => 'wizard.score::Счет',
+            'method' => 'wizard.compare.method',
+            'value' => 'wizard.value.with.compare',
+            'not' => 'wizard.negative.logic.invert'
         ];
     }
 
@@ -63,21 +63,21 @@ class IfScoreActionType extends AbstractSimpleActionType
     function getTitle(Action $action = null)
     {
         if ($action) {
-            return "Если счет {$action->get('name')} ...";
+            return _("wizard.2d.command.param.if.score::Если счет {0} ...", $action->get('name'));
         }
 
-        return 'Если счет ...';
+        return 'wizard.2d.command.if.score::Если счет ...';
     }
 
     function getDescription(Action $action = null)
     {
         if ($action == null) {
-            return "Если счет";
+            return "wizard.2d.command.desc.if.score::Если счет";
         }
 
-        $method = NumberMethodsArgumentEditor::$variants[$action->method];
+        $method = _(NumberMethodsArgumentEditor::$variants[$action->method]);
 
-        return Str::format("Если счет %s `%s` -> %s ", $action->get('name'), $method, $action->get('value'));
+        return _("wizard.2d.command.desc.param.if.score::Если счет {0} `{1}` -> {2} ", $action->get('name'), $method, $action->get('value'));
     }
 
     function getIcon(Action $action = null)

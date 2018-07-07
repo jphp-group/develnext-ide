@@ -29,7 +29,7 @@ class GameStopAnimationActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект со спрайтом'
+            'object' => 'wizard.sprite.object::Объект со спрайтом'
         ];
     }
 
@@ -47,16 +47,16 @@ class GameStopAnimationActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Остановить анимацию';
+        return 'wizard.2d.command.stop.anim::Остановить анимацию';
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Остановить анимацию объекта";
+            return "wizard.2d.command.desc.stop.anim::Остановить анимацию объекта";
         }
 
-        return "Остановить анимацию объекта {$action->get('object')}";
+        return _("wizard.2d.command.desc.param.stop.anim::Остановить анимацию объекта {0}.", $action->get('object'));
     }
 
     function getIcon(Action $action = null)

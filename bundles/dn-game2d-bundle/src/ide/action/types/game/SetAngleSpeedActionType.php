@@ -25,7 +25,7 @@ class SetAngleSpeedActionType extends AbstractSimpleActionType
 
     function getHelpText()
     {
-        return 'Это действие работает только для игровых объектов с поведением "Объект игровой сцены" внутри игровой комнаты или для объектов с поведением "Игровая сцена"!';
+        return 'wizard.2d.command.set.angle.speed.help.text::Это действие работает только для игровых объектов с поведением `Объект игровой сцены` внутри игровой комнаты или для объектов с поведением `Игровая сцена`!';
     }
 
     function attributes()
@@ -40,9 +40,9 @@ class SetAngleSpeedActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Игровой объект',
-            'direction' => 'Направление (от 0 до 360 градусов)',
-            'speed' => 'Скорость (м/с)'
+            'object' => 'wizard.game.object::Игровой объект',
+            'direction' => 'wizard.direction.deg.360::Направление (от 0 до 360 градусов)',
+            'speed' => 'wizard.2d.speed.m.s::Скорость (м/с)'
         ];
     }
 
@@ -62,15 +62,15 @@ class SetAngleSpeedActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Задать скорость";
+        return "wizard.2d.command.set.angle.speed::Задать скорость";
     }
 
     function getDescription(Action $action = null)
     {
         if ($action) {
-            return str::format("Задать %s объекту скорость = %s и направление = %s", $action->get('object'), $action->get('speed'), $action->get('direction'));
+            return _("wizard.2d.command.desc.param.set.angle.speed::Задать {0} объекту скорость = {1} и направление = {2}.", $action->get('object'), $action->get('speed'), $action->get('direction'));
         } else {
-            return "Задать объекту скорость и направление движения";
+            return "wizard.2d.command.desc.set.angle.speed::Задать объекту скорость и направление движения";
         }
     }
 

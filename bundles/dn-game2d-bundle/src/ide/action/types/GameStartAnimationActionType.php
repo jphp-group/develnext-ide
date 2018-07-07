@@ -29,7 +29,7 @@ class GameStartAnimationActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект со спрайтом'
+            'object' => 'wizard.sprite.object::Объект со спрайтом'
         ];
     }
 
@@ -47,16 +47,16 @@ class GameStartAnimationActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return 'Запустить анимацию';
+        return 'wizard.2d.command.start.anim::Запустить анимацию';
     }
 
     function getDescription(Action $action = null)
     {
         if (!$action) {
-            return "Запустить анимацию объекта";
+            return "wizard.2d.command.desc.start.anim::Запустить анимацию объекта";
         }
 
-        return "Запустить анимацию объекта {$action->get('object')}";
+        return _("wizard.2d.command.desc.param.start.anim::Запустить анимацию объекта {0}.", $action->get('object'));
     }
 
     function getIcon(Action $action = null)

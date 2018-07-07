@@ -8,6 +8,7 @@ use ide\Ide;
 use ide\Logger;
 use php\gui\designer\UXDesignProperties;
 use php\gui\framework\DataUtils;
+use php\gui\UXChoiceBox;
 use php\gui\UXComboBox;
 use php\gui\UXComboBoxBase;
 use php\gui\UXLabeled;
@@ -20,6 +21,7 @@ use php\gui\UXParent;
 use php\gui\UXTab;
 use php\gui\UXTabPane;
 use php\gui\UXTextInputControl;
+use php\gui\UXTooltip;
 use php\lib\str;
 use php\util\Regex;
 use function pre;
@@ -78,6 +80,30 @@ class IdeLocalizer extends Localizer
     }
 
     /**
+     * @param UXTooltip $tooltip
+     * @param array ...$args
+     * @return UXTooltip
+     * @internal param UXTooltip $node
+     */
+    public function translateTooltip(UXTooltip $tooltip, ...$args): UXTooltip
+    {
+        $text = $tooltip->text;
+
+        $tooltip->text = $this->translate($text, $args);
+
+        if ($l10nBind = $tooltip->data('l10n-bind-id')) {
+            $this->off('after-change-language', $l10nBind);
+        }
+
+        $l10nBind = $this->bind('after-change-language', function () use ($tooltip, $args, $text) {
+            $tooltip->text = $this->translate($text, $args);
+        });
+
+        $tooltip->data('l10n-bind-id', $l10nBind);
+        return $tooltip;
+    }
+
+    /**
      * @param UXNode $node
      * @param array ...$args
      */
@@ -124,7 +150,7 @@ class IdeLocalizer extends Localizer
             });
 
             $node->data('l10n-bind-id', $l10nBind);
-        } else if ($node instanceof UXComboBox) {
+        } else if ($node instanceof UXComboBox || $node instanceof UXChoiceBox) {
             $items = flow($node->items)->toArray();
 
             $selected = $node->selectedIndex;
@@ -238,7 +264,7 @@ class IdeLocalizer extends Localizer
         });
     }*/
 
-    public function translate($message, array $args = []): string
+    public function translate($message, array $args = [])
     {
         if ($message instanceof LocalizedString) {
             return $message;

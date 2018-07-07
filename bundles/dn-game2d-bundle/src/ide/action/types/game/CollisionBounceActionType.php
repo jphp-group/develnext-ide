@@ -26,7 +26,7 @@ class CollisionBounceActionType extends AbstractSimpleActionType
 
     function getHelpText()
     {
-        return 'Данное действие работает только в событии столкновения для движущихся игровых объектов';
+        return 'wizard.2d.command.collision.bounce.help.text::Данное действие работает только в событии столкновения для движущихся игровых объектов';
     }
 
     function attributes()
@@ -40,8 +40,8 @@ class CollisionBounceActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'bounciness' => 'Коэфициент отскока'
+            'object' => 'wizard.object::Объект',
+            'bounciness' => 'wizard.2d.k.of.bound::Коэффициент отскока'
         ];
     }
 
@@ -60,15 +60,15 @@ class CollisionBounceActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Отскочить";
+        return "wizard.2d.command.bounce::Отскочить";
     }
 
     function getDescription(Action $action = null)
     {
         if ($action) {
-            return str::format("Выполнить отскок для объекта %s (во время столкновения) с коэфициентом %s", $action->get('object'), $action->get('bounciness'));
+            return _("wizard.2d.command.desc.param.bounce::Выполнить отскок для объекта {0} (во время столкновения) с коэфициентом {1} ", $action->get('object'), $action->get('bounciness'));
         } else {
-            return "Выполнить отскок для объекта (во время столкновения)";
+            return "wizard.2d.command.desc.bounce::Выполнить отскок для объекта (во время столкновения)";
         }
     }
 

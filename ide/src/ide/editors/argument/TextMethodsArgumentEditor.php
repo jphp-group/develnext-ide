@@ -14,15 +14,15 @@ use php\lib\Str;
 class TextMethodsArgumentEditor extends MethodsArgumentEditor
 {
     static $variants = [
-        'equals' => 'Равно',
-        'equalsIgnoreCase' => 'Равно (без учета регистра)',
-        'startsWith' => 'Начинается с',
-        'endsWidth' => 'Кончается ...',
-        'contains' => 'Содержит',
-        'regex' => 'Регулярное выражение',
-        'regexIgnoreCase' => 'Регулярное выражение (без учета регистра)',
-        'smaller' => 'Меньше',
-        'greater' => 'Больше',
+        'equals' => 'method.equals::Равно',
+        'equalsIgnoreCase' => 'method.equals.i::Равно (без учета регистра)',
+        'startsWith' => 'method.starts.with::Начинается с',
+        'endsWidth' => 'method.ends.with::Кончается ...',
+        'contains' => 'method.contains::Содержит',
+        'regex' => 'entity.regular.expr::Регулярное выражение',
+        'regexIgnoreCase' => 'entity.regular.expr.i::Регулярное выражение (без учета регистра)',
+        'smaller' => 'method.smaller::Меньше',
+        'greater' => 'method.greater::Больше',
     ];
 
     public function __construct(array $options = [])

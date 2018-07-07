@@ -39,11 +39,11 @@ class CreateInstanceActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'id' => 'Объект (прототип)',
-            'x' => 'X (координата)',
-            'y' => 'Y (координата)',
-            'parent' => 'Относительно какого объекта',
-            'relative' => 'Относительно',
+            'id' => 'wizard.object.prototype::Объект (прототип)',
+            'x' => 'wizard.x.position',
+            'y' => 'wizard.y.position',
+            'parent' => 'wizard.relative.to.object::Относительно какого объекта',
+            'relative' => 'wizard.relative::Относительно',
         ];
     }
 
@@ -63,7 +63,7 @@ class CreateInstanceActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return str::format("Создать %s", $action ? $action->get('id') : 'клона');
+        return _("wizard.2d.command.create.instance::Создать {0} ", $action ? $action->get('id') : 'клона');
     }
 
     function getDescription(Action $action = null)
@@ -72,18 +72,18 @@ class CreateInstanceActionType extends AbstractSimpleActionType
             $parent = $action->get('parent');
 
             if ($parent) {
-                return str::format(
-                    "Создать клона от объекта %s, относительно = %s, [x, y] = [%s, %s], относительно объекта %s",
-                    $action->get('id'), $action->relative ? 'да' : 'нет', $action->get('x'), $action->get('y'), $parent
+                return _(
+                    "wizard.2d.command.desc.param.create.instance.parent::Создать клона от объекта {0}, относительно = {1}, [x, y] = [{2}, {3}], относительно объекта {4}.",
+                    $action->get('id'), $action->relative ? _('btn.yes') : _('btn.no'), $action->get('x'), $action->get('y'), $parent
                 );
             } else {
-                return str::format(
-                    "Создать клона от объекта %s, относительно = %s, [x, y] = [%s, %s]",
-                    $action->get('id'), $action->relative ? 'да' : 'нет', $action->get('x'), $action->get('y')
+                return _(
+                    "wizard.2d.command.desc.param.create.instance::Создать клона от объекта {0}, относительно = {2}, [x, y] = [{2}, {3}]",
+                    $action->get('id'), $action->relative ? _('btn.yes') : _('btn.no'), $action->get('x'), $action->get('y')
                 );
             }
         } else {
-            return "Создать клона от объекта";
+            return "wizard.2d.command.desc.create.instance::Создать клона от объекта";
         }
     }
 

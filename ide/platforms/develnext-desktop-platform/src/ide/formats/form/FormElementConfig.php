@@ -355,7 +355,8 @@ class FormElementConfig
                         }
 
                         if ($property->getAttribute('tooltip')) {
-                            $tooltip .= " {$property->getAttribute('tooltip')}";
+                            $t = $property->getAttribute('tooltip');
+                            $tooltip .= " \{$t\}";
                         }
 
                         $editor->setTooltip($tooltip);

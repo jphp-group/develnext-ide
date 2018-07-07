@@ -376,9 +376,10 @@ class ActionConstructorForm extends AbstractIdeForm
             $titleName = new UXLabel(_($action->getTitle()));
             $titleName->style = '-fx-font-weight: bold; -fx-text-fill: #383838; ' . UiUtils::fontSizeStyle();
 
-            if ($action->getDescription()) {
-                var_dump($action->getDescription());
-                $titleDescription = new UXLabel(_($action->getDescription()));
+            $description = $action->getDescription();
+
+            if ($description) {
+                $titleDescription = new UXLabel(_($description));
                 $titleDescription->style = '-fx-text-fill: gray; ' . UiUtils::fontSizeStyle();
                 $titleDescription->padding = 0;
             } else {
@@ -392,7 +393,7 @@ class ActionConstructorForm extends AbstractIdeForm
 
                 if ($action->getType()->isDeprecated()) {
                     $title->opacity = 0.6;
-                    $titleName->tooltipText = $titleDescription->tooltipText = 'Действие устарело, необходимо его заменить чем-то другим';
+                    $titleName->tooltipText = $titleDescription->tooltipText = _('wizard.action.is.deprecated.replace.it::Действие устарело, необходимо его заменить чем-то другим');
                 }
             }
 
@@ -568,7 +569,7 @@ class ActionConstructorForm extends AbstractIdeForm
         foreach ($buildTabs as $group => $tab) {
             $t = new UXTab();
             $t->data('group', $group);
-            $t->text = _($tab->text);
+            $t->text = $tab->text;
             $t->closable = false;
             $t->content = new UXScrollPane($tab->content);
             $t->content->fitToWidth = true;
@@ -578,7 +579,7 @@ class ActionConstructorForm extends AbstractIdeForm
             $t->graphic = $tab->graphic;
             $t->style = $tab->style;
 
-            $this->actionTypePane->tabs->add($t);
+            $this->actionTypePane->tabs->add(_($t));
 
             if ($i++ == static::$tabSelectedIndex) {
                 UXApplication::runLater(function () use ($t) {
@@ -621,7 +622,8 @@ class ActionConstructorForm extends AbstractIdeForm
             $tab = new UXTab();
             $tab->style = '-fx-cursor: hand;';
             $tab->closable = false;
-            $tab->text = _($actionType->getGroup());
+            $tab->text = $actionType->getGroup();
+            _($tab);
 
             $flowPane = new UXFlowPane();
             $flowPane->hgap = $flowPane->vgap = 6;
@@ -643,7 +645,7 @@ class ActionConstructorForm extends AbstractIdeForm
 
         if (!$subGroups[$actionType->getGroup()][$subGroup]) {
             if ($subGroup) {
-                $label = new UXLabel(_($subGroup));
+                $label = _(new UXLabel($subGroup));
                 $label->font = UXFont::of($label->font, $label->font->size, 'BOLD');
 
                 if ($subGroups[$actionType->getGroup()]) {
@@ -653,7 +655,7 @@ class ActionConstructorForm extends AbstractIdeForm
                 $tab->data('vbox')->add($label);
 
 
-                $label = new UXLabel(_($subGroup));
+                $label = _(new UXLabel($subGroup));
                 $label->font = UXFont::of($label->font, $label->font->size, 'BOLD');
                 $tab->data('fbox')->observer('width')->addListener(function ($old, $new) use ($label, $tab) {
                     $label->minWidth = $new - $tab->data('fbox')->paddingLeft - $tab->data('fbox')->paddingRight;
@@ -675,7 +677,7 @@ class ActionConstructorForm extends AbstractIdeForm
         $btn->height = 29;
         $btn->maxWidth = 99999;
         $btn->alignment = 'CENTER_LEFT';
-        $btn->text = _($actionType->getTitle());
+        $btn->text = $actionType->getTitle();
         $btn->style = UiUtils::fontSizeStyle();
         $btn->data('type', get_class($actionType));
 
@@ -702,7 +704,7 @@ class ActionConstructorForm extends AbstractIdeForm
 
         $btn->on('dragDetect', $dragDetect);
 
-        $tab->data('vbox')->add($btn);
+        $tab->data('vbox')->add(_($btn));
 
         // ---
 
@@ -721,7 +723,7 @@ class ActionConstructorForm extends AbstractIdeForm
         $smallBtn->on('action', [$this, 'actionTypeClick']);
         $smallBtn->on('dragDetect', $dragDetect);
 
-        $tab->data('fbox')->add($smallBtn);
+        $tab->data('fbox')->add(_($smallBtn));
     }
 
 
@@ -851,11 +853,11 @@ class ActionConstructorForm extends AbstractIdeForm
     public function actionClear()
     {
         if (!$this->list->items->count) {
-            Dialog::show('Список из действий пуст.');
+            Dialog::show(_('wizard.message.action.list.is.empty::Список из действий пуст.'));
             return;
         }
 
-        $dlg = new MessageBoxForm('Вы уверены, что хотите удалить все действия?', ['Да, удалить', 'Нет, отмена']);
+        $dlg = new MessageBoxForm('wizard.message.confirm.to.delete.all.actions::Вы уверены, что хотите удалить все действия?', ['btn.yes.delete::Да, удалить', 'btn.no.cancel::Нет, отмена']);
 
         if ($dlg->showDialog() && $dlg->getResultIndex() == 0) {
             $this->editor->removeMethod($this->class, $this->method);
@@ -872,7 +874,7 @@ class ActionConstructorForm extends AbstractIdeForm
     public function actionPreview()
     {
         if (!$this->list->items->count) {
-            Dialog::show('Список из действий пуст.');
+            Dialog::show(_('wizard.message.action.list.is.empty::Список из действий пуст.'));
             return;
         }
 
@@ -890,7 +892,7 @@ class ActionConstructorForm extends AbstractIdeForm
         $phpParser->addUseImports($imports);
 
         $dialog = new UXForm();
-        $dialog->title = 'Сгенерированный php код';
+        $dialog->title = _('wizard.generated.php.code::Сгенерированный php код');
         $dialog->style = 'UTILITY';
         $dialog->modality = 'APPLICATION_MODAL';
         $dialog->size = [700, 400];
@@ -899,7 +901,7 @@ class ActionConstructorForm extends AbstractIdeForm
         $area->text = $phpParser->getContent();
         UXVBox::setVgrow($area, 'ALWAYS');
 
-        $okButton = new UXButton('Закрыть');
+        $okButton = new UXButton('command.close::Закрыть');
         $okButton->graphic = ico('ok16');
         $okButton->padding = [10, 15];
         $okButton->maxHeight = 9999;
@@ -956,13 +958,13 @@ class ActionConstructorForm extends AbstractIdeForm
     public function actionConvert()
     {
         if ($this->list->items->count == 0) {
-            UXDialog::show('Нет действий для конвертирования в php код');
+            UXDialog::show(_('wizard.message.no.actions.to.convert.to.php.code::Нет действий для конвертирования в php код'));
             return;
         }
 
-        $buttons = ['Да, перевести', 'Нет, отмена'];
+        $buttons = ['btn.yes.convert::Да, перевести', 'btn.no.cancel::Нет, отмена'];
 
-        $dialog = new MessageBoxForm('Вы уверены, что хотите перевести все действия в php код?', $buttons);
+        $dialog = new MessageBoxForm('wizard.message.confirm.to.convert.actions.to.php.code::Вы уверены, что хотите перевести все действия в php код?', $buttons);
 
         if ($dialog->showDialog() && $dialog->getResultIndex() == 0) {
             $script = new ActionScript();

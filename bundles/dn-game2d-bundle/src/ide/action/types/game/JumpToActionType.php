@@ -32,10 +32,10 @@ class JumpToActionType extends AbstractSimpleActionType
     function attributeLabels()
     {
         return [
-            'object' => 'Объект',
-            'x' => 'X (координата)',
-            'y' => 'Y (координата)',
-            'relative' => 'Относительно'
+            'object' => 'wizard.object',
+            'x' => 'wizard.x.position',
+            'y' => 'wizard.y.position',
+            'relative' => 'wizard.relative'
         ];
     }
 
@@ -55,19 +55,19 @@ class JumpToActionType extends AbstractSimpleActionType
 
     function getTitle(Action $action = null)
     {
-        return "Прыгнуть в позицию";
+        return "wizard.2d.command.jump.to.pos::Прыгнуть в позицию";
     }
 
     function getDescription(Action $action = null)
     {
         if ($action) {
             if ($action->relative) {
-                return str::format("Переместить объект %s к относительной позиции (x: %s, y: %s)", $action->get('object'), $action->get('x'), $action->get('y'));
+                return _("wizard.2d.command.desc.param.jump.to.pos.rel::Переместить объект {0} к относительной позиции (x: {1}, y: {2})", $action->get('object'), $action->get('x'), $action->get('y'));
             } else {
-                return str::format("Переместить объект %s к позиции (x: %s, y: %s)", $action->get('object'), $action->get('x'), $action->get('y'));
+                return _("wizard.2d.command.desc.param.jump.to.pos::Переместить объект {0} к позиции (x: {1}, y: {2})", $action->get('object'), $action->get('x'), $action->get('y'));
             }
         } else {
-            return "Переместить объект к позиции (x, y)";
+            return "wizard.2d.command.desc.jump.to.pos::Переместить объект к позиции (x, y)";
         }
     }
 

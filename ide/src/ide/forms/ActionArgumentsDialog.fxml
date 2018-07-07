@@ -11,12 +11,12 @@
    <children>
       <HBox layoutX="14.0" layoutY="256.0" prefHeight="32.0" prefWidth="582.0" spacing="10.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0">
          <children>
-            <Button id="okButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" prefHeight="32.0" prefWidth="124.0" styleClass="icon-ok" text="Применить">
+            <Button id="okButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" prefHeight="32.0" prefWidth="124.0" styleClass="icon-ok" text="btn.apply::Применить">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </Button>
-            <Button id="cancelButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" prefHeight="32.0" prefWidth="102.0" text="Отмена" />
+            <Button id="cancelButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" prefHeight="32.0" prefWidth="102.0" text="btn.cancel::Отмена" />
          </children>
       </HBox>
       <VBox id="box" layoutX="14.0" layoutY="70.0" prefHeight="73.0" prefWidth="578.0" AnchorPane.bottomAnchor="78.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="70.0" />
