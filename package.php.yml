@@ -2,7 +2,7 @@ name: DevelNext
 version: 17.0.0+dev
 
 requires:
-  java: {version: '>=10.0.0', arch: amd64}
+  java: {version: '>=11.0.0', arch: amd64}
   os:
   - Windows
   - Linux
@@ -28,4 +28,4 @@ localization:
   languages: [ru, en]
 
 jre:
-  win: './tools/jre-win64-10.0.1.tar.bz2'
+  win: './tools/jre-win64-11.0.2.tar.bz2'
