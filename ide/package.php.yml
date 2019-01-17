@@ -18,24 +18,25 @@ includes:
 - index.php
 
 deps:
-  wizard-core: '~0.1.0'
-  wizard-localization: '~0.1.0'
-  jphp-core: '~1.0.0'
-  jphp-xml-ext: '~1.0.0'
-  jphp-zend-ext: '~1.0.0'
-  jphp-yaml-ext: '~1.0.0'
-  jphp-zip-ext: '~1.0.0'
-  jphp-httpclient-ext: '~1.0.0'
-  jphp-gui-ext: '~1.0.0'
-  jphp-gui-game-ext: '~1.0.0'
-  jphp-gui-desktop-ext: '~1.0.0'
-  jphp-httpclient-ext: '~1.0.0'
-  jphp-zip-ext: '~1.0.0'
-  jphp-compress-ext: '~1.0.0'
-  jphp-parser-ext: '~1.0.0'
+  wizard-core: '^0.1.0'
+  wizard-localization: '^0.1.0'
+  jphp-core: '^1.0.0'
+  jphp-xml-ext: '^1.0.0'
+  jphp-zend-ext: '^1.0.0'
+  jphp-yaml-ext: '^1.0.0'
+  jphp-zip-ext: '^1.0.0'
+  jphp-httpclient-ext: '^1.0.0'
+  jphp-gui-ext: '^2.0.0'
+  jphp-gui-game-ext: '^2.0.0'
+  jphp-gui-desktop-ext: '^2.0.0'
+  jphp-compress-ext: '^1.0.0'
+  jphp-parser-ext: '^1.0.0'
   jphp-process-ext: '*'
-  develnext-designer: '~1.0.0'
-  develnext-gui-tabs-ext: '~1.0.0'
+  develnext-designer: '^1.0.0'
+  develnext-gui-tabs-ext: '^1.0.0'
+
+  jphp-gui-jfx-win: '^11.0.0'
+  jphp-gui-jfx-linux: '^11.0.0'
 
 app:
   disable-launcher: true

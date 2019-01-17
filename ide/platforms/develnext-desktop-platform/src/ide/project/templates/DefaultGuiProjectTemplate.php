@@ -237,6 +237,8 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
         $deps = [
             'dn-app-framework' => '~1.0.0',
             'dn-debug-bundle' => '~0.1.0',
+            'jphp-gui-jfx-win' => '^11.0.0',
+            'jphp-gui-jfx-linux' => '^11.0.0',
             'jphp-gui-desktop-ext' => '*',
             'jphp-zend-ext' => '*',
         ];
@@ -248,7 +250,7 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
             'develnext.bundle.hotkey.HotKeyBundle' => ['dn-hotkey-bundle', '~1.0.0'],
             'develnext.bundle.sql.FireBirdSqlBundle' => ['dn-firebirdsql-bundle', '~1.0.0'],
             'develnext.bundle.httpclient.HttpClientBundle' => ['dn-httpclient-bundle', '~1.0.0'],
-            'develnext.bundle.jfoenix.JFoenixBundle' => ['dn-jfoenix-bundle', '~1.0.0'],
+            'develnext.bundle.jfoenix.JFoenixBundle' => ['dn-jfoenix-bundle', '^1.0.0'],
             'develnext.bundle.mail.MailBundle' => ['dn-mail-bundle', '~1.0.0'],
             'develnext.bundle.sql.MysqlBundle' => ['dn-mysql-bundle', '~1.0.0'],
             'develnext.bundle.sql.PgSqlBundle' => ['dn-pgsql-bundle', '~1.0.0'],

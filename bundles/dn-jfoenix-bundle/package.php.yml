@@ -1,12 +1,12 @@
 
 name: dn-jfoenix-bundle
-version: 1.0.0
+version: 2.0.0
 author: DevelNext
 
 plugins: [Hub, Doc]
 
 deps:
-  jphp-gui-jfoenix-ext: '*'
+  jphp-gui-jfoenix-ext: '^2.0.0'
 
 sources:
 - src/vendor/develnext.bundle.jfoenix.JFoenixBundle
