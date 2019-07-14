@@ -91,6 +91,7 @@ class JPPMProjectSupport extends AbstractProjectSupport
                 $newPlugins = $this->pkgTemplate->getPlugins();
 
                 if ($oldDeps != $newDeps || $oldDevDeps != $newDevDeps || $oldPlugins != $newPlugins) {
+                    
                     $this->install($project);
                     $this->installToIDE($project);
 
@@ -121,8 +122,11 @@ class JPPMProjectSupport extends AbstractProjectSupport
         $this->install($project);
         $this->installToIDE($project);
 
+
         $this->pkgFileWatcher->start();
     }
+
+
 
     public function getVendorInspectDirsForDep(Project $project, string $depName)
     {
@@ -182,7 +186,7 @@ class JPPMProjectSupport extends AbstractProjectSupport
         return $result;
     }
 
-    public function install(Project $project)
+    public function install(Project $project, ?callable $onError = null)
     {
         $project->loadDirectoryForInspector(IdeSystem::getOwnFile("stubs/dn-php-stub"));
         $project->loadDirectoryForInspector(IdeSystem::getOwnFile("stubs/dn-jphp-stub"));
@@ -198,22 +202,31 @@ class JPPMProjectSupport extends AbstractProjectSupport
             }
         }
 
-        Promise::all($promisses)->then(function () use ($project) {
+        Promise::all($promisses)->then(function () use ($project, $onError) {
             $process = (new Process(['cmd', '/c', 'jppm', 'install'], $project->getRootDir(), Ide::get()->makeEnvironment()))
-                ->inheritIO()->startAndWait();
+                //->inheritIO()
+                ->startAndWait();
 
+            $jppmOutpput = $process->getInput()->readFully();
+            Logger::debug('Install: ' . $jppmOutpput);
+            if(stripos($jppmOutpput, 'Failed') !== false){
+                Logger::error('Plugin install error');
+                if(is_callable($onError)) call_user_func($onError, $jppmOutpput);
+            }
+            
             $newInspectDirs = $this->getVendorInspectDirs($project);
-
             foreach ($newInspectDirs as $dir) {
                 $project->loadDirectoryForInspector($dir);
             }
-        })->catch(function (Throwable $e) {
+        })->catch(function (Throwable $e) use ($onError){
             Logger::exception("Failed to install", $e);
+            if(is_callable($onError)) call_user_func($onError, $e->getMessage());
         });
     }
 
     public function installToIDE(Project $project)
     {
+        $install = false;
         foreach (fs::scan("{$project->getRootDir()}/vendor", ['excludeFiles' => true], 1) as $dep) {
             $dep = fs::name($dep);
 
@@ -230,6 +243,7 @@ class JPPMProjectSupport extends AbstractProjectSupport
                         $bundleClass = $data['class'];
 
                         if ($bundleClass) {
+                            $install = true;
                             Logger::info("Add jar bundle: $dep -> $bundleClass");
 
                             /** @var AbstractJarBundle $bundle */
@@ -256,20 +270,41 @@ class JPPMProjectSupport extends AbstractProjectSupport
                 }
             }
         }
+
+        return $install;
     }
 
-    public function addDep(string $name, string $version = '*')
-    {
-        $this->pkgTemplate->setDeps(flow($this->pkgTemplate->getDeps(), [$name => $version])->toMap());
+    public function addDep(string $name, string $version = '*', ?Project $project = null, ?callable $onError = null) {
+        $this->pkgTemplate->load();
+        $this->pkgTemplate->addDep($name, $version);
+        $this->pkgTemplate->save();
+
+        $project = is_null($project) ? Ide::project() : $project;
+        $this->install($project, function($msg) use ($onError){
+            // on error callback
+            Logger::error('Cannot install package ' . $name . ':' . $version);
+            if(is_callable($onError)) call_user_func($onError, $msg);
+        });
+
+        $this->installToIDE($project);
+        $project->refreshSupports();
     }
 
-    public function removeDep(string $name)
+    public function removeDep(string $name, ?Project $project = null)
     {
         $deps = $this->pkgTemplate->getDeps();
         unset($deps[$name]);
 
         $this->pkgTemplate->setDeps($deps);
+        $this->pkgTemplate->save();
+
+        $project = is_null($project) ? Ide::project() : $project;
+        
+        $this->install($project);
+        $this->installToIDE($project);
+        $project->refreshSupports();
     }
+
 
     public function hasDep(string $name): bool
     {
