@@ -148,7 +148,9 @@ class IdeLanguage
 
     public function addSource(string $source)
     {
-        $this->sources[$source] = $fw = new FileWatcher($source);
+        // Зачем постоянно следить за языковыми файлами?
+        // При разработке - ок, но не в продакшне
+        /*$this->sources[$source] = $fw = new FileWatcher($source);
         $fw->start();
         $fw->on('change', function (Event $event) use ($source) {
             $newTime = $event->data['newTime'];
@@ -159,7 +161,7 @@ class IdeLanguage
                     $this->localizer->load($this->code, $source);
                 });
             }
-        });
+        });*/
 
         if (fs::isFile($source)) {
             $this->localizer->load($this->code, $source);
