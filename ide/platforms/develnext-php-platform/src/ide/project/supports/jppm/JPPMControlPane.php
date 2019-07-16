@@ -2,6 +2,7 @@
 namespace ide\project\supports\jppm;
 
 use ide\Ide;
+use ide\Logger;
 use ide\formats\templates\JPPMPackageFileTemplate;
 use ide\misc\FileWatcher;
 use ide\project\behaviours\BundleProjectBehaviour;
@@ -71,6 +72,7 @@ class JPPMControlPane extends AbstractProjectControlPane
     protected $delBtn;
 
     /**
+     * @todo Сделать поддержку языков
      * @return UXNode
      */
     protected function makeUi()
@@ -93,7 +95,7 @@ class JPPMControlPane extends AbstractProjectControlPane
         $this->packagesList->anchors = ['top' => 0, 'left' => 0, 'right' => 0, 'bottom' => 0];
         UXHBox::setHgrow($this->packagesList, 'ALWAYS');
         
-        $this->delBtn = new UXButton('Delete package');
+        $this->delBtn = new UXButton('Delete package', ico('pluginRemove16'));
         $this->delBtn->enabled = false;
         $this->delBtn->width = 120;
         
@@ -119,7 +121,7 @@ class JPPMControlPane extends AbstractProjectControlPane
         $this->versionField = new UXTextField();
         $this->versionField->promptText = "Version: *";
         $this->versionField->maxWidth = 100;
-        $addBtn = new UXButton('Add package');
+        $addBtn = new UXButton('Add package', ico('pluginAdd16'));
         $addBtn->width = 120;
         
         
@@ -129,7 +131,7 @@ class JPPMControlPane extends AbstractProjectControlPane
         $parentPane->add($addBox);
 
 
-        $delBtn->on('click', [$this, 'doDeletePackage']);
+        $this->delBtn->on('click', [$this, 'doDeletePackage']);
         $addBtn->on('click', [$this, 'doAddPackage']);
         return $parentPane;
     }
@@ -164,7 +166,7 @@ class JPPMControlPane extends AbstractProjectControlPane
     }
 
     /**
-     * При нажатии кнопки - добавим пакет в список
+     * @event нажатие кнопки "добавить пакет"
      */
     public function doAddPackage(){
         $package = $this->nameField->text;
@@ -178,25 +180,46 @@ class JPPMControlPane extends AbstractProjectControlPane
             $version = '*';
         }
 
-        $this->jppm->addDep($package, $version, $this->project, function($msg){
-            // on error callback
-            uiLater(function() use ($msg, $package){
-                alert("Package install error:\n" . $msg);
-                $this->doDeletePackage($package);
-            });
-        });
-
+        $this->jppm->addDep($package, $version);
+        $this->applyPackages($package);
         $this->refresh();
 
         $this->nameField->text = null;
         $this->versionField->text = null;
     }
 
+    /**
+     * @event нажатие кнопки "удалить пакет"
+     */
     public function doDeletePackage($package = null){
         $package = (is_null($package) || !is_string($package)) ? ($this->packagesList->selectedItem->data('name')) : ($package) ;
 
         $this->jppm->removeDep($package);
+        $this->applyPackages();
+
         $this->refresh();
         $this->delBtn->enabled = false;
+    }
+
+    protected function applyPackages(?string $lastInstall = null){
+        $this->jppm->install($this->project, 
+
+            function(){
+                // on finish
+            },
+
+            function($msg) use ($lastInstall){
+                // on error callback
+                Logger::error('Cannot install package ' . $lastInstall);
+                alert("Package install error:\n" . $msg);
+
+                if(strlen($lastInstall) > 0){
+                    $this->doDeletePackage($lastInstall);
+                }
+            }
+        );
+
+        $this->jppm->installToIDE($this->project);
+        $this->project->refreshSupports();
     }
 }
