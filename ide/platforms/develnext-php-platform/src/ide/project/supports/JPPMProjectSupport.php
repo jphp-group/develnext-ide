@@ -186,13 +186,19 @@ class JPPMProjectSupport extends AbstractProjectSupport
         return $result;
     }
 
-    public function install(Project $project, ?callable $onError = null)
+    /**
+     * Установка зависимостей jppm в проект
+     * @param  Project       $project   
+     * @param  callable|null $onComplete Коллбек будет вызван по завершению установки
+     * @param  callable|null $onError(string $errorText)    Коллбек будет вызван при возникновении ошибок.
+     */
+    public function install(Project $project, ?callable $onComplete = null, ?callable $onError = null)
     {
         $project->loadDirectoryForInspector(IdeSystem::getOwnFile("stubs/dn-php-stub"));
         $project->loadDirectoryForInspector(IdeSystem::getOwnFile("stubs/dn-jphp-stub"));
 
         $promisses = [];
-        foreach (fs::scan("{$project->getFile("vendor/")}", ['excludeFiles' => true]) as $dir) {
+        foreach (fs::scan($project->getFile("vendor/"), ['excludeFiles' => true]) as $dir) {
             $pkgName = fs::name($dir);
 
             if (!$this->pkgTemplate->getDeps()[$pkgName]) {
@@ -202,9 +208,15 @@ class JPPMProjectSupport extends AbstractProjectSupport
             }
         }
 
-        Promise::all($promisses)->then(function () use ($project, $onError) {
-            $process = (new Process(['cmd', '/c', 'jppm', 'install'], $project->getRootDir(), Ide::get()->makeEnvironment()))
-                //->inheritIO()
+        Promise::all($promisses)->then(function () use ($project, $onComplete, $onError) {
+            $args = ['jppm', 'install'];
+
+            if (Ide::get()->isWindows()) {
+                $args = flow(['cmd', '/c'], $args)->toArray();
+            }
+
+            $process = (new Process($args, $project->getRootDir(), Ide::get()->makeEnvironment()))
+                //->inheritIO() // Нам нужен output, чтоб проверять наличие ошибок
                 ->startAndWait();
 
             $jppmOutpput = $process->getInput()->readFully();
@@ -218,12 +230,17 @@ class JPPMProjectSupport extends AbstractProjectSupport
             foreach ($newInspectDirs as $dir) {
                 $project->loadDirectoryForInspector($dir);
             }
+            if(is_callable($onComplete)) call_user_func($onComplete);
         })->catch(function (Throwable $e) use ($onError){
             Logger::exception("Failed to install", $e);
             if(is_callable($onError)) call_user_func($onError, $e->getMessage());
         });
     }
 
+    /**
+     * Установка зависимостей jppm в среду
+     * @param  Project $project
+     */
     public function installToIDE(Project $project)
     {
         $install = false;
@@ -274,35 +291,28 @@ class JPPMProjectSupport extends AbstractProjectSupport
         return $install;
     }
 
-    public function addDep(string $name, string $version = '*', ?Project $project = null, ?callable $onError = null) {
+    /**
+     * Добавить пакет в зависимости
+     * @param string $name
+     * @param string $version
+     */
+    public function addDep(string $name, string $version = '*') {
         $this->pkgTemplate->load();
         $this->pkgTemplate->addDep($name, $version);
         $this->pkgTemplate->save();
-
-        $project = is_null($project) ? Ide::project() : $project;
-        $this->install($project, function($msg) use ($onError){
-            // on error callback
-            Logger::error('Cannot install package ' . $name . ':' . $version);
-            if(is_callable($onError)) call_user_func($onError, $msg);
-        });
-
-        $this->installToIDE($project);
-        $project->refreshSupports();
     }
 
-    public function removeDep(string $name, ?Project $project = null)
+    /**
+     * Удалить пакет из зависимостей
+     * @param  string $name
+     */
+    public function removeDep(string $name)
     {
         $deps = $this->pkgTemplate->getDeps();
         unset($deps[$name]);
 
         $this->pkgTemplate->setDeps($deps);
         $this->pkgTemplate->save();
-
-        $project = is_null($project) ? Ide::project() : $project;
-        
-        $this->install($project);
-        $this->installToIDE($project);
-        $project->refreshSupports();
     }
 
 
