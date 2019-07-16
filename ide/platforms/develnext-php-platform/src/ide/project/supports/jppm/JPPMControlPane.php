@@ -8,11 +8,16 @@ use ide\misc\FileWatcher;
 use ide\project\behaviours\BundleProjectBehaviour;
 use ide\project\control\AbstractProjectControlPane;
 use ide\project\supports\JPPMProjectSupport;
+use php\gui\UXAlert;
 use php\gui\UXButton;
+use php\gui\UXImage;
+use php\gui\UXImageView;
 use php\gui\UXLabel;
 use php\gui\UXListView;
 use php\gui\UXNode;
+use php\gui\UXProgressBar;
 use php\gui\UXTextField;
+use php\gui\layout\UXAnchorPane;
 use php\gui\layout\UXHBox;
 use php\gui\layout\UXPanel;
 use php\gui\layout\UXVBox;
@@ -69,7 +74,22 @@ class JPPMControlPane extends AbstractProjectControlPane
     /**
      * @var UXButton
      */
-    protected $delBtn;
+    protected $delButton;
+
+    /**
+     * @var UXButton
+     */
+    protected $readmeButton;
+
+    /**
+     * @var UXButton
+     */
+    protected $addButton;
+
+    /**
+     * @var UXVBox
+     */
+    protected $parentPane;
 
     /**
      * @todo Сделать поддержку языков
@@ -85,55 +105,68 @@ class JPPMControlPane extends AbstractProjectControlPane
         }
 
         // GUI
-        $parentPane = new UXVBox;
+        $this->parentPane = new UXVBox;
         
-        $parentPane->anchors = ['top' => 0, 'left' => 0, 'right' => 0, 'bottom' => 0];
-        $parentPane->padding = 5;
-        $parentPane->spacing = 3;      
+        $this->parentPane->anchors = ['top' => 0, 'left' => 0, 'right' => 0, 'bottom' => 0];
+        $this->parentPane->padding = 3;
+        $this->parentPane->spacing = 5;      
         
         $this->packagesList = new UXListView;
         $this->packagesList->anchors = ['top' => 0, 'left' => 0, 'right' => 0, 'bottom' => 0];
         UXHBox::setHgrow($this->packagesList, 'ALWAYS');
         
-        $this->delBtn = new UXButton('Delete package', ico('pluginRemove16'));
-        $this->delBtn->enabled = false;
-        $this->delBtn->width = 120;
+        $this->delButton = new UXButton(_('jppm.package.manager.delete'), ico('pluginRemove16'));
+        $this->delButton->enabled = false;
+        $this->delButton->width = 150;
+
+        $this->readmeButton = new UXButton(_('jppm.package.manager.readme'), ico('search16'));
+        $this->readmeButton->enabled = false;
+        $this->readmeButton->width = 150;
+
+        $buttonsBox = new UXVBox([$this->delButton, $this->readmeButton]);
+        $buttonsBox->spacing = 5;  
         
-        
-        $this->packagesList->observer('focused')->addListener(function(){
-            $this->delBtn->enabled = $this->packagesList->selectedIndex >= 0;
-        });
-        
-        $this->packagesList->on('click', function(){
-            $this->delBtn->enabled = $this->packagesList->selectedIndex >= 0;
-        });
-        
-        
-        $packBox = new UXHBox([$this->packagesList, $this->delBtn]);
-        $packBox->spacing = 3;  
-        $parentPane->add($packBox);
-              
-        
+        $packBox = new UXHBox([$this->packagesList, $buttonsBox]);
+        $packBox->spacing = 5;  
+        $this->parentPane->add($packBox);
+                
         $this->nameField = new UXTextField;
-        $this->nameField->promptText = "Package name";
+        $this->nameField->promptText = _('jppm.package.manager.name');
         UXHBox::setHgrow($this->nameField, 'ALWAYS');
         
         $this->versionField = new UXTextField();
-        $this->versionField->promptText = "Version: *";
-        $this->versionField->maxWidth = 100;
-        $addBtn = new UXButton('Add package', ico('pluginAdd16'));
-        $addBtn->width = 120;
+        $this->versionField->promptText = _('jppm.package.manager.version');
+        $this->versionField->maxWidth = 150;
+        $this->addButton = new UXButton(_('jppm.package.manager.add'), ico('pluginAdd16'));
+        $this->addButton->width = 150;
         
-        
-        $addBox = new UXHBox([$this->nameField, $this->versionField, $addBtn]);
+        $addBox = new UXHBox([$this->nameField, $this->versionField, $this->addButton]);
         $addBox->anchors = ['top' => false, 'left' => 0, 'right' => 0, 'bottom' => false];
-        $addBox->spacing = 3;
-        $parentPane->add($addBox);
+        $addBox->spacing = 5;
+        $this->parentPane->add($addBox);  
 
+        $this->delButton->on('click', [$this, 'doDeletePackage']);
+        $this->readmeButton->on('click', [$this, 'doBrowseReadme']);
+        $this->addButton->on('click', [$this, 'doAddPackage']);
+        $this->packagesList->observer('focused')->addListener([$this, 'doSelectPackage']);
+        $this->packagesList->on('click', [$this, 'doSelectPackage']);
+        $this->packagesList->on('keyPress', [$this, 'doSelectPackage']);
 
-        $this->delBtn->on('click', [$this, 'doDeletePackage']);
-        $addBtn->on('click', [$this, 'doAddPackage']);
-        return $parentPane;
+        return $this->parentPane;
+    }
+
+    protected function createPreloader(): UXNode {
+        $progressBar = new UXProgressBar;
+        $progressBar->progress = -1;
+        $progressBar->height = 24;
+        $progressBar->anchors = ['top' => 0, 'left' => 0, 'right' => 0, 'bottom' => false];
+
+        $progressPane = new UXAnchorPane;
+        $progressPane->add($progressBar);
+        $progressPane->paddingTop = 10;
+        UXHBox::setHgrow($progressBar, 'ALWAYS');
+        
+        return $progressPane;
     }
 
     /**
@@ -142,27 +175,62 @@ class JPPMControlPane extends AbstractProjectControlPane
     public function refresh() {
         if(is_null($this->packageTpl)) return;
 
-        Ide::get()->getMainForm()->showPreloader('...');
+        $this->disableUI();
+
         $this->packagesList->items->clear();
         $this->packageTpl->load();
         $packages = $this->packageTpl->getDeps();
 
         foreach ($packages as $name => $version){
-            $labelName = new UXLabel($name);
-            $labelName->textColor = UXColor::of('#000000');
-            $labelName->font = $labelName->font->withBold();
+            $packageData = $this->jppm->getDepConfig($name);
+            $isBundle = isset($packageData['ide-bundle']);
 
-            $labelVersion = new UXLabel($version);
-            $labelVersion->textColor = UXColor::of('#888888');
-            $labelVersion->font = $labelVersion->font->withSize(11);
+            $nameLabel = new UXLabel($name);
+            $nameLabel->textColor = UXColor::of('#000000');
+            $nameLabel->font = $nameLabel->font->withBold();
 
-            $packageBox = new UXVBox([$labelName, $labelVersion]);
+            $versionLabel = new UXLabel('@' . $version);
+            $versionLabel->textColor = UXColor::of('#333333');
+
+            $nameBox = new UXHBox([$nameLabel, $versionLabel]);
+
+            $descript = $packageData['description'] ?? $packageData['develnext-bundle']['description'] ?? _('jppm.package.manager.no-description');
+            $descriptLabel = new UXLabel($descript);
+            $descriptLabel->font = $descriptLabel->font->withSize(11);
+            $descriptLabel->textColor = UXColor::of('#333333');
+
+            $textBox = new UXVBox([$nameBox, $descriptLabel]);
+
+            // Разные иконки для пакетов jphp и bundle
+            $icon = ico($isBundle ? 'bundle32' : 'package32');
+
+            $packageBox = new UXHBox([$icon, $textBox]);
+            $packageBox->spacing = 5;
             $packageBox->data('name', $name);
             $packageBox->data('version', $version);
+
             $this->packagesList->items->add($packageBox);
         }
 
-        Ide::get()->getMainForm()->hidePreloader();
+        $this->enableUI();
+    }
+
+    public function doBrowseReadme(){
+        $selected = $this->packagesList->selectedItem->data('name');
+        $info = $this->jppm->getDepConfig($selected);
+        $url = str_replace('%name%', $info['name'], $info['doc']['url-prefix']);
+        browse($url);
+    }
+
+    public function doSelectPackage(){
+        $this->delButton->enabled = $this->packagesList->selectedIndex >= 0;
+
+        if($this->delButton->enabled){
+            $selected = $this->packagesList->selectedItem->data('name');
+            $info = $this->jppm->getDepConfig($selected);
+            $this->readmeButton->enabled = isset($info['doc']['url-prefix']);
+            var_dump($info);
+        }
     }
 
     /**
@@ -173,7 +241,10 @@ class JPPMControlPane extends AbstractProjectControlPane
         $version = $this->versionField->text;
 
         if(strlen($package) == 0){
-            return alert('Введите имя пакета!');
+            $error = new UXAlert('ERROR');
+            $error->title = _('jppm.package.manager.error.name');
+            $error->showAndWait();
+            return;
         }
 
         if(strlen($version) == 0){
@@ -182,7 +253,6 @@ class JPPMControlPane extends AbstractProjectControlPane
 
         $this->jppm->addDep($package, $version);
         $this->applyPackages($package);
-        $this->refresh();
 
         $this->nameField->text = null;
         $this->versionField->text = null;
@@ -198,28 +268,54 @@ class JPPMControlPane extends AbstractProjectControlPane
         $this->applyPackages();
 
         $this->refresh();
-        $this->delBtn->enabled = false;
+        $this->delButton->enabled = false;
     }
 
     protected function applyPackages(?string $lastInstall = null){
+        $preloader = $this->createPreloader();
+        $this->packagesList->items->add($preloader);
+        $this->disableUI();
+
         $this->jppm->install($this->project, 
 
             function(){
                 // on finish
+                $this->refresh();
             },
 
             function($msg) use ($lastInstall){
                 // on error callback
                 Logger::error('Cannot install package ' . $lastInstall);
-                alert("Package install error:\n" . $msg);
 
                 if(strlen($lastInstall) > 0){
                     $this->doDeletePackage($lastInstall);
                 }
+
+                $error = new UXAlert('ERROR');
+                $error->title = _('entity.error');
+                $error->headerText = _('jppm.package.manager.error.install') . ' ' . $lastInstall;
+                $error->contentText = $msg;
+                $error->showAndWait();
+
+                $this->refresh();
             }
         );
 
         $this->jppm->installToIDE($this->project);
         $this->project->refreshSupports();
+    }
+
+    protected function disableUI(){
+        $this->readmeButton->enabled = 
+        $this->addButton->enabled = 
+        $this->delButton->enabled = 
+        !$this->parentPane->mouseTransparent = true;
+        $this->packagesList->selectedIndex = -1;
+    }
+
+    protected function enableUI(){
+        $this->addButton->enabled = 
+        !$this->parentPane->mouseTransparent = false;
+        $this->packagesList->selectedIndex = -1;
     }
 }
