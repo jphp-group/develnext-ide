@@ -223,17 +223,17 @@ class JPPMProjectSupport extends AbstractProjectSupport
             Logger::debug('Install: ' . $jppmOutpput);
             if(stripos($jppmOutpput, 'Failed') !== false){
                 Logger::error('Plugin install error');
-                if(is_callable($onError)) call_user_func($onError, $jppmOutpput);
+                if(is_callable($onError)) uiLater(function() use ($onError, $jppmOutpput){ call_user_func($onError, $jppmOutpput); });
             }
             
             $newInspectDirs = $this->getVendorInspectDirs($project);
             foreach ($newInspectDirs as $dir) {
                 $project->loadDirectoryForInspector($dir);
             }
-            if(is_callable($onComplete)) call_user_func($onComplete);
+            if(is_callable($onComplete)) uiLater(function() use ($onComplete){ call_user_func($onComplete); });
         })->catch(function (Throwable $e) use ($onError){
             Logger::exception("Failed to install", $e);
-            if(is_callable($onError)) call_user_func($onError, $e->getMessage());
+            if(is_callable($onError)) uiLater(function() use ($onError, $e){ call_user_func($onError, $e->getMessage()); });
         });
     }
 
@@ -375,5 +375,15 @@ class JPPMProjectSupport extends AbstractProjectSupport
     public function getCode()
     {
         return 'jppm';
+    }
+
+    public function getDepConfig(string $dep, ?Project $project = null): array {
+        $project = is_null($project) ? Ide::project() : $project;
+        $packageFile = $project->getRootDir() . "/vendor/" . $dep . "/package.php.yml";
+        if(fs::exists($packageFile)){
+            return fs::parse($packageFile);
+        }
+
+        return [];
     }
 }
