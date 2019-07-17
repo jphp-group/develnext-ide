@@ -136,7 +136,7 @@ class JPPMControlPane extends AbstractProjectControlPane
         
         $this->versionField = new UXTextField();
         $this->versionField->promptText = _('jppm.package.manager.version');
-        $this->versionField->maxWidth = 150;
+        $this->versionField->maxWidth = 165;
         $this->addButton = new UXButton(_('jppm.package.manager.add'), ico('pluginAdd16'));
         $this->addButton->width = 150;
         
@@ -148,9 +148,9 @@ class JPPMControlPane extends AbstractProjectControlPane
         $this->delButton->on('click', [$this, 'doDeletePackage']);
         $this->readmeButton->on('click', [$this, 'doBrowseReadme']);
         $this->addButton->on('click', [$this, 'doAddPackage']);
-        $this->packagesList->observer('focused')->addListener([$this, 'doSelectPackage']);
-        $this->packagesList->on('click', [$this, 'doSelectPackage']);
-        $this->packagesList->on('keyPress', [$this, 'doSelectPackage']);
+        //$this->packagesList->observer('focused')->addListener([$this, 'doSelectPackage']);
+        //$this->packagesList->on('click', [$this, 'doSelectPackage']);
+        $this->packagesList->on('action', [$this, 'doSelectPackage']);
 
         return $this->parentPane;
     }
@@ -202,19 +202,28 @@ class JPPMControlPane extends AbstractProjectControlPane
             $textBox = new UXVBox([$nameBox, $descriptLabel]);
 
             // Разные иконки для пакетов jphp и bundle
-            $icon = ico($isBundle ? 'bundle32' : 'package32');
+            $icon = ico($isBundle ? 'bundle16' : 'plugin16');
+            $icon->x =
+            $icon->y = 8;
+            $iconPane = new UXAnchorPane;
+            $iconPane->add($icon);
+            $iconPane->padding = 4;
 
-            $packageBox = new UXHBox([$icon, $textBox]);
+            $packageBox = new UXHBox([$iconPane, $textBox]);
             $packageBox->spacing = 5;
             $packageBox->data('name', $name);
             $packageBox->data('version', $version);
 
             $this->packagesList->items->add($packageBox);
+            $this->packagesList->requestFocus();
         }
 
         $this->enableUI();
     }
 
+    /**
+     * Открыть readme для текущего пакета
+     */
     public function doBrowseReadme(){
         $selected = $this->packagesList->selectedItem->data('name');
         $info = $this->jppm->getDepConfig($selected);
@@ -222,6 +231,9 @@ class JPPMControlPane extends AbstractProjectControlPane
         browse($url);
     }
 
+    /**
+     * Выбор пакета из списка
+     */
     public function doSelectPackage(){
         $this->delButton->enabled = $this->packagesList->selectedIndex >= 0;
 
@@ -234,7 +246,7 @@ class JPPMControlPane extends AbstractProjectControlPane
     }
 
     /**
-     * @event нажатие кнопки "добавить пакет"
+     * Добавление пакета
      */
     public function doAddPackage(){
         $package = $this->nameField->text;
@@ -259,7 +271,7 @@ class JPPMControlPane extends AbstractProjectControlPane
     }
 
     /**
-     * @event нажатие кнопки "удалить пакет"
+     * Удаление пакета
      */
     public function doDeletePackage($package = null){
         $package = (is_null($package) || !is_string($package)) ? ($this->packagesList->selectedItem->data('name')) : ($package) ;
@@ -271,6 +283,10 @@ class JPPMControlPane extends AbstractProjectControlPane
         $this->delButton->enabled = false;
     }
 
+    /**
+     * После установки или удаления пакетов обновляет их в системе и проекте
+     * @param  string|null $lastInstall Имя последнего добавленного пакета, если произойдет ошибка, он будет удалён
+     */
     protected function applyPackages(?string $lastInstall = null){
         $preloader = $this->createPreloader();
         $this->packagesList->items->add($preloader);
@@ -305,6 +321,9 @@ class JPPMControlPane extends AbstractProjectControlPane
         $this->project->refreshSupports();
     }
 
+    /**
+     * Выключить возможность взаимодействия с графическими элементами
+     */
     protected function disableUI(){
         $this->readmeButton->enabled = 
         $this->addButton->enabled = 
@@ -313,6 +332,9 @@ class JPPMControlPane extends AbstractProjectControlPane
         $this->packagesList->selectedIndex = -1;
     }
 
+    /**
+     * Включить возможность взаимодействия с графическими элементами
+     */
     protected function enableUI(){
         $this->addButton->enabled = 
         !$this->parentPane->mouseTransparent = false;
