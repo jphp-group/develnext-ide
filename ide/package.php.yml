@@ -2,9 +2,8 @@ name: develnext-ide
 version: 17.0.0+dev
 type: project
 description: IDE for PHP/JPHP.
-
-plugins: [App]
-
+plugins:
+- App
 sources:
 - src
 - platforms/develnext-desktop-platform/src
@@ -13,47 +12,44 @@ sources:
 - platforms/develnext-web-platform/src
 - platforms/develnext-wizard-platform/src
 - ../dn-app-framework/src
-
 includes:
 - index.php
-
 deps:
-  wizard-core: '^0.1.0'
-  wizard-localization: '^0.1.0'
-  jphp-core: '^1.0.0'
-  jphp-xml-ext: '^1.0.0'
-  jphp-zend-ext: '^1.0.0'
-  jphp-yaml-ext: '^1.0.0'
-  jphp-zip-ext: '^1.0.0'
-  jphp-httpclient-ext: '^1.0.0'
-  jphp-gui-ext: '^2.0.0'
-  jphp-gui-game-ext: '^2.0.0'
-  jphp-gui-desktop-ext: '^2.0.0'
-  jphp-compress-ext: '^1.0.0'
-  jphp-parser-ext: '^1.0.0'
+  wizard-core: ^0.1.0
+  wizard-localization: ^0.1.0
+  jphp-core: ^1.0.0
+  jphp-xml-ext: ^1.0.0
+  jphp-zend-ext: ^1.0.0
+  jphp-yaml-ext: ^1.0.0
+  jphp-zip-ext: ^1.0.0
+  jphp-httpclient-ext: ^1.0.0
+  jphp-gui-ext: ^2.0.0
+  jphp-gui-game-ext: ^2.0.0
+  jphp-gui-desktop-ext: ^2.0.0
+  jphp-compress-ext: ^1.0.0
+  jphp-parser-ext: ^1.0.0
   jphp-process-ext: '*'
-  develnext-designer: '^1.0.0'
-  develnext-gui-tabs-ext: '^1.0.0'
-
-  jphp-gui-jfx-win: '^11.0.0'
-  jphp-gui-jfx-linux: '^11.0.0'
-
+  develnext-designer: ^1.0.0
+  develnext-gui-tabs-ext: ^1.0.0
+  jphp-gui-jfx-win: ^11.0.0
+  jphp-gui-jfx-linux: ^11.0.0
+  jphp-richtextfx-ext: '*'
 app:
-  disable-launcher: true
+  disable-launcher: '1'
   jvm-args:
-    - '-Ddevelnext.noCodeCache=true'
-    - '--add-exports=javafx.base/com.sun.javafx=ALL-UNNAMED'
-    - '--add-exports=javafx.base/com.sun.javafx.collections=ALL-UNNAMED'
-    - '--add-exports=javafx.graphics/com.sun.javafx.css=ALL-UNNAMED'
-    - '--add-exports=javafx.graphics/com.sun.javafx.cursor=ALL-UNNAMED'
-    - '--add-exports=javafx.base/com.sun.javafx.event=ALL-UNNAMED'
-    - '--add-exports=javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED'
-    - '--add-exports=javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED'
-    - '--add-exports=javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED'
-    - '--add-exports=javafx.controls/com.sun.javafx.scene.control.behavior=ALL-UNNAMED'
-    - '--add-exports=javafx.controls/com.sun.javafx.scene.control.skin=ALL-UNNAMED'
-    - '--add-opens=javafx.controls/javafx.scene.control=ALL-UNNAMED'
-    - '--add-opens=javafx.controls/javafx.scene.control.skin=ALL-UNNAMED'
+  - -Ddevelnext.noCodeCache=true
+  - --add-exports=javafx.base/com.sun.javafx=ALL-UNNAMED
+  - --add-exports=javafx.base/com.sun.javafx.collections=ALL-UNNAMED
+  - --add-exports=javafx.graphics/com.sun.javafx.css=ALL-UNNAMED
+  - --add-exports=javafx.graphics/com.sun.javafx.cursor=ALL-UNNAMED
+  - --add-exports=javafx.base/com.sun.javafx.event=ALL-UNNAMED
+  - --add-exports=javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED
+  - --add-exports=javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED
+  - --add-exports=javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED
+  - --add-exports=javafx.controls/com.sun.javafx.scene.control.behavior=ALL-UNNAMED
+  - --add-exports=javafx.controls/com.sun.javafx.scene.control.skin=ALL-UNNAMED
+  - --add-opens=javafx.controls/javafx.scene.control=ALL-UNNAMED
+  - --add-opens=javafx.controls/javafx.scene.control.skin=ALL-UNNAMED
   build:
-    file-name: 'develnext-lib'
-    type: 'multi-jar'
+    file-name: develnext-lib
+    type: multi-jar
