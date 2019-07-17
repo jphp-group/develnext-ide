@@ -1244,7 +1244,7 @@ class Ide extends Application
      *
      * @param Project $openedProject
      */
-    public function setOpenedProject($openedProject = null)
+    public function setOpenedProject(?Project $openedProject = null)
     {
         $this->openedProject = $openedProject;
 
