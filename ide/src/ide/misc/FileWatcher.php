@@ -69,7 +69,7 @@ class FileWatcher extends Component
             $newSize = fs::size($this->file);
             $newHash = fs::isFile($this->file) ? fs::hash($this->file, 'SHA-256') : null;
 
-            if ($newTime !== $this->time && ($newSize != $this->size && $newHash != $this->hash)) {
+            if ($newTime !== $this->time || $newSize != $this->size || $newHash != $this->hash){
                 $this->time = $newTime;
                 $this->size = $newSize;
                 $this->hash = $newHash;
@@ -92,6 +92,4 @@ class FileWatcher extends Component
         $this->stop();
         parent::free();
     }
-
-
 }
