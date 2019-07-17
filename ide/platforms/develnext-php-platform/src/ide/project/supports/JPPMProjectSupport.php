@@ -91,6 +91,7 @@ class JPPMProjectSupport extends AbstractProjectSupport
                 $newPlugins = $this->pkgTemplate->getPlugins();
 
                 if ($oldDeps != $newDeps || $oldDevDeps != $newDevDeps || $oldPlugins != $newPlugins) {
+                    
                     $this->install($project);
                     $this->installToIDE($project);
 
@@ -121,8 +122,11 @@ class JPPMProjectSupport extends AbstractProjectSupport
         $this->install($project);
         $this->installToIDE($project);
 
+
         $this->pkgFileWatcher->start();
     }
+
+
 
     public function getVendorInspectDirsForDep(Project $project, string $depName)
     {
@@ -182,13 +186,19 @@ class JPPMProjectSupport extends AbstractProjectSupport
         return $result;
     }
 
-    public function install(Project $project)
+    /**
+     * Установка зависимостей jppm в проект
+     * @param  Project       $project   
+     * @param  callable|null $onComplete Коллбек будет вызван по завершению установки
+     * @param  callable|null $onError(string $errorText)    Коллбек будет вызван при возникновении ошибок.
+     */
+    public function install(Project $project, ?callable $onComplete = null, ?callable $onError = null)
     {
         $project->loadDirectoryForInspector(IdeSystem::getOwnFile("stubs/dn-php-stub"));
         $project->loadDirectoryForInspector(IdeSystem::getOwnFile("stubs/dn-jphp-stub"));
 
         $promisses = [];
-        foreach (fs::scan("{$project->getFile("vendor/")}", ['excludeFiles' => true]) as $dir) {
+        foreach (fs::scan($project->getFile("vendor/"), ['excludeFiles' => true]) as $dir) {
             $pkgName = fs::name($dir);
 
             if (!$this->pkgTemplate->getDeps()[$pkgName]) {
@@ -198,22 +208,42 @@ class JPPMProjectSupport extends AbstractProjectSupport
             }
         }
 
-        Promise::all($promisses)->then(function () use ($project) {
-            $process = (new Process(['cmd', '/c', 'jppm', 'install'], $project->getRootDir(), Ide::get()->makeEnvironment()))
-                ->inheritIO()->startAndWait();
+        Promise::all($promisses)->then(function () use ($project, $onComplete, $onError) {
+            $args = ['jppm', 'install'];
 
+            if (Ide::get()->isWindows()) {
+                $args = flow(['cmd', '/c'], $args)->toArray();
+            }
+
+            $process = (new Process($args, $project->getRootDir(), Ide::get()->makeEnvironment()))
+                //->inheritIO() // Нам нужен output, чтоб проверять наличие ошибок
+                ->startAndWait();
+
+            $jppmOutpput = $process->getInput()->readFully();
+            Logger::debug('Install: ' . $jppmOutpput);
+            if(stripos($jppmOutpput, 'Failed') !== false){
+                Logger::error('Plugin install error');
+                if(is_callable($onError)) uiLater(function() use ($onError, $jppmOutpput){ call_user_func($onError, $jppmOutpput); });
+            }
+            
             $newInspectDirs = $this->getVendorInspectDirs($project);
-
             foreach ($newInspectDirs as $dir) {
                 $project->loadDirectoryForInspector($dir);
             }
-        })->catch(function (Throwable $e) {
+            if(is_callable($onComplete)) uiLater(function() use ($onComplete){ call_user_func($onComplete); });
+        })->catch(function (Throwable $e) use ($onError){
             Logger::exception("Failed to install", $e);
+            if(is_callable($onError)) uiLater(function() use ($onError, $e){ call_user_func($onError, $e->getMessage()); });
         });
     }
 
+    /**
+     * Установка зависимостей jppm в среду
+     * @param  Project $project
+     */
     public function installToIDE(Project $project)
     {
+        $install = false;
         foreach (fs::scan("{$project->getRootDir()}/vendor", ['excludeFiles' => true], 1) as $dep) {
             $dep = fs::name($dep);
 
@@ -230,6 +260,7 @@ class JPPMProjectSupport extends AbstractProjectSupport
                         $bundleClass = $data['class'];
 
                         if ($bundleClass) {
+                            $install = true;
                             Logger::info("Add jar bundle: $dep -> $bundleClass");
 
                             /** @var AbstractJarBundle $bundle */
@@ -256,20 +287,34 @@ class JPPMProjectSupport extends AbstractProjectSupport
                 }
             }
         }
+
+        return $install;
     }
 
-    public function addDep(string $name, string $version = '*')
-    {
-        $this->pkgTemplate->setDeps(flow($this->pkgTemplate->getDeps(), [$name => $version])->toMap());
+    /**
+     * Добавить пакет в зависимости
+     * @param string $name
+     * @param string $version
+     */
+    public function addDep(string $name, string $version = '*') {
+        $this->pkgTemplate->load();
+        $this->pkgTemplate->addDep($name, $version);
+        $this->pkgTemplate->save();
     }
 
+    /**
+     * Удалить пакет из зависимостей
+     * @param  string $name
+     */
     public function removeDep(string $name)
     {
         $deps = $this->pkgTemplate->getDeps();
         unset($deps[$name]);
 
         $this->pkgTemplate->setDeps($deps);
+        $this->pkgTemplate->save();
     }
+
 
     public function hasDep(string $name): bool
     {
@@ -330,5 +375,15 @@ class JPPMProjectSupport extends AbstractProjectSupport
     public function getCode()
     {
         return 'jppm';
+    }
+
+    public function getDepConfig(string $dep, ?Project $project = null): array {
+        $project = is_null($project) ? Ide::project() : $project;
+        $packageFile = $project->getRootDir() . "/vendor/" . $dep . "/package.php.yml";
+        if(fs::exists($packageFile)){
+            return fs::parse($packageFile);
+        }
+
+        return [];
     }
 }

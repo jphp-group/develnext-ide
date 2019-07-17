@@ -200,6 +200,21 @@ class JPPMPackageFileTemplate extends AbstractMetaTemplate
     public function setDeps($deps): void
     {
         $this->deps = (array) $deps;
+        $this->sortDeps();
+    }
+
+    /**
+     * @param string $name
+     * @param string $version
+     */
+    public function addDep($name, $version): void
+    {
+        $this->deps[$name] = $version;
+        $this->sortDeps();
+    }
+
+    protected function sortDeps(){
+        $this->deps = flow($this->deps)->toMap();
     }
 
     /**
