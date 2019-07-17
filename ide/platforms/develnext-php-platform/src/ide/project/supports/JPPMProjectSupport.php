@@ -187,7 +187,7 @@ class JPPMProjectSupport extends AbstractProjectSupport
     }
 
     /**
-     * Установка зависимостей jppm в проект
+     * Установка пакетов и бандлов через jppm в проект. Создаёт новые файлы в текущем проекте.
      * @param  Project       $project   
      * @param  callable|null $onComplete Коллбек будет вызван по завершению установки
      * @param  callable|null $onError(string $errorText)    Коллбек будет вызван при возникновении ошибок.
@@ -215,15 +215,23 @@ class JPPMProjectSupport extends AbstractProjectSupport
                 $args = flow(['cmd', '/c'], $args)->toArray();
             }
 
-            $process = (new Process($args, $project->getRootDir(), Ide::get()->makeEnvironment()))
-                //->inheritIO() // Нам нужен output, чтоб проверять наличие ошибок
-                ->startAndWait();
+            $process = (new Process($args, $project->getRootDir(), Ide::get()->makeEnvironment()));
+            if(!is_callable($onError)){
+                // Если есть callback для ошибок, забираем себе output
+                $process->inheritIO();
+            }
+            $process->startAndWait(); 
 
-            $jppmOutpput = $process->getInput()->readFully();
-            Logger::debug('Install: ' . $jppmOutpput);
-            if(stripos($jppmOutpput, 'Failed') !== false){
-                Logger::error('Plugin install error');
-                if(is_callable($onError)) uiLater(function() use ($onError, $jppmOutpput){ call_user_func($onError, $jppmOutpput); });
+            if(is_callable($onError)){
+                $jppmOutpput = $process->getInput()->readFully();
+                Logger::debug('Installing result: ' . $jppmOutpput);
+
+                // Если удаляется плагин, develnext блокирует некоторые файлы, они не будут удалены, но на процесс сборки абсолютно не влияют.
+                // И если файл не удаляется, то вылазит ошибка, но здесь проверяется только 'failed to install' - ошибка установки
+                if(stripos($jppmOutpput, 'failed to install') !== false){
+                    Logger::error('Plugin install error');
+                    uiLater(function() use ($onError, $jppmOutpput){ call_user_func($onError, $jppmOutpput); });
+                }
             }
             
             $newInspectDirs = $this->getVendorInspectDirs($project);
@@ -238,12 +246,11 @@ class JPPMProjectSupport extends AbstractProjectSupport
     }
 
     /**
-     * Установка зависимостей jppm в среду
+     * Установка зависимостей jppm в среду. Парсит структуру пакетов, их зависимости. Добавляет пути к новым классам и удаляет неиспользуемые.
      * @param  Project $project
      */
     public function installToIDE(Project $project)
     {
-        $install = false;
         foreach (fs::scan("{$project->getRootDir()}/vendor", ['excludeFiles' => true], 1) as $dep) {
             $dep = fs::name($dep);
 
@@ -257,10 +264,8 @@ class JPPMProjectSupport extends AbstractProjectSupport
                     }
 
                     if (!$this->projectIdeBundles[$dep]) {
-                        $bundleClass = $data['class'];
-
-                        if ($bundleClass) {
-                            $install = true;
+                        if (isset($data['class'])) {
+                            $bundleClass = $data['class'];
                             Logger::info("Add jar bundle: $dep -> $bundleClass");
 
                             /** @var AbstractJarBundle $bundle */
@@ -287,8 +292,6 @@ class JPPMProjectSupport extends AbstractProjectSupport
                 }
             }
         }
-
-        return $install;
     }
 
     /**
