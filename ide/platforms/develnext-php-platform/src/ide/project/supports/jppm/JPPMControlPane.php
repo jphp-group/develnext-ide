@@ -3,6 +3,7 @@ namespace ide\project\supports\jppm;
 
 use ide\Ide;
 use ide\Logger;
+use ide\account\api\ServiceResponse;
 use ide\formats\templates\JPPMPackageFileTemplate;
 use ide\misc\FileWatcher;
 use ide\project\behaviours\BundleProjectBehaviour;
@@ -22,6 +23,7 @@ use php\gui\layout\UXHBox;
 use php\gui\layout\UXPanel;
 use php\gui\layout\UXVBox;
 use php\gui\paint\UXColor;
+use php\lang\Thread;
 
 
 class JPPMControlPane extends AbstractProjectControlPane
@@ -92,7 +94,7 @@ class JPPMControlPane extends AbstractProjectControlPane
     protected $parentPane;
 
     /**
-     * @todo Сделать поддержку языков
+     * Создание графического интерфейса
      * @return UXNode
      */
     protected function makeUi()
@@ -155,6 +157,9 @@ class JPPMControlPane extends AbstractProjectControlPane
         return $this->parentPane;
     }
 
+    /**
+     * Прелоадер при установке пакета расширений
+     */
     protected function createPreloader(): UXNode {
         $progressBar = new UXProgressBar;
         $progressBar->progress = -1;
@@ -163,14 +168,13 @@ class JPPMControlPane extends AbstractProjectControlPane
 
         $progressPane = new UXAnchorPane;
         $progressPane->add($progressBar);
-        $progressPane->paddingTop = 10;
         UXHBox::setHgrow($progressBar, 'ALWAYS');
         
         return $progressPane;
     }
 
     /**
-     * Refresh ui and pane.
+     * Обновление панели
      */
     public function refresh() {
         if(is_null($this->packageTpl)) return;
@@ -339,5 +343,27 @@ class JPPMControlPane extends AbstractProjectControlPane
         $this->addButton->enabled = 
         !$this->parentPane->mouseTransparent = false;
         $this->packagesList->selectedIndex = -1;
+    }
+
+    /**
+     * @todo GitHub repo api
+     * @link https://api.github.com/orgs/jphp-group/repos
+     * @link https://api.github.com/repos/jphp-group/jphp-websocket-client/contents
+     */
+    protected function loadPackages(callable $load){
+        $thread = new Thread(function() use ($load){
+            /** @var ServiceResponse $query */
+            $query = Ide::service()->ide()->executeGet('repo/list/all');
+            if($query->isSuccess()){
+                $data = $query->result();
+            } else {
+                $data = [];
+            }
+
+            uiLater(function() use ($load, $data){
+                call_user_func($load, $data);
+            });
+        });
+        $thread->start();
     }
 }
