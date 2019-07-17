@@ -217,12 +217,10 @@ class JPPMProjectSupport extends AbstractProjectSupport
 
             $process = (new Process($args, $project->getRootDir(), Ide::get()->makeEnvironment()));
             if(!is_callable($onError)){
+                $process = $process->inheritIO()->startAndWait();
+            } else {
                 // Если есть callback для ошибок, забираем себе output
-                $process->inheritIO();
-            }
-            $process->startAndWait(); 
-
-            if(is_callable($onError)){
+                $process = $process->startAndWait();
                 $jppmOutpput = $process->getInput()->readFully();
                 Logger::debug('Installing result: ' . $jppmOutpput);
 
