@@ -564,13 +564,13 @@ class CodeEditor extends AbstractEditor
         $value = $this->getValue();
 
         if (!fs::exists($this->file)) {
-            FileUtils::put($this->file, $value);
+            FileUtils::putAsync($this->file, $value);
         }
 
         if ($this->isSourceFile()) {
-            FileUtils::put("$this->file.source", $value);
+            FileUtils::putAsync("$this->file.source", $value);
         } else {
-            FileUtils::put($this->file, $value);
+            FileUtils::putAsync($this->file, $value);
         }
 
         Logger::info("Finish save file $this->file.");
