@@ -11,10 +11,13 @@ use ide\project\control\AbstractProjectControlPane;
 use ide\project\supports\JPPMProjectSupport;
 use php\gui\UXAlert;
 use php\gui\UXButton;
+use php\gui\UXClipboard;
+use php\gui\UXContextMenu;
 use php\gui\UXImage;
 use php\gui\UXImageView;
 use php\gui\UXLabel;
 use php\gui\UXListView;
+use php\gui\UXMenuItem;
 use php\gui\UXNode;
 use php\gui\UXProgressBar;
 use php\gui\UXTextField;
@@ -136,6 +139,7 @@ class JPPMControlPane extends AbstractProjectControlPane
         $this->packagesList->on('action', [$this, 'doSelectPackage']);
         UXHBox::setHgrow($this->packagesList, 'ALWAYS');
         $packBox->add($this->packagesList);
+        $this->uiPackageContextMenu($this->packagesList);
         
         // 1.2 Бокс для кнопок
         $buttonsBox = new UXVBox;
@@ -181,16 +185,38 @@ class JPPMControlPane extends AbstractProjectControlPane
         $this->nameField->promptText = _('jppm.package.manager.name.placeholder');
         $this->nameField->on('keyUp', function(UXKeyEvent $e){
             if($e->codeName == 'Enter'){
+                // Нажатие enter == нажатие на кнопку добавить
                 $this->doAddPackage();
+            } elseif($e->codeName == 'Shift' || $e->codeName == 'Ctrl' || $e->codeName == '2'){
+                // Если нажать ctrl+v или shift+2 (== @) и если была вставлена команда вида package@source, то распарсим эту строку и разбросаем данные по полям
+                if(str::pos($this->nameField->text, '@') > -1){
+                    // Вместе с названием репозитория может быть скопирована команда jppm
+                    $this->nameField->text = str::replace($this->nameField->text, 'jppm add ', '');
+                    if(str::endsWith($this->nameField->text, '@')){
+                        // Принажатии на @ перебрасывает на следующее поле
+                        $this->nameField->text = str::replace($this->nameField->text, '@', '');
+                    } else {
+                        $exp = str::split($this->nameField->text, '@', 2);
+                        $this->nameField->text = $exp[0];
+                        $this->versionField->text = $exp[1];
+                    }
+                    $this->versionField->requestFocus();
+                }
             }
         });
         UXHBox::setHgrow($this->nameField, 'ALWAYS');
         $addBox->add($this->nameField);
         
-        // 2.1.2 Поле ввода: версия пакета
+        // 2.1.2 Знак @
+        $aLabel = new UXLabel('@');
+        $aLabel->font = $aLabel->font->/*withBold()->*/withSize(16);
+        $aLabel->textColor = UXColor::of('#666');
+        $addBox->add($aLabel);
+
+        // 2.1.3 Поле ввода: версия пакета
         $this->versionField = new UXTextField;
         $this->versionField->promptText = _('jppm.package.manager.version.placeholder');
-        $this->versionField->maxWidth = 300;
+        $this->versionField->maxWidth = 350;
         $this->versionField->on('keyUp', function(UXKeyEvent $e){
             if($e->codeName == 'Enter'){
                 $this->doAddPackage();
@@ -198,7 +224,7 @@ class JPPMControlPane extends AbstractProjectControlPane
         });
         $addBox->add($this->versionField);
         
-        // 2.1.3 Кнопка добавить пакет
+        // 2.1.4 Кнопка добавить пакет
         $this->addButton = new UXButton(_('jppm.package.manager.add'), ico('pluginAdd16'));
         $this->addButton->width = 140;
         $this->addButton->on('click', [$this, 'doAddPackage']);
@@ -219,12 +245,12 @@ class JPPMControlPane extends AbstractProjectControlPane
             }
         });
         $addPaneBox->add($this->repoList);
+        $this->uiPackageContextMenu($this->repoList);
         
         // 2.4 Кнопка обновить репозиторий
         $this->repoUpdateButton = new UXButton(_('jppm.package.manager.refresh'), ico('refresh16'));
         $this->repoUpdateButton->anchors = ['top' => false, 'left' => 0, 'right' => false, 'bottom' => 0];
-        $this->repoUpdateButton->on('action', [$this, 'doUpdateRepo']);
-        $this->doUpdateRepo();
+        $this->repoUpdateButton->on('action', [$this, 'doUpdateRepos']);
         $addPaneBox->add($this->repoUpdateButton);
 
         return $this->parentPane;
@@ -253,7 +279,15 @@ class JPPMControlPane extends AbstractProjectControlPane
         if(is_null($this->packageTpl)) return;
 
         $this->disableUI();
+        $this->doUpdatePackages();     
+        $this->doUpdateRepos();
+        $this->enableUI();
+    }
 
+    /**
+     * Обновить список используемых в текущем проекте пакетов
+     */
+    public function doUpdatePackages(){
         $this->packagesList->items->clear();
         $this->packageTpl->load();
         $packages = $this->packageTpl->getDeps();
@@ -262,7 +296,8 @@ class JPPMControlPane extends AbstractProjectControlPane
             $packageData = $this->jppm->getDepConfig($name);
             $isBundle = isset($packageData['ide-bundle']);
 
-            $nameLabel = new UXLabel($packageData['name']);
+            $nameText = isset($packageData['name']) && (str::length($packageData['name']) > 0) ? $packageData['name'] : $name;
+            $nameLabel = new UXLabel();
             $nameLabel->textColor = UXColor::of('#000000');
             $nameLabel->font = $nameLabel->font->withBold();
 
@@ -305,14 +340,12 @@ class JPPMControlPane extends AbstractProjectControlPane
             $this->packagesList->items->add($packageBox);
             $this->packagesList->requestFocus();
         }
-
-        $this->enableUI();
     }
 
     /**
      * Обновление репозитория
      */
-    public function doUpdateRepo(){
+    public function doUpdateRepos(){
         $this->repoUpdateButton->enabled = false;
         $this->repoUpdateButton->graphic = ico('process16');
 
@@ -383,9 +416,27 @@ class JPPMControlPane extends AbstractProjectControlPane
     }
 
     /**
+     * Создать контекстное меню для списка с пакетами. Элементы в items должны хранить данные в data('name') и data('version')
+     * @return UXContextMenu
+     */
+    protected function uiPackageContextMenu(UXListView $list){
+        $list->contextMenu = new UXContextMenu;
+
+        $copyLinkMenu = new UXMenuItem('Копировать ссылку', ico('copy16'));
+        $copyLinkMenu->on('action', function() use ($list){
+            if($list->selectedIndex < 0) return;
+            $selected = $list->selectedItem;
+            $link = $selected->data('name') . '@' . $selected->data('version');
+            UXClipboard::setText($link);
+            Ide::get()->getMainForm()->toast('Скопировано: ' . $link);
+        });
+        $list->contextMenu->items->add($copyLinkMenu);
+    }
+
+    /**
      * Выбор элемента из репозитория
      */
-    function doSelectRepo(){
+    public function doSelectRepo(){
         if($this->repoList->selectedIndex < 0) return;
         
         $selected = $this->repoList->selectedItem;
@@ -454,6 +505,7 @@ class JPPMControlPane extends AbstractProjectControlPane
 
     /**
      * Удаление пакета
+     * @param string|null $package Если не передано имя пакета, то будет взят выбранный элемент из списка пакетов
      */
     public function doDeletePackage($package = null){
         if(is_null($package) || !is_string($package)){
@@ -484,7 +536,6 @@ class JPPMControlPane extends AbstractProjectControlPane
                 $this->refresh();
                 $this->jppm->installToIDE($this->project);
                 $this->project->refreshSupports();
-                $this->doUpdateRepo();
             },
 
             function($msg) use ($lastInstall){
@@ -511,7 +562,7 @@ class JPPMControlPane extends AbstractProjectControlPane
                 /*$this->refresh();
                 $this->jppm->installToIDE($this->project);
                 $this->project->refreshSupports();
-                $this->doUpdateRepo();*/
+                $this->doUpdateRepos();*/
             }
         );
     }
