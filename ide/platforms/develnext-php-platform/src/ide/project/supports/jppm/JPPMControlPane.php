@@ -296,8 +296,8 @@ class JPPMControlPane extends AbstractProjectControlPane
             $packageData = $this->jppm->getDepConfig($name);
             $isBundle = isset($packageData['ide-bundle']);
 
-            $nameText = isset($packageData['name']) && (str::length($packageData['name']) > 0) ? $packageData['name'] : $name;
-            $nameLabel = new UXLabel();
+            $nameText = (isset($packageData['name']) && (str::length($packageData['name']) > 0)) ? $packageData['name'] : $name;
+            $nameLabel = new UXLabel($nameText);
             $nameLabel->textColor = UXColor::of('#000000');
             $nameLabel->font = $nameLabel->font->withBold();
 
