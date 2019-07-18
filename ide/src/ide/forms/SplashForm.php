@@ -43,6 +43,7 @@ class SplashForm extends AbstractIdeForm
         $versionCode = $this->_app->getConfig()->get('app.versionCode');
         $this->version->text = $this->_app->getVersion();
 
+        // Конечно, эфекты это прикольно, но нужно ли это?
         if ($this->_app->isSnapshotVersion()) {
             $effect = new UXSepiaToneEffect();
             $effect->level = 0.5;
@@ -98,12 +99,6 @@ class SplashForm extends AbstractIdeForm
             }
         }
 
-        waitAsync(7000, function() {
-            if ($this->_app->getMainForm()->visible) {
-                $this->hide();
-            }
-        });
-
         Ide::get()->on('start', function () {
             Ide::accountManager()->on('update', function ($data) {
                 Ide::service()->file()->getImageAsync($data['avatar'], function ($file) {
@@ -114,6 +109,22 @@ class SplashForm extends AbstractIdeForm
             }, __CLASS__);
             Ide::accountManager()->updateAccount();
         }, __CLASS__);
+
+        $this->waiter();
+    }
+
+    /**
+     * Функция ждёт, когда отрисуется окно среды, и скрывает сплеш
+     * Надо ли это вообще?
+     */
+    public function waiter(int $timeoutMs = 15000){
+        waitAsync($timeoutMs, function() use ($timeoutMs){
+            if (is_object($this->_app->getMainForm()) && $this->_app->getMainForm()->visible) {
+                $this->hide();
+            } elseif($this->visible) {
+                $this->waiter($timeoutMs);
+            }
+        });
     }
 
     /**
@@ -132,18 +143,19 @@ class SplashForm extends AbstractIdeForm
     public function doShow()
     {
         $this->tip->text = SplashTipSystem::get(Ide::get()->getLanguage()->getCode());
-
-        if (Ide::get()->isDevelopment() && Ide::get()->isWindows()) {
+        // Я хочу увидеть, как это выглядит в продакшне
+        /*if (Ide::get()->isDevelopment() && Ide::get()->isWindows()) {
             if ($this->opacity > 0.9) {
                 $this->opacity = 0.05;
             } else {
                 $this->opacity = 1;
             }
-        }
+        }*/
 
-        uiLater(function () {
-            $this->toFront();
-        });
+        //uiLater(function () { // мы же и так в ui, разве нет?
+        $this->toFront();
+        $this->requestFocus();
+        //});
     }
 
     /**
