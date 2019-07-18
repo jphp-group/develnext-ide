@@ -527,7 +527,7 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
     {
         if ($this->uiSettings) {
             $this->uiByteCodeCheckbox->selected = $this->getIdeConfigValue(self::OPT_COMPILE_BYTE_CODE, true);
-            //$this->uiImportTypesSelect->value   = _(static::$importTypes[$this->getImportType()]);
+            $this->uiImportTypesSelect->value   = _(static::$importTypes[$this->getImportType()]);
 			  if($this->getImportType() == null){
 				
                 $this->setImportType(arr::keys(static::$importTypes)[$this->uiImportTypesSelect->selectedIndex = 1]);
