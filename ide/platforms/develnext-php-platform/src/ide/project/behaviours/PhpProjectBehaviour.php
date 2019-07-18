@@ -527,7 +527,16 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
     {
         if ($this->uiSettings) {
             $this->uiByteCodeCheckbox->selected = $this->getIdeConfigValue(self::OPT_COMPILE_BYTE_CODE, true);
-            $this->uiImportTypesSelect->value   = _(static::$importTypes[$this->getImportType()]);
+            //$this->uiImportTypesSelect->value   = _(static::$importTypes[$this->getImportType()]);
+			  if($this->getImportType() == null){
+				
+                $this->setImportType(arr::keys(static::$importTypes)[$this->uiImportTypesSelect->selectedIndex = 1]);
+           
+			//pre(1);
+			  }else{
+				$this->setImportType(arr::keys(static::$importTypes)[$this->uiImportTypesSelect->selectedIndex = $this->getImportType()]);
+			  }
+		//	$this->uiImportTypesSelect->selected = $importTypes;
         }
     }
 
@@ -548,14 +557,15 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
 
         $importTitle = _(new UXLabel('php.option.use.type.for.classes::Метод импортирования классов:'));
         $importTypeSelect = new UXComboBox(static::$importTypes);
-
         $importTypeSelect->on('action', function () {
             uiLater(function () {
                 $this->setImportType(arr::keys(static::$importTypes)[$this->uiImportTypesSelect->selectedIndex]);
             });
+			$this->doSave();
         });
+		$this->uiImportTypesSelect = _($importTypeSelect);
 
-        $this->uiImportTypesSelect = _($importTypeSelect);
+        
 
         $importTypeSelect->padding = 5;
         $importTypeSelect->minWidth = 350;
