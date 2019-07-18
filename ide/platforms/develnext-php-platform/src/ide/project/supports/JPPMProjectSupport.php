@@ -1,17 +1,21 @@
 <?php
 namespace ide\project\supports;
 
-use function alert;
+use Throwable;
 use framework\core\Event;
-use ide\bundle\AbstractJarBundle;
-use ide\formats\templates\JPPMPackageFileTemplate;
+use function alert;
+use function pre;
+use function uiLater;
+use function var_dump;
 use ide\Ide;
 use ide\Logger;
+use ide\bundle\AbstractJarBundle;
+use ide\formats\templates\JPPMPackageFileTemplate;
 use ide\misc\FileWatcher;
 use ide\project\AbstractProjectSupport;
+use ide\project\Project;
 use ide\project\behaviours\PhpProjectBehaviour;
 use ide\project\control\CommonProjectControlPane;
-use ide\project\Project;
 use ide\systems\IdeSystem;
 use ide\systems\ProjectSystem;
 use ide\ui\Notifications;
@@ -22,11 +26,8 @@ use php\lang\System;
 use php\lib\arr;
 use php\lib\fs;
 use php\lib\reflect;
-use function pre;
-use Throwable;
+use php\lib\str;
 use timer\AccurateTimer;
-use function uiLater;
-use function var_dump;
 
 /**
  * Class JPPMProjectSupport
@@ -225,8 +226,7 @@ class JPPMProjectSupport extends AbstractProjectSupport
                 Logger::debug('Installing result: ' . $jppmOutpput);
 
                 // Если удаляется плагин, develnext блокирует некоторые файлы, они не будут удалены, но на процесс сборки абсолютно не влияют.
-                // И если файл не удаляется, то вылазит ошибка, но здесь проверяется только 'failed to install' - ошибка установки
-                if(stripos($jppmOutpput, 'failed to install') !== false){
+                if(str::posIgnoreCase($jppmOutpput, 'failed') > -1){
                     Logger::error('Plugin install error');
                     uiLater(function() use ($onError, $jppmOutpput){ call_user_func($onError, $jppmOutpput); });
                 }
@@ -237,9 +237,10 @@ class JPPMProjectSupport extends AbstractProjectSupport
                 $project->loadDirectoryForInspector($dir);
             }
             if(is_callable($onComplete)) uiLater(function() use ($onComplete){ call_user_func($onComplete); });
-        })->catch(function (Throwable $e) use ($onError){
+        })->catch(function (Throwable $e) use ($onError, $onComplete){
             Logger::exception("Failed to install", $e);
             if(is_callable($onError)) uiLater(function() use ($onError, $e){ call_user_func($onError, $e->getMessage()); });
+            if(is_callable($onComplete)) uiLater(function() use ($onComplete){ call_user_func($onComplete); });
         });
     }
 
