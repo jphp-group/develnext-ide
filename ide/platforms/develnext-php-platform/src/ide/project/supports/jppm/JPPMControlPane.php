@@ -127,8 +127,12 @@ class JPPMControlPane extends AbstractProjectControlPane
         $this->parentPane = new UXVBox;
         $this->parentPane->anchors = ['top' => 0, 'left' => 0, 'right' => 0, 'bottom' => 0];
         $this->parentPane->padding = 3;
-        $this->parentPane->spacing = 30;      
+        $this->parentPane->spacing = 8;      
         
+        $packagesLabel = new UXLabel(_('jppm.package.manager.packages.title'));
+        $packagesLabel->font = $packagesLabel->font->withBold()->withSize(16);
+        $this->parentPane->add($packagesLabel);
+
         // 1. Список с установленными расширениями + кнопки удалить/readme
         $packBox = new UXHBox;
         $packBox->spacing = 5;  
@@ -162,9 +166,12 @@ class JPPMControlPane extends AbstractProjectControlPane
         $this->readmeButton->on('click', [$this, 'doBrowseReadme']);
         $buttonsBox->add($this->readmeButton);
         
-        // 2. Установка пакетов из репозитория  
+        // 2. Установка пакетов из репозитория         
+        $addLabel = new UXLabel(_('jppm.package.manager.addpane.title'));
+        $addLabel->font = $packagesLabel->font->withBold()->withSize(16);
+        $this->parentPane->add($addLabel);
+
         $addPane = new UXPanel;
-        $addPane->title = _('jppm.package.manager.addpane.title');
         $addPane->backgroundColor = UXColor::of('#fff');
         $addPane->padding = 10;
         $this->parentPane->add($addPane);  
@@ -464,7 +471,6 @@ class JPPMControlPane extends AbstractProjectControlPane
             $selected = $this->packagesList->selectedItem->data('name');
             $info = $this->jppm->getDepConfig($selected);
             $this->readmeButton->enabled = isset($info['doc']['url-prefix']);
-            var_dump($info);
         }
     }
 
