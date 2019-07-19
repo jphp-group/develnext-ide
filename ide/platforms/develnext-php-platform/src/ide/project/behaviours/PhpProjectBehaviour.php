@@ -1,24 +1,24 @@
 <?php
 namespace ide\project\behaviours;
 
-use develnext\lexer\inspector\PHPInspector;
 use Error;
-use ide\formats\PhpCodeFormat;
+use develnext\lexer\inspector\PHPInspector;
 use ide\Logger;
+use ide\formats\PhpCodeFormat;
 use ide\project\AbstractProjectBehaviour;
+use ide\project\Project;
+use ide\project\ProjectFile;
 use ide\project\behaviours\php\TreeCreatePhpClassMenuCommand;
 use ide\project\behaviours\php\TreeCreatePhpFileMenuCommand;
 use ide\project\control\CommonProjectControlPane;
-use ide\project\Project;
-use ide\project\ProjectFile;
 use ide\utils\FileUtils;
 use php\compress\ZipFile;
 use php\framework\FrameworkPackageLoader;
-use php\gui\layout\UXHBox;
-use php\gui\layout\UXVBox;
 use php\gui\UXCheckbox;
 use php\gui\UXComboBox;
 use php\gui\UXLabel;
+use php\gui\layout\UXHBox;
+use php\gui\layout\UXVBox;
 use php\io\File;
 use php\io\FileStream;
 use php\io\IOException;
@@ -32,6 +32,7 @@ use php\lib\arr;
 use php\lib\fs;
 use php\lib\str;
 use php\net\URL;
+use php\util\Flow;
 
 /**
  * Class PhpProjectBehaviour
@@ -117,9 +118,20 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
         $this->registerTreeMenu();
     }
 
-    public function getImportType()
-    {
-        return $this->getIdeConfigValue(self::OPT_IMPORT_TYPE_CODE, 'simple');
+    /**
+     * Получить метод импортирования классов
+     * @return  string simple|package
+     */
+    public function getImportType(): string
+    {   
+        $default = 'simple';
+        $type = $this->getIdeConfigValue(self::OPT_IMPORT_TYPE_CODE, $default);
+        if(!isset(static::$importTypes[$type])){
+            $this->setImportType($default);
+            return $default;
+        }
+
+        return $type;
     }
 
     public function setImportType($value)
@@ -527,20 +539,7 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
     {
         if ($this->uiSettings) {
             $this->uiByteCodeCheckbox->selected = $this->getIdeConfigValue(self::OPT_COMPILE_BYTE_CODE, true);
-            $this->uiImportTypesSelect->value   = _(static::$importTypes[$this->getImportType()]);
-			  if($this->getImportType() == 'package'){
-				
-                $this->setImportType(arr::keys(static::$importTypes)[$this->uiImportTypesSelect->selectedIndex = 1]);
-           
-			//pre($this->getImportType());
-			  }elseif($this->getImportType() == 'simple'){
-			  $this->setImportType(arr::keys(static::$importTypes)[$this->uiImportTypesSelect->selectedIndex = 0]);
-			//  pre($this->getImportType());
-			  }
-			//  }else{
-			//	$this->setImportType(arr::keys(static::$importTypes)[$this->uiImportTypesSelect->selectedIndex = $this->getImportType()]);
-			//  }
-		//	$this->uiImportTypesSelect->selected = $importTypes;
+            $this->uiImportTypesSelect->selectedIndex = Flow::of(arr::keys(static::$importTypes))->findValue($this->getImportType());
         }
     }
 
@@ -561,15 +560,12 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
 
         $importTitle = _(new UXLabel('php.option.use.type.for.classes::Метод импортирования классов:'));
         $importTypeSelect = new UXComboBox(static::$importTypes);
-        $importTypeSelect->on('action', function () {
-            uiLater(function () {
-                $this->setImportType(arr::keys(static::$importTypes)[$this->uiImportTypesSelect->selectedIndex]);
-            });
-			//$this->doSave();
-        });
-		$this->uiImportTypesSelect = _($importTypeSelect);
 
-        
+        $importTypeSelect->on('action', function () {
+            $this->setImportType(arr::keys(static::$importTypes)[$this->uiImportTypesSelect->selectedIndex]);
+        });
+
+        $this->uiImportTypesSelect = _($importTypeSelect);
 
         $importTypeSelect->padding = 5;
         $importTypeSelect->minWidth = 350;
