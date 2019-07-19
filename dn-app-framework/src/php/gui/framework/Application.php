@@ -630,7 +630,7 @@ class Application
             $this->launched = true;
 
             // Если установлен сплеш, показываем его
-            if ($this->splashFormClass) {
+            if ($this->getConfig()->getBoolean('app.fx.splash.show') && $this->splashFormClass) {
                 $this->splash = $this->getForm($this->splashFormClass);
 
                 if ($this->splash) {
