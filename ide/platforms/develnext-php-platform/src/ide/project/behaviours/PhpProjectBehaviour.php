@@ -528,14 +528,18 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
         if ($this->uiSettings) {
             $this->uiByteCodeCheckbox->selected = $this->getIdeConfigValue(self::OPT_COMPILE_BYTE_CODE, true);
             $this->uiImportTypesSelect->value   = _(static::$importTypes[$this->getImportType()]);
-			  if($this->getImportType() == null){
+			  if($this->getImportType() == 'package'){
 				
                 $this->setImportType(arr::keys(static::$importTypes)[$this->uiImportTypesSelect->selectedIndex = 1]);
            
-			//pre(1);
-			  }else{
-				$this->setImportType(arr::keys(static::$importTypes)[$this->uiImportTypesSelect->selectedIndex = $this->getImportType()]);
+			//pre($this->getImportType());
+			  }elseif($this->getImportType() == 'simple'){
+			  $this->setImportType(arr::keys(static::$importTypes)[$this->uiImportTypesSelect->selectedIndex = 0]);
+			//  pre($this->getImportType());
 			  }
+			//  }else{
+			//	$this->setImportType(arr::keys(static::$importTypes)[$this->uiImportTypesSelect->selectedIndex = $this->getImportType()]);
+			//  }
 		//	$this->uiImportTypesSelect->selected = $importTypes;
         }
     }
@@ -561,7 +565,7 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
             uiLater(function () {
                 $this->setImportType(arr::keys(static::$importTypes)[$this->uiImportTypesSelect->selectedIndex]);
             });
-			$this->doSave();
+			//$this->doSave();
         });
 		$this->uiImportTypesSelect = _($importTypeSelect);
 
