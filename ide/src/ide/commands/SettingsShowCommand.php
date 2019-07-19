@@ -25,10 +25,10 @@ class SettingsShowCommand extends AbstractCommand
         $menu = Ide::get()->getMainForm()->defineMenuGroup('settings', null);
 
         // Т.к. UXMenu не имеет события на клик, нужно создать label
-        $label = new UXLabel(_('menu.settings'), Ide::get()->getImage('icons/settings16.png'));
+        $label = _(new UXLabel('menu.settings', Ide::get()->getImage('icons/settings16.png')));
         $menu->graphic = $label;
         $label->on('click', [$this, 'onExecute']);
-        
+
         return null;
     }
 

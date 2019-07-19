@@ -2,6 +2,7 @@
 namespace php\gui\framework;
 
 use Exception;
+use ide\Ide;
 use php\framework\Logger;
 use php\gui\UXApplication;
 use php\gui\UXForm;
@@ -630,7 +631,7 @@ class Application
             $this->launched = true;
 
             // Если установлен сплеш, показываем его
-            if ($this->getConfig()->getBoolean('app.fx.splash.show') && $this->splashFormClass) {
+            if (Ide::get()->getUserConfigValue('ide.splash', 1) && $this->splashFormClass) {
                 $this->splash = $this->getForm($this->splashFormClass);
 
                 if ($this->splash) {
