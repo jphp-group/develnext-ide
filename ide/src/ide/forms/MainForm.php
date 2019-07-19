@@ -218,45 +218,11 @@ class MainForm extends AbstractIdeForm
         _($this->mainMenu);
     }
 
-    protected function addLanguagesMenu(){
-        $ideLanguage = Ide::get()->getLanguage();
-
-        $parentMenu = $this->findSubMenu('menuSettings');
-        $menu = new UXMenu;
-        $parentMenu->items->add($menu);
-
-        if ($ideLanguage) {
-            $menu->graphic = Ide::get()->getImage(new UXImage($ideLanguage->getIcon()));
-            $menu->text = 'Language';
-        }
-
-        foreach (Ide::get()->getLanguages() as $language) {
-            $item = new UXMenuItem($language->getTitle(), Ide::get()->getImage(new UXImage($language->getIcon())));
-
-            if ($language->getTitle() != $language->getTitleEn()) {
-                $item->text .= ' (' . $language->getTitleEn() . ')';
-            }
-
-            if ($language->isBeta()) {
-                $item->text .= ' (Beta Version)';
-            }
-
-            $item->on('action', function () use ($language, $item, $menu) {
-                $menu->graphic = Ide::get()->getImage(new UXImage($language->getIcon()));
-                Ide::get()->setUserConfigValue('ide.language', $language->getCode());
-                Ide::get()->getLocalizer()->language = $language->getCode();
-            });
-
-            $menu->items->add($item);
-        }
-    }
-
     public function show()
     {
         parent::show();
         Logger::info("Show main form ...");
 
-        //$this->addLanguagesMenu();
 
         $screen = UXScreen::getPrimary();
 
