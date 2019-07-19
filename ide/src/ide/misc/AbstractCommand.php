@@ -112,6 +112,10 @@ abstract class AbstractCommand extends Module
         return _($button);
     }
 
+    /**
+     * Создать подменю для одной из существующих групп меню
+     * @return UXMenuItem|null
+     */
     public function makeMenuItem()
     {
         $item = _(new UXMenuItem($this->getName()));

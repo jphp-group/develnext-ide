@@ -6,23 +6,24 @@ use ide\IdeConfigurable;
 use ide\IdeException;
 use ide\Logger;
 use ide\utils\UiUtils;
-use php\gui\designer\UXDirectoryTreeView;
-use php\gui\dock\UXDockPane;
-use php\gui\event\UXEvent;
-use php\gui\layout\UXAnchorPane;
-use php\gui\layout\UXHBox;
-use php\gui\layout\UXVBox;
 use php\gui\UXDndTabPane;
 use php\gui\UXImage;
 use php\gui\UXLabel;
 use php\gui\UXMenu;
 use php\gui\UXMenuBar;
+use php\gui\UXMenuButton;
 use php\gui\UXMenuItem;
 use php\gui\UXNode;
 use php\gui\UXScreen;
 use php\gui\UXSplitPane;
 use php\gui\UXTabPane;
 use php\gui\UXTreeView;
+use php\gui\designer\UXDirectoryTreeView;
+use php\gui\dock\UXDockPane;
+use php\gui\event\UXEvent;
+use php\gui\layout\UXAnchorPane;
+use php\gui\layout\UXHBox;
+use php\gui\layout\UXVBox;
 use php\lib\fs;
 use php\lib\str;
 
@@ -217,15 +218,12 @@ class MainForm extends AbstractIdeForm
         _($this->mainMenu);
     }
 
-    public function show()
-    {
-        parent::show();
-        Logger::info("Show main form ...");
-
+    protected function addLanguagesMenu(){
         $ideLanguage = Ide::get()->getLanguage();
 
-        $menu = $this->findSubMenu('menuL10n');
-        $menu->items->clear();
+        $parentMenu = $this->findSubMenu('menuSettings');
+        $menu = new UXMenu;
+        $parentMenu->items->add($menu);
 
         if ($ideLanguage) {
             $menu->graphic = Ide::get()->getImage(new UXImage($ideLanguage->getIcon()));
@@ -243,24 +241,22 @@ class MainForm extends AbstractIdeForm
                 $item->text .= ' (Beta Version)';
             }
 
-            //$item->enabled = !$ideLanguage || $language->getCode() != $ideLanguage->getCode();
-
             $item->on('action', function () use ($language, $item, $menu) {
-                /*$msg = new MessageBoxForm($language->getRestartMessage(), [$language->getRestartYes(), $language->getRestartNo()]);
-                $msg->makeWarning();
-                $msg->showDialog();*/
-
                 $menu->graphic = Ide::get()->getImage(new UXImage($language->getIcon()));
                 Ide::get()->setUserConfigValue('ide.language', $language->getCode());
                 Ide::get()->getLocalizer()->language = $language->getCode();
-
-                /*if ($msg->getResultIndex() == 0) {
-                    Ide::get()->restart();
-                }*/
             });
 
             $menu->items->add($item);
         }
+    }
+
+    public function show()
+    {
+        parent::show();
+        Logger::info("Show main form ...");
+
+        //$this->addLanguagesMenu();
 
         $screen = UXScreen::getPrimary();
 
@@ -317,6 +313,14 @@ class MainForm extends AbstractIdeForm
                 $this->splitTree->dividerPositions = $this->ideConfig()->getArray('splitTree.dividerPositions', [0.3]);
             }
         });
+
+        /*$settingsMenu = new UXMenu(_('menu.settings'));
+
+        $settingsMenu->graphic = Ide::get()->getImage('icons/settings16.png');
+        $settingsMenu->on('click', function(){
+            app()->showFormAndWait('SettingsForm');
+        });
+        $this->mainMenu->menus->add($settingsMenu);*/
     }
 
     /**

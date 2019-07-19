@@ -21,3 +21,5 @@ ide\commands\CheckUpdatesCommand
 ide\commands\AboutCommand
 
 ide\doc\commands\DocCommand
+
+ide\commands\SettingsShowCommand
