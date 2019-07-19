@@ -279,14 +279,6 @@ class MainForm extends AbstractIdeForm
                 $this->splitTree->dividerPositions = $this->ideConfig()->getArray('splitTree.dividerPositions', [0.3]);
             }
         });
-
-        /*$settingsMenu = new UXMenu(_('menu.settings'));
-
-        $settingsMenu->graphic = Ide::get()->getImage('icons/settings16.png');
-        $settingsMenu->on('click', function(){
-            app()->showFormAndWait('SettingsForm');
-        });
-        $this->mainMenu->menus->add($settingsMenu);*/
     }
 
     /**
