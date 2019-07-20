@@ -2,14 +2,13 @@
 
 namespace ide\editors\rich\highlighters;
 
-use ide\editors\rich\CodeEditor;
-use php\gui\event\UXKeyEvent;
-use php\lib\str;
+use ide\editors\rich\RichCodeEditor;
+use php\gui\UXStyleSpansBuilder;
 
 abstract class AbstractHighlighter {
 
     /**
-     * @var CodeEditor
+     * @var RichCodeEditor
      */
     protected $editor;
 
@@ -18,39 +17,15 @@ abstract class AbstractHighlighter {
      */
     protected $_text;
 
-    /**
-     * @var UXKeyEvent
-     */
-    protected $_event;
-
-    public function __construct(CodeEditor $editor) {
+    public function __construct(RichCodeEditor $editor) {
         $this->editor = $editor;
     }
 
-    public function doUpdate(UXKeyEvent $event) {
+    public function doUpdate(UXStyleSpansBuilder $builder) {
         $this->_text = $this->editor->getArea()->text;
-        $this->_event = $event;
 
-        $this->highlight();
+        $this->highlight($builder);
     }
 
-    abstract public function highlight();
-
-    /**
-     * Clear css style from editor
-     */
-    protected function clearStyle() {
-        $this->editor->getArea()->clearStyle(0, str::length($this->editor->getArea()->text));
-    }
-
-    /**
-     * Append fx-css class style
-     *
-     * @param int $form
-     * @param int $to
-     * @param string $class
-     */
-    protected function appendStyleClass(int $form, int $to, string $class) {
-        $this->editor->getArea()->setStyleClass($form, $to, $class);
-    }
+    abstract public function highlight(UXStyleSpansBuilder $builder);
 }

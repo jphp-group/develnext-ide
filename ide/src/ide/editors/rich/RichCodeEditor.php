@@ -3,20 +3,16 @@
 namespace ide\editors\rich;
 
 use ide\editors\rich\highlighters\AbstractHighlighter;
-use ide\Ide;
 use ide\Logger;
-use php\gui\event\UXKeyEvent;
-use php\gui\UXGenericStyledArea;
+use php\gui\UXHighlightClassedTextArea;
 use php\gui\UXStyleClassedTextArea;
+use php\gui\UXStyleSpansBuilder;
 use php\gui\UXVirtualizedScrollPane;
-use php\io\File;
-use php\lib\fs;
-use php\lib\str;
 
-class CodeEditor extends UXVirtualizedScrollPane {
+class RichCodeEditor extends UXVirtualizedScrollPane {
 
     /**
-     * @var UXStyleClassedTextArea
+     * @var UXHighlightClassedTextArea
      */
     protected $codeArea;
 
@@ -26,29 +22,31 @@ class CodeEditor extends UXVirtualizedScrollPane {
     protected $lineNumber;
 
     /**
-     * @var AbstractHighlighter[]
+     * @var AbstractHighlighter
      */
-    private $highlighters;
+    private $highlighter;
 
     /**
-     * CodeEditor constructor.
+     * RichCodeEditor constructor.
      * @throws \Exception
      */
     public function __construct() {
         parent::__construct(
-            $this->codeArea = new UXStyleClassedTextArea());
-
-        $this->codeArea->on("keyUp", function (UXKeyEvent $event) {
-            $this->getArea()->clearStyle(0, str::length($this->getArea()->text));
-
-            foreach ($this->highlighters as $highlighter)
-                $highlighter->doUpdate($event);
-        });
+            $this->codeArea = new UXHighlightClassedTextArea());
 
         $this->codeArea->classes->add("syntax-text-area");
 
+        $this->codeArea->setHighlightCallback(500, function () {
+            $builder = new UXStyleSpansBuilder();
+
+            if ($this->highlighter)
+                $this->highlighter->doUpdate($builder);
+
+            return $builder;
+        });
+
         // TODO: make multi-theme
-        $this->codeArea->stylesheets->add(".theme/editor/default.css");
+        $this->codeArea->stylesheets->add(".theme/editor/dark.css");
     }
 
     /**
@@ -57,11 +55,11 @@ class CodeEditor extends UXVirtualizedScrollPane {
      *
      * @param string $class
      */
-    public function addHighlighter(string $class) {
+    public function setHighlighter(string $class) {
         try {
-            $this->highlighters[$class] = new $class($this);
+            $this->highlighter = new $class($this);
         } catch (\Throwable $exception) {
-            Logger::error("Error adding highlighter, message error: " . $exception->getMessage());
+            Logger::error("Error setting highlighter, message error: " . $exception->getMessage());
         }
     }
 
