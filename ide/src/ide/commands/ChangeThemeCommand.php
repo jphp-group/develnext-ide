@@ -12,6 +12,13 @@ use php\lib\str;
 
 class ChangeThemeCommand extends AbstractCommand {
     /**
+     * Хз почему, но при использовании Ide::get()->getRegisteredCommand(ChangeThemeCommand::class) 
+     * в некоторых случаях возвращается null, поэтому лучше буду обращаться к instance
+     * @var SettingsForm
+     */
+    public static $instance;
+
+    /**
      * Предыдущая используемая тема
      * При добавлении новой темы сначала удаляется старая
      * @var string|null
@@ -43,6 +50,7 @@ class ChangeThemeCommand extends AbstractCommand {
         parent::__construct();
         FormCollection::onAddEvent([$this, 'applyStylesheet']);
         $this->prevTheme = $this->getCurrentTheme();
+        self::$instance = $this;
     }
 
     /**
@@ -74,6 +82,10 @@ class ChangeThemeCommand extends AbstractCommand {
 
     public function getThemes(): array {
         return $this->themes;
+    }
+
+    public function getCategory(){
+        return 'theme';
     }
 
     public function getName(){
