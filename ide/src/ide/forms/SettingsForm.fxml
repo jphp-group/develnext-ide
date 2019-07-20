@@ -37,5 +37,17 @@
       </font>
     </Button>
     <Data cursor="DEFAULT" enabled="1" id="data-saveButton" visible="1"/>
+    <LabelEx AnchorPane.leftAnchor="8" AnchorPane.rightAnchor="8" AnchorPane.topAnchor="152" alignment="CENTER_LEFT" autoSize="false" contentDisplay="LEFT" ellipsisString="..." focusTraversable="false" graphicTextGap="4" id="themeLabel" layoutX="8" layoutY="152" prefHeight="17" prefWidth="624" styleClass="label " text="settings.theme.title" textAlignment="LEFT" underline="false" wrapText="false">
+      <font>
+        <Font name="System Bold" size="14"/>
+      </font>
+    </LabelEx>
+    <Data cursor="DEFAULT" enabled="1" id="data-themeLabel" visible="1"/>
+    <ComboBox AnchorPane.leftAnchor="8" AnchorPane.rightAnchor="8" AnchorPane.topAnchor="176" editable="false" focusTraversable="true" id="themeCombo" layoutX="8" layoutY="176" prefHeight="25" prefWidth="304" promptText="" styleClass="combo-box-base combo-box " value="" visibleRowCount="10">
+      <items xmlns:fx="http://javafx.com/fxml">
+        <FXCollections fx:factory="observableArrayList"/>
+      </items>
+    </ComboBox>
+    <Data cursor="DEFAULT" enabled="1" id="data-themeCombo" visible="1"/>
   </children>
 </AnchorPane>
