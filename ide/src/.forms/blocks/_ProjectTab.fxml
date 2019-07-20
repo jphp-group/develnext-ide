@@ -19,7 +19,7 @@
                   </Button>
                   <VBox>
                      <children>
-                        <Label text="project.name::Имя проекта" textFill="#a8a8a8" />
+                        <Label text="project.name::Имя проекта"/>
                         <Label id="projectNameLabel" text="Project Name">
                            <font>
                               <Font name="System Bold" size="16.0" />
@@ -39,7 +39,7 @@
                         <Insets left="5.0" right="5.0" />
                      </padding>
                   </Button>
-                  <Label id="projectDirLabel" prefHeight="26.0" text="ProjectRootDirectory" textFill="#686868" />
+                  <Label id="projectDirLabel" prefHeight="26.0" text="ProjectRootDirectory" />
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" />

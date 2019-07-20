@@ -15,13 +15,14 @@
     -fx-focus-color: #2788d3;
     -fx-faint-focus-color: #039ED322;
 
-    -fx-body-color: linear-gradient(to bottom,
+    -fx-body-color: #ececec;
+    /*-fx-body-color: linear-gradient(to bottom,
                         ladder(
                                 -fx-color,
                                 derive(-fx-color,8%) 85%,
                                 derive(-fx-color,10%) 90%
                         ),
-                        derive(-fx-color,-3%));
+                        derive(-fx-color,-3%));*/
 }
 
 .combo-box > .list-cell:hover {
@@ -43,4 +44,11 @@
 .nav .nav-hint-total {
     -fx-text-fill: gray;
     -fx-font-weight: bold;
+}
+
+/**
+ * Вкладка проект - фрейм "синхронизация с develnext"
+ */
+#syncPane, #need-auth-pane, #need-auth-pane > * {
+    -fx-background-color: white;
 }
