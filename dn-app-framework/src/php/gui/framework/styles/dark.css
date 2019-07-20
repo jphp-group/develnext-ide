@@ -1,13 +1,12 @@
 .root {
-    /***************************************************************************
-     *                                                                         *
-     * The main color palette from which the rest of the colors are derived.   *
-     *                                                                         *
-     **************************************************************************/
+    /* Основной цвет элементов */
+    -fx-base: #262626;
 
--fx-base: #2b2b2b;
-    -fx-background: derive(-fx-base, 6%);
+    /* Цвет фона будет немного светлее */
+    -fx-background: #1A1A1A;
+    
     -fx-background-color: -fx-background;
+
     -fx-hover: derive(-fx-base, 12%);
     -fx-focus-color: -fx-base;
     -fx-faint-focus-color: -fx-base;
@@ -21,7 +20,7 @@
     -fx-blue: #38b5ed;
     -fx-red: #e2574c;
     -fx-yellow: #f9a300;
-    -fx-font-color: derive(-fx-base, 90%);
+    -fx-font-color: #dedede;
     -fx-lighting-yellow: #44413c;
     -fx-lighting-green: #3f443c;
     -fx-lighting-blue: #3c3f44;
@@ -41,154 +40,55 @@
     /* Цвет border у компонентов управления*/
     -fx-outer-border: derive(-fx-color, 3%);
     
-    /* Цвет внутреннего border у компонентов*/
+    /* Цвет внутреннего border у компонентов */
     -fx-inner-border: derive(-fx-base, 15%);
     
-    /* Цвет внутреннего border у компонентов*/
+    /* Цвет внутреннего border у компонентов */
     -fx-selection-bar: -fx-hover;
     -fx-selection-bar-non-focused: -fx-hover;
     -fx-selection-bar-text: -fx-accent;
-    
-    
-    /* Текстовые параметры*/
-    -fx-font-family: 'Roboto', sans-serif;
-    -fx-font-size: 0.938em;
-    -fx-font-weight: 400;
 }
 
-/*******************************************************************************
- *                                                                             *
- * Hyperlink                                                                   *
- *                                                                             *
- ******************************************************************************/
-
-.hyperlink {
-    -fx-padding: 0; /*0.166667em 0.25em 0.166667em 0.25em;*/ /* 2 3 2 3 */
-    -fx-content-display: LEFT;
-    -fx-border-color: transparent;
-    -fx-border-width: 0px;
-}
-.hyperlink,
-.hyperlink:hover,
-.hyperlink:hover:visited {
-    -fx-text-fill: -fx-default-button;
-}
-.hyperlink:armed,
-.hyperlink:visited,
-.hyperlink:hover:armed {
-    -fx-text-fill: -fx-default-button;
-}
-.hyperlink:hover,
-.hyperlink:hover:visited {
-    -fx-underline: true;
+/* Меню */
+/* Цвет фона у подменю*/
+.menu * {
+    -fx-background-color: -fx-background;
 }
 
-.hyperlink:visited,
-.hyperlink:visited:armed {
-    -fx-underline: false;
-}
-.hyperlink:focused {
-    -fx-border-style: segments(0.166667em, 0.166667em);
-    -fx-border-width: 0px;
-}
-.hyperlink:show-mnemonics > .mnemonic-underline {
-    -fx-stroke: -fx-text-fill;
+/* У текста в меню фон прозрачный */
+.menu .label {
+    -fx-background-color: transparent;
 }
 
-.flat-button {
-    -fx-cursor: hand;
+/* Наведение на пункт меню */
+.menu:hover * {
+    -fx-background-color: -fx-base;
 }
 
-.tooltip {
-    -fx-font-size: 1em;
+.label {
+    -fx-text-fill: -fx-font-color;
 }
 
-.combo-box > .list-cell:hover {
-    -fx-background-insets: 1 -3 1 1, 1 -2 1 1 ;
-    -fx-background-color: gray;
+/* Цвет у кнопки "вход в аккаунт" */
+.button.flat-button {
+    /*-fx-text-fill*/
+    -fx-text-fill: -fx-font-color;
+    -fx-background-color: -fx-background;
 }
 
-.without-focus, .without-focus:focused {
-    -fx-focus-color: transparent;
+/* Панель табов - неактивный таб */
+.tab-pane .tab {
+    -fx-background-color: -fx-background;
 }
 
-.scroll-pane.without-focus {
-    -fx-background-insets: 0;
-    -fx-padding: 0;
+/* Панель табов - активный таб */
+.tab-pane .tab:selected {
+    -fx-background-color: -fx-base;
 }
 
-.scroll-pane.without-focus:focused {
-    -fx-background-insets: 0;
-}
-
-.scroll-pane.without-focus .corner {
-    -fx-background-insets: 0;
-}
-
-.nav {
-   /* -fx-hgap: 5;     */
-}
-
-.nav .nav-item {
-    -fx-padding: 5px 10px;
-}
-
-.nav .nav-item.selected {
-    -fx-font-weight: bold;
-    -fx-background-color: white;
-    -fx-border-color: silver;
-    -fx-border-radius: 3px;
-}
-
-.nav .nav-hint-text {
-    -fx-text-fill: gray;
-    -fx-padding:  0 0 0 10;
-}
-
-.nav .nav-hint-total {
-    -fx-text-fill: gray;
-    -fx-font-weight: bold;
-}
-
-.button, .combo-box-base, .list-view, .text-area, .text-field, .tab-header-area, .tab-pane, .tab-header-background {
-    -fx-background-radius: 2px;
-}
-
-.list-view {
-    -fx-background-radius: 0px;
-}
-
-.scroll-pane {
-    -fx-background-color: -fx-control-inner-background;
-    -fx-background-insets: 0;
-    -fx-padding: 0;
-}
-
-.scroll-pane:focused {
-    -fx-background-color: -fx-control-inner-background;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-}
-
-.split-pane:focused,
-.list-view:focused,
-.tree-view:focused,
-.table-view:focused,
-.tree-table-view:focused,
-.html-editor:contains-focus {
-    -fx-background-color: -fx-box-border, -fx-box-border, -fx-control-inner-background;
-    -fx-background-insets: 0, 0, 1;
-    -fx-background-radius: 0, 0, 0;
-}
-
-.text-area > .scroll-pane {
-    -fx-background-color: -fx-box-border, -fx-control-inner-background;
-    -fx-background-insets: 0, 1;
-    -fx-padding: 1;
-}
-
-.text-area:focused > .scroll-pane {
-    -fx-background-insets: -1.4, -0.3, 1;
-    -fx-background-radius: 2, 0, 0;
-    -fx-background-color: -fx-faint-focus-color, -fx-focus-color, -fx-background;
+/**
+ * Вкладка проект - фрейм "синхронизация с develnext"
+ */
+#syncPane, #need-auth-pane, #need-auth-pane > * {
+    -fx-background-color: -fx-background;
 }
