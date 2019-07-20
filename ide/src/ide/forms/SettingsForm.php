@@ -28,18 +28,12 @@ use php\lib\str;
 class SettingsForm extends AbstractIdeForm
 {	
     /**
-     * @var ChangeThemeCommand
-     */
-    protected $themeCommand;
-
-    /**
      * @event show
      */
     public function doShow()
     {
         Logger::info("Show settings form ...");
 
-        $this->themeCommand = Ide::get()->getRegisteredCommand(ChangeThemeCommand::class);
         $this->loadConfigs();
 
     	$this->langCombo->onButtonRender([$this, 'uiLanguageRender']); // Отрисовка выбранного элемента
@@ -80,8 +74,8 @@ class SettingsForm extends AbstractIdeForm
     	}
 
         // Загрузка тем
-        $themes = $this->themeCommand->getThemes();
-        $currentTheme = $this->themeCommand->getCurrentTheme();
+        $themes = $this->getThemeCommand()->getThemes();
+        $currentTheme = $this->getThemeCommand()->getCurrentTheme();
         $this->themeCombo->items->clear();
         $this->themeCombo->items->addAll($themes);
         $this->themeCombo->selectedIndex = array_search($currentTheme, $themes);
@@ -129,8 +123,8 @@ class SettingsForm extends AbstractIdeForm
 
         $theme = $this->themeCombo->selected;
         $themeIndex = $this->themeCombo->selectedIndex;
-        $this->themeCommand->setCurrentTheme($theme);
-        $this->themeCommand->onExecute();
+        $this->getThemeCommand()->setCurrentTheme($theme);
+        $this->getThemeCommand()->onExecute();
 
         // Параметры языка
         $langCode = $this->langCombo->selected;
@@ -139,11 +133,11 @@ class SettingsForm extends AbstractIdeForm
             Ide::get()->getLocalizer()->language = $langCode;
         }
 
-        //});
-
-        /*waitAsync(1000, function(){
-            $this->hide();
-        });*/
         $this->loadConfigs();
+    }
+
+    protected function getThemeCommand(): ChangeThemeCommand {
+        return ChangeThemeCommand::$instance;
+        //return Ide::get()->getRegisteredCommand(ChangeThemeCommand::class);
     }
 }
