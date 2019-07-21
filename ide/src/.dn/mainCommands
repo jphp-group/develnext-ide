@@ -9,6 +9,7 @@ ide\commands\LaunchNewIDECommand
 ide\commands\ExitCommand
 
 ide\commands\RunTaskCommand
+ide\commands\PtyCommand
 
 ide\commands\IdeLogShowCommand
 ide\commands\IdeSandboxShowCommand
