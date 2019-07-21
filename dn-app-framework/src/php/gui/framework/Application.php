@@ -2,6 +2,7 @@
 namespace php\gui\framework;
 
 use Exception;
+use ide\Ide;
 use php\framework\Logger;
 use php\gui\UXApplication;
 use php\gui\UXForm;
@@ -611,16 +612,9 @@ class Application
 
     public function launch(callable $handler = null, callable $after = null)
     {
-        $mainFormClass = $this->mainFormClass;
-        $splashFormClass = $this->splashFormClass;
-        $showMainForm  = $this->config->getBoolean('app.showMainForm') && $mainFormClass;
-
-        /*if (!class_exists($mainFormClass)) {    TODO Remove it
-            throw new Exception("Unable to start the application without the main form class or the class '$mainFormClass' not found");
-        }*/
-
-        $onStart = function () use ($mainFormClass, $splashFormClass, $showMainForm, $handler, $after) {
+        UXApplication::launch(function () use ($handler, $after) {
             static::$instance = $this;
+            $showMainForm = $this->config->getBoolean('app.showMainForm') && $this->mainFormClass;
 
             if ($handler) {
                 $handler();
@@ -636,10 +630,28 @@ class Application
 
             $this->launched = true;
 
-            $startMain = function () use ($mainFormClass, $showMainForm, $after) {
-                $this->mainForm = $mainFormClass ? $this->getForm($mainFormClass) : null;
+            // Если установлен сплеш, показываем его
+            if (Ide::get()->getUserConfigValue('ide.splash', 1) && $this->splashFormClass) {
+                $this->splash = $this->getForm($this->splashFormClass);
 
+                if ($this->splash) {
+                    Logger::info("Show splash screen ($this->splashFormClass)");
+                    //$this->splash->alwaysOnTop = true; // Напрягает, когда заставка висит впереди окон других программ
+                    $this->splash->show();
+                }
+            }
+
+            // Задержка незначительная, но даёт время прогрузиться сплешу, и он нормально отображается, а не мелькает
+            waitAsync(100, function() use ($showMainForm, $after){
+                // Показываем форму среды
+                $this->mainForm = $this->mainFormClass ? $this->getForm($this->mainFormClass) : null;
                 if ($showMainForm && $this->mainForm) {
+
+                    // Если есть сплеш, форма будет прозрачной (чтоб не мерцала) и свернутой
+                    if($this->splashFormClass && $this->splash){
+                        $this->mainForm->opacity = 0;
+                        $this->mainForm->iconified = true;
+                    }
                     $this->mainForm->show();
                 }
 
@@ -653,41 +665,19 @@ class Application
 
                 Logger::debug("Application start is done.");
 
-                if ($oldSplash = UXApplication::getSplash()) {
-                    if ($this->getConfig()->getBoolean('app.fx.splash.autoHide')) {
-                        $oldSplash->hide();
+                if($this->splashFormClass && $this->splash) {
+                    // Если был показан сплеш, возвращаем непрозрачность, разворачиваем окно, убираем спдеш
+                    $this->mainForm->opacity = 1;
+                    $this->mainForm->iconified = false;
+                    $this->mainForm->toFront();
+                    if($this->getConfig()->getBoolean('app.fx.splash.autoHide')){
+                        $this->splash->hide();
                     }
                 }
-            };
+            });
+        });
 
-            if ($splashFormClass) {
-                $this->splash = $this->getForm($splashFormClass);
-
-                if ($this->splash) {
-                    Logger::info("Show splash screen ($splashFormClass)");
-
-                    /** @var AbstractForm $form */
-                    $form = $this->splash;
-                    $form->alwaysOnTop = true;
-
-                    $form->show();
-                    $form->toFront();
-
-                    if ($oldSplash = UXApplication::getSplash()) {
-                        $oldSplash->hide();
-                    }
-
-                    uiLater(function () use ($form, $startMain) {
-                        waitAsync(1000, $startMain);
-                    });
-                    return;
-                }
-            }
-
-            $startMain();
-        };
-
-        UXApplication::launch($onStart);
+        
     }
 
     /**
