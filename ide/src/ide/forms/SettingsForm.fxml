@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?import javafx.scene.*?><?import javafx.collections.*?><?import javafx.scene.layout.*?><?import javafx.scene.control.*?><?import javafx.scene.text.*?><?import javafx.scene.image.*?><?import javafx.scene.shape.*?><?import javafx.scene.paint.*?><?import javafx.scene.web.*?><?import javafx.geometry.*?><?import java.lang.*?><?import org.develnext.jphp.ext.javafx.classes.data.*?><?import org.develnext.jphp.ext.javafx.support.*?><?import org.develnext.jphp.ext.javafx.support.control.*?><?import org.develnext.jphp.ext.game.support.*?><AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" focusTraversable="false" id="" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="328" prefWidth="408" styleClass="">
+  <children>
+    <CheckBox AnchorPane.leftAnchor="8" AnchorPane.rightAnchor="8" AnchorPane.topAnchor="32" alignment="CENTER_LEFT" contentDisplay="LEFT" ellipsisString="..." focusTraversable="true" graphicTextGap="4" id="splashShowCheck" layoutX="8" layoutY="32" prefHeight="24" prefWidth="624" styleClass="check-box " text="settings.splash.show" textAlignment="LEFT" underline="false" wrapText="false">
+      <font>
+        <Font name="System Regular" size="12"/>
+      </font>
+    </CheckBox>
+    <Data cursor="DEFAULT" enabled="1" id="data-splashShowCheck" visible="1"/>
+    <LabelEx AnchorPane.leftAnchor="8" AnchorPane.rightAnchor="8" AnchorPane.topAnchor="8" alignment="CENTER_LEFT" autoSize="false" contentDisplay="LEFT" ellipsisString="..." focusTraversable="false" graphicTextGap="4" id="splashLabel" layoutX="8" layoutY="8" prefHeight="17" prefWidth="624" styleClass="label " text="settings.splash.title" textAlignment="LEFT" underline="false" wrapText="false">
+      <font>
+        <Font name="System Bold" size="14"/>
+      </font>
+    </LabelEx>
+    <Data cursor="DEFAULT" enabled="1" id="data-splashLabel" visible="1"/>
+    <LabelEx AnchorPane.leftAnchor="8" AnchorPane.rightAnchor="8" AnchorPane.topAnchor="72" alignment="CENTER_LEFT" autoSize="false" contentDisplay="LEFT" ellipsisString="..." focusTraversable="false" graphicTextGap="4" id="langLabel" layoutX="8" layoutY="72" prefHeight="17" prefWidth="624" styleClass="label " text="settings.language.title" textAlignment="LEFT" underline="false" wrapText="false">
+      <font>
+        <Font name="System Bold" size="14"/>
+      </font>
+    </LabelEx>
+    <Data cursor="DEFAULT" enabled="1" id="data-langLabel" visible="1"/>
+    <ComboBox AnchorPane.leftAnchor="8" AnchorPane.rightAnchor="8" AnchorPane.topAnchor="96" editable="false" focusTraversable="true" id="langCombo" layoutX="8" layoutY="96" prefHeight="25" prefWidth="304" promptText="" styleClass="combo-box-base combo-box " value="" visibleRowCount="10">
+      <items xmlns:fx="http://javafx.com/fxml">
+        <FXCollections fx:factory="observableArrayList"/>
+      </items>
+    </ComboBox>
+    <Data cursor="DEFAULT" enabled="1" id="data-langCombo" visible="1"/>
+    <LabelEx AnchorPane.bottomAnchor="7" AnchorPane.leftAnchor="8" AnchorPane.rightAnchor="144" alignment="BOTTOM_LEFT" autoSize="false" contentDisplay="LEFT" ellipsisString="..." focusTraversable="false" graphicTextGap="4" id="versionLabel" layoutX="8" layoutY="297" prefHeight="24" prefWidth="256" styleClass="label " text="DevelNext" textAlignment="LEFT" underline="false" wrapText="false">
+      <font>
+        <Font name="System Regular" size="10"/>
+      </font>
+    </LabelEx>
+    <Data cursor="DEFAULT" enabled="1" id="data-versionLabel" visible="1"/>
+    <Button AnchorPane.bottomAnchor="7" AnchorPane.rightAnchor="8" alignment="CENTER" contentDisplay="LEFT" ellipsisString="..." focusTraversable="true" graphicTextGap="4" id="saveButton" layoutX="264" layoutY="296" prefHeight="25" prefWidth="136" styleClass="button icon-save " text="command.save" textAlignment="CENTER" underline="false" wrapText="false">
+      <font>
+        <Font name="System Regular" size="12"/>
+      </font>
+    </Button>
+    <Data cursor="DEFAULT" enabled="1" id="data-saveButton" visible="1"/>
+  </children>
+</AnchorPane>
