@@ -34,6 +34,7 @@ deps:
   jphp-gui-jfx-win: ^11.0.0
   jphp-gui-jfx-linux: ^11.0.0
   jphp-richtextfx-ext: '*'
+  jphp-gui-jediterm-ext: '*'
 app:
   disable-launcher: '1'
   jvm-args:

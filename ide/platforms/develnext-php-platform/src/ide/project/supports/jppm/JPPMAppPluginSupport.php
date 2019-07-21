@@ -71,8 +71,11 @@ class JPPMAppPluginSupport extends AbstractProjectSupport
                     $args = flow(['cmd', '/c'], $args)->toArray();
                 }
 
-                $process = new Process($args, $project->getRootDir(), $env);
-                return $process;
+                return [
+                    "args" => $args,
+                    "dir"  => $project->getRootDir(),
+                    "env"  => $env
+                ];
             },
         ]);
 
@@ -89,8 +92,11 @@ class JPPMAppPluginSupport extends AbstractProjectSupport
                     $args = flow(['cmd', '/c'], $args)->toArray();
                 }
 
-                $process = new Process($args, $project->getRootDir(), $env);
-                return $process;
+                return [
+                    "args" => $args,
+                    "dir"  => $project->getRootDir(),
+                    "env"  => $env
+                ];
             },
         ]);
     }
