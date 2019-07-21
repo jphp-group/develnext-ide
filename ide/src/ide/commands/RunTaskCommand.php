@@ -22,6 +22,7 @@ use php\gui\UXLabel;
 use php\gui\UXListCell;
 use php\gui\UXMenuItem;
 use php\gui\UXSplitMenuButton;
+use php\intellij\pty\PtyProcess;
 use php\lang\Process;
 use const PHP_INT_MAX;
 use function pre;
@@ -121,19 +122,14 @@ class RunTaskCommand extends AbstractCommand
                             $this->taskSelect->enabled = false;
 
                             $startProcess = function () use ($item, $dialog, $stopFunc) {
-                                /** @var Process $process */
-                                $process = $item['makeStartProcess']();
-                                $process = $process->start();
+                                /** @var PtyProcess $process */
+                                $processInfo = $item['makeStartProcess']();
+
+                                $process = PtyProcess::exec($processInfo["args"], $processInfo["env"], $processInfo["dir"]);
 
                                 $dialog->watchProcess($process);
                                 $dialog->setStopProcedure(function () use ($stopFunc, $process) {
-                                    $handle = new ProcessHandle($process);
-
-                                    if ($parent = $handle->parent()) {
-                                        $parent->destroy();
-                                    }
-
-                                    $handle->destroy();
+                                    $process->destroy();
 
                                     $this->taskSelect->enabled = true;
                                     $this->stopButton->enabled = false;
@@ -145,20 +141,8 @@ class RunTaskCommand extends AbstractCommand
                                 });
 
                                 $this->stopButton->on('action', function () use ($stopFunc, $process, $dialog) {
-                                    $handle = new ProcessHandle($process);
                                     $dialog->setIgnoreExit1(true);
-
-                                    if ($descendants = $handle->descendants()) {
-                                        foreach ($descendants as $proc) {
-                                            if (!$proc->destroy()) {
-                                                $proc->destroyForcibly();
-                                            }
-                                        }
-                                    }
-
-                                    if (!$handle->destroy()) {
-                                        $handle->destroyForcibly();
-                                    }
+                                    $process->destroy();
 
                                     $this->stopButton->enabled = false;
                                 });
