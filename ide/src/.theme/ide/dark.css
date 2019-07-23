@@ -92,3 +92,26 @@
 #syncPane, #need-auth-pane, #need-auth-pane > * {
     -fx-background-color: -fx-background;
 }
+
+/**
+ * Визуальный конструктор элементов
+ */
+#designer-layout {
+    -fx-border-color: -fx-outer-border;
+    -fx-background-color: -fx-background;
+}
+
+/**
+ * Preloader
+ */
+#x-preloader {
+    -fx-background-color: -fx-background;
+}
+
+/**
+ * Мозаичный фон при редактировании форм
+ */
+.scroll-pane.dn-mosaic-background > .viewport {
+    -fx-background-image: url("/.data/img/transparent-dark.png");
+    -fx-background-repeat: repeat;
+}
