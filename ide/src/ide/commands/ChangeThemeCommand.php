@@ -39,7 +39,7 @@ class ChangeThemeCommand extends AbstractCommand {
      * По дефолту берётся первая тема из этого массива
      * @var string[]
      */
-    protected $themes = ['light', 'dark'];
+    protected $themes = [];
 
     /**
      * Путь к css файлам с темами
@@ -50,6 +50,10 @@ class ChangeThemeCommand extends AbstractCommand {
 
     public function __construct() {
         parent::__construct();
+
+        $this->registerTheme('light');
+        $this->registerTheme('dark');
+
         FormCollection::onAddEvent([$this, 'applyStylesheet']);
         $this->prevTheme = $this->getCurrentTheme();
         self::$instance = $this;
@@ -88,14 +92,18 @@ class ChangeThemeCommand extends AbstractCommand {
         $this->themes = $themes;
     }
 
-    public function registerTheme($themeName): bool {
-        try { 
-            ResourceStream::of($this->themePath . $themeName . '.css');
+    /**
+     * Добавить тему для IDE
+     * @param  string $themeName Имя темы, без пути и безс расширения
+     * Файл с темой будет искаться по пути $this->themePath / имя-темы .css
+     */
+    public function registerTheme(string $themeName): bool {
+        if(ResourceStream::exists('res:/' . $this->themePath . $themeName . '.css')){
             $this->themes[] = $themeName;
             return true;
-        } catch (IOException $e){
-            return false;
         }
+
+        return false;
     }
 
     public function getThemes(): array {

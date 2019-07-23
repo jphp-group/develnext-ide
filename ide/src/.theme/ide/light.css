@@ -12,9 +12,11 @@
     -fx-accent: #c5c5c5;
     -fx-default-button: #1c67b1;
 
+
     -fx-focus-color: #2788d3;
     -fx-faint-focus-color: #039ED322;
 
+    -fx-background: white;
     -fx-body-color: #ececec;
     /*-fx-body-color: linear-gradient(to bottom,
                         ladder(
@@ -23,6 +25,13 @@
                                 derive(-fx-color,10%) 90%
                         ),
                         derive(-fx-color,-3%));*/
+}
+
+/**
+ * Цвет у панелей со списком форм, модулей, проектов
+ */
+.flow-list-view{
+    -fx-background-color: white;
 }
 
 .combo-box > .list-cell:hover {
@@ -92,6 +101,18 @@
     -fx-background-color: white;
 }
 
+
+/* Цвет у кнопки "вход в аккаунт" */
+.flat-button { -fx-background-color: #f1f1f1; }
+.flat-button:hover { -fx-background-color: #e6e6e6; }
+
+/**
+ * Активный там у MainForm
+ */
+.dn-file-tab-pane > .tab-header-area > .headers-region > .tab:selected > .tab-container > .tab-label {
+    -fx-text-fill: #16467b;
+}
+
 .dn-list-item { -fx-border-color: silver; -fx-cursor: hand; -fx-background-color: white; }
 .dn-list-item:hover { -fx-border-color: red; }
 
@@ -140,16 +161,18 @@
     -fx-border-color: red;
 }
 
-
 .tab-pane.dn-style .tab-content-area {
     -fx-border-color: silver;
 }
 
 
+/**
+ * Справка
+ */
+
 .dn-web {
     -fx-background-color: white;
 }
-
 
 .doc-entry {
     -fx-background-color: #fafafa;
@@ -166,7 +189,9 @@
     -fx-background-color: #1c67b1;
 }
 
-
+/**
+ * Табы в MainForm
+ */
 .dn-file-tab-pane > .tab-header-area > .headers-region > .tab:selected {
     -fx-background-color: -fx-outer-border, -fx-inner-border, white;
     -fx-background-insets: 0 1 1 0, 1 2 0 1, 2 3 0 2;
