@@ -25,8 +25,7 @@ class IdPropertyEditor extends TextPropertyEditor
 
         $this->textField->editable = false;
         $this->textField->paddingRight = 5;
-        $this->textField->style = '-fx-background-color: silver; -fx-border-width: 0; -fx-border-radius: 0;
-                                    -fx-font-style: italic; -fx-font-weight: bold;';
+        $this->textField->classes->add('property-editor');
 
         $this->textField->on('click', function (UXMouseEvent $e) {
             if ($e->clickCount >= 2) {

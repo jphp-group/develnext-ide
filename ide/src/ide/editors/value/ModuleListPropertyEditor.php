@@ -18,8 +18,7 @@ class ModuleListPropertyEditor extends TextPropertyEditor
         $result = parent::makeUi();
 
         $this->editorForm = new ModuleListEditorForm();
-
-        $this->textField->style = '-fx-background-color: #fffe85; -fx-cursor: hand;';
+        $this->textField->classes->add('modules-editor');
         $this->textField->promptText = 'редактировать';
         $this->textField->editable = false;
         $this->textField->on('click', function () {

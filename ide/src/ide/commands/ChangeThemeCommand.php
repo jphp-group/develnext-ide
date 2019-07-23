@@ -8,6 +8,8 @@ use php\framework\Logger;
 use php\gui\UXDesktop;
 use php\gui\framework\AbstractForm;
 use php\gui\framework\FormCollection;
+use php\io\IOException;
+use php\io\ResourceStream;
 use php\lib\str;
 
 class ChangeThemeCommand extends AbstractCommand {
@@ -44,7 +46,7 @@ class ChangeThemeCommand extends AbstractCommand {
      * Начинается с директории /dn-app-framework/src/
      * @var string
      */
-    protected $themePath = '/php/gui/framework/styles/';
+    protected $themePath = '/.theme/ide/';
 
     public function __construct() {
         parent::__construct();
@@ -78,6 +80,22 @@ class ChangeThemeCommand extends AbstractCommand {
         $this->currentTheme = $theme;
 
         Logger::info('Set IDE theme: ' . $theme);
+    }
+
+    public function unregisterTheme($themeName){
+        $themes = array_flip($this->themes);
+        unset($themes[$themeName]);
+        $this->themes = $themes;
+    }
+
+    public function registerTheme($themeName): bool {
+        try { 
+            ResourceStream::of($this->themePath . $themeName . '.css');
+            $this->themes[] = $themeName;
+            return true;
+        } catch (IOException $e){
+            return false;
+        }
     }
 
     public function getThemes(): array {

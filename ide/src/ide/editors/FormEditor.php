@@ -1856,8 +1856,7 @@ class FormEditor extends AbstractModuleEditor
 
             UXAnchorPane::setAnchor($this->layout, 0);
         } else {
-            $this->layout->style = '-fx-border-width: 0px; -fx-border-style: none; -fx-border-color: silver;';
-            $this->layout->backgroundColor = '#F7F7F7';
+            $this->layout->id = 'designer-layout';
 
             uiLater(function () use ($area, $viewer) {
                 $area->minWidth = $viewer->viewportBounds['width'];

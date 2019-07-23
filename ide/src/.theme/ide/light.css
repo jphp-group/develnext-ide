@@ -1,0 +1,208 @@
+.root {
+    /***************************************************************************
+     *                                                                         *
+     * The main color palette from which the rest of the colors are derived.   *
+     *                                                                         *
+     **************************************************************************/
+
+    /* A light grey that is the base color for objects.  Instead of using
+     * -fx-base directly, the sections in this file will typically use -fx-color.
+     */
+    /*-fx-base: #ececec;*/
+    -fx-accent: #c5c5c5;
+    -fx-default-button: #1c67b1;
+
+    -fx-focus-color: #2788d3;
+    -fx-faint-focus-color: #039ED322;
+
+    -fx-body-color: #ececec;
+    /*-fx-body-color: linear-gradient(to bottom,
+                        ladder(
+                                -fx-color,
+                                derive(-fx-color,8%) 85%,
+                                derive(-fx-color,10%) 90%
+                        ),
+                        derive(-fx-color,-3%));*/
+}
+
+.combo-box > .list-cell:hover {
+    -fx-background-color: gray;
+}
+
+.nav .nav-item.selected {
+    -fx-font-weight: bold;
+    -fx-background-color: white;
+    -fx-border-color: silver;
+    -fx-border-radius: 3px;
+}
+
+.nav .nav-hint-text {
+    -fx-text-fill: gray;
+    -fx-padding:  0 0 0 10;
+}
+
+.nav .nav-hint-total {
+    -fx-text-fill: gray;
+    -fx-font-weight: bold;
+}
+
+/**
+ * Вкладка проект - фрейм "синхронизация с develnext"
+ */
+#syncPane, #need-auth-pane, #need-auth-pane > * {
+    -fx-background-color: white;
+}
+
+/**
+ * Визуальный конструктор элементов
+ */
+#designer-layout {
+    -fx-border-color: silver;
+    -fx-background-color: #F7F7F7;
+}
+
+/**
+ * Списки
+ */
+.list-view .list-cell:filled:selected:focused, .list-view .list-cell:filled:selected {
+    -fx-background-color: silver;
+}
+
+.list-view.dn-simple-list:filled:selected:focused, .list-view.dn-simple-list .list-cell:filled:selected {
+    -fx-background-color: white;
+}
+
+.list-view.dn-simple-list .list-cell:odd {
+    -fx-cell-hover-color: white;
+    -fx-background-color: white;
+}
+
+/**
+ * ПКМ меню
+ */
+.context-menu {
+    -fx-background-color: #f6f6f6;
+    -fx-border-color: silver;
+}
+
+/**
+ * Preloader
+ */
+#x-preloader {
+    -fx-background-color: white;
+}
+
+.dn-list-item { -fx-border-color: silver; -fx-cursor: hand; -fx-background-color: white; }
+.dn-list-item:hover { -fx-border-color: red; }
+
+.dn-list-menu-description { -fx-text-fill: gray; }
+
+.dn-list-menu-count { -fx-background-color: gray; -fx-text-fill: white; }
+
+.flow-list-view { -fx-background-color: white;   -fx-border-color: silver; }
+.flow-list-view .list-cell.selected { -fx-background-color: #dcdcdc; }
+
+.flow-list-view .list-cell.hovered { -fx-border-color: gray; }
+
+.flow-list-view .list-cell.dragged { -fx-border-color: red;  }
+
+.dn-list-hint { -fx-text-fill: silver; }
+
+.dn-simple-toggle-button:hover { -fx-background-color: #cce6fe; -fx-border-color: #5a71a7; }
+.dn-simple-toggle-button:selected { -fx-background-color: silver; -fx-border-color: gray; }
+
+.dn-simple-toggle-button, .dn-simple-button { -fx-background-color: white; -fx-border-color: silver; -fx-border-width: 1px; }
+
+
+.dn-autocomplete {
+    -fx-border-color: #dddddd;
+}
+
+.dn-autocomplete-description {
+    -fx-background-color: #feffc5;
+}
+
+.dn-autocomplete-description .description {
+    -fx-text-fill: gray;
+}
+
+
+.dn-tooltip-error {
+    -fx-background-color: #b71c0f;
+    -fx-text-fill: #ffece0;
+}
+
+.dn-autocomplete-description .content .label {
+    -fx-text-fill: gray;
+}
+
+.point-marker {
+    -fx-border-color: red;
+}
+
+
+.tab-pane.dn-style .tab-content-area {
+    -fx-border-color: silver;
+}
+
+
+.dn-web {
+    -fx-background-color: white;
+}
+
+
+.doc-entry {
+    -fx-background-color: #fafafa;
+    -fx-border-color: silver;
+}
+
+
+.doc-entry .description {
+    -fx-text-fill: gray;
+}
+
+.media-view {
+    -fx-border-color: #2b3436;
+    -fx-background-color: #1c67b1;
+}
+
+
+.dn-file-tab-pane > .tab-header-area > .headers-region > .tab:selected {
+    -fx-background-color: -fx-outer-border, -fx-inner-border, white;
+    -fx-background-insets: 0 1 1 0, 1 2 0 1, 2 3 0 2;
+}
+
+.dn-file-tab-pane:top > .tab-header-area > .tab-header-background {
+    -fx-border-color: white, #d6d6d6;
+}
+
+#form-named-block{
+    -fx-border-color: gray; 
+    -fx-background-color: #DCDCDC; 
+}
+
+
+#form-named-block .title{
+    cursor: hand; 
+    -fx-border-radius: 2px; 
+    -fx-background-color: #DCDCDC; 
+    -fx-border-color: silver; 
+    -fx-text-fill: black;
+}
+
+
+.property-editor {
+    -fx-background-color: silver; 
+}
+
+.modules-editor {
+    -fx-background-color: #fffe85;
+}
+
+/**
+ * Мозаичный фон при редактировании форм
+ */
+.scroll-pane.dn-mosaic-background > .viewport {
+    -fx-background-image: url("/.data/img/transparent-2.png");
+    -fx-background-repeat: repeat;
+}
