@@ -172,7 +172,7 @@ class JPPMControlPane extends AbstractProjectControlPane
         $this->parentPane->add($addLabel);
 
         $addPane = new UXPanel;
-        $addPane->backgroundColor = UXColor::of('#fff');
+        $addPane->style = '-fx-background-color: -fx-background';
         $addPane->padding = 10;
         $this->parentPane->add($addPane);  
         
