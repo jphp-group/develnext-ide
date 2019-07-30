@@ -221,7 +221,7 @@
 }
 
 .modules-editor {
-    -fx-background-color: #fffe85;
+    -fx-control-inner-background: #fffe85;
 }
 
 /**
