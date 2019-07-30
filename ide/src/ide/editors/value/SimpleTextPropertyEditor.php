@@ -34,7 +34,6 @@ class SimpleTextPropertyEditor extends ElementPropertyEditor
     public function makeUi()
     {
         $this->textField = $this->textField ?: new UXTextField();
-
         $this->textField->padding = 2;
         $this->textField->maxWidth = 9999;
         UXHBox::setHgrow($this->textField, 'ALWAYS');
