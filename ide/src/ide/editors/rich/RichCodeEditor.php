@@ -46,7 +46,7 @@ class RichCodeEditor extends UXVirtualizedScrollPane {
         });
 
         // TODO: make multi-theme
-        $this->codeArea->stylesheets->add(".theme/editor/dark.css");
+        $this->codeArea->stylesheets->add(".theme/editor/default.css");
     }
 
     /**

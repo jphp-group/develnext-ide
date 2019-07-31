@@ -23,7 +23,7 @@ abstract class AbstractHighlighter {
 
     public function doUpdate(UXStyleSpansBuilder $builder) {
         $this->_text = $this->editor->getArea()->text;
-
+        $builder->add([], 0);
         $this->highlight($builder);
     }
 

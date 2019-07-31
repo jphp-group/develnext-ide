@@ -28,6 +28,11 @@
     -fx-font-style: italic;
 }
 
+.syntax-text-area .text.magic-function {
+    -fx-fill: #701e81;
+    -fx-font-style: italic;
+}
+
 .syntax-text-area .text.keyword {
     -fx-fill: #000080;
     -fx-font-weight: medium;
@@ -43,6 +48,10 @@
 
 .syntax-text-area .text.variable {
     -fx-fill: #660000;
+}
+
+.syntax-text-area .text.operator {
+    -fx-fill: #106655;
 }
 
 .syntax-text-area .text.error {
