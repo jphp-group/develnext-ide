@@ -55,19 +55,13 @@ public class Launcher {
         return both.toArray(new String[both.size()]);
     }
 
-    public boolean isJava8FxExists() {
-        try {
-            Class.forName("javafx.application.Platform");
-            Class.forName("javafx.embed.swing.SwingNode");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
+    public boolean isValidJava() {
+        return new Version(System.getProperty("java.version").replace("_", ".")).compareTo(new Version("11.0.0")) == 1;
     }
 
     public void start() throws URISyntaxException, IOException, InterruptedException {
-        if (!isJava8FxExists()) {
-            JOptionPane.showMessageDialog(null, "Oracle/Open Java Runtime 8+ required with JavaFX", "Error", JOptionPane.ERROR_MESSAGE);
+        if (!isValidJava()) {
+            JOptionPane.showMessageDialog(null, "Open Java Runtime 11+ required", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
