@@ -1,7 +1,6 @@
 <?php
 namespace ide;
 
-use framework\localization\Localizer;
 use ide\account\AccountManager;
 use ide\account\ServiceManager;
 use ide\bundle\AbstractBundle;
@@ -263,6 +262,9 @@ class Ide extends Application
                     });
                     return;
                 }
+
+                if (!Ide::get()->getUserConfigValue('ide.splash', 1))
+                    Ide::get()->setSplashFormClass(null);
             },
             function () {
 
