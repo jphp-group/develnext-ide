@@ -108,6 +108,7 @@ class IdePropertiesPane
 
             foreach ($groupPanes as $pane) {
                 $pane = _($pane);
+                $pane->classes->add('property-group');
             }
 
             $this->ui->children->addAll($groupPanes);
