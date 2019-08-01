@@ -36,7 +36,7 @@
             </Label>
          </children>
       </HBox>
-      <HBox id="accountPane" layoutX="14.0" layoutY="14.0" spacing="15.0" style="-fx-background-color: white;">
+      <HBox id="accountPane" layoutX="14.0" layoutY="14.0" spacing="15.0" style="-fx-background-color: -fx-background;">
          <children>
             <AnchorPane id="accountAvatarImage" prefWidth="50.0" />
             <VBox HBox.hgrow="ALWAYS">

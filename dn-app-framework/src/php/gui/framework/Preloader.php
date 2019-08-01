@@ -83,7 +83,6 @@ class Preloader extends UXAnchorPane
         $this->add($indicator);
 
         $this->id = 'x-preloader';
-        $this->style = '-fx-background-color: white';
 
         $pane->add($this);
     }
