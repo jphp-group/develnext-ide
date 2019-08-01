@@ -1,0 +1,196 @@
+.root {
+    /* Основной цвет элементов */
+    -fx-base: #262626;
+
+    /* Цвет фона */
+    -fx-background: #1A1A1A;
+    -fx-background-color: -fx-background;
+
+    /* Цвет текста */
+    -fx-font-color: #dedede;
+    -fx-text-base-color: -fx-font-color;
+
+    /* Цвет наведения на элемент (например в списке)*/
+    -fx-hover: derive(-fx-base, 20%);
+
+    /* Фокусированная вкладка (окантовка) */
+    -fx-focus-color: -fx-base;
+
+    /* Цвет обводки при фокусе на элемент */
+    -fx-faint-focus-color: #263759;
+    
+    /* Фон у внутренних элементов: нечёт, чёт */
+    -fx-control-inner-background: -fx-base;
+    -fx-control-inner-background-alt: derive(-fx-base, 4%);
+
+    /* Цвет фона при нажатии и наведении (на кнопку, таб) */
+    -fx-pressed-base: derive(-fx-background, 18%);
+    -fx-hover-base: derive(-fx-base, 10%);
+    
+    /* Цвет кнопок с действие по-умолчанию: применить, сохранить и т.д.*/
+    -fx-default-button: #555;
+
+    -fx-color: -fx-base;
+    -fx-accent: #38b5ed;
+    -fx-green: #3D747A;
+    -fx-blue: #4EABD3;
+    /*-fx-blue: #7EB6CC;*/
+    -fx-dark-blue: #2C5260;
+    -fx-red: #e2574c;
+    -fx-yellow: #f9a300;
+    -fx-lime: #7F7E43;
+
+    -fx-lighting-yellow: #44413c;
+    -fx-lighting-green: #3f443c;
+    -fx-lighting-blue: #3c3f44;
+    -fx-lighting-err: #443c3c;
+
+    -fx-lighting-acc: -fx-accent;
+    -fx-lighting-hover: derive(-fx-base, 13%);
+    
+    /* Цвет border у табличных элементов*/
+    -fx-box-border: derive(-fx-color, 1%);
+
+    /* Цвет border у текстовых элементов*/
+    -fx-text-box-border: derive(-fx-color, -8%);
+    
+    /* Базовый градиент всех элементов управления*/
+    -fx-body-color: derive(-fx-color, 5%);
+    
+    /* Цвет border у компонентов управления*/
+    -fx-outer-border: derive(-fx-color, 3%);
+    
+    /* Цвет внутреннего border у компонентов */
+    -fx-inner-border: derive(-fx-base, 15%);
+    
+    /* Цвет внутреннего border у компонентов */
+    -fx-selection-bar: -fx-hover;
+    -fx-selection-bar-non-focused: -fx-hover;
+    -fx-selection-bar-text: -fx-accent;
+}
+
+/**
+ * Цвет у панелей со списком форм, модулей, проектов
+ */
+.flow-list-view {
+    -fx-background-color: -fx-background;
+    -fx-border-color: -fx-outer-border; 
+}
+
+.flow-list-view .list-cell.selected { 
+    -fx-background-color: -fx-pressed-base; 
+}
+.flow-list-view .list-cell.hovered { 
+    -fx-border-color: -fx-hover-base; 
+}
+.flow-list-view .list-cell.dragged { 
+    -fx-border-color: -fx-accent;  
+}
+
+/* Меню */
+/* Цвет фона у подменю*/
+.menu * {
+    -fx-background-color: -fx-background;
+}
+
+/* У текста в меню фон прозрачный */
+.menu .label {
+    -fx-background-color: transparent;
+}
+
+/* Наведение на пункт меню */
+.menu:hover * {
+    -fx-background-color: -fx-base;
+}
+
+/* Цвет текстовых элементов */
+.label {
+    -fx-text-fill: -fx-font-color;
+}
+
+/* Цвет у кнопки "вход в аккаунт" */
+.button.flat-button {
+    -fx-text-fill: -fx-font-color;
+    -fx-background-color: -fx-background;
+}
+
+.button.flat-button:hover { 
+    -fx-background-color: -fx-hover; 
+}
+
+/* Панель табов - неактивный таб */
+.tab-pane .tab,
+.dn-file-tab-pane > .tab-header-area > .headers-region > .tab {
+    -fx-background-color: -fx-pressed-base;
+}
+
+/* Активный таб (в т.ч. у MainForm) */
+.tab-pane .tab:selected,
+.dn-file-tab-pane > .tab-header-area > .headers-region > .tab:selected {    
+    -fx-background-color: -fx-base;
+}
+
+.tab-pane .tab:selected > .tab-container *,
+.dn-file-tab-pane > .tab-header-area > .headers-region > .tab:selected > .tab-container > .tab-label {    
+    -fx-text-fill: -fx-blue;
+}
+
+/**
+ * Preloader
+ */
+#x-preloader {
+    -fx-background-color: -fx-background;
+}
+
+/**
+ * Подсказка с ошибкой
+ */
+.dn-tooltip-error {
+    -fx-background-color: -fx-red;
+    -fx-text-fill: -fx-base;
+}
+
+/**
+ * Вкладка проект - фрейм "синхронизация с develnext"
+ */
+#syncPane, #need-auth-pane, #need-auth-pane > * {
+    -fx-background-color: -fx-background;
+}
+
+/**
+ * Визуальный конструктор элементов
+ */
+#designer-layout {
+    -fx-border-color: -fx-outer-border;
+    -fx-background-color: -fx-background;
+}
+
+/**
+ * Фон у визуального редактора форм
+ */
+.scroll-pane.dn-mosaic-background > .viewport {
+    -fx-background-color: -fx-base;
+    -fx-background-image: url("/.data/img/transparent-dark.png");
+    -fx-background-repeat: repeat;
+}
+
+/**
+ * Поле редактировать список модулей у формы
+ */
+.modules-editor {
+    -fx-control-inner-background: -fx-dark-blue;
+}
+
+/**
+ * Кнопка сохранить
+ */
+.button:default {
+    -fx-background-color: -fx-default-button;
+}
+
+/**
+ * Цвет текста в полях у редактора форм
+ */
+.property-group, .property-group * {
+    -fx-text-fill: -fx-font-color;
+}

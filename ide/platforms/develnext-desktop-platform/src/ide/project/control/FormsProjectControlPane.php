@@ -117,15 +117,15 @@ class FormsProjectControlPane extends AbstractEditorsProjectControlPane
         $formListEditor->getUi()->width = 250;
         $this->settingsMainFormCombobox = $formListEditor;
 
-        $label = new UXLabel('ui.form.show.on.start::* отображается при старте программы');
-        $label->textColor = 'silver';
+        $label = _(new UXLabel('ui.form.show.on.start'));
+        $label->opacity = 0.75;
 
-        $box = new UXHBox([$formListEditor->getUi()], 5);
+        $box = new UXHBox([$formListEditor->getUi(), $label], 5);
         $box->alignment = 'CENTER_LEFT';
 
         $ui = new UXVBox([
             _(new UXLabel('{ui.main.form::Главная форма}:')),
-            $box
+            $box,
         ]);
 
         $ui->spacing = 3;

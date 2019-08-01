@@ -37,6 +37,12 @@ class SkinManagerForm extends AbstractIdeForm
 {
     use DialogFormMixin;
 
+    /**
+     * Имя файла у скина, который будет установлен по умолчанию, вместо "без скина"
+     * Точка в начале имени файла, чтоб он отображался в начале списка
+     */
+    const DEFAULT_SKIN = ".Modena";
+
     public function init()
     {
         parent::init();
@@ -117,11 +123,11 @@ class SkinManagerForm extends AbstractIdeForm
                     $cell->graphic = new ListExtendedItem($skin->getName(), str::upperFirst($desc), ico('brush16'));
                 }
 
-            } else {
+            } /*else {
                 $cell->text = null;
                 $cell->graphic = $ui = new ListExtendedItem(_('ui.design.without.skin::(Без скина)'), _('command.remove.skin.from.project::Убрать скин из проекта'), ico('brush16'));
                 $ui->setTitleThin(true);
-            }
+            }*/
         });
 
         $this->timer = new AccurateTimer(100, function () {
@@ -222,7 +228,7 @@ class SkinManagerForm extends AbstractIdeForm
 
     public function updateList()
     {
-        $this->list->items->setAll([null]);
+        $this->list->items->clear(); // В списке не будет пункта "без скина"
         $resources = Ide::get()->getLibrary()->getResources('skins');
 
         foreach ($resources as $resource) {
@@ -238,7 +244,6 @@ class SkinManagerForm extends AbstractIdeForm
     public function doShowing(): void
     {
         $this->timer->start();
-
         $this->updateList();
     }
 }

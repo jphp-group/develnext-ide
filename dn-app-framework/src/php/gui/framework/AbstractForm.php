@@ -104,7 +104,7 @@ abstract class AbstractForm extends UXForm
      * @param bool $loadBehaviours
      */
     public function __construct(UXForm $origin = null, $loadEvents = true, $loadBehaviours = true)
-    {
+    {   
         parent::__construct($origin);
 
         $this->_app = Application::get();
@@ -136,6 +136,7 @@ abstract class AbstractForm extends UXForm
         }
 
         Logger::debug("Form '{$this->getName()}' is created.");
+        FormCollection::addForm($this);
     }
 
     protected static function getResourcePathByClassName()
