@@ -11,9 +11,10 @@ use php\io\File;
 use php\io\FileStream;
 use php\io\IOException;
 use php\io\Stream;
+use php\lang\IllegalStateException;
 use php\lang\System;
-use php\lib\fs;
 use php\lib\Str;
+use php\lib\fs;
 use php\time\Time;
 
 /**
@@ -337,9 +338,12 @@ class FileUtils
                 try {
                     Stream::putContents($filename, $encodeStr);
                     return true;
-                } catch (IOException $e) {
-                    Notifications::errorWriteFile($filename, $e);
-                    Logger::error("Unable to write $filename, {$e->getMessage()}");
+                } catch (IOException | IllegalStateException $e) {
+                    uiLater(function() use ($filename, $e){
+                        Notifications::errorWriteFile($filename, $e);
+                        Logger::error("Unable to write $filename, {$e->getMessage()}");
+                    });
+                    
                     return false;
                 }
             } else {

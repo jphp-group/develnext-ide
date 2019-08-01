@@ -47,12 +47,13 @@ class FormNamedBlock extends UXAnchorPane
         parent::__construct();
 
         $this->maxSize = $this->minSize = $this->size = [32, 32];
-        $this->style = '-fx-border-width: 1px; -fx-border-color: gray; -fx-background-color: #DCDCDC; -fx-border-radius: 3px; cursor: hand;';
+        $this->id = 'form-named-block';
+        $this->style = '';
 
         $label = new UXLabel($title);
+        $label->classes->add('title');
         $label->id = 'title';
         $label->padding = [2, 5];
-        $label->style = '-fx-background-color: #DCDCDC; -fx-border-color: silver; cursor: hand; -fx-border-radius: 2px; -fx-text-fill: black;';
        // $label->mouseTransparent = true;
 
         $this->label = $label;

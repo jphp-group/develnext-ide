@@ -868,12 +868,15 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
 
     /**
      * Удалить скин программы.
+     * И установить скин по умолчанию
      */
     public function clearSkin()
     {
         $skinDir = $this->project->getSrcFile('.theme/skin');
         fs::clean($skinDir);
         fs::delete($skinDir);
+
+        $this->applySkin(ProjectSkin::createEmpty());
     }
 
     /**
@@ -923,22 +926,27 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
     }
 
     /**
+     * Возвращает текущий скин проекта или скин по умолчанию
+     * Используется при сборке и запуске проекта, для копировании файлов скина в проект
      * @return ProjectSkin
      */
     public function getCurrentSkin(): ?ProjectSkin
     {
         $skinDir = $this->project->getSrcFile('.theme/skin');
 
-        if (!fs::isDir($skinDir)) return null;
-        if (!fs::isFile("$skinDir/skin.json")) return null;
-        if (!fs::isFile("$skinDir/skin.css")) return null;
+        if (!fs::isDir($skinDir) ||
+            !fs::isFile("$skinDir/skin.json") ||
+            !fs::isFile("$skinDir/skin.css")) {
+            $this->clearSkin(); // Если каких-то файлов темы нет, пусть тема будет очищена
+            return $this->getCurrentSkin();
+        }
 
         try {
             $skin = ProjectSkin::createFromDir($skinDir);
             return $skin;
         } catch (IOException $e) {
             Logger::warn("Unable to read skin information, {$e->getMessage()}");
-            return null;
+            return ProjectSkin::createEmpty();
         }
     }
 

@@ -2,7 +2,10 @@
 
 namespace ide\entity;
 
+use ide\Ide;
 use ide\misc\AbstractEntity;
+use ide\project\behaviours\gui\SkinManagerForm;
+use ide\systems\IdeSystem;
 use php\compress\ZipException;
 use php\compress\ZipFile;
 use php\io\IOException;
@@ -56,11 +59,21 @@ class ProjectSkin extends AbstractEntity
     private $scopes = [];
 
     /**
+     * Создать пустой скин (используются стили скина по умолчанию)
      * @return ProjectSkin
      */
     public static function createEmpty()
     {
-        return new ProjectSkin();
+        //return new ProjectSkin(); 
+        
+        $defaultSkin = "library/skins/". SkinManagerForm::DEFAULT_SKIN . ".zip";
+        $file = IdeSystem::getOwnFile($defaultSkin);
+
+        if (IdeSystem::isDevelopment() && !fs::isFile($file)) {
+            $file = IdeSystem::getOwnFile('misc/' . $defaultSkin);
+        }
+
+        return self::createFromZip($file);
     }
 
     /**
@@ -94,6 +107,8 @@ class ProjectSkin extends AbstractEntity
      */
     public static function createFromZip($file): ProjectSkin
     {
+        //var_dump([ '!!! createFromZip !!!' => $file ]);
+
         $result = new ProjectSkin();
         $result->setName(fs::nameNoExt($file));
         $result->setUid(fs::normalize($file));
