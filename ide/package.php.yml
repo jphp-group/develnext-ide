@@ -11,6 +11,7 @@ sources:
 - platforms/develnext-php-platform/src
 - platforms/develnext-web-platform/src
 - platforms/develnext-wizard-platform/src
+- platforms/develnext-android-platform/src
 - ../dn-app-framework/src
 includes:
 - index.php

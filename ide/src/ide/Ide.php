@@ -434,12 +434,12 @@ class Ide extends Application
     {
         $env = System::getEnv();
 
+        if ($this->isWindows())
+            $env["TERM"] = null;
+        else $env["TERM"] = "XTERM"; // UNIX like OS
+
         if ($this->getJrePath()) {
             $env['JAVA_HOME'] = $this->getJrePath();
-        }
-
-        if ($this->getGradlePath()) {
-            $env['GRADLE_HOME'] = $this->getGradlePath();
         }
 
         if ($this->getApacheAntPath()) {
