@@ -2,6 +2,7 @@
 
 namespace ide\project\supports;
 
+use ide\commands\AndroidSettingsCommand;
 use ide\Ide;
 use ide\project\AbstractProjectSupport;
 use ide\project\Project;
@@ -29,7 +30,7 @@ class AndroidProjectSupport extends AbstractProjectSupport {
             'makeStartProcess' => function () use ($project) {
                 $env = Ide::get()->makeEnvironment();
 
-                $env['JAVA_HOME'] = UXDialog::input("Путь до JDK 8");
+                $env['JAVA_HOME'] = AndroidSettingsCommand::getJDKDir();
 
                 $args = ['jppm', 'start'];
 
@@ -51,8 +52,8 @@ class AndroidProjectSupport extends AbstractProjectSupport {
             'makeStartProcess' => function () use ($project) {
                 $env = Ide::get()->makeEnvironment();
 
-                $env['ANDROID_HOME'] = UXDialog::input("Путь до Android SDK");
-                $env['JAVA_HOME'] = UXDialog::input("Путь до JDK 8");
+                $env['ANDROID_HOME'] = AndroidSettingsCommand::getSDKDir();
+                $env['JAVA_HOME'] = AndroidSettingsCommand::getJDKDir();
 
                 $args = ['jppm', 'build'];
 
