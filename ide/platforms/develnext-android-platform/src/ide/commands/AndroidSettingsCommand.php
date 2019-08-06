@@ -10,6 +10,7 @@ use ide\project\Project;
 use ide\project\templates\AndroidProjectTemplate;
 use php\gui\UXButton;
 use php\gui\UXForm;
+use php\lib\fs;
 
 class AndroidSettingsCommand extends AbstractProjectCommand {
 
@@ -28,6 +29,7 @@ class AndroidSettingsCommand extends AbstractProjectCommand {
 
         $this->button = new UXButton($this->getName());
         $this->button->graphic = Ide::getImage($this->getIcon());
+        $this->button->visible = false;
         $this->button->on("click", [$this, "onExecute"]);
 
         Ide::get()->bind('openProject', function (Project $project) {
@@ -62,5 +64,27 @@ class AndroidSettingsCommand extends AbstractProjectCommand {
         if ($this->settingForm->visible)
             $this->settingForm->requestFocus();
         else $this->settingForm->showAndWait();
+    }
+
+    public static function getJDKDir() {
+        $directory = Ide::get()->getUserConfigValue("android.jdk8.dir");
+
+        if ($directory && fs::isDir($directory))
+            return $directory;
+
+        Ide::get()->getRegisteredCommand(AndroidSettingsCommand::class)->onExecute();
+
+        return self::getJDKDir();
+    }
+
+    public static function getSDKDir() {
+        $directory = Ide::get()->getUserConfigValue("android.sdk.dir");
+
+        if ($directory && fs::isDir($directory))
+            return $directory;
+
+        Ide::get()->getRegisteredCommand(AndroidSettingsCommand::class)->onExecute();
+
+        return self::getSDKDir();
     }
 }
