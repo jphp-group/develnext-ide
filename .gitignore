@@ -39,3 +39,5 @@ gradlew
 gradlew.bat
 build.gradle
 .phpintel/
+/dn-antlr4/sdk/
+/dn-antlr4/antlr-complete.jar
