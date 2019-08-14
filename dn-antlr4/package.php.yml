@@ -1,0 +1,11 @@
+name: antlr4-develnext-grammars
+version: 1.0.0
+
+devDeps:
+  jphp-compress-ext: '*'
+
+config:
+  ignore:
+    - "./jphp-antlr4-ext/**"
+    - "./grammars/**"
+    - "./antlr-complete.jar"

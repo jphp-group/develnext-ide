@@ -37,8 +37,8 @@ class PtyEditor extends AbstractEditor {
             $dir = Ide::project()->getRootDir();
 
         $this->process = PtyProcess::exec($args, $env, $dir);
-        $this->terminal = new JediTermWidget();
-        $this->terminal->createTerminalSession($this->process);
+        $this->terminal = new JediTermWidget($this->process);
+        $this->terminal->requestFocus();
         $this->terminal->start();
     }
 
