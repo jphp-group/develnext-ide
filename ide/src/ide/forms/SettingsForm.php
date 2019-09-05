@@ -7,7 +7,10 @@ use ide\settings\SettingsContext;
 use ide\settings\ui\AbstractSettingsGroup;
 use ide\settings\ui\AbstractSettingsItem;
 use ide\ui\SettingsTreeItem;
+use php\gui\event\UXEvent;
 use php\gui\layout\UXAnchorPane;
+use php\gui\layout\UXHBox;
+use php\gui\UXButton;
 use php\gui\UXSplitPane;
 use php\gui\UXTreeItem;
 use php\gui\UXTreeView;
@@ -86,9 +89,57 @@ class SettingsForm extends AbstractIdeForm
 
         $ui = _($item->makeUi(new SettingsContext($item->getName())));
 
-        UXAnchorPane::setAnchor($ui, 0);
-
         $this->root->children->clear();
-        $this->root->add($ui);
+
+        if ($item instanceof AbstractSettingsItem) {
+            $context = new SettingsContext($item->getName());
+
+            $buttonBox = new UXHBox();
+            $buttonBox->spacing = 8;
+            $buttonBox->alignment = "CENTER_RIGHT";
+
+            $ok = new UXButton("settings.buttons.ok");
+            $apply = new UXButton("settings.buttons.apply");
+            $close = new UXButton("settings.buttons.close");
+
+            $buttonBox->add($ok);
+            $buttonBox->add($apply);
+            $buttonBox->add($close);
+
+            $update = function () use ($context, $ui, $item, $ok, $apply) {
+                $ok->enabled = $apply->enabled = $item->canSave($context, $ui);
+            };
+
+            $update();
+
+            $ui->on("click", $update);
+            $ui->on("keyUp", $update);
+
+            $close->on("action", function () {
+                $this->hide();
+            });
+
+            $apply->on("action", function () use ($context, $ui, $item) {
+                $item->doSave($context, $ui);
+            });
+
+            $ok->on("action", function (UXEvent $event) use ($apply, $close) {
+                $apply->trigger("action", $event);
+                $close->trigger("action", $event);
+            });
+
+            UXAnchorPane::setAnchor($ui, 0);
+            UXAnchorPane::setBottomAnchor($ui, 40);
+
+            UXAnchorPane::setBottomAnchor($buttonBox, 8);
+            UXAnchorPane::setLeftAnchor($buttonBox, 8);
+            UXAnchorPane::setRightAnchor($buttonBox, 8);
+
+            $this->root->add($ui);
+            $this->root->add(_($buttonBox));
+        } else {
+            UXAnchorPane::setAnchor($ui, 0);
+            $this->root->add($ui);
+        }
     }
 }
