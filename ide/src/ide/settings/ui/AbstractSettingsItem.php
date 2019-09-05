@@ -25,11 +25,14 @@ abstract class AbstractSettingsItem
 
     /**
      * @param SettingsContext $context
+     * @param UXNode $ui
      */
-    abstract public function doSave(SettingsContext $context);
+    abstract public function doSave(SettingsContext $context, UXNode $ui);
 
     /**
      * @param SettingsContext $context
+     * @param UXNode $ui
+     * @return bool
      */
-    abstract public function doRestore(SettingsContext $context);
+    abstract public function canSave(SettingsContext $context, UXNode $ui): bool;
 }
