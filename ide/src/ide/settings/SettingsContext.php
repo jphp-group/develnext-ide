@@ -4,8 +4,21 @@ namespace ide\settings;
 
 use ide\Ide;
 use ide\Logger;
+use ide\settings\ui\AbstractSettingsGroup;
+use ide\settings\ui\AbstractSettingsItem;
 
 class SettingsContext {
+
+    /**
+     * @param AbstractSettingsItem|AbstractSettingsGroup $item
+     * @return SettingsContext
+     */
+    public static function of($item) {
+        if (is_string($item))
+            $item = new $item();
+
+        return new SettingsContext($item->getName());
+    }
 
     /**
      * @var string

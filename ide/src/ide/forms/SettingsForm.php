@@ -86,14 +86,13 @@ class SettingsForm extends AbstractIdeForm
      */
     public function open($item) {
         $this->focusTreeItem($item);
+        $context = SettingsContext::of($item);
 
-        $ui = _($item->makeUi(new SettingsContext($item->getName())));
+        $ui = _($item->makeUi($context));
 
         $this->root->children->clear();
 
         if ($item instanceof AbstractSettingsItem) {
-            $context = new SettingsContext($item->getName());
-
             $buttonBox = new UXHBox();
             $buttonBox->spacing = 8;
             $buttonBox->alignment = "CENTER_RIGHT";
@@ -114,13 +113,15 @@ class SettingsForm extends AbstractIdeForm
 
             $ui->on("click", $update);
             $ui->on("keyUp", $update);
+            $ui->on("mouseMove", $update);
 
             $close->on("action", function () {
                 $this->hide();
             });
 
-            $apply->on("action", function () use ($context, $ui, $item) {
+            $apply->on("action", function () use ($update, $context, $ui, $item) {
                 $item->doSave($context, $ui);
+                $update();
             });
 
             $ok->on("action", function (UXEvent $event) use ($apply, $close) {
