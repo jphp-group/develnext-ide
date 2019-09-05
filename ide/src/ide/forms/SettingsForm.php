@@ -62,7 +62,12 @@ class SettingsForm extends AbstractIdeForm
 
         $this->tree->on("click", function () {
             if (arr::count($this->tree->selectedItems) > 0) {
-                $this->open($this->tree->selectedItems[0]->value->getItem());
+                static $item;
+
+                if ($item == $this->tree->selectedItems[0]->value->getItem()) return;
+                $item = $this->tree->selectedItems[0]->value->getItem();
+
+                $this->open($item);
             }
         });
     }
@@ -82,6 +87,8 @@ class SettingsForm extends AbstractIdeForm
         $ui = _($item->makeUi(new SettingsContext($item->getName())));
 
         UXAnchorPane::setAnchor($ui, 0);
+
+        $this->root->children->clear();
         $this->root->add($ui);
     }
 }
