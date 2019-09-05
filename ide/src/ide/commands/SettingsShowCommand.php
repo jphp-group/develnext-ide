@@ -1,12 +1,10 @@
 <?php
 namespace ide\commands;
 
-use ide\Ide;
 use ide\editors\AbstractEditor;
+use ide\Ide;
 use ide\misc\AbstractCommand;
-use php\gui\UXDesktop;
-use php\gui\UXLabel;
-use php\gui\UXMenuItem;
+use ide\settings\ide\IDESettingsGroup;
 
 class SettingsShowCommand extends AbstractCommand
 {
@@ -15,30 +13,28 @@ class SettingsShowCommand extends AbstractCommand
         return 'menu.settings';
     }
 
+    public function getIcon()
+    {
+        return 'icons/settings16.png';
+    }
+
     public function isAlways()
     {
         return true;
     }
 
-    public function makeMenuItem(){
-        // Вместо подменю создадим элемент в меню баре
-        $menu = Ide::get()->getMainForm()->defineMenuGroup('settings', null);
-
-        // Т.к. UXMenu не имеет события на клик, нужно создать label
-        $label = _(new UXLabel('menu.settings', Ide::get()->getImage('icons/settings16.png')));
-        $menu->graphic = $label;
-        $label->on('click', [$this, 'onExecute']);
-
-        return null;
-    }
-
     public function getCategory()
     {
-        return 'settings';
+        return 'help';
     }
 
+    /**
+     * @param null $e
+     * @param AbstractEditor|null $editor
+     * @throws \Exception
+     */
     public function onExecute($e = null, AbstractEditor $editor = null)
     {
-        app()->showFormAndWait('SettingsForm');
+        Ide::get()->getSettings()->open(new IDESettingsGroup());
     }
 }
