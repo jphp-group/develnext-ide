@@ -41,7 +41,7 @@ function task_build_grammars(Event $e): void {
 
     Console::log("Generate java code from ANTLR4 grammars ...");
     foreach ($files as $file) {
-        $processCommand = "java -jar " . fs::abs("./antlr-complete.jar") . " " . fs::abs($file);
+        $processCommand = "java -jar " . fs::abs("./antlr-complete.jar") . " " . $file;
 
         if (str::contains(str::lower(System::getProperty("os.name")), "win"))
             $processCommand = "cmd.exe /c " . $processCommand;

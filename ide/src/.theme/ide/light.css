@@ -231,3 +231,7 @@
     -fx-background-image: url("/.data/img/transparent-2.png");
     -fx-background-repeat: repeat;
 }
+
+.settings-group {
+    -fx-background-color: #e3e3e3;
+}

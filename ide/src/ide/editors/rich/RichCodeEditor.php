@@ -32,7 +32,7 @@ class RichCodeEditor extends UXVirtualizedScrollPane {
      */
     public function __construct() {
         parent::__construct(
-            $this->codeArea = new UXHighlightClassedTextArea());
+            $this->codeArea = new UXHighlightClassedTextAreaImpl());
 
         $this->codeArea->classes->add("syntax-text-area");
 

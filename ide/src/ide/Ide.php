@@ -21,6 +21,7 @@ use ide\project\control\AbstractProjectControlPane;
 use ide\project\Project;
 use ide\protocol\AbstractProtocolHandler;
 use ide\protocol\handlers\FileOpenProjectProtocolHandler;
+use ide\settings\Settings;
 use ide\systems\Cache;
 use ide\systems\FileSystem;
 use ide\systems\IdeSystem;
@@ -173,6 +174,11 @@ class Ide extends Application
      */
     protected $mode = 'prod';
 
+    /**
+     * @var Settings
+     */
+    protected $settings;
+
     public function __construct($configPath = null)
     {
         parent::__construct($configPath);
@@ -184,6 +190,8 @@ class Ide extends Application
         $this->toolManager = new IdeToolManager();
         $this->localizer = new IdeLocalizer();
         $this->localizer->setUseDefaultValuesForLang('ru');
+
+        $this->settings = new Settings();
 
         $this->asyncThreadPool = ThreadPool::createCached();
     }
@@ -1785,5 +1793,12 @@ class Ide extends Application
         }
 
         return null;
+    }
+
+    /**
+     * @return Settings
+     */
+    public function getSettings() {
+        return $this->settings;
     }
 }

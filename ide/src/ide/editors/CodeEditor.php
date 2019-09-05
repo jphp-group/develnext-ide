@@ -7,6 +7,9 @@ use ide\autocomplete\AutoComplete;
 use ide\autocomplete\php\PhpAutoComplete;
 use ide\autocomplete\ui\AutoCompletePane;
 use ide\editors\menu\ContextMenu;
+use ide\editors\rich\highlighters\CssANTLR4Highlighter;
+use ide\editors\rich\LineNumber;
+use ide\editors\rich\RichCodeEditor;
 use ide\forms\AbstractIdeForm;
 use ide\forms\CodeEditorSettingsForm;
 use ide\forms\FindTextDialogForm;
@@ -23,6 +26,7 @@ use ide\systems\FileSystem;
 use ide\utils\FileUtils;
 use ide\utils\Json;
 use ide\utils\UiUtils;
+use php\gui\UXGenericStyledArea;
 use function is_array;
 use function is_string;
 use php\format\JsonProcessor;
@@ -211,11 +215,12 @@ class CodeEditor extends AbstractEditor
                     break;
 
                 case 'css':
-                    $this->textArea = new UXCssCodeArea();
-                    break;
-
                 case 'fxcss':
-                    $this->textArea = new UXFxCssCodeArea();
+                    $this->textAreaScrollPane = new RichCodeEditor();
+                    $this->textArea = $this->textAreaScrollPane->getArea();
+                    $this->textAreaScrollPane->setHighlighter(CssANTLR4Highlighter::class);
+                    $this->textAreaScrollPane->setLineNumber(new LineNumber());
+
                     break;
 
                 case 'js':
@@ -454,7 +459,10 @@ class CodeEditor extends AbstractEditor
     public function setValue($value)
     {
         $value = str::replace($value, "\t", str::repeat(" ", 4));
-        $this->textArea->text = $value;
+
+        if ($this->textArea instanceof UXGenericStyledArea)
+            $this->textArea->replaceText(0, str::length($this->textArea->text), $value);
+        else $this->textArea->text = $value;
     }
 
     public function loadContentToAreaIfModified()
@@ -522,7 +530,8 @@ class CodeEditor extends AbstractEditor
         $this->setValue($content);
 
         if ($resetHistory) {
-            $this->textArea->forgetHistory();
+            if (!($this->textArea instanceof UXGenericStyledArea))
+                $this->textArea->forgetHistory();
         }
 
         $this->textArea->caretPosition = $caret;

@@ -47,15 +47,6 @@ class WelcomeEditor extends AbstractEditor
      */
     public function makeUi()
     {
-        $editor = new RichCodeEditor();
-        $editor->setHighlighter(CssANTLR4Highlighter::class);
-        $editor->setLineNumber(new LineNumber());
-
-        //$inspector = new PHPInspector();
-        //$pane = new AutoCompletePane($editor->getArea(), new PhpAutoComplete($inspector));
-
-        return $editor;
-
         $loader = new UXLoader();
 
         $layout = _($loader->load('res://.forms/blocks/_Welcome.fxml'));
