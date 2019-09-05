@@ -16,8 +16,8 @@
     -fx-focus-color: #2788d3;
     -fx-faint-focus-color: #039ED322;
 
-    -fx-background: white;
-    -fx-body-color: #ececec;
+    -fx-background: #f3f3f3;
+    -fx-body-color: #e4e4e4;
     /*-fx-body-color: linear-gradient(to bottom,
                         ladder(
                                 -fx-color,
@@ -31,7 +31,7 @@
  * Цвет у панелей со списком форм, модулей, проектов
  */
 .flow-list-view{
-    -fx-background-color: white;
+    -fx-background-color: -fx-background;
 }
 
 .combo-box > .list-cell:hover {
@@ -40,7 +40,7 @@
 
 .nav .nav-item.selected {
     -fx-font-weight: bold;
-    -fx-background-color: white;
+    -fx-background-color: -fx-background;
     -fx-border-color: silver;
     -fx-border-radius: 3px;
 }
@@ -59,7 +59,7 @@
  * Вкладка проект - фрейм "синхронизация с develnext"
  */
 #syncPane, #need-auth-pane, #need-auth-pane > * {
-    -fx-background-color: white;
+    -fx-background-color: -fx-background;
 }
 
 /**
@@ -78,12 +78,12 @@
 }
 
 .list-view.dn-simple-list:filled:selected:focused, .list-view.dn-simple-list .list-cell:filled:selected {
-    -fx-background-color: white;
+    -fx-background-color: -fx-background;
 }
 
 .list-view.dn-simple-list .list-cell:odd {
-    -fx-cell-hover-color: white;
-    -fx-background-color: white;
+    -fx-cell-hover-color: -fx-background;
+    -fx-background-color: -fx-background;
 }
 
 /**
@@ -98,7 +98,7 @@
  * Preloader
  */
 #x-preloader {
-    -fx-background-color: white;
+    -fx-background-color: -fx-background;
 }
 
 
@@ -132,7 +132,7 @@
 .dn-simple-toggle-button:hover { -fx-background-color: #cce6fe; -fx-border-color: #5a71a7; }
 .dn-simple-toggle-button:selected { -fx-background-color: silver; -fx-border-color: gray; }
 
-.dn-simple-toggle-button, .dn-simple-button { -fx-background-color: white; -fx-border-color: silver; -fx-border-width: 1px; }
+.dn-simple-toggle-button, .dn-simple-button { -fx-background-color: -fx-background; -fx-border-color: silver; -fx-border-width: 1px; }
 
 
 .dn-autocomplete {
@@ -171,7 +171,7 @@
  */
 
 .dn-web {
-    -fx-background-color: white;
+    -fx-background-color: -fx-background;
 }
 
 .doc-entry {
@@ -233,5 +233,5 @@
 }
 
 .settings-group {
-    -fx-background-color: #e3e3e3;
+    -fx-background-color: #eeeeee;
 }
