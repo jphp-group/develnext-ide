@@ -23,7 +23,7 @@ class LineNumber {
         $node->alignment = "BASELINE_RIGHT";
         $node->paddingRight = 10;
         $node->classes->add("lineno");
-        $node->width = 30;
+        $node->width = 50;
 
         if (!$this->gutters[$line + 1]) {
             $gutter = &$this->gutters[$line + 1] = new UXImageView();

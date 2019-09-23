@@ -1,6 +1,7 @@
 <?php
 namespace ide\tool;
 use ide\misc\EventHandlerBehaviour;
+use php\lang\Thread;
 
 /**
  * Class AbstractToolInstaller
@@ -29,9 +30,9 @@ abstract class AbstractToolInstaller
     }
 
     /**
-     * @return mixed
+     * @return Thread
      */
-    abstract public function run();
+    abstract public function run(): Thread;
 
     /**
      * @param $status
@@ -46,7 +47,7 @@ abstract class AbstractToolInstaller
      * @param $message
      * @param string $type
      */
-    protected function triggerMessage($message, $type = 'info')
+    protected function triggerMessage($message, $type = null)
     {
         $this->trigger('message', [$message, $type]);
     }

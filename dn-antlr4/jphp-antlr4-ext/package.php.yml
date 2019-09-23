@@ -1,0 +1,12 @@
+name: jphp-antlr4-ext
+version: 1.0.0
+deps:
+  jphp-runtime: '*'
+
+plugins:
+  - Gradle
+  - Hub
+
+gradle:
+  deps:
+    - "org.antlr:antlr4-runtime:4.7.2"

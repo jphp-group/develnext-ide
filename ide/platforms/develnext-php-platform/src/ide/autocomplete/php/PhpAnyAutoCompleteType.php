@@ -49,7 +49,7 @@ class PhpAnyAutoCompleteType extends AutoCompleteType
         $this->kind = $kind;
     }
 
-    public static function appendUseClass(UXAbstractCodeArea $area, $use)
+    public static function appendUseClass($area, $use)
     {
         $useString = "use " . $use . ";";
 

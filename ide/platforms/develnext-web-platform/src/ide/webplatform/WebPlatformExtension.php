@@ -31,4 +31,12 @@ class WebPlatformExtension extends AbstractExtension
     {
 
     }
+
+    public function getName(): string {
+        return "plugin.platform.web.name";
+    }
+
+    public function getDescription(): string {
+        return "plugin.platform.web.description";
+    }
 }
