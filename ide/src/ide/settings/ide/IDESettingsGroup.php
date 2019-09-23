@@ -2,6 +2,7 @@
 
 namespace ide\settings\ide;
 
+use ide\settings\ide\items\PluginsSettingsItem;
 use ide\settings\ide\items\UISettingsItem;
 use ide\settings\ui\AbstractSettingsGroup;
 use ide\settings\ui\AbstractSettingsItem;
@@ -28,7 +29,8 @@ class IDESettingsGroup extends AbstractSettingsGroup
     public function getItems(): array
     {
         return [
-            new UISettingsItem()
+            new UISettingsItem(),
+            new PluginsSettingsItem()
         ];
     }
 }

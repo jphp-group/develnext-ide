@@ -23,4 +23,16 @@ class IdeStandardExtension extends AbstractExtension
     public function onIdeShutdown() {
 
     }
+
+    public function getName(): string {
+        return "plugin.develnext.name";
+    }
+
+    public function getDescription(): string {
+        return "plugin.develnext.description";
+    }
+
+    public function isSystem(): bool {
+        return true;
+    }
 }

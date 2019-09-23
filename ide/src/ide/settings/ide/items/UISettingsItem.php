@@ -172,6 +172,7 @@ class UISettingsItem extends AbstractSettingsItem {
             $item->text .= ' (Beta Version)';
         }
     }
+
     /**
      * @param  UXListCell $item
      * @param  string $value

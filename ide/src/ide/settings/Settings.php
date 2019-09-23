@@ -42,6 +42,13 @@ class Settings
     }
 
     /**
+     * @throws \Exception
+     */
+    public function hide() {
+        $this->getForm()->hide();
+    }
+
+    /**
      * @return SettingsForm
      * @throws \Exception
      */

@@ -11,7 +11,7 @@ sources:
 - platforms/develnext-php-platform/src
 - platforms/develnext-web-platform/src
 - platforms/develnext-wizard-platform/src
-- platforms/develnext-android-platform/src
+#- platforms/develnext-android-platform/src
 - ../dn-app-framework/src
 includes:
 - index.php
@@ -34,9 +34,9 @@ deps:
   develnext-gui-tabs-ext: ^1.0.0
   jphp-gui-jfx-win: ^11.0.0
   jphp-gui-jfx-linux: ^11.0.0
-  jphp-richtextfx-ext: '*'
   jphp-gui-jediterm-ext: '*'
   antlr4-develnext-grammars: '*'
+  jphp-richtextfx-ext: 1.2.5
 app:
   disable-launcher: '1'
   jvm-args:

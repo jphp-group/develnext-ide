@@ -2,6 +2,7 @@
 
 namespace ide\settings;
 
+use ide\settings\items\AndroidSdkManagerItem;
 use ide\settings\ui\AbstractSettingsGroup;
 use ide\settings\ui\AbstractSettingsItem;
 
@@ -26,7 +27,7 @@ class AndroidSettingsGroup extends AbstractSettingsGroup {
      */
     public function getItems(): array {
         return [
-
+            new AndroidSdkManagerItem()
         ];
     }
 }

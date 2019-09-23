@@ -62,6 +62,9 @@ class IdeToolManager
                 }
 
                 $installer = $this->installer($tool);
+                $form = new ToolInstallForm($installer);
+                $form->showAndWait();
+
                 $installer->on('done', function ($success) use ($next, $tool, $done) {
                     if ($success) {
                         $next();
@@ -69,9 +72,6 @@ class IdeToolManager
                         $done(false, $tool);
                     }
                 }, __CLASS__);
-
-                new ToolInstallForm($installer);
-                $installer->run();
             } else {
                 $done(true);
             }
@@ -109,8 +109,8 @@ class IdeToolManager
                     $installer->on('done', $doneCallback, __CLASS__);
 
                     uiLater(function () use ($installer) {
-                        new ToolInstallForm($installer);
-                        $installer->run();
+                        $form = new ToolInstallForm($installer);
+                        $form->showAndWait();
                     });
                 } else {
                     $doneCallback(true);

@@ -33,7 +33,7 @@ class AutoCompleteInsert
      * AutoCompleteInsert constructor.
      * @param UXAbstractCodeArea $area
      */
-    public function __construct(UXAbstractCodeArea $area)
+    public function __construct($area)
     {
         $this->area = $area;
     }

@@ -1801,4 +1801,12 @@ class Ide extends Application
     public function getSettings() {
         return $this->settings;
     }
+
+    /**
+     * @return AbstractExtension[]
+     */
+    public function getExtensions(): array
+    {
+        return $this->extensions;
+    }
 }
