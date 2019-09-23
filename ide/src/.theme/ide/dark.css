@@ -194,3 +194,7 @@
 .property-group, .property-group * {
     -fx-text-fill: -fx-font-color;
 }
+
+.settings-group {
+    -fx-background-color: #303030;
+}

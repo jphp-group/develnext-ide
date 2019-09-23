@@ -308,6 +308,16 @@ class JPPMPackageFileTemplate extends AbstractMetaTemplate
         $out->writeFormatted($data, 'yaml', YamlProcessor::SERIALIZE_PRETTY_FLOW);
     }
 
+    public function setProperties(array $props) {
+        foreach ($props as $key => $value) {
+            if (method_exists($this, "set$key")) {
+                $this->{"set$key"}($value);
+            } else {
+                $this->extra[$key] = $value;
+            }
+        }
+    }
+
     public function load()
     {
         if (fs::isFile($this->file)) {

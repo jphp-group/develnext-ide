@@ -3,7 +3,6 @@ namespace ide\editors;
 
 use ide\commands\NewProjectCommand;
 use ide\commands\OpenProjectCommand;
-use ide\forms\OpenProjectForm;
 use ide\Ide;
 use php\gui\UXLoader;
 use php\gui\UXNode;

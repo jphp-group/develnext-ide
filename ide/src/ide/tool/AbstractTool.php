@@ -74,6 +74,10 @@ abstract class AbstractTool
         return $this->manager->getToolPath() . "/" . $this->getName() . "/" . $this->version;
     }
 
+    public function getIcon(): string {
+        return "icons/setup32.png";
+    }
+
     /**
      * @param array $args
      * @param $workDirectory
