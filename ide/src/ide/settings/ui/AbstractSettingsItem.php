@@ -35,4 +35,11 @@ abstract class AbstractSettingsItem
      * @return bool
      */
     abstract public function canSave(SettingsContext $context, UXNode $ui): bool;
+
+    /**
+     * @return bool
+     */
+    public function showBottomButtons(): bool {
+        return true;
+    }
 }

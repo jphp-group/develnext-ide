@@ -1,10 +1,11 @@
 <?php
 namespace ide\forms;
 
-
-use ide\tool\AbstractTool;
+use ide\Ide;
 use ide\tool\AbstractToolInstaller;
+use php\gui\framework\AbstractForm;
 use php\gui\UXDialog;
+use php\gui\UXImageView;
 use php\gui\UXLabel;
 use php\gui\UXTextArea;
 
@@ -13,10 +14,10 @@ use php\gui\UXTextArea;
  * @package ide\forms
  *
  * @property UXLabel $titleLabel
- * @property UXLabel $descriptionLabel
+ * @property UXImageView icon
  * @property UXTextArea $console
  */
-class ToolInstallForm extends AbstractIdeForm
+class ToolInstallForm extends AbstractForm
 {
     /**
      * @var AbstractToolInstaller
@@ -26,6 +27,7 @@ class ToolInstallForm extends AbstractIdeForm
     /**
      * ToolInstallForm constructor.
      * @param AbstractToolInstaller $installer
+     * @throws \Exception
      */
     public function __construct(AbstractToolInstaller $installer)
     {
@@ -33,46 +35,44 @@ class ToolInstallForm extends AbstractIdeForm
 
         parent::__construct();
 
-        $installer->on('progress', function ($status, $progress) {
-            uiLater(function () use ($status, $progress) {
-                if (!$this->visible) {
-                    $this->show();
-                    $this->toFront();
-                }
-
-                $progress = round($progress, 2);
-                $this->descriptionLabel->text = "$status ({$progress}%)";
-            });
-        }, __CLASS__);
-
         $installer->on('message', function ($message, $type) {
             uiLater(function () use ($message, $type) {
-                $this->console->text .= "[$type] $message\n";
+                if ($type)
+                    $this->console->text .= "[$type] $message\n";
+                else $this->console->text .= $message;
+
                 $this->console->end();
             });
         }, __CLASS__);
 
         $installer->on('done', function ($success) {
             uiLater(function () use ($success) {
-                if ($success) {
-                    $this->console->text .= 'All done success.';
-                    $this->console->end();
-
-                    waitAsync(2000, [$this, 'hide']);
-                    //$this->hide();
-                } else {
-                    UXDialog::show('Ошибка установки ' . $this->installer->getTool()->getName(), 'ERROR');
+                if (!$success) {
+                    UXDialog::showAndWait(_("tool.install.error", $this->installer->getTool()->getName()), 'ERROR');
                 }
+
+                $this->hide();
+                Ide::get()->getMainForm()->hidePreloader();
             });
         }, __CLASS__);
+
+        $this->on("show", function () {
+            $this->installer->run()->start();
+        });
+    }
+
+    public function showAndWait() {
+        Ide::get()->getMainForm()->showPreloader(_("tool.install.title", $this->installer->getTool()->getName()));
+
+        parent::showAndWait();
     }
 
     protected function init()
     {
-        $installer = $this->installer;
+        parent::init();
 
-        $this->title = "Установка " . $installer->getTool()->getName();
-        $this->titleLabel->text = "Установка " . $installer->getTool()->getName();
-        $this->icon->image = ico('setup32')->image;
+        $this->icon->image = Ide::getImage($this->installer->getTool()->getIcon(), [32, 32])->image;
+        $this->title = _($this->title, $this->installer->getTool()->getName());
+        _($this->layout, $this->installer->getTool()->getName());
     }
 }

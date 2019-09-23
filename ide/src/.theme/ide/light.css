@@ -9,7 +9,8 @@
      * -fx-base directly, the sections in this file will typically use -fx-color.
      */
     /*-fx-base: #ececec;*/
-    -fx-accent: #c5c5c5;
+    /*-fx-accent: #c5c5c5;*/
+    -fx-accent: #0093ff;
     -fx-default-button: #1c67b1;
 
 

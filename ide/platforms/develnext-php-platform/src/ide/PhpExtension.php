@@ -27,4 +27,16 @@ class PhpExtension extends AbstractExtension
     public function onIdeShutdown()
     {
     }
+
+    public function getName(): string {
+        return "plugin.php.name";
+    }
+
+    public function getDescription(): string {
+        return "plugin.php.description";
+    }
+
+    public function isSystem(): bool {
+        return true;
+    }
 }

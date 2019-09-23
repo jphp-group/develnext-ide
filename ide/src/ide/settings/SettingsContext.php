@@ -10,7 +10,7 @@ use ide\settings\ui\AbstractSettingsItem;
 class SettingsContext {
 
     /**
-     * @param AbstractSettingsItem|AbstractSettingsGroup $item
+     * @param AbstractSettingsItem|AbstractSettingsGroup|string $item
      * @return SettingsContext
      */
     public static function of($item) {
@@ -34,25 +34,27 @@ class SettingsContext {
     }
 
     /**
-     * @param array $value
+     * @param string $key
+     * @param string $value
      */
-    public function setValue(array $value) {
+    public function setValue(string $key, string $value) {
         try {
-            Ide::get()->setUserConfigValue("settings." . $this->contextId, $value);
+            Ide::get()->setUserConfigValue($this->contextId . ".$key", $value);
         } catch (\Exception $exception) {
             Logger::error($exception->getMessage());
         }
     }
 
     /**
-     * @return array
+     * @param string $key
+     * @return string
      */
-    public function getValue(): array {
+    public function getValue(string $key): ?string {
         try {
-            return Ide::get()->getUserConfigArrayValue("settings." . $this->contextId. $key);
+            return Ide::get()->getUserConfigValue($this->contextId . ".$key");
         } catch (\Exception $exception) {
             Logger::error($exception->getMessage());
-            return [];
+            return null;
         }
     }
 }

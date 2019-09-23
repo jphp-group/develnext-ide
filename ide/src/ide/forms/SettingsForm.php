@@ -92,7 +92,7 @@ class SettingsForm extends AbstractIdeForm
 
         $this->root->children->clear();
 
-        if ($item instanceof AbstractSettingsItem) {
+        if ($item instanceof AbstractSettingsItem && $item->showBottomButtons()) {
             $buttonBox = new UXHBox();
             $buttonBox->spacing = 8;
             $buttonBox->alignment = "CENTER_RIGHT";

@@ -16,4 +16,12 @@ class WizardPlatformExtension extends AbstractExtension
     public function onIdeShutdown()
     {
     }
+
+    public function getName(): string {
+        return "plugin.platform.wizard.name";
+    }
+
+    public function getDescription(): string {
+        return "plugin.platform.wizard.description";
+    }
 }
