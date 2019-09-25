@@ -47,7 +47,7 @@ class JPPMControlPane extends AbstractProjectControlPane
 
     public function getIcon()
     {
-        return 'icons/pluginEx16.png';
+        return 'icons/plugin16.png';
     }
 
     /**
@@ -151,7 +151,7 @@ class JPPMControlPane extends AbstractProjectControlPane
         $packBox->add($buttonsBox);
         
         // 1.2.1 Кнопка удалить
-        $this->delButton = new UXButton(_('jppm.package.manager.delete'), ico('pluginRemove16'));
+        $this->delButton = new UXButton(_('jppm.package.manager.delete'), ico('close16'));
         $this->delButton->enabled = false;
         $this->delButton->width = 150;
         $this->delButton->height = 32;
@@ -195,7 +195,7 @@ class JPPMControlPane extends AbstractProjectControlPane
                 // Нажатие enter == нажатие на кнопку добавить
                 $this->doAddPackage();
             } elseif($e->codeName == 'Shift' || $e->codeName == 'Ctrl' || $e->codeName == '2'){
-                // Если нажать ctrl+v или shift+2 (== @) и если была вставлена команда вида package@source, то распарсим эту строку и разбросаем данные по полям
+                // Если нажать ctrl+v или shift+2 (== @) и если была вставлена команда вида packsearch16age@source, то распарсим эту строку и разбросаем данные по полям
                 if(str::pos($this->nameField->text, '@') > -1){
                     // Вместе с названием репозитория может быть скопирована команда jppm
                     $this->nameField->text = str::replace($this->nameField->text, 'jppm add ', '');
@@ -232,7 +232,7 @@ class JPPMControlPane extends AbstractProjectControlPane
         $addBox->add($this->versionField);
         
         // 2.1.4 Кнопка добавить пакет
-        $this->addButton = new UXButton(_('jppm.package.manager.add'), ico('pluginAdd16'));
+        $this->addButton = new UXButton(_('jppm.package.manager.add'), ico('add16'));
         $this->addButton->width = 140;
         $this->addButton->on('click', [$this, 'doAddPackage']);
         $addBox->add($this->addButton);
