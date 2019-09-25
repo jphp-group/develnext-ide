@@ -3,6 +3,7 @@ namespace ide\project\supports\jppm;
 
 use ide\Ide;
 use ide\Logger;
+use ide\account\api\ServiceResponse;
 use ide\formats\templates\JPPMPackageFileTemplate;
 use ide\misc\FileWatcher;
 use ide\project\behaviours\BundleProjectBehaviour;
@@ -10,18 +11,26 @@ use ide\project\control\AbstractProjectControlPane;
 use ide\project\supports\JPPMProjectSupport;
 use php\gui\UXAlert;
 use php\gui\UXButton;
+use php\gui\UXClipboard;
+use php\gui\UXContextMenu;
 use php\gui\UXImage;
 use php\gui\UXImageView;
 use php\gui\UXLabel;
 use php\gui\UXListView;
+use php\gui\UXMenuItem;
 use php\gui\UXNode;
 use php\gui\UXProgressBar;
 use php\gui\UXTextField;
+use php\gui\event\UXKeyEvent;
+use php\gui\event\UXMouseEvent;
 use php\gui\layout\UXAnchorPane;
 use php\gui\layout\UXHBox;
 use php\gui\layout\UXPanel;
 use php\gui\layout\UXVBox;
 use php\gui\paint\UXColor;
+use php\lang\Thread;
+use php\lib\fs;
+use php\lib\str;
 
 
 class JPPMControlPane extends AbstractProjectControlPane
@@ -62,6 +71,11 @@ class JPPMControlPane extends AbstractProjectControlPane
     protected $packagesList;
 
     /**
+     * @var UXListView
+     */
+    protected $repoList;
+
+    /**
      * @var UXTextField
      */
     protected $nameField;
@@ -87,12 +101,17 @@ class JPPMControlPane extends AbstractProjectControlPane
     protected $addButton;
 
     /**
+     * @var UXButton
+     */
+    protected $repoUpdateButton;
+
+    /**
      * @var UXVBox
      */
     protected $parentPane;
 
     /**
-     * @todo Сделать поддержку языков
+     * Создание графического интерфейса
      * @return UXNode
      */
     protected function makeUi()
@@ -104,57 +123,149 @@ class JPPMControlPane extends AbstractProjectControlPane
             $this->packageTpl = $this->jppm->getPkgTemplate();
         }
 
-        // GUI
+        // Основа - вертикальный бокс
         $this->parentPane = new UXVBox;
-        
         $this->parentPane->anchors = ['top' => 0, 'left' => 0, 'right' => 0, 'bottom' => 0];
         $this->parentPane->padding = 3;
-        $this->parentPane->spacing = 5;      
+        $this->parentPane->spacing = 8;      
         
+        $packagesLabel = new UXLabel(_('jppm.package.manager.packages.title'));
+        $packagesLabel->font = $packagesLabel->font->withBold()->withSize(16);
+        $this->parentPane->add($packagesLabel);
+
+        // 1. Список с установленными расширениями + кнопки удалить/readme
+        $packBox = new UXHBox;
+        $packBox->spacing = 5;  
+        $this->parentPane->add($packBox);
+        
+        // 1.1 Список
         $this->packagesList = new UXListView;
-        $this->packagesList->anchors = ['top' => 0, 'left' => 0, 'right' => 0, 'bottom' => 0];
+        $this->packagesList->on('action', [$this, 'doSelectPackage']);
         UXHBox::setHgrow($this->packagesList, 'ALWAYS');
+        $packBox->add($this->packagesList);
+        $this->uiPackageContextMenu($this->packagesList);
         
+        // 1.2 Бокс для кнопок
+        $buttonsBox = new UXVBox;
+        $buttonsBox->spacing = 5;  
+        $packBox->add($buttonsBox);
+        
+        // 1.2.1 Кнопка удалить
         $this->delButton = new UXButton(_('jppm.package.manager.delete'), ico('pluginRemove16'));
         $this->delButton->enabled = false;
         $this->delButton->width = 150;
-
+        $this->delButton->height = 32;
+        $this->delButton->on('click', [$this, 'doDeletePackage']);
+        $buttonsBox->add($this->delButton);
+        
+        // 1.2.2 Кнопка readme
         $this->readmeButton = new UXButton(_('jppm.package.manager.readme'), ico('search16'));
         $this->readmeButton->enabled = false;
         $this->readmeButton->width = 150;
-
-        $buttonsBox = new UXVBox([$this->delButton, $this->readmeButton]);
-        $buttonsBox->spacing = 5;  
-        
-        $packBox = new UXHBox([$this->packagesList, $buttonsBox]);
-        $packBox->spacing = 5;  
-        $this->parentPane->add($packBox);
-                
-        $this->nameField = new UXTextField;
-        $this->nameField->promptText = _('jppm.package.manager.name');
-        UXHBox::setHgrow($this->nameField, 'ALWAYS');
-        
-        $this->versionField = new UXTextField();
-        $this->versionField->promptText = _('jppm.package.manager.version');
-        $this->versionField->maxWidth = 165;
-        $this->addButton = new UXButton(_('jppm.package.manager.add'), ico('pluginAdd16'));
-        $this->addButton->width = 150;
-        
-        $addBox = new UXHBox([$this->nameField, $this->versionField, $this->addButton]);
-        $addBox->anchors = ['top' => false, 'left' => 0, 'right' => 0, 'bottom' => false];
-        $addBox->spacing = 5;
-        $this->parentPane->add($addBox);  
-
-        $this->delButton->on('click', [$this, 'doDeletePackage']);
+        $this->readmeButton->height = 32;
         $this->readmeButton->on('click', [$this, 'doBrowseReadme']);
+        $buttonsBox->add($this->readmeButton);
+        
+        // 2. Установка пакетов из репозитория         
+        $addLabel = new UXLabel(_('jppm.package.manager.addpane.title'));
+        $addLabel->font = $packagesLabel->font->withBold()->withSize(16);
+        $this->parentPane->add($addLabel);
+
+        $addPane = new UXPanel;
+        $addPane->style = '-fx-background-color: -fx-background';
+        $addPane->padding = 10;
+        $this->parentPane->add($addPane);  
+        
+        $addPaneBox = new UXVBox;
+        $addPaneBox->anchors = ['top' => 0, 'left' => 0, 'right' => 0, 'bottom' => 0];
+        $addPaneBox->spacing = 10;
+        $addPane->add($addPaneBox);
+              
+        // 2.1 Бокс с добавлением нового пакета
+        $addBox = new UXHBox;
+        $addBox->anchors = ['top' => 0, 'left' => 0, 'right' => 0, 'bottom' => false];
+        $addBox->spacing = 5;
+        $addPaneBox->add($addBox);
+        
+        // 2.1.1 Поле ввода: имя пакета
+        $this->nameField = new UXTextField;
+        $this->nameField->promptText = _('jppm.package.manager.name.placeholder');
+        $this->nameField->on('keyUp', function(UXKeyEvent $e){
+            if($e->codeName == 'Enter'){
+                // Нажатие enter == нажатие на кнопку добавить
+                $this->doAddPackage();
+            } elseif($e->codeName == 'Shift' || $e->codeName == 'Ctrl' || $e->codeName == '2'){
+                // Если нажать ctrl+v или shift+2 (== @) и если была вставлена команда вида package@source, то распарсим эту строку и разбросаем данные по полям
+                if(str::pos($this->nameField->text, '@') > -1){
+                    // Вместе с названием репозитория может быть скопирована команда jppm
+                    $this->nameField->text = str::replace($this->nameField->text, 'jppm add ', '');
+                    if(str::endsWith($this->nameField->text, '@')){
+                        // Принажатии на @ перебрасывает на следующее поле
+                        $this->nameField->text = str::replace($this->nameField->text, '@', '');
+                    } else {
+                        $exp = str::split($this->nameField->text, '@', 2);
+                        $this->nameField->text = $exp[0];
+                        $this->versionField->text = $exp[1];
+                    }
+                    $this->versionField->requestFocus();
+                }
+            }
+        });
+        UXHBox::setHgrow($this->nameField, 'ALWAYS');
+        $addBox->add($this->nameField);
+        
+        // 2.1.2 Знак @
+        $aLabel = new UXLabel('@');
+        $aLabel->font = $aLabel->font->/*withBold()->*/withSize(16);
+        $aLabel->textColor = UXColor::of('#666');
+        $addBox->add($aLabel);
+
+        // 2.1.3 Поле ввода: версия пакета
+        $this->versionField = new UXTextField;
+        $this->versionField->promptText = _('jppm.package.manager.version.placeholder');
+        $this->versionField->maxWidth = 350;
+        $this->versionField->on('keyUp', function(UXKeyEvent $e){
+            if($e->codeName == 'Enter'){
+                $this->doAddPackage();
+            }
+        });
+        $addBox->add($this->versionField);
+        
+        // 2.1.4 Кнопка добавить пакет
+        $this->addButton = new UXButton(_('jppm.package.manager.add'), ico('pluginAdd16'));
+        $this->addButton->width = 140;
         $this->addButton->on('click', [$this, 'doAddPackage']);
-        //$this->packagesList->observer('focused')->addListener([$this, 'doSelectPackage']);
-        //$this->packagesList->on('click', [$this, 'doSelectPackage']);
-        $this->packagesList->on('action', [$this, 'doSelectPackage']);
+        $addBox->add($this->addButton);
+        
+        
+        // 2.2 Текст репозиторий
+        $repoLabel = new UXLabel(_('jppm.package.manager.repo'), ico('database16'));
+        $repoLabel->font = $repoLabel->font->withBold();
+        $addPaneBox->add($repoLabel);
+        
+        // 2.3 Список репозитория
+        $this->repoList = new UXListView;
+        $this->repoList->on('action', [$this, 'doSelectRepo']);
+        $this->repoList->on('click', function(UXMouseEvent $e){
+            if ($e->isDoubleClick() && $this->repoList->selectedIndex > -1) {
+                $this->doAddPackage();
+            }
+        });
+        $addPaneBox->add($this->repoList);
+        $this->uiPackageContextMenu($this->repoList);
+        
+        // 2.4 Кнопка обновить репозиторий
+        $this->repoUpdateButton = new UXButton(_('jppm.package.manager.refresh'), ico('refresh16'));
+        $this->repoUpdateButton->anchors = ['top' => false, 'left' => 0, 'right' => false, 'bottom' => 0];
+        $this->repoUpdateButton->on('action', [$this, 'doUpdateRepos']);
+        $addPaneBox->add($this->repoUpdateButton);
 
         return $this->parentPane;
     }
 
+    /**
+     * Прелоадер при установке пакета расширений
+     */
     protected function createPreloader(): UXNode {
         $progressBar = new UXProgressBar;
         $progressBar->progress = -1;
@@ -163,20 +274,27 @@ class JPPMControlPane extends AbstractProjectControlPane
 
         $progressPane = new UXAnchorPane;
         $progressPane->add($progressBar);
-        $progressPane->paddingTop = 10;
         UXHBox::setHgrow($progressBar, 'ALWAYS');
         
         return $progressPane;
     }
 
     /**
-     * Refresh ui and pane.
+     * Обновление содержимого панели
      */
     public function refresh() {
         if(is_null($this->packageTpl)) return;
 
         $this->disableUI();
+        $this->doUpdatePackages();     
+        $this->doUpdateRepos();
+        $this->enableUI();
+    }
 
+    /**
+     * Обновить список используемых в текущем проекте пакетов
+     */
+    public function doUpdatePackages(){
         $this->packagesList->items->clear();
         $this->packageTpl->load();
         $packages = $this->packageTpl->getDeps();
@@ -185,7 +303,8 @@ class JPPMControlPane extends AbstractProjectControlPane
             $packageData = $this->jppm->getDepConfig($name);
             $isBundle = isset($packageData['ide-bundle']);
 
-            $nameLabel = new UXLabel($name);
+            $nameText = (isset($packageData['name']) && (str::length($packageData['name']) > 0)) ? $packageData['name'] : $name;
+            $nameLabel = new UXLabel($nameText);
             $nameLabel->textColor = UXColor::of('#000000');
             $nameLabel->font = $nameLabel->font->withBold();
 
@@ -202,9 +321,20 @@ class JPPMControlPane extends AbstractProjectControlPane
             $textBox = new UXVBox([$nameBox, $descriptLabel]);
 
             // Разные иконки для пакетов jphp и bundle
-            $icon = ico($isBundle ? 'bundle16' : 'plugin16');
+            if($isBundle){
+                if(isset($packageData['ide-bundle']['icon']) && fs::exists( $this->project->getRootDir() . "/vendor/" . $name . "/src/.data/img/" . $packageData['ide-bundle']['icon'])){
+                    $icon = new UXImageView;
+                    $icon->image = $this->project->getRootDir() . "/vendor/" . $name . "/src/.data/img/" . $packageData['ide-bundle']['icon'];
+                } else {
+                    $icon = ico('bundle16');
+                }
+            } else {
+                $icon = ico('plugin16');
+            }
             $icon->x =
             $icon->y = 8;
+            $icon->width =
+            $icon->height = 16;
             $iconPane = new UXAnchorPane;
             $iconPane->add($icon);
             $iconPane->padding = 4;
@@ -217,8 +347,108 @@ class JPPMControlPane extends AbstractProjectControlPane
             $this->packagesList->items->add($packageBox);
             $this->packagesList->requestFocus();
         }
+    }
 
-        $this->enableUI();
+    /**
+     * Обновление репозитория
+     */
+    public function doUpdateRepos(){
+        $this->repoUpdateButton->enabled = false;
+        $this->repoUpdateButton->graphic = ico('process16');
+
+        $packages = $this->packageTpl->getDeps();
+        $thread = new Thread(function() use ($packages){
+            /** @var ServiceResponse $query */
+            $query = Ide::service()->ide()->executeGet('repo/list/last');
+            if($query->isSuccess()){
+                $data = $query->result();
+            } else {
+                $data = [];
+            }
+
+            uiLater(function() use ($data, $packages){
+                $this->repoList->items->clear();
+                $lastName = null;
+                foreach($data as $item){
+                    if($item['name'] != $lastName){
+                        $box = new UXVBox;
+                        $box->data('name', $item['name']);
+                        $box->data('version', '*');
+                        $this->repoList->items->add($box);
+                        
+                        $labelName = new UXLabel($item['name']);
+                        $labelName->font = $labelName->font->withBold()->withSize(14);
+                        $labelName->textColor = UXColor::of('#333');
+                        $box->add($labelName);
+                        
+                        $descText = (is_null($item['description']) ? 'No description' : $item['description']);
+                        $descLabel = new UXLabel($descText);
+                        $descLabel->font = $descLabel->font->withSize(12);
+                        $descLabel->textColor = UXColor::of('#333');
+                        $box->add($descLabel);                    
+                        
+                        $versionLabel = new UXLabel(_('jppm.package.manager.version') . ': *', ico('tag16'));
+                        $versionLabel->graphicTextGap = 24;
+                        $versionLabel->font = $versionLabel->font->withSize(12);
+                        $versionLabel->textColor = UXColor::of('#666');
+                        $box->add($versionLabel);
+
+                        if(isset($packages[$item['name']]) && $packages[$item['name']] == '*'){
+                            $versionLabel->graphic = ico('ok16');
+                            $versionLabel->enabled = false;
+                        }
+                    }
+                    
+                    $label = new UXLabel(_('jppm.package.manager.version') . ': ' . $item['version'], ico('tag16'));
+                    $label->data('name', $item['name']);
+                    $label->data('version', $item['version']);
+                    $label->graphicTextGap = $versionLabel->graphicTextGap;
+                    $label->font = $versionLabel->font;
+                    $label->textColor = $versionLabel->textColor;
+                    $this->repoList->items->add($label);
+                    
+                    if(isset($packages[$item['name']]) && $packages[$item['name']] == $item['version']){
+                        $label->graphic = ico('ok16');
+                        $label->enabled = false;
+                    }
+
+                    $lastName = $item['name'];
+                }
+                
+                $this->repoUpdateButton->enabled = true;
+                $this->repoUpdateButton->graphic = ico('refresh16');
+            });
+        });
+        $thread->start();
+    }
+
+    /**
+     * Создать контекстное меню для списка с пакетами. Элементы в items должны хранить данные в data('name') и data('version')
+     * @return UXContextMenu
+     */
+    protected function uiPackageContextMenu(UXListView $list){
+        $list->contextMenu = new UXContextMenu;
+
+        $copyLinkMenu = new UXMenuItem('Копировать ссылку', ico('copy16'));
+        $copyLinkMenu->on('action', function() use ($list){
+            if($list->selectedIndex < 0) return;
+            $selected = $list->selectedItem;
+            $link = $selected->data('name') . '@' . $selected->data('version');
+            UXClipboard::setText($link);
+            Ide::get()->getMainForm()->toast('Скопировано: ' . $link);
+        });
+        $list->contextMenu->items->add($copyLinkMenu);
+    }
+
+    /**
+     * Выбор элемента из репозитория
+     */
+    public function doSelectRepo(){
+        if($this->repoList->selectedIndex < 0) return;
+        
+        $selected = $this->repoList->selectedItem;
+        $this->nameField->text = $selected->data('name');
+        $this->versionField->text = $selected->data('version');
     }
 
     /**
@@ -241,7 +471,6 @@ class JPPMControlPane extends AbstractProjectControlPane
             $selected = $this->packagesList->selectedItem->data('name');
             $info = $this->jppm->getDepConfig($selected);
             $this->readmeButton->enabled = isset($info['doc']['url-prefix']);
-            var_dump($info);
         }
     }
 
@@ -254,13 +483,23 @@ class JPPMControlPane extends AbstractProjectControlPane
 
         if(strlen($package) == 0){
             $error = new UXAlert('ERROR');
-            $error->title = _('jppm.package.manager.error.name');
+            $error->title = _('entity.error');
+            $error->headerText = _('jppm.package.manager.error.name');
             $error->showAndWait();
             return;
         }
 
         if(strlen($version) == 0){
             $version = '*';
+        }
+
+        $packages = $this->packageTpl->getDeps();
+        if(isset($packages[$package]) && $packages[$package] == $version){
+            $error = new UXAlert('ERROR');
+            $error->title = _('entity.error');
+            $error->headerText = _('jppm.package.manager.error.exists');
+            $error->showAndWait();
+            return;
         }
 
         $this->jppm->addDep($package, $version);
@@ -272,14 +511,17 @@ class JPPMControlPane extends AbstractProjectControlPane
 
     /**
      * Удаление пакета
+     * @param string|null $package Если не передано имя пакета, то будет взят выбранный элемент из списка пакетов
      */
     public function doDeletePackage($package = null){
-        $package = (is_null($package) || !is_string($package)) ? ($this->packagesList->selectedItem->data('name')) : ($package) ;
+        if(is_null($package) || !is_string($package)){
+            $package = $this->packagesList->selectedItem->data('name');
+            $this->packagesList->items->removeByIndex($this->packagesList->selectedIndex);
+        }
 
         $this->jppm->removeDep($package);
         $this->applyPackages();
 
-        $this->refresh();
         $this->delButton->enabled = false;
     }
 
@@ -290,6 +532,7 @@ class JPPMControlPane extends AbstractProjectControlPane
     protected function applyPackages(?string $lastInstall = null){
         $preloader = $this->createPreloader();
         $this->packagesList->items->add($preloader);
+        $this->packagesList->scrollTo($this->packagesList->items->count());
         $this->disableUI();
 
         $this->jppm->install($this->project, 
@@ -297,34 +540,47 @@ class JPPMControlPane extends AbstractProjectControlPane
             function(){
                 // on finish
                 $this->refresh();
+                $this->jppm->installToIDE($this->project);
+                $this->project->refreshSupports();
             },
 
             function($msg) use ($lastInstall){
                 // on error callback
-                Logger::error('Cannot install package ' . $lastInstall);
+                
+                if(str::posIgnoreCase($msg, 'failed to install') > -1){
+                    Logger::error('Cannot install package ' . $lastInstall);
 
-                if(strlen($lastInstall) > 0){
-                    $this->doDeletePackage($lastInstall);
+                    if(str::length($lastInstall) > 0){
+                        $this->doDeletePackage($lastInstall);
+                    }
+                
+                    $error = new UXAlert('ERROR');
+                    $error->title = _('entity.error');
+                    $error->headerText = _('jppm.package.manager.error.install') . ' ' . $lastInstall;
+                    $error->contentText = $msg;
+                    $error->showAndWait();
+                } elseif(str::posIgnoreCase($msg, 'failed to delete') > -1){
+                    Ide::get()->getMainForm()->toast(_('jppm.package.manager.error.delete'));
+                } else {
+                    Ide::get()->getMainForm()->toast(_('jppm.package.manager.error.default'));
                 }
 
-                $error = new UXAlert('ERROR');
-                $error->title = _('entity.error');
-                $error->headerText = _('jppm.package.manager.error.install') . ' ' . $lastInstall;
-                $error->contentText = $msg;
-                $error->showAndWait();
-
-                $this->refresh();
+                /*$this->refresh();
+                $this->jppm->installToIDE($this->project);
+                $this->project->refreshSupports();
+                $this->doUpdateRepos();*/
             }
         );
-
-        $this->jppm->installToIDE($this->project);
-        $this->project->refreshSupports();
     }
 
     /**
      * Выключить возможность взаимодействия с графическими элементами
      */
     protected function disableUI(){
+        $this->nameField->enabled = 
+        $this->versionField->enabled = 
+        $this->repoList->enabled = 
+        $this->repoUpdateButton->enabled = 
         $this->readmeButton->enabled = 
         $this->addButton->enabled = 
         $this->delButton->enabled = 
@@ -336,6 +592,10 @@ class JPPMControlPane extends AbstractProjectControlPane
      * Включить возможность взаимодействия с графическими элементами
      */
     protected function enableUI(){
+        $this->nameField->enabled = 
+        $this->versionField->enabled = 
+        $this->repoList->enabled = 
+        $this->repoUpdateButton->enabled = 
         $this->addButton->enabled = 
         !$this->parentPane->mouseTransparent = false;
         $this->packagesList->selectedIndex = -1;
