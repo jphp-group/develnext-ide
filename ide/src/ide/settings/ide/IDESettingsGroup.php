@@ -30,7 +30,7 @@ class IDESettingsGroup extends AbstractSettingsGroup
     {
         return [
             new UISettingsItem(),
-            new PluginsSettingsItem()
+            //new PluginsSettingsItem()
         ];
     }
 }
