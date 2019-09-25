@@ -5,15 +5,12 @@ use ide\Ide;
 use ide\Logger;
 use ide\account\api\ServiceResponse;
 use ide\formats\templates\JPPMPackageFileTemplate;
-use ide\misc\FileWatcher;
-use ide\project\behaviours\BundleProjectBehaviour;
 use ide\project\control\AbstractProjectControlPane;
 use ide\project\supports\JPPMProjectSupport;
 use php\gui\UXAlert;
 use php\gui\UXButton;
 use php\gui\UXClipboard;
 use php\gui\UXContextMenu;
-use php\gui\UXImage;
 use php\gui\UXImageView;
 use php\gui\UXLabel;
 use php\gui\UXListView;
@@ -109,6 +106,16 @@ class JPPMControlPane extends AbstractProjectControlPane
      * @var UXVBox
      */
     protected $parentPane;
+
+    /**
+     * @var UXVBox
+     */
+    protected $paginationBox;
+
+    /**
+     * @var int
+     */
+    protected $offset = 0;
 
     /**
      * Создание графического интерфейса
@@ -254,11 +261,29 @@ class JPPMControlPane extends AbstractProjectControlPane
         $addPaneBox->add($this->repoList);
         $this->uiPackageContextMenu($this->repoList);
         
-        // 2.4 Кнопка обновить репозиторий
+        // 2.4 Кнопка обновить репозиторий и пагинация
         $this->repoUpdateButton = new UXButton(_('jppm.package.manager.refresh'), ico('refresh16'));
-        $this->repoUpdateButton->anchors = ['top' => false, 'left' => 0, 'right' => false, 'bottom' => 0];
         $this->repoUpdateButton->on('action', [$this, 'doUpdateRepos']);
-        $addPaneBox->add($this->repoUpdateButton);
+
+        $buildPaginationButton = function ($icon, $offset): UXButton {
+            $button = new UXButton();
+            $button->graphic = ico($icon);
+            $button->on("action", function () use ($offset) {
+                $this->offset += $offset;
+                $this->doUpdateRepos();
+            });
+
+            return $button;
+        };
+
+        $this->paginationBox = new UXHBox();
+        $this->paginationBox->spacing = 8;
+        $this->paginationBox->add($buildPaginationButton("undo16", -30));
+        $this->paginationBox->add($buildPaginationButton("redo16", 30));
+
+        $addPaneBox->add(new UXHBox([
+            $this->repoUpdateButton, $this->paginationBox
+        ], 8));
 
         return $this->parentPane;
     }
@@ -353,18 +378,28 @@ class JPPMControlPane extends AbstractProjectControlPane
      * Обновление репозитория
      */
     public function doUpdateRepos(){
-        $this->repoUpdateButton->enabled = false;
+        $this->repoUpdateButton->enabled =
+        $this->paginationBox->children->toArray()[0]->enabled =
+        $this->paginationBox->children->toArray()[1]->enabled = false;
         $this->repoUpdateButton->graphic = ico('process16');
 
         $packages = $this->packageTpl->getDeps();
         $thread = new Thread(function() use ($packages){
             /** @var ServiceResponse $query */
-            $query = Ide::service()->ide()->executeGet('repo/list/last');
+            $query = Ide::service()->ide()->executeGet('repo/list/last?limit=31&offset=' . $this->offset);
             if($query->isSuccess()){
                 $data = $query->result();
             } else {
                 $data = [];
             }
+
+            uiLaterAndWait(function () use ($data) {
+                $this->paginationBox->children->toArray()[0]->enabled = $this->offset != 0;
+                $this->paginationBox->children->toArray()[1]->enabled = count($data) == 31;
+            });
+
+            if (count($data) == 31)
+                array_pop($data);
 
             uiLater(function() use ($data, $packages){
                 $this->repoList->items->clear();
@@ -586,6 +621,8 @@ class JPPMControlPane extends AbstractProjectControlPane
         $this->delButton->enabled = 
         !$this->parentPane->mouseTransparent = true;
         $this->packagesList->selectedIndex = -1;
+        $this->paginationBox->children->toArray()[0]->enabled =
+        $this->paginationBox->children->toArray()[1]->enabled = false;
     }
 
     /**
@@ -599,5 +636,7 @@ class JPPMControlPane extends AbstractProjectControlPane
         $this->addButton->enabled = 
         !$this->parentPane->mouseTransparent = false;
         $this->packagesList->selectedIndex = -1;
+        $this->paginationBox->children->toArray()[0]->enabled =
+        $this->paginationBox->children->toArray()[1]->enabled = true;
     }
 }
