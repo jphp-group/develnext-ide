@@ -41,12 +41,12 @@ function task_build_grammars(Event $e): void {
 
     Console::log("Generate java code from ANTLR4 grammars ...");
     foreach ($files as $file) {
-        $processCommand = "java -jar " . fs::abs("./antlr-complete.jar") . " " . $file;
+        $processCommand = ["java", "-jar", fs::abs("./antlr-complete.jar"), fs::abs($file)];
 
         if (str::contains(str::lower(System::getProperty("os.name")), "win"))
-            $processCommand = "cmd.exe /c " . $processCommand;
+            $processCommand = flow(["cmd.exe", "/c"], $processCommand)->toArray();
 
-        $process = new Process(str::split($processCommand, " "), "./jars/.out/");
+        $process = new Process($processCommand, "./jars/.out/");
         $process = $process->inheritIO()->startAndWait();
         $exit = $process->getExitValue();
 
@@ -63,13 +63,12 @@ function task_build_grammars(Event $e): void {
     });
 
     Console::log("Compile java code from ANTLR4 grammars ...");
-    $processCommand = "javac -cp " . str::join($jars, File::PATH_SEPARATOR) . " "
-        . str::join($files, " ");
+    $processCommand = flow(["javac", "-cp", str::join($jars, File::PATH_SEPARATOR)], $files)->toArray();
 
     if (str::contains(str::lower(System::getProperty("os.name")), "win"))
-        $processCommand = "cmd.exe /c " . $processCommand;
+        $processCommand = flow(["cmd.exe", "/c"], $processCommand)->toArray();
 
-    $process = new Process(str::split($processCommand, " "), "./jars/.out/");
+    $process = new Process($processCommand, "./jars/.out/");
     $process = $process->inheritIO()->startAndWait();
     $exit = $process->getExitValue();
 
