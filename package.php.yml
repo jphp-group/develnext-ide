@@ -27,5 +27,8 @@ localization:
   source-dir: './ide/misc/languages'
   languages: [ru, en]
 
-jre:
-  win: './tools/jre-win64-11.0.2.tar.bz2'
+jdk:
+  version: "jdk-13"
+  win: 'https://download.bell-sw.com/java/13/bellsoft-jdk13-windows-amd64.zip'
+  darwin: 'https://download.bell-sw.com/java/13/bellsoft-jdk13-macos-amd64.zip'
+  linux: 'https://download.bell-sw.com/java/13/bellsoft-jdk13-linux-amd64.tar.gz'

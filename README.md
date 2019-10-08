@@ -21,8 +21,17 @@ jppm start-ide
 jppm prepare-ide
 ```
 3. Finally, build IDE:
+
+Platforms available to build:
+
+* **win** - windows
+* **linux** - any linux distribution
+* **darwin** - OS X (MacOS)
+
 ```bash
-jppm build-ide
+jppm build-ide --{platform_name}
 ```
+
+********************
 
 The build of IDE will be in the `ide/build` directory.
