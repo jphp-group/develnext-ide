@@ -152,7 +152,7 @@ function task_buildIde(Event $e)
 
     $os = $e->isFlag('linux') ? 'linux' : $e->isFlag('darwin') ? 'darwin' : 'win';
 
-    $jreLink = $e->package()->getAny("jdk.$os");
+    $jreLink = $e->package()->getAny("jdk.$os.url");
     $jrePath = "./tools/build/jre/" . fs::name($jreLink);
 
     if (!fs::exists($jrePath)) {
@@ -193,7 +193,7 @@ function task_buildIde(Event $e)
                 }
             });
 
-            Tasks::copy("./tools/build/jre/$os/" . $e->package()->getAny("jdk.version"), "./ide/build/jre");
+            Tasks::copy("./tools/build/jre/$os/" . $e->package()->getAny("jdk.$os.dir"), "./ide/build/jre");
         }
     }
 }
