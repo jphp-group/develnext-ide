@@ -137,6 +137,8 @@ function task_fetchMessages($e)
  */
 function task_buildIde(Event $e)
 {
+    fs::makeDir("./tools/build/jre/");
+
     Tasks::runExternal("./ide", "install");
 
     Tasks::copy("./ide/vendor", "./ide/build/vendor/");
@@ -146,16 +148,22 @@ function task_buildIde(Event $e)
     Tasks::runExternal('./dn-launcher', 'build');
     Tasks::deleteFile("./ide/build/DevelNext.jar");
     Tasks::copy('./dn-launcher/build/DevelNext.jar', './ide/build');
-
     Tasks::runExternal('./ide', 'copySourcesToBuild');
 
-    $os = $e->isFlag('linux') ? 'linux' : 'win';
+    $os = $e->isFlag('linux') ? 'linux' : $e->isFlag('darwin') ? 'darwin' : 'win';
 
-    $jrePath = $e->package()->getAny("jre.$os");
+    $jreLink = $e->package()->getAny("jdk.$os");
+    $jrePath = "./tools/build/jre/" . fs::name($jreLink);
+
+    if (!fs::exists($jrePath)) {
+        fs::makeFile($jrePath);
+        Console::log("Download JDK for $os from $jreLink");
+        Stream::putContents($jrePath, Stream::getContents($jreLink));
+    }
 
     if ($jrePath) {
         if (fs::isDir("./tools/build/jre/$os")) {
-            Tasks::copy("./tools/build/jre/$os", "./ide/build/jre");
+            Tasks::copy("./tools/build/jre/$os/" . $e->package()->getAny("jdk.version"), "./ide/build/jre");
         } else {
             switch (fs::ext($jrePath)) {
                 case 'xz':
@@ -185,7 +193,7 @@ function task_buildIde(Event $e)
                 }
             });
 
-            Tasks::copy("./tools/build/jre/$os", "./ide/build/jre");
+            Tasks::copy("./tools/build/jre/$os/" . $e->package()->getAny("jdk.version"), "./ide/build/jre");
         }
     }
 }

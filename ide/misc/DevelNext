@@ -12,7 +12,7 @@ APP_HOME=$(dirname "$(realpath "$0")")
 
 echo "App Home = $APP_HOME"
 
-JAVA_HOME="$APP_HOME/tools/jre"
+JAVA_HOME="$APP_HOME/jre"
 JAVA_BIN="$JAVA_HOME/bin/java"
 
 
