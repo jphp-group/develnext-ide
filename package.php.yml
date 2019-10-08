@@ -28,7 +28,12 @@ localization:
   languages: [ru, en]
 
 jdk:
-  version: "jdk-13"
-  win: 'https://download.bell-sw.com/java/13/bellsoft-jdk13-windows-amd64.zip'
-  darwin: 'https://download.bell-sw.com/java/13/bellsoft-jdk13-macos-amd64.zip'
-  linux: 'https://download.bell-sw.com/java/13/bellsoft-jdk13-linux-amd64.tar.gz'
+  win:
+    url: 'https://download.bell-sw.com/java/13/bellsoft-jdk13-windows-amd64.zip'
+    dir: 'jdk-13'
+  darwin:
+    url: 'https://download.bell-sw.com/java/13/bellsoft-jdk13-macos-amd64.zip'
+    dir: 'jdk-13.jdk'
+  linux:
+    url: 'https://download.bell-sw.com/java/13/bellsoft-jdk13-linux-amd64.tar.gz'
+    dir: 'jdk-13'
