@@ -1,9 +1,13 @@
+* {
+    -fx-prompt-text-fill: #a0a0a0;
+}
+
 .root {
     /* Основной цвет элементов */
-    -fx-base: #262626;
+    -fx-base: #3a3a3a;
 
     /* Цвет фона */
-    -fx-background: #1A1A1A;
+    -fx-background: #393939;
     -fx-background-color: -fx-background;
 
     /* Цвет текста */
@@ -17,7 +21,7 @@
     -fx-focus-color: -fx-base;
 
     /* Цвет обводки при фокусе на элемент */
-    -fx-faint-focus-color: #263759;
+    -fx-faint-focus-color: rgba(86, 86, 86, 0.42);
     
     /* Фон у внутренних элементов: нечёт, чёт */
     -fx-control-inner-background: -fx-base;
@@ -31,9 +35,9 @@
     -fx-default-button: #555;
 
     -fx-color: -fx-base;
-    -fx-accent: #38b5ed;
+    -fx-accent: #bfd7e2;
     -fx-green: #3D747A;
-    -fx-blue: #4EABD3;
+    -fx-blue: #87bed3;
     /*-fx-blue: #7EB6CC;*/
     -fx-dark-blue: #2C5260;
     -fx-red: #e2574c;
@@ -74,7 +78,7 @@
  */
 .flow-list-view {
     -fx-background-color: -fx-background;
-    -fx-border-color: -fx-outer-border; 
+    -fx-border-color: -fx-outer-border;
 }
 
 .flow-list-view .list-cell.selected { 
@@ -103,9 +107,13 @@
     -fx-background-color: -fx-base;
 }
 
+.menu-bar {
+    -fx-background-color: #313131;
+}
+
 /* Цвет текстовых элементов */
 .label {
-    -fx-text-fill: -fx-font-color;
+    -fx-text-fill: white;
 }
 
 /* Цвет у кнопки "вход в аккаунт" */
@@ -132,7 +140,7 @@
 
 .tab-pane .tab:selected > .tab-container *,
 .dn-file-tab-pane > .tab-header-area > .headers-region > .tab:selected > .tab-container > .tab-label {    
-    -fx-text-fill: -fx-blue;
+    -fx-text-fill: white;
 }
 
 /**
