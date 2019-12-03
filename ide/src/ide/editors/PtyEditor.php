@@ -78,8 +78,10 @@ class PtyEditor extends AbstractEditor {
      */
     public function makeUi() {
         $node = $this->terminal->getFXNode();
-        uiLater(function () use ($node) { // fix for unix systems
-            $node->requestFocus();
+        $node->on("click", function () use ($node) {
+            uiLater(function () use ($node) { // fix for unix systems
+                $node->requestFocus();
+            });
         });
 
         return $node;
