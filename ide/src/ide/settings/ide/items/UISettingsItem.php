@@ -5,6 +5,7 @@ namespace ide\settings\ide\items;
 
 
 use ide\commands\ChangeThemeCommand;
+use ide\commands\theme\IDETheme;
 use ide\Ide;
 use ide\IdeLanguage;
 use ide\l10n\LocalizedString;
@@ -52,14 +53,16 @@ class UISettingsItem extends AbstractSettingsItem {
 
         $themeCombobox = new UXComboBox();
         $themeCombobox->id = "theme-combobox";
-        $themeCombobox->onCellRender([$this, "uiThemeRender"]);
-        $themeCombobox->onButtonRender([$this, "uiThemeRender"]);
 
         $themes = ChangeThemeCommand::$instance->getThemes();
-        $currentTheme = ChangeThemeCommand::$instance->getCurrentTheme();
+        $currentTheme = ChangeThemeCommand::$instance->getCurrentTheme()->getName();
         $themeCombobox->items->clear();
-        $themeCombobox->items->addAll($themes);
-        $themeCombobox->selectedIndex = array_search($currentTheme, $themes);
+        foreach ($themes as $key => $theme) {
+            $themeCombobox->items->add($theme->getName());
+
+            if ($theme->getName() == $currentTheme)
+                $themeCombobox->selectedIndex = $key;
+        }
 
         $box->add($themeCombobox);
 
@@ -122,7 +125,7 @@ class UISettingsItem extends AbstractSettingsItem {
         Ide::get()->setUserConfigValue('ide.splash', $ui->lookup("#splash-checkbox")->selected ? 1 : 0);
 
         ChangeThemeCommand::$instance->setCurrentTheme(
-            str::lower($ui->lookup("#theme-combobox")->value->__toString()));
+            $ui->lookup("#theme-combobox")->value->__toString());
         ChangeThemeCommand::$instance->onExecute();
 
 
@@ -178,6 +181,6 @@ class UISettingsItem extends AbstractSettingsItem {
      * @param  string $value
      */
     public function uiThemeRender(UXListCell $item, $value){
-        $item->text = str::upperFirst($value);
+        $item->text = $value->__toString();
     }
 }

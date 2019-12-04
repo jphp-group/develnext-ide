@@ -1,6 +1,7 @@
 <?php
 namespace ide\forms;
 
+use ide\commands\ChangeThemeCommand;
 use ide\forms\mixins\SavableFormMixin;
 use ide\Ide;
 use ide\Logger;
@@ -97,8 +98,13 @@ class BuildProgressForm extends AbstractIdeForm implements ProjectConsoleOutput
         });
 
 
-        $this->term = new JediTermWidget();
+        $this->term = new JediTermWidget(null, ChangeThemeCommand::$instance->getCurrentTheme()->getTerminalTheme()->build());
         $this->consoleArea = $this->term->getFXNode();
+        $this->consoleArea->on("click", function () {
+            uiLater(function () {
+                $this->term->requestFocus();
+            });
+        });
 
         $this->consoleArea->position = $this->consoleList->position;
         $this->consoleArea->size = $this->consoleList->size;

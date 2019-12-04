@@ -37,6 +37,7 @@ deps:
   jphp-gui-jediterm-ext: '*'
   antlr4-develnext-grammars: '*'
   jphp-richtextfx-ext: 1.2.5
+  jphp-cglib-ext: '*'
 app:
   disable-launcher: '1'
   jvm-args:

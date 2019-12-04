@@ -2,6 +2,7 @@
 
 namespace ide\editors;
 
+use ide\commands\ChangeThemeCommand;
 use ide\Ide;
 use php\gui\UXDialog;
 use php\gui\UXNode;
@@ -37,7 +38,9 @@ class PtyEditor extends AbstractEditor {
             $dir = Ide::project()->getRootDir();
 
         $this->process = PtyProcess::exec($args, $env, $dir);
-        $this->terminal = new JediTermWidget($this->process);
+
+        $this->terminal = new JediTermWidget($this->process,
+            ChangeThemeCommand::$instance->getCurrentTheme()->getTerminalTheme()->build());
         $this->terminal->requestFocus();
         $this->terminal->start();
     }
