@@ -52,7 +52,7 @@ class ChangeThemeCommand extends AbstractCommand {
         $this->prevTheme = $this->getCurrentTheme();
         self::$instance = $this;
 
-        $this->onExecute(); // fix!
+        $this->getCurrentTheme()->onApply();
     }
 
     /**
@@ -88,6 +88,8 @@ class ChangeThemeCommand extends AbstractCommand {
 
         if ($this->currentTheme->getName() != $theme)
             $this->currentTheme = $this->themes[0];
+
+        $this->currentTheme->onApply();
 
         Logger::info('Set IDE theme: ' . $theme);
     }
@@ -130,7 +132,6 @@ class ChangeThemeCommand extends AbstractCommand {
             $this->applyStylesheet($form);
         }
 
-        $this->currentTheme->onApply();
         $this->prevTheme = $this->currentTheme;
     }
 
