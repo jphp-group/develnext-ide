@@ -51,6 +51,8 @@ class ChangeThemeCommand extends AbstractCommand {
         FormCollection::onAddEvent([$this, 'applyStylesheet']);
         $this->prevTheme = $this->getCurrentTheme();
         self::$instance = $this;
+
+        $this->onExecute(); // fix!
     }
 
     /**
