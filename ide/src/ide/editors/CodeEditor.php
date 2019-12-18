@@ -23,7 +23,6 @@ use php\gui\designer\UXCodeAreaScrollPane;
 use php\gui\designer\UXFxCssCodeArea;
 use php\gui\designer\UXJavaScriptCodeArea;
 use php\gui\designer\UXPhpCodeArea;
-use php\gui\designer\UXSyntaxAutoCompletion;
 use php\gui\designer\UXSyntaxTextArea;
 use php\gui\designer\UXTextCodeArea;
 use php\gui\event\UXKeyEvent;
@@ -47,8 +46,6 @@ use php\lib\Str;
  */
 class CodeEditor extends AbstractEditor
 {
-    const USE_NEW_EDITOR = true;
-
     use EventHandlerBehaviour;
 
     protected $mode;
@@ -57,21 +54,6 @@ class CodeEditor extends AbstractEditor
      * @var UXVBox
      */
     protected $ui;
-
-    /**
-     * @var bool
-     */
-    protected $lockHandlers = false;
-
-    /**
-     * @var null|array
-     */
-    protected $editableArea = null;
-
-    /**
-     * @var array
-     */
-    protected $doOnSucceed = [];
 
     /**
      * @var AbstractCommand[]
@@ -153,11 +135,6 @@ class CodeEditor extends AbstractEditor
         $this->sourceFile = $sourceFile;
     }
 
-    /*public function getIcon()
-    {
-        return $this->mode ? 'icons/' . $this->mode . 'File16.png' : null;
-    }*/
-
     /**
      * CodeEditor constructor.
      * @param string $file
@@ -169,7 +146,6 @@ class CodeEditor extends AbstractEditor
         parent::__construct($file);
 
         $this->mode = $mode;
-        //$this->sourceFile = $mode == 'php';
 
         $textArea = $options['textArea'] instanceof UXAbstractCodeArea ? $options['textArea'] : null;
 
@@ -250,8 +226,6 @@ class CodeEditor extends AbstractEditor
     public function close($save = true)
     {
         parent::close($save);
-
-        //$this->autoComplete = null;
     }
 
     public function leave()
@@ -316,11 +290,6 @@ class CodeEditor extends AbstractEditor
         }
     }
 
-    public function installAutoCompletion(UXSyntaxAutoCompletion $completion)
-    {
-        $completion->install($this->textArea);
-    }
-
     /**
      * @param $any
      *
@@ -382,19 +351,11 @@ class CodeEditor extends AbstractEditor
             case 'paste': $this->textArea->paste(); break;
 
             case 'find':
-                if ($this->textArea instanceof UXAbstractCodeArea) {
-                    $this->showFindDialog();
-                } else {
-                    $this->textArea->showFindDialog();
-                }
+                $this->showFindDialog();
                 break;
 
             case 'replace':
-                if ($this->textArea instanceof UXAbstractCodeArea) {
-                    $this->showReplaceDialog();
-                } else {
-                    $this->textArea->showReplaceDialog();
-                }
+                $this->showReplaceDialog();
                 break;
 
             default:
