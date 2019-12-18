@@ -3,14 +3,12 @@ namespace ide\project\templates;
 
 use ide\formats\ProjectFormat;
 use ide\formats\templates\JPPMPackageFileTemplate;
-use ide\Ide;
 use ide\project\AbstractProjectTemplate;
 use ide\project\behaviours\BackupProjectBehaviour;
 use ide\project\behaviours\JavaPlatformBehaviour;
 use ide\project\behaviours\PhpProjectBehaviour;
 use ide\project\control\CommonProjectControlPane;
 use ide\project\Project;
-use ide\project\ProjectModule;
 use ide\utils\FileUtils;
 
 class PhpProjectTemplate extends AbstractProjectTemplate

@@ -2,10 +2,12 @@
 
 namespace ide\commands;
 
+use facade\Async;
+use ide\tasks\TaskPanel;
+use php\concurrent\Promise;
 use function alert;
 use function dump;
 use function flow;
-use framework\core\Promise;
 use ide\editors\AbstractEditor;
 use ide\forms\BuildProgressForm;
 use ide\Ide;
@@ -103,62 +105,33 @@ class RunTaskCommand extends AbstractCommand
 
             foreach ($items as $key => $item) {
                 uiLaterAndWait(function () use ($key, $item, $items, $i) {
-                    $menuItem = _(new UXMenuItem($item['title'] ?? $key));
-
-                    $menuItem->graphic = Ide::getImage($item['icon'] ?? $this->getIcon());
+                    $menuItem = new UXMenuItem(_($item->getName()));
+                    $menuItem->graphic = Ide::getImage($item->getIcon());
 
                     $handler = function () use ($item, $key, $menuItem) {
-                        $this->taskSelect->text = $item['title'] ?? $key;
+                        $this->taskSelect->text = $item->getName();
                         $this->taskSelect = _($this->taskSelect);
-                        $this->taskSelect->graphic = Ide::getImage($item['icon'] ?? $this->getIcon());
+                        $this->taskSelect->graphic = Ide::getImage($item->getIcon());
 
                         $this->taskSelect->on('action', function () use ($item) {
                             ProjectSystem::saveOnlyRequired();
-
-                            $dialog = Ide::get()->getMainForm()->showCLI();
-
-                            $stopFunc = $item['stopFunc'];
-                            $this->stopButton->enabled = true;
                             $this->taskSelect->enabled = false;
+                            $this->stopButton->enabled = true;
 
-                            $startProcess = function () use ($item, $dialog, $stopFunc) {
-                                /** @var PtyProcess $process */
-                                $processInfo = $item['makeStartProcess']();
+                            $panel = new TaskPanel($item);
+                            $panel->setOnProcessExit(function () use ($panel) {
+                                $this->taskSelect->enabled = true;
+                                $this->stopButton->enabled = false;
 
-                                $process = PtyProcess::exec($processInfo["args"], $processInfo["env"], $processInfo["dir"]);
+                                if ($panel->isCloseAfterExit())
+                                    Ide::get()->getMainForm()->hideBottom();
+                            });
 
-                                $dialog->watchProcess($process);
-                                $dialog->setStopProcedure(function () use ($stopFunc, $process) {
-                                    $process->destroy();
+                            $this->stopButton->on("action", function () use ($panel) {
+                                $panel->destroy();
+                            });
 
-                                    $this->taskSelect->enabled = true;
-                                    $this->stopButton->enabled = false;
-                                });
-
-                                $dialog->setOnExitProcess(function () {
-                                    $this->taskSelect->enabled = true;
-                                    $this->stopButton->enabled = false;
-                                });
-
-                                $this->stopButton->on('action', function () use ($stopFunc, $process, $dialog) {
-                                    $dialog->setIgnoreExit1(true);
-                                    $process->destroy();
-
-                                    $this->stopButton->enabled = false;
-                                });
-                            };
-
-                            if ($prepareFunc = $item['prepareFunc']) {
-                                $result = $prepareFunc($dialog);
-
-                                if ($result instanceof Promise) {
-                                    $result->then($startProcess);
-                                } else {
-                                    $startProcess();
-                                }
-                            } else {
-                                $startProcess();
-                            }
+                            Ide::get()->getMainForm()->showBottom($panel->makeUI());
                         }, __CLASS__);
                     };
                     $menuItem->on('action', $handler);

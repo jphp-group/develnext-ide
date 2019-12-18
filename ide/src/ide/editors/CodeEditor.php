@@ -2,14 +2,8 @@
 namespace ide\editors;
 
 use develnext\lexer\inspector\AbstractInspector;
-use Files;
 use ide\autocomplete\AutoComplete;
-use ide\autocomplete\php\PhpAutoComplete;
 use ide\autocomplete\ui\AutoCompletePane;
-use ide\editors\menu\ContextMenu;
-use ide\editors\rich\highlighters\CssANTLR4Highlighter;
-use ide\editors\rich\LineNumber;
-use ide\editors\rich\RichCodeEditor;
 use ide\forms\AbstractIdeForm;
 use ide\forms\CodeEditorSettingsForm;
 use ide\forms\FindTextDialogForm;
@@ -19,20 +13,13 @@ use ide\Ide;
 use ide\Logger;
 use ide\misc\AbstractCommand;
 use ide\misc\EventHandlerBehaviour;
-use ide\project\behaviours\PhpProjectBehaviour;
-use ide\project\Project;
-use ide\scripts\AbstractScriptComponent;
 use ide\systems\FileSystem;
 use ide\utils\FileUtils;
-use ide\utils\Json;
 use ide\utils\UiUtils;
 use php\gui\UXGenericStyledArea;
 use function is_array;
-use function is_string;
-use php\format\JsonProcessor;
 use php\gui\designer\UXAbstractCodeArea;
 use php\gui\designer\UXCodeAreaScrollPane;
-use php\gui\designer\UXCssCodeArea;
 use php\gui\designer\UXFxCssCodeArea;
 use php\gui\designer\UXJavaScriptCodeArea;
 use php\gui\designer\UXPhpCodeArea;
@@ -40,41 +27,19 @@ use php\gui\designer\UXSyntaxAutoCompletion;
 use php\gui\designer\UXSyntaxTextArea;
 use php\gui\designer\UXTextCodeArea;
 use php\gui\event\UXKeyEvent;
-use php\gui\layout\UXAnchorPane;
 use php\gui\layout\UXHBox;
 use php\gui\layout\UXVBox;
-use php\gui\text\UXFont;
 use php\gui\UXApplication;
 use php\gui\UXCheckbox;
-use php\gui\UXClipboard;
-use php\gui\UXContextMenu;
-use php\gui\UXDesktop;
 use php\gui\UXDialog;
-use php\gui\UXForm;
 use php\gui\UXLabel;
-use php\gui\UXListView;
-use php\gui\UXMenuItem;
 use php\gui\UXNode;
-use php\gui\UXPopupWindow;
 use php\gui\UXTooltip;
-use php\gui\UXWebEngine;
-use php\gui\UXWebView;
 use php\io\File;
 use php\io\IOException;
-use php\io\ResourceStream;
-use php\io\Stream;
 use php\lang\IllegalArgumentException;
-use php\lang\IllegalStateException;
-use php\lang\JavaException;
-use php\lib\Char;
 use php\lib\fs;
-use php\lib\Items;
-use php\lib\Mirror;
 use php\lib\Str;
-use php\net\URLConnection;
-use php\time\Time;
-use php\util\Scanner;
-use script\TimerScript;
 
 /**
  * Class CodeEditor
@@ -216,10 +181,7 @@ class CodeEditor extends AbstractEditor
 
                 case 'css':
                 case 'fxcss':
-                    $this->textAreaScrollPane = new RichCodeEditor();
-                    $this->textArea = $this->textAreaScrollPane->getArea();
-                    $this->textAreaScrollPane->setHighlighter(CssANTLR4Highlighter::class);
-                    $this->textAreaScrollPane->setLineNumber(new LineNumber());
+                    $this->textArea = new UXFxCssCodeArea();
 
                     break;
 

@@ -25,7 +25,7 @@ class AndroidProjectSupport extends AbstractProjectSupport {
      * @return mixed
      */
     public function onLink(Project $project) {
-        $project->getRunDebugManager()->add('jppm-start', [
+        /* $project->getRunDebugManager()->add('jppm-start', [
             'title' => 'jppm.tasks.start.android.title',
             'makeStartProcess' => function () use ($project) {
                 $env = Ide::get()->makeEnvironment();
@@ -67,7 +67,9 @@ class AndroidProjectSupport extends AbstractProjectSupport {
                     "env"  => $env
                 ];
             },
-        ]);
+        ]); */
+
+        // TODO: refactor configuration for android
     }
 
     /**

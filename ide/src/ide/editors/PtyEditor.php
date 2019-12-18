@@ -4,7 +4,6 @@ namespace ide\editors;
 
 use ide\commands\ChangeThemeCommand;
 use ide\Ide;
-use php\gui\UXDialog;
 use php\gui\UXNode;
 use php\intellij\pty\PtyProcess;
 use php\intellij\ui\JediTermWidget;
@@ -69,10 +68,8 @@ class PtyEditor extends AbstractEditor {
         parent::close($save);
 
         if ($this->process->isAlive()) {
-            if (UXDialog::confirm(_("editor.terminal.exit.message"))) {
-                $this->process->destroy();
-                $this->terminal->stop();
-            }
+            $this->process->destroy();
+            $this->terminal->stop();
         }
     }
 
