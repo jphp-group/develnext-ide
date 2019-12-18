@@ -3,6 +3,7 @@ namespace ide\project;
 
 use framework\core\Component;
 use framework\core\Event;
+use ide\tasks\AbstractTaskConfiguration;
 
 /**
  * Class ProjectRunDebugManager
@@ -33,9 +34,9 @@ class ProjectRunDebugManager extends Component
 
     /**
      * @param string $code
-     * @param array $config
+     * @param AbstractTaskConfiguration $config
      */
-    public function add(string $code, array $config)
+    public function add(string $code, AbstractTaskConfiguration $config)
     {
         $this->items[$code] = $config;
         $this->trigger(new Event('add', $this, null, ['code' => $code, 'config' => $config]));
@@ -48,10 +49,9 @@ class ProjectRunDebugManager extends Component
     }
 
     /**
-     * @return array
+     * @return AbstractTaskConfiguration[]
      */
-    public function getItems(): array
-    {
+    public function getItems(): array {
         return $this->items;
     }
 

@@ -373,55 +373,34 @@ class MainForm extends AbstractIdeForm
 
     public function showBottom(UXNode $content = null)
     {
-        if ($content) {
-            if (!$this->contentSplit->items->has($this->bottom)) {
-                $this->contentSplit->items->add($this->bottom);
-            }
-
-            $this->bottom->children->clear();
-
-            $height = $this->layout->height;
-
-            $content->height = (int) Ide::get()->getUserConfigValue('mainForm.consoleHeight', 350);
-
-            $content->observer('height')->addListener(function ($old, $new) use ($content) {
-                if (!$content->isFree()) {
-                    Ide::get()->setUserConfigValue('mainForm.consoleHeight', $new);
+        uiLater(function () use ($content) {
+            if ($content) {
+                if (!$this->contentSplit->items->has($this->bottom)) {
+                    $this->contentSplit->items->add($this->bottom);
                 }
-            });
 
-            UXAnchorPane::setAnchor($content, 0);
+                $this->bottom->children->clear();
 
-            $this->bottom->add($content);
+                $height = $this->layout->height;
 
-            $percent = (($content->height + 3) * 100 / $height) / 100;
+                $content->height = (int) Ide::get()->getUserConfigValue('mainForm.consoleHeight', 350);
 
-            $this->contentSplit->dividerPositions = [1 - $percent, $percent];
-        } else {
-            $this->contentSplit->items->remove($this->bottom);
-        }
-    }
+                $content->observer('height')->addListener(function ($old, $new) use ($content) {
+                    if (!$content->isFree()) {
+                        Ide::get()->setUserConfigValue('mainForm.consoleHeight', $new);
+                    }
+                });
 
-    /**
-     * @return BuildProgressForm
-     */
-    public function showCLI(): BuildProgressForm
-    {
-        $dialog = new BuildProgressForm();
-        $dialog->reduceHeader();
-        $dialog->reduceFooter();
-        $dialog->removeProgressbar();
+                UXAnchorPane::setAnchor($content, 0);
 
-        $this->showBottom($dialog->layout);
+                $this->bottom->add($content);
 
-        $dialog->opacity = 0.01;
-        $dialog->show();
-        $dialog->hide();
+                $percent = (($content->height + 3) * 100 / $height) / 100;
 
-        $dialog->closeButton->on('action', function () {
-            $this->hideBottom();
-        }, __CLASS__);
-
-        return $dialog;
+                $this->contentSplit->dividerPositions = [1 - $percent, $percent];
+            } else {
+                $this->contentSplit->items->remove($this->bottom);
+            }
+        });
     }
 }

@@ -19,7 +19,6 @@ function task_publish(Event $e)
     Tasks::runExternal('./dn-app-framework', 'publish', [], ...$e->flags());
     Tasks::runExternal('./dn-designer', 'publish', [], ...$e->flags());
     Tasks::runExternal('./dn-gui-tabs-ext', 'publish', [], ...$e->flags());
-    Tasks::runExternal('./dn-antlr4', 'antlr4:build', [], ...$e->flags());
 
     foreach ($e->package()->getAny('bundles', []) as $bundle) {
         Tasks::runExternal("./bundles/$bundle", 'publish', [], ...$e->flags());
