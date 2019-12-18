@@ -2,17 +2,13 @@
 namespace ide\formats;
 
 use ide\editors\AbstractEditor;
-use ide\editors\form\FormNamedBlock;
 use ide\editors\ScriptModuleEditor;
 use ide\formats\form\context\DeleteMenuCommand;
 use ide\formats\form\context\ScriptHelperMenuCommand;
 use ide\formats\form\context\SelectAllMenuCommand;
 use ide\forms\InputMessageBoxForm;
 use ide\Ide;
-use ide\Logger;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
 use ide\project\ProjectFile;
-use ide\scripts\AbstractScriptComponent;
 use ide\scripts\elements\DirectoryChooserScriptComponent;
 use ide\scripts\elements\FileChooserScriptComponent;
 use ide\scripts\elements\FileScriptComponent;
@@ -28,11 +24,8 @@ use ide\scripts\ScriptComponentContainer;
 use ide\systems\FileSystem;
 use ide\systems\RefactorSystem;
 use ide\utils\FileUtils;
-use php\io\File;
 use php\lib\fs;
-use php\lib\Str;
 use php\util\Regex;
-use php\util\Scanner;
 
 /**
  * Class ScriptModuleFormat

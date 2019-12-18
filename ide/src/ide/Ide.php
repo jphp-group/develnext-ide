@@ -304,10 +304,8 @@ class Ide extends Application
 
                 $timer = new AccurateTimer(1000, function () {
                     Ide::async(function () {
-                        $file = FileSystem::getSelected();
-
                         foreach (FileSystem::getOpened() as $info) {
-                            if (!fs::exists($info['file']) /*&& !FileUtils::equalNames($file, $info['file'])*/) {
+                            if (!fs::exists($info['file'])) {
                                 uiLater(function () use ($info) {
                                     $editor = FileSystem::getOpenedEditor($info['file']);
                                     if ($editor->isAutoClose()) {
@@ -1504,14 +1502,16 @@ class Ide extends Application
         return parent::getMainForm();
     }
 
-
     /**
      * @return Ide
-     * @throws \Exception
      */
     public static function get()
     {
-        return parent::get();
+        try {
+            return parent::get();
+        } catch (\Throwable $e) {
+            return null;
+        }
     }
 
     /**

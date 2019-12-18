@@ -2,7 +2,6 @@
 
 namespace ide\entity;
 
-use ide\Ide;
 use ide\misc\AbstractEntity;
 use ide\project\behaviours\gui\SkinManagerForm;
 use ide\systems\IdeSystem;
@@ -14,7 +13,6 @@ use php\io\Stream;
 use php\lib\arr;
 use php\lib\fs;
 use php\lib\str;
-use php\util\Configuration;
 
 class ProjectSkin extends AbstractEntity
 {

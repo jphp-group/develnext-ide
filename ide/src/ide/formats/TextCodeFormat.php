@@ -3,10 +3,7 @@ namespace ide\formats;
 
 use ide\editors\AbstractEditor;
 use ide\editors\CodeEditor;
-use ide\utils\FileUtils;
-use php\gui\designer\UXSyntaxAutoCompletion;
 use php\lib\fs;
-use php\lib\Str;
 
 class TextCodeFormat extends AbstractFormat
 {

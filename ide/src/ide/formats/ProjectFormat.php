@@ -3,7 +3,6 @@ namespace ide\formats;
 
 use ide\editors\AbstractEditor;
 use ide\editors\ProjectEditor;
-use ide\editors\WelcomeEditor;
 use ide\project\control\AbstractProjectControlPane;
 use php\lib\fs;
 use php\lib\reflect;
