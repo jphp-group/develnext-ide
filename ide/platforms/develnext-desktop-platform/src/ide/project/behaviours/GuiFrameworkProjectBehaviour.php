@@ -389,6 +389,8 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
         if ($this->spriteManager) {
             $this->spriteManager->reloadAll();
         }
+
+        $this->saveBootstrapScript();
     }
 
     /**
