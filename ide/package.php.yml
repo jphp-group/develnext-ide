@@ -35,7 +35,6 @@ deps:
   jphp-gui-jfx-win: ^11.0.0
   jphp-gui-jfx-linux: ^11.0.0
   jphp-gui-jediterm-ext: '*'
-  antlr4-develnext-grammars: '*'
   jphp-richtextfx-ext: 1.2.5
   jphp-cglib-ext: '*'
 app:
