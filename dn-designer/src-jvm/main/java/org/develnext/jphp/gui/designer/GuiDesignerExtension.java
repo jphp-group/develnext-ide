@@ -36,6 +36,7 @@ public class GuiDesignerExtension extends JavaFXExtension {
         registerWrapperClass(scope, CssCodeArea.class, UXCssCodeArea.class);
         registerWrapperClass(scope, FxCssCodeArea.class, UXFxCssCodeArea.class);
         registerWrapperClass(scope, PhpCodeArea.class, UXPhpCodeArea.class);
+        registerWrapperClass(scope, YamlCodeArea.class, UXYamlCodeArea.class);
         registerWrapperClass(scope, SwingNode.class, UXIsolatedNode.class);
 
         //registerWrapperClass(scope, DockPane.class, UXDockPane.class);
