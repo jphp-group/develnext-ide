@@ -50,11 +50,7 @@ class ColorPropertyEditor extends ElementPropertyEditor
             $obj = ReflectionObject::fromMemory($this->colorPicker);
             $value = $obj->getReflectionClass()->getMethod("getValue", [])->invoke($obj, [])->toMemory();
 
-            $this->applyValue($value, false);
-
-            uiLater(function () use ($value) {
-                $this->updateUi($this->getNormalizedValue($value));
-            });
+            $this->applyValue($value, true);
         });
 
         $this->dialogButton = new UXButton();
