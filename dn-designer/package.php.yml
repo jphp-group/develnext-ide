@@ -15,7 +15,7 @@ deps:
 
 gradle:
   deps:
-  - 'org.fxmisc.richtext:richtextfx:0.9.2'
+  - 'org.fxmisc.richtext:richtextfx:0.10.3'
   providedDeps:
     - 'org.openjfx:javafx-base:%jfx.version%:linux'
     - 'org.openjfx:javafx-graphics:%jfx.version%:linux'

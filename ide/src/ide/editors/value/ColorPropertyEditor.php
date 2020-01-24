@@ -2,6 +2,7 @@
 namespace ide\editors\value;
 
 use ide\forms\TextPropertyEditorForm;
+use java\reflection\ReflectionObject;
 use php\gui\event\UXMouseEvent;
 use php\gui\layout\UXHBox;
 use php\gui\paint\UXColor;
@@ -46,11 +47,13 @@ class ColorPropertyEditor extends ElementPropertyEditor
         $this->colorPicker->style = "-fx-background-insets: 0; -fx-background-radius: 0; -fx-font-size: 10px; ";
 
         $this->colorPicker->on('action', function () {
-            $this->applyValue($this->colorPicker->value, false);
+            $obj = ReflectionObject::fromMemory($this->colorPicker);
+            $value = $obj->getReflectionClass()->getMethod("getValue", [])->invoke($obj, [])->toMemory();
 
-            uiLater(function () {
-                $value = $this->getNormalizedValue($this->colorPicker->value);
-                $this->updateUi($value);
+            $this->applyValue($value, false);
+
+            uiLater(function () use ($value) {
+                $this->updateUi($this->getNormalizedValue($value));
             });
         });
 
@@ -91,12 +94,6 @@ class ColorPropertyEditor extends ElementPropertyEditor
         parent::setTooltip($tooltip);
 
         $this->colorPicker->tooltipText = $tooltip;
-    }
-
-
-    public function applyValue($value, $updateUi = true)
-    {
-        parent::applyValue($value, $updateUi);
     }
 
     /**

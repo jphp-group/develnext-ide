@@ -108,6 +108,13 @@ abstract class AbstractForm extends UXForm
         parent::__construct($origin);
 
         $this->_app = Application::get();
+
+        $this->addStylesheet('/php/gui/framework/style.css');
+
+        foreach ($this->_app->getStyles() as $one) {
+            $this->addStylesheet($one);
+        }
+
         $this->loadConfig(null, false);
 
         $this->loadDesign();
@@ -121,12 +128,6 @@ abstract class AbstractForm extends UXForm
         $this->applyConfig();
 
         $this->init();
-
-        $this->addStylesheet('/php/gui/framework/style.css');
-
-        foreach ($this->_app->getStyles() as $one) {
-            $this->addStylesheet($one);
-        }
 
         $this->behaviourManager = $behaviourManager = new FormBehaviourManager($this);
 
