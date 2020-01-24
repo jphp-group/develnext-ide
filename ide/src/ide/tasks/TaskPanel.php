@@ -43,6 +43,11 @@ class TaskPanel {
      */
     private $closeAfterExit;
 
+    /**
+     * @var boolean
+     */
+    private $configurationProcessExitTriggered = false;
+
     public function __construct(AbstractTaskConfiguration $configuration) {
         $this->processInfo = $configuration->getTaskInfo();
         $this->configuration = $configuration;
@@ -81,18 +86,15 @@ class TaskPanel {
         $destroyButton->on("action", function () use ($destroyButton) {
             if ($this->process->isAlive())
                 $this->destroy();
-            else {
-                $this->closeAfterExit = true;
-                $this->triggerDestroyEvent();
-            }
+
+            $this->closeAfterExit = true;
+            $this->triggerDestroyEvent();
         });
 
         $hideCheckbox = _(new UXCheckbox("command.close.after.exit"));
         $hideCheckbox->selected = $this->closeAfterExit;
         $hideCheckbox->on("action", function () use ($hideCheckbox) {
-            $this->closeAfterExit = $hideCheckbox->selected;
-
-            Ide::get()->setUserConfigValue("builder.closeAfterDone", $this->closeAfterExit);
+            Ide::get()->setUserConfigValue("builder.closeAfterDone", $this->closeAfterExit = $hideCheckbox->selected);
         });
 
         $box = new UXHBox([ $destroyButton, $hideCheckbox ], 8);
@@ -117,7 +119,11 @@ class TaskPanel {
     private function triggerDestroyEvent() {
         uiLater(function () {
             call_user_func($this->onProcessExit, $this->process->getExitValue());
-            $this->configuration->onProcessExit($this->process->getExitValue());
+
+            if (!$this->configurationProcessExitTriggered) {
+                $this->configuration->onProcessExit($this->process->getExitValue());
+                $this->configurationProcessExitTriggered = true;
+            }
         });
     }
 
