@@ -43,10 +43,13 @@ use ide\systems\FileSystem;
 use ide\ui\Notifications;
 use ide\utils\Json;
 use ide\utils\UiUtils;
+use java\reflection\ReflectionClass;
+use java\reflection\ReflectionObject;
 use php\format\ProcessorException;
 use php\gui\designer\UXDesigner;
 use php\gui\designer\UXDesignPane;
 use php\gui\designer\UXDesignProperties;
+use php\gui\designer\UXIsolatedNode;
 use php\gui\event\UXDragEvent;
 use php\gui\event\UXEvent;
 use php\gui\event\UXMouseEvent;
@@ -1813,7 +1816,12 @@ class FormEditor extends AbstractModuleEditor
             $area->classes->remove('FormEditor');
         }
 
-        $viewer = $this->layoutViewer = new UXScrollPane($area);
+        if (!$fullArea) {
+            $viewer = $this->layoutViewer = new UXScrollPane(new UXIsolatedNode($area));
+        } else {
+            $viewer = $this->layoutViewer = new UXScrollPane($area);
+        }
+
         $viewer->classes->add('dn-mosaic-background');
 
         foreach ($this->stylesheets as $stylesheet) {

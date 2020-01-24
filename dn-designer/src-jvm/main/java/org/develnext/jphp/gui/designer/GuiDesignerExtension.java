@@ -1,5 +1,6 @@
 package org.develnext.jphp.gui.designer;
 
+import javafx.embed.swing.SwingNode;
 import org.develnext.jphp.ext.javafx.JavaFXExtension;
 import org.develnext.jphp.gui.designer.classes.*;
 import org.develnext.jphp.gui.designer.editor.syntax.AbstractCodeArea;
@@ -35,6 +36,7 @@ public class GuiDesignerExtension extends JavaFXExtension {
         registerWrapperClass(scope, CssCodeArea.class, UXCssCodeArea.class);
         registerWrapperClass(scope, FxCssCodeArea.class, UXFxCssCodeArea.class);
         registerWrapperClass(scope, PhpCodeArea.class, UXPhpCodeArea.class);
+        registerWrapperClass(scope, SwingNode.class, UXIsolatedNode.class);
 
         //registerWrapperClass(scope, DockPane.class, UXDockPane.class);
         //registerWrapperClass(scope, DockNode.class, UXDockNode.class);
