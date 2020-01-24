@@ -66,7 +66,7 @@ class DocCommand extends AbstractCommand
         //$button->width = 35;
 
         $searchButton = new UXButton();
-        $searchButton->classes->addAll(['icon-flat-search']);
+        $searchButton->graphic = Ide::getImage("icons/search16.png", [16, 16]);
         $searchButton->tooltipText = 'doc.search.hint::Поиск по документации';
         $searchButton->maxHeight = 999;
         $searchButton->width = 35;

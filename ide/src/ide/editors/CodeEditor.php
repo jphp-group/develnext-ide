@@ -16,6 +16,7 @@ use ide\misc\EventHandlerBehaviour;
 use ide\systems\FileSystem;
 use ide\utils\FileUtils;
 use ide\utils\UiUtils;
+use php\gui\designer\UXYamlCodeArea;
 use php\gui\UXGenericStyledArea;
 use function is_array;
 use php\gui\designer\UXAbstractCodeArea;
@@ -163,6 +164,11 @@ class CodeEditor extends AbstractEditor
 
                 case 'js':
                     $this->textArea = new UXJavaScriptCodeArea();
+                    break;
+
+                case 'yaml':
+                case 'yml':
+                    $this->textArea = new UXYamlCodeArea();
                     break;
 
                 default:
