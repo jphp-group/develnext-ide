@@ -1,31 +1,40 @@
 .root {
-    /***************************************************************************
-     *                                                                         *
-     * The main color palette from which the rest of the colors are derived.   *
-     *                                                                         *
-     **************************************************************************/
+    -fx-base: #f0f0f0;
+    -fx-background: #f0f0f0;
+    -fx-accent: #0088cc;
+    -fx-warning: #d6312b;
+    -fx-green: #55bd63;
+    -fx-focus-color: #b3b3b3;
+    -fx-faint-focus-color: #b3b3b301;
+    -fx-control-inner-background: derive(-fx-base, 7%);
+    -fx-control-inner-background-alt: derive(-fx-base, 15%);
+    -fx-color: -fx-base;
 
-    /* A light grey that is the base color for objects.  Instead of using
-     * -fx-base directly, the sections in this file will typically use -fx-color.
-     */
-    /*-fx-base: #ececec;*/
-    /*-fx-accent: #c5c5c5;*/
-    -fx-accent: #0093ff;
-    -fx-default-button: #1c67b1;
+    // Цвет border у табличных элементов
+    -fx-box-border: ladder(
+        -fx-color,
+        black 5%,
+        derive(-fx-color,-7%) 30%
+    );
+    // Цвет border у текстовых элементов
+    -fx-text-box-border: ladder(
+        -fx-color,
+        black 5%,
+        derive(-fx-color,-7%) 30%
+    );
+    // Цвет border у компонентов управления
+    -fx-outer-border: derive(-fx-color, -13%);
+        -fx-body-color: linear-gradient(to bottom,
+        ladder(
+                -fx-color,
+                derive(-fx-color,8%) 75%,
+                derive(-fx-color,10%) 80%
+        ),
+        derive(-fx-color,-2%));
 
-
-    -fx-focus-color: #2788d3;
-    -fx-faint-focus-color: #039ED322;
-
-    -fx-background: #f3f3f3;
-    -fx-body-color: #e4e4e4;
-    /*-fx-body-color: linear-gradient(to bottom,
-                        ladder(
-                                -fx-color,
-                                derive(-fx-color,8%) 85%,
-                                derive(-fx-color,10%) 90%
-                        ),
-                        derive(-fx-color,-3%));*/
+    // установка параметров шрифта
+    -fx-font-family: "Source Sans Pro Regular";
+    -fx-font-size: 1em;
 }
 
 /**

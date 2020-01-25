@@ -12,14 +12,8 @@ sources:
 deps:
   jphp-core: '~1.0.0'
   jphp-gui-ext: '~1.0.0'
+  jphp-gui-jfx-linux: ^11.0.0
 
 gradle:
   deps:
   - 'org.fxmisc.richtext:richtextfx:0.10.3'
-  providedDeps:
-    - 'org.openjfx:javafx-base:%jfx.version%:linux'
-    - 'org.openjfx:javafx-graphics:%jfx.version%:linux'
-    - 'org.openjfx:javafx-controls:%jfx.version%:linux'
-    - 'org.openjfx:javafx-web:%jfx.version%:linux'
-    - 'org.openjfx:javafx-fxml:%jfx.version%:linux'
-    - 'org.openjfx:javafx-media:%jfx.version%:linux'
