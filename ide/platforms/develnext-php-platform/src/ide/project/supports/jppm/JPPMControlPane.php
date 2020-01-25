@@ -44,7 +44,7 @@ class JPPMControlPane extends AbstractProjectControlPane
 
     public function getIcon()
     {
-        return 'icons/plugin16.png';
+        return 'icons/propertyGo16.png';
     }
 
     /**
@@ -181,7 +181,7 @@ class JPPMControlPane extends AbstractProjectControlPane
         $addPane = new UXPanel;
         $addPane->style = '-fx-background-color: -fx-background';
         $addPane->padding = 10;
-        $this->parentPane->add($addPane);  
+        $this->parentPane->add($addPane);
         
         $addPaneBox = new UXVBox;
         $addPaneBox->anchors = ['top' => 0, 'left' => 0, 'right' => 0, 'bottom' => 0];
@@ -354,7 +354,7 @@ class JPPMControlPane extends AbstractProjectControlPane
                     $icon = ico('bundle16');
                 }
             } else {
-                $icon = ico('plugin16');
+                $icon = ico('property16');
             }
             $icon->x =
             $icon->y = 8;

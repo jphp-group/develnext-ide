@@ -16,6 +16,8 @@ public class TextCodeArea extends AbstractCodeArea {
         super();
 
         registerHotkey(new DuplicateSelectionHotkey());
+
+        setStylesheet(AbstractCodeArea.class.getResource("CssCodeArea.css").toExternalForm());
     }
 
     @Override
