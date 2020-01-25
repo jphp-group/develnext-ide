@@ -3,42 +3,74 @@
 }
 
 .root {
-    -fx-base: #404040;
-    -fx-background: #3f3f3f;
-    -fx-accent: #0088cc;
-    -fx-warning: #d6312b;
-    -fx-green: #55bd63;
-    -fx-focus-color: #b3b3b3;
-    -fx-faint-focus-color: #b3b3b301;
-    -fx-control-inner-background: derive(-fx-base, 7%);
-    -fx-control-inner-background-alt: derive(-fx-base, 15%);
+    /* Основной цвет элементов */
+    -fx-base: #3a3a3a;
+
+    /* Цвет фона */
+    -fx-background: #393939;
+    -fx-background-color: -fx-background;
+
+    /* Цвет текста */
+    -fx-font-color: #dedede;
+    -fx-text-base-color: -fx-font-color;
+
+    /* Цвет наведения на элемент (например в списке)*/
+    -fx-hover: derive(-fx-base, 20%);
+
+    /* Фокусированная вкладка (окантовка) */
+    -fx-focus-color: -fx-base;
+
+    /* Цвет обводки при фокусе на элемент */
+    -fx-faint-focus-color: rgba(86, 86, 86, 0.42);
+
+    /* Фон у внутренних элементов: нечёт, чёт */
+    -fx-control-inner-background: -fx-base;
+    -fx-control-inner-background-alt: derive(-fx-base, 4%);
+
+    /* Цвет фона при нажатии и наведении (на кнопку, таб) */
+    -fx-pressed-base: derive(-fx-background, 18%);
+    -fx-hover-base: derive(-fx-base, 10%);
+
+    /* Цвет кнопок с действие по-умолчанию: применить, сохранить и т.д.*/
+    -fx-default-button: #555;
+
     -fx-color: -fx-base;
+    -fx-accent: #bfd7e2;
+    -fx-green: #3D747A;
+    -fx-blue: #87bed3;
+    /*-fx-blue: #7EB6CC;*/
+    -fx-dark-blue: #2C5260;
+    -fx-red: #e2574c;
+    -fx-yellow: #f9a300;
+    -fx-lime: #7F7E43;
 
-    // Цвет border у табличных элементов
-    -fx-box-border: ladder(
-        -fx-color,
-        black 5%,
-        derive(-fx-color,-7%) 30%
-    );
-    // Цвет border у текстовых элементов
-    -fx-text-box-border: ladder(
-        -fx-color,
-        black 5%,
-        derive(-fx-color,-7%) 30%
-    );
-    // Цвет border у компонентов управления
-    -fx-outer-border: derive(-fx-color, -13%);
-        -fx-body-color: linear-gradient(to bottom,
-        ladder(
-                -fx-color,
-                derive(-fx-color,8%) 75%,
-                derive(-fx-color,10%) 80%
-        ),
-        derive(-fx-color,-2%));
+    -fx-lighting-yellow: #44413c;
+    -fx-lighting-green: #3f443c;
+    -fx-lighting-blue: #3c3f44;
+    -fx-lighting-err: #443c3c;
 
-    // установка параметров шрифта
-    -fx-font-family: "Source Sans Pro Regular";
-    -fx-font-size: 1em;
+    -fx-lighting-acc: -fx-accent;
+    -fx-lighting-hover: derive(-fx-base, 13%);
+
+    /* Цвет border у табличных элементов*/
+    -fx-box-border: derive(-fx-color, 1%);
+
+    /* Цвет border у текстовых элементов*/
+    -fx-text-box-border: derive(-fx-color, -8%);
+
+    /* Базовый градиент всех элементов управления*/
+    -fx-body-color: derive(-fx-color, 5%);
+
+    /* Цвет border у компонентов управления*/
+    -fx-outer-border: derive(-fx-color, 3%);
+
+    /* Цвет внутреннего border у компонентов */
+    -fx-inner-border: derive(-fx-base, 15%);
+
+    /* Цвет внутреннего border у компонентов */
+    -fx-selection-bar: -fx-hover;
+    -fx-selection-bar-non-focused: -fx-hover;
+    -fx-selection-bar-text: -fx-accent;
 }
 
 /**
@@ -49,14 +81,14 @@
     -fx-border-color: -fx-outer-border;
 }
 
-.flow-list-view .list-cell.selected { 
-    -fx-background-color: -fx-pressed-base; 
+.flow-list-view .list-cell.selected {
+    -fx-background-color: -fx-pressed-base;
 }
-.flow-list-view .list-cell.hovered { 
-    -fx-border-color: -fx-hover-base; 
+.flow-list-view .list-cell.hovered {
+    -fx-border-color: -fx-hover-base;
 }
-.flow-list-view .list-cell.dragged { 
-    -fx-border-color: -fx-accent;  
+.flow-list-view .list-cell.dragged {
+    -fx-border-color: -fx-accent;
 }
 
 /* Меню */
@@ -90,8 +122,8 @@
     -fx-background-color: -fx-background;
 }
 
-.button.flat-button:hover { 
-    -fx-background-color: -fx-hover; 
+.button.flat-button:hover {
+    -fx-background-color: -fx-hover;
 }
 
 /* Панель табов - неактивный таб */
@@ -102,12 +134,12 @@
 
 /* Активный таб (в т.ч. у MainForm) */
 .tab-pane .tab:selected,
-.dn-file-tab-pane > .tab-header-area > .headers-region > .tab:selected {    
+.dn-file-tab-pane > .tab-header-area > .headers-region > .tab:selected {
     -fx-background-color: -fx-base;
 }
 
 .tab-pane .tab:selected > .tab-container *,
-.dn-file-tab-pane > .tab-header-area > .headers-region > .tab:selected > .tab-container > .tab-label {    
+.dn-file-tab-pane > .tab-header-area > .headers-region > .tab:selected > .tab-container > .tab-label {
     -fx-text-fill: white;
 }
 
