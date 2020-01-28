@@ -28,6 +28,9 @@ class IdeService extends AbstractService
     /**
      * @param string $channel NIGHT, BETA, STABLE
      * @return ServiceResponse
+     * @throws api\ServiceException
+     * @throws api\ServiceInvalidResponseException
+     * @throws api\ServiceNotAvailableException
      */
     public function getLastUpdate($channel = 'NIGHT')
     {

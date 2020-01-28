@@ -104,23 +104,23 @@ class RunTaskCommand extends AbstractCommand
             $i = 0;
 
             foreach ($items as $key => $item) {
-                uiLaterAndWait(function () use ($key, $item, $items, $i) {
+                uiLaterAndWait(function () use ($project, $key, $item, $items, $i) {
                     $menuItem = new UXMenuItem(_($item->getName()));
                     $menuItem->graphic = Ide::getImage($item->getIcon());
 
-                    $handler = function () use ($item, $key, $menuItem) {
+                    $handler = function () use ($project, $item, $key, $menuItem) {
                         $this->taskSelect->text = $item->getName();
                         $this->taskSelect = _($this->taskSelect);
                         $this->taskSelect->graphic = Ide::getImage($item->getIcon());
 
-                        $this->taskSelect->on('action', function () use ($item) {
-
-                            $project = $project ?: Ide::project();
-
-                            $project->preCompile('dev');
-                            $project->compile('dev');
-
+                        $this->taskSelect->on('action', function () use ($project, $item) {
                             ProjectSystem::saveOnlyRequired();
+
+                            $defEnv = $item->getDefaultEnvironment();
+                            foreach ($item->getPreExecuteIdeTasks() as $preExecuteIdeTask) {
+                                $project->{$preExecuteIdeTask}($defEnv);
+                            }
+
                             $this->taskSelect->enabled = false;
                             $this->stopButton->enabled = true;
 

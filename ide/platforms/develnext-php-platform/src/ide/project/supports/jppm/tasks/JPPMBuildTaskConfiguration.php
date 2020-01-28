@@ -4,6 +4,7 @@ namespace ide\project\supports\jppm\tasks;
 
 use ide\forms\BuildSuccessForm;
 use ide\Ide;
+use ide\project\Project;
 use ide\tasks\AbstractTaskConfiguration;
 use ide\tasks\TaskProcessInfo;
 use php\lang\Process;
@@ -23,6 +24,17 @@ class JPPMBuildTaskConfiguration extends AbstractTaskConfiguration {
      */
     public function getIcon(): string {
         return "icons/boxArrow16.png";
+    }
+
+    public function getDefaultEnvironment(): string {
+        return Project::ENV_DEV;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPreExecuteIdeTasks(): array {
+        return ["preCompile", "compile"];
     }
 
     /**
