@@ -7,8 +7,8 @@ jfx:
 plugins: [Gradle, Hub]
 
 deps:
-  jphp-runtime: '~1.0.0'
-  jphp-gui-ext: '~1.0.0'
+  jphp-runtime: '^1.0.0'
+  jphp-gui-ext: '^2.0.0'
 
 
 gradle:
