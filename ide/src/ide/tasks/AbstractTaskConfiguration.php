@@ -2,6 +2,8 @@
 
 namespace ide\tasks;
 
+use ide\project\Project;
+
 abstract class AbstractTaskConfiguration {
 
     /**
@@ -14,6 +16,21 @@ abstract class AbstractTaskConfiguration {
      */
     public function getIcon(): string {
         return "icons/run16.png";
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultEnvironment(): string {
+        return Project::ENV_DEV;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPreExecuteIdeTasks(): array {
+        return [];
+        //return ["preCompile", "compile"];
     }
 
     /**
