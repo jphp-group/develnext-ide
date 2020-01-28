@@ -114,6 +114,12 @@ class RunTaskCommand extends AbstractCommand
                         $this->taskSelect->graphic = Ide::getImage($item->getIcon());
 
                         $this->taskSelect->on('action', function () use ($item) {
+
+                            $project = $project ?: Ide::project();
+
+                            $project->preCompile('dev');
+                            $project->compile('dev');
+
                             ProjectSystem::saveOnlyRequired();
                             $this->taskSelect->enabled = false;
                             $this->stopButton->enabled = true;
