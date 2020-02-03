@@ -3,6 +3,7 @@ namespace php\framework;
 
 use php\io\Stream;
 use php\time\Time;
+use php\lib\char;
 
 /**
  * Class Logger
@@ -11,6 +12,33 @@ use php\time\Time;
  */
 class Logger
 {
+    protected static $ANSI_CODES = array(
+        "off"        => 0,
+        "bold"       => 1,
+        "italic"     => 3,
+        "underline"  => 4,
+        "blink"      => 5,
+        "inverse"    => 7,
+        "hidden"     => 8,
+        "gray"       => 30,
+        "red"        => 31,
+        "green"      => 32,
+        "yellow"     => 33,
+        "blue"       => 34,
+        "magenta"    => 35,
+        "cyan"       => 36,
+        "silver"     => "0;37",
+        "white"      => 37,
+        "black_bg"   => 40,
+        "red_bg"     => 41,
+        "green_bg"   => 42,
+        "yellow_bg"  => 43,
+        "blue_bg"    => 44,
+        "magenta_bg" => 45,
+        "cyan_bg"    => 46,
+        "white_bg"   => 47,
+    );
+
     const LEVEL_ERROR = 1;
     const LEVEL_WARN = 2;
 
@@ -19,6 +47,30 @@ class Logger
 
     protected static $level = self::LEVEL_INFO;
     protected static $showTime = false;
+    protected static $colored = false;
+
+    protected static function withColor($str, $color)
+    {
+        $color_attrs = explode("+", $color);
+        $ansi_str = "";
+
+        foreach ($color_attrs as $attr) {
+            $ansi_str .= char::of(27) . "[" . self::$ANSI_CODES[$attr] . "m";
+        }
+
+        $ansi_str .= $str . char::of(27) . "[" . self::$ANSI_CODES["off"] . "m";
+        return $ansi_str;
+    }
+
+    public static function setColored(boolean $colored)
+    {
+        self::$colored = $colored;
+    }
+
+    public static function isColored()
+    {
+        return self::$colored;
+    }
 
     /**
      * @return int
@@ -64,6 +116,16 @@ class Logger
         }
     }
 
+    static protected function getLogColor($level) {
+        switch ($level) {
+            case self::LEVEL_DEBUG: return "silver";
+            case self::LEVEL_WARN: return "yellow";
+            case self::LEVEL_ERROR: return "red";
+            default:
+                return null;
+        }
+    }
+
     static protected function log($level, $message)
     {
         if ($level <= static::$level) {
@@ -74,6 +136,11 @@ class Logger
             }
 
             $line = "[" . static::getLogName($level) . "] $time" . $message . "\r\n";
+            $_line = $line;
+
+            if ($color = static::getLogColor($level)) {
+                $_line = static::withColor($line, $color);
+            }
 
             static $out = null;
 
@@ -81,7 +148,7 @@ class Logger
                 $out = Stream::of('php://stdout');
             }
 
-            $out->write($line);
+            $out->write($_line);
         }
     }
 
