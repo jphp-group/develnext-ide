@@ -15,7 +15,7 @@ jppm start-ide
 ```
 
 ## How to build?
-1. Install **Java Development Kit 10** and the last version of JPPM.
+1. Install **Java Development Kit 11** and the last version of JPPM.
 2. Prepare IDE dependencies:
 ```bash
 jppm prepare-ide
