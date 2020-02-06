@@ -97,8 +97,8 @@ class Application
         $functions = "res://php/gui/framework/functions";
 
         if (Stream::exists($functions . ".phb")) {
-            $module = new Module("$functions.phb", true);
-            $module->call();
+            /*$module = new Module("$functions.phb", true);
+            $module->call();*/ // nop
         } else {
             include_once "$functions.php";
         }

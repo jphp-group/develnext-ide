@@ -865,7 +865,7 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
 
         $template->setInnerCode($code);
 
-        $this->project->defineFile('src/JPHP-INF/.bootstrap', $template, true);
+        $this->project->defineFile('src/JPHP-INF/.bootstrap.php', $template, true);
     }
 
     /**

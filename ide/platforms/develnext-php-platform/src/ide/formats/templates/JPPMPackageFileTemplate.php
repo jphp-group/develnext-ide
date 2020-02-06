@@ -49,6 +49,10 @@ class JPPMPackageFileTemplate extends AbstractMetaTemplate
      */
     private $deps = [];
 
+    private $deps_win = [];
+    private $deps_unix = [];
+    private $deps_mac = [];
+
     /**
      * @var array
      */
@@ -187,19 +191,34 @@ class JPPMPackageFileTemplate extends AbstractMetaTemplate
     }
 
     /**
+     * @param string|null $os
      * @return array
      */
-    public function getDeps(): array
+    public function getDeps(string $os = null): array
     {
-        return $this->deps;
+        if ($os) {
+            if ($os == "linux") $os = "unix";
+
+            return $this->{"deps_{$os}"};
+        } else {
+            return $this->deps;
+        }
     }
 
     /**
      * @param array $deps
+     * @param string|null $os
      */
-    public function setDeps($deps): void
+    public function setDeps($deps, string $os = null): void
     {
-        $this->deps = (array) $deps;
+        if ($os) {
+            if ($os == "linux") $os = "unix";
+
+            $this->{"deps_{$os}"} = (array) $deps;
+        } else {
+            $this->deps = (array) $deps;
+        }
+
         $this->sortDeps();
     }
 
@@ -215,6 +234,9 @@ class JPPMPackageFileTemplate extends AbstractMetaTemplate
 
     protected function sortDeps(){
         $this->deps = flow($this->deps)->toMap();
+        $this->deps_mac = flow($this->deps_mac)->toMap();
+        $this->deps_unix = flow($this->deps_unix)->toMap();
+        $this->deps_win = flow($this->deps_win)->toMap();
     }
 
     /**
@@ -294,6 +316,9 @@ class JPPMPackageFileTemplate extends AbstractMetaTemplate
         if ($this->plugins) $data['plugins'] = $this->plugins;
 
         if ($this->deps) $data['deps'] = $this->deps;
+        if ($this->deps_unix) $data['depsUnix'] = $this->deps_unix;
+        if ($this->deps_win) $data['depsWin'] = $this->deps_win;
+        if ($this->deps_mac) $data['depsMac'] = $this->deps_mac;
         if ($this->devDeps) $data['devDeps'] = $this->devDeps;
 
         if ($this->sources) $data['sources'] = $this->sources;

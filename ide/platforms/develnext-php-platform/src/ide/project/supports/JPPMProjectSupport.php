@@ -65,6 +65,20 @@ class JPPMProjectSupport extends AbstractProjectSupport
             || $project->getFile("package.php.yml")->isFile();
     }
 
+    protected function getOs()
+    {
+        $osName = System::osName();
+        if (str::posIgnoreCase($osName, 'win') > -1) {
+            return 'win';
+        }
+
+        if (str::posIgnoreCase($osName, 'mac') > -1) {
+            return 'mac';
+        }
+
+        return 'unix';
+    }
+
     /**
      * @param Project $project
      * @return mixed|void
@@ -82,6 +96,7 @@ class JPPMProjectSupport extends AbstractProjectSupport
         $this->pkgFileWatcher->on('change', function (Event $event) use ($project) {
             if ($event->data['newTime'] >= 0) {
                 $oldDeps = $this->pkgTemplate->getDeps();
+                $oldOsDeps = $this->pkgTemplate->getDeps($this->getOs());
                 $oldDevDeps = $this->pkgTemplate->getDevDeps();
                 $oldPlugins = $this->pkgTemplate->getPlugins();
 
@@ -90,9 +105,9 @@ class JPPMProjectSupport extends AbstractProjectSupport
                 $newDeps = $this->pkgTemplate->getDeps();
                 $newDevDeps = $this->pkgTemplate->getDevDeps();
                 $newPlugins = $this->pkgTemplate->getPlugins();
+                $newOsDeps = $this->pkgTemplate->getDeps($this->getOs());
 
-                if ($oldDeps != $newDeps || $oldDevDeps != $newDevDeps || $oldPlugins != $newPlugins) {
-                    
+                if ($oldDeps != $newDeps || $oldOsDeps != $newOsDeps || $oldDevDeps != $newDevDeps || $oldPlugins != $newPlugins) {
                     $this->install($project);
                     $this->installToIDE($project);
 
@@ -123,11 +138,8 @@ class JPPMProjectSupport extends AbstractProjectSupport
         $this->install($project);
         $this->installToIDE($project);
 
-
         $this->pkgFileWatcher->start();
     }
-
-
 
     public function getVendorInspectDirsForDep(Project $project, string $depName)
     {
