@@ -136,7 +136,7 @@ class ChangeThemeCommand extends AbstractCommand {
     }
 
     public function applyStylesheet(AbstractForm $form){
-        if(str::length($this->prevTheme) > 0){
+        if (str::length($this->prevTheme) > 0) {
             $prev = $this->prevTheme->getCSSFile();
             Logger::info('Stylesheet ' . $prev . ' removed from ' . $form->getName());
             $form->removeStylesheet($prev);
