@@ -854,6 +854,8 @@ class FormEditor extends AbstractModuleEditor
             }
         }
 
+        $this->designerSplit->dividerPositions = [1 - 240 / $this->designerSplit->layoutBounds['width']];
+
         $this->designer->disabled = false;
         $this->opened = true;
         //$this->designer->unselectAll();
@@ -1948,7 +1950,8 @@ class FormEditor extends AbstractModuleEditor
 
         $scrollPane = new UXScrollPane($this->elementTypePane->getContent());
         $scrollPane->fitToWidth = true;
-        $scrollPane->maxWidth = 240;
+        //$scrollPane->maxWidth = 240;
+        $scrollPane->minHeight = 100;
         $this->elementTypePaneContainer = $scrollPane;
 
         if ($this->prototypeTypePane) {
@@ -1985,14 +1988,18 @@ class FormEditor extends AbstractModuleEditor
         }
 
         $split->observer('width')->addOnceListener(function ($_, $width) use ($scrollPane, $split) {
-            $split->dividerPositions = [1.0 - (240 / $width)];
-            $scrollPane->maxWidth = -1;
+            /*$split->dividerPositions = [1.0 - (240 / $width)];
+            $scrollPane->maxWidth = -1;*/
         });
 
         $this->makeContextMenu();
 
+        $this->designerSplit = $split;
+
         return $split;
     }
+
+    protected $designerSplit = null;
 
     protected function makeContextMenu()
     {

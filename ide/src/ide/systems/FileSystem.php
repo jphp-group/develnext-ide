@@ -371,6 +371,7 @@ class FileSystem
             $wrap->add($wrapScroll);
             UXSplitPane::setResizeWithParent($wrap, false);
 
+            $oldContent = $content;
             $content = new UXSplitPane([$wrap, $content]);
 
             if ($type == 'tab') {
@@ -380,7 +381,7 @@ class FileSystem
                     }
                 });
 
-                $content->observer('width')->addOnceListener(function ($_, $width) use ($wrap, $content) {
+                $content->observer('width')->addOnceListener(function ($_, $width) use ($wrap, $content, $editor) {
                     $content->dividerPositions = [$wrap->width / $width];
                 });
             } else {
