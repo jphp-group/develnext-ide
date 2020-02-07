@@ -2,10 +2,11 @@ name: DevelNext
 version: 17.0.0+dev
 
 requires:
-  java: {version: '>=11.0.0', arch: amd64}
+  java: {version: '>=11.0.0', arch: ['amd64', 'x86_64']}
   os:
   - Windows
   - Linux
+  - Mac
 
 bundles:
 - dn-game2d-bundle
