@@ -30,11 +30,11 @@ localization:
 
 jdk:
   win:
-    url: 'https://download.bell-sw.com/java/13/bellsoft-jdk13-windows-amd64.zip'
-    dir: 'jdk-13'
+    url: 'https://download.bell-sw.com/java/11/bellsoft-jdk11-windows-amd64.zip'
+    dir: 'jdk-11'
   darwin:
-    url: 'https://download.bell-sw.com/java/13/bellsoft-jdk13-macos-amd64.zip'
-    dir: 'jdk-13.jdk'
+    url: 'https://download.bell-sw.com/java/11/bellsoft-jdk11-macos-amd64.zip'
+    dir: 'jdk-11.jdk'
   linux:
-    url: 'https://download.bell-sw.com/java/13/bellsoft-jdk13-linux-amd64.tar.gz'
-    dir: 'jdk-13'
+    url: 'https://download.bell-sw.com/java/11/bellsoft-jdk11-linux-amd64.tar.gz'
+    dir: 'jdk-11'
