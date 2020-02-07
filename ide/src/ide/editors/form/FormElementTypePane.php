@@ -107,7 +107,8 @@ class FormElementTypePane
         $this->selectable = $selectable;
 
         $this->layout = new UXVBox();
-        //$this->layout->maxWidth = 265;
+        //$this->layout->minWidth = 100;
+        //$this->layout->maxWidth = 250;
         $this->layout->fillWidth = true;
 
         $this->content = new UXScrollPane($this->layout);

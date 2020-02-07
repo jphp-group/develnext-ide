@@ -47,7 +47,7 @@ class Logger
 
     protected static $level = self::LEVEL_INFO;
     protected static $showTime = false;
-    protected static $colored = false;
+    protected static $colored = true;
 
     protected static function withColor($str, $color)
     {
@@ -138,8 +138,10 @@ class Logger
             $line = "[" . static::getLogName($level) . "] $time" . $message . "\r\n";
             $_line = $line;
 
-            if ($color = static::getLogColor($level)) {
-                $_line = static::withColor($line, $color);
+            if (self::$colored) {
+                if ($color = static::getLogColor($level)) {
+                    $_line = static::withColor($line, $color);
+                }
             }
 
             static $out = null;

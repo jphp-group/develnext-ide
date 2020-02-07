@@ -223,7 +223,6 @@ class MainForm extends AbstractIdeForm
         parent::show();
         Logger::info("Show main form ...");
 
-
         $screen = UXScreen::getPrimary();
 
         $this->showBottom(null);
@@ -232,25 +231,27 @@ class MainForm extends AbstractIdeForm
         $this->contentSplitPaneDividerPositions = $this->contentSplitPane->dividerPositions;
         */
 
-        $this->width  = Ide::get()->getUserConfigValue(get_class($this) . '.width', $screen->bounds['width'] * 0.75);
-        $this->height = Ide::get()->getUserConfigValue(get_class($this) . '.height', $screen->bounds['height'] * 0.75);
+        uiLater(function () use ($screen) {
+            $this->width  = $width = Ide::get()->getUserConfigValue(get_class($this) . '.width', $screen->bounds['width'] * 0.75);
+            $this->height = $height = Ide::get()->getUserConfigValue(get_class($this) . '.height', $screen->bounds['height'] * 0.75);
 
-        if ($this->width < 300 || $this->height < 200) {
-            $this->width = $screen->bounds['width'] * 0.75;
-            $this->height = $screen->bounds['height'] * 0.75;
-        }
+            if ($this->width < 300 || $this->height < 200) {
+                $this->width = $screen->bounds['width'] * 0.75;
+                $this->height = $screen->bounds['height'] * 0.75;
+            }
 
-        $this->centerOnScreen();
+            $this->centerOnScreen();
 
-        $this->x = Ide::get()->getUserConfigValue(get_class($this) . '.x', 0);
-        $this->y = Ide::get()->getUserConfigValue(get_class($this) . '.y', 0);
+            $this->x = Ide::get()->getUserConfigValue(get_class($this) . '.x', 0);
+            $this->y = Ide::get()->getUserConfigValue(get_class($this) . '.y', 0);
 
-        if ($this->x > $screen->visualBounds['width'] - 10 || $this->y > $screen->visualBounds['height'] - 10 ||
-            $this->x < -999 || $this->y < -999) {
-            $this->x = $this->y = 50;
-        }
+            if ($this->x > $screen->visualBounds['width'] - 10 || $this->y > $screen->visualBounds['height'] - 10 ||
+                $this->x < -999 || $this->y < -999) {
+                $this->x = $this->y = 50;
+            }
 
-        $this->maximized = Ide::get()->getUserConfigValue(get_class($this) . '.maximized', true);
+            $this->maximized = Ide::get()->getUserConfigValue(get_class($this) . '.maximized', true);
+        });
 
         $this->observer('maximized')->addListener(function ($old, $new) {
             Ide::get()->setUserConfigValue(get_class($this) . '.maximized', $new);
@@ -273,6 +274,7 @@ class MainForm extends AbstractIdeForm
                 //Ide::get()->setUserConfigValue(get_class($this) . '.dividerPositions', $this->contentSplitPane->dividerPositions);
             });
         }
+
 
         uiLater(function () {
             if ($this->ideConfig()->has('splitTree.dividerPositions')) {
