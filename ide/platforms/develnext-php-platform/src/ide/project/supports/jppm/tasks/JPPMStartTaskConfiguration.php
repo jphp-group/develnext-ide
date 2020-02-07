@@ -30,6 +30,6 @@ class JPPMStartTaskConfiguration extends AbstractTaskConfiguration {
      * @inheritDoc
      */
     public function getTaskInfo(): TaskProcessInfo {
-        return new JPPMTaskProcessInfo("start");
+        return new JPPMTaskProcessInfo("start", ['light']);
     }
 }
