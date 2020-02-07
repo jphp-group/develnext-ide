@@ -54,8 +54,8 @@ class RhombusFormElement extends AbstractFormElement
     {
         $element = new UXPolygon(static::$points);
 
-        $element->fillColor = UXColor::of('#cce6ff');
-        $element->strokeColor = UXColor::of('#334db3');
+        $element->fill = UXColor::of('#cce6ff');
+        $element->stroke = UXColor::of('#334db3');
         $element->strokeType = 'INSIDE';
         $element->strokeWidth = 2;
 
