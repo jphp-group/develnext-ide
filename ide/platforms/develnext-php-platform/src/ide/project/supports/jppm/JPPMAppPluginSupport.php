@@ -47,7 +47,7 @@ class JPPMAppPluginSupport extends AbstractProjectSupport
         $project->getRunDebugManager()->add('jppm-start', new JPPMStartTaskConfiguration());
         $project->getRunDebugManager()->add('jppm-build', new JPPMBuildTaskConfiguration());
 
-        Ide::get()->getSettings()->registerSettingGroup(new JPPMAppPluginSettingGroup());
+        //Ide::get()->getSettings()->registerSettingGroup(new JPPMAppPluginSettingGroup());
     }
 
     /**
@@ -55,7 +55,7 @@ class JPPMAppPluginSupport extends AbstractProjectSupport
      */
     public function onUnlink(Project $project)
     {
-        Ide::get()->getSettings()->unregisterSettingGroup(JPPMAppPluginSettingGroup::class);
+        //Ide::get()->getSettings()->unregisterSettingGroup(JPPMAppPluginSettingGroup::class);
 
         /** @var ProjectFormat $projectFormat */
         if ($projectFormat = $project->getRegisteredFormat(ProjectFormat::class)) {

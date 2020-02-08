@@ -100,7 +100,7 @@ abstract class AbstractCommand extends Module
             $button->tooltipText .= ' (' . $this->getAccelerator() . ')';
         }
 
-        $button->graphic = Ide::get()->getImage($this->getIcon());
+        $button->graphic = ico($this->getIcon());
         $button->maxHeight = 9999;
         $button->padding = 3;
         $button->paddingLeft = $button->paddingRight = 7;
@@ -119,7 +119,7 @@ abstract class AbstractCommand extends Module
     public function makeMenuItem()
     {
         $item = _(new UXMenuItem($this->getName()));
-        $item->graphic = Ide::get()->getImage($this->getIcon());
+        $item->graphic = ico($this->getIcon());
         $item->accelerator = $this->getAccelerator();
 
         $item->on('action', $this->makeAction());

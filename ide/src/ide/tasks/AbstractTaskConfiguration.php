@@ -15,7 +15,7 @@ abstract class AbstractTaskConfiguration {
      * @return string
      */
     public function getIcon(): string {
-        return "icons/run16.png";
+        return "525:play,,#52a22a";
     }
 
     /**

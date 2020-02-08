@@ -57,7 +57,7 @@ class RunTaskCommand extends AbstractCommand
         parent::__construct();
 
         $this->stopButton = $this->makeGlyphButton();
-        $this->stopButton->graphic = Ide::get()->getImage('icons/square16.png');
+        $this->stopButton->graphic = ico('525:square,16px,#d04949');
         $this->stopButton->tooltipText = 'command.stop';
         $this->stopButton->enabled = false;
         $this->stopButton = _($this->stopButton);
@@ -106,12 +106,12 @@ class RunTaskCommand extends AbstractCommand
             foreach ($items as $key => $item) {
                 uiLaterAndWait(function () use ($project, $key, $item, $items, $i) {
                     $menuItem = new UXMenuItem(_($item->getName()));
-                    $menuItem->graphic = Ide::getImage($item->getIcon());
+                    $menuItem->graphic = ico($item->getIcon());
 
                     $handler = function () use ($project, $item, $key, $menuItem) {
                         $this->taskSelect->text = $item->getName();
                         $this->taskSelect = _($this->taskSelect);
-                        $this->taskSelect->graphic = Ide::getImage($item->getIcon());
+                        $this->taskSelect->graphic = ico($item->getIcon());
 
                         $this->taskSelect->on('action', function () use ($project, $item) {
                             ProjectSystem::saveOnlyRequired();

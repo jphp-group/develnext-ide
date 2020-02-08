@@ -9,6 +9,7 @@ use php\gui\designer\UXDesignProperties;
 use php\gui\UXDialog;
 use php\gui\UXNode;
 use php\lang\System;
+use php\lib\str;
 
 $cache = false;//!IdeSystem::isDevelopment();
 
@@ -86,9 +87,32 @@ function dump($arg)
 
 /**
  * @param $name
- * @return \php\gui\UXImageView
+ * @return \php\gui\UXImageView|\php\gui\icons\UXFontAwesomeIcon|\php\gui\icons\UXIcons525Icon
  */
 function ico($name)
 {
-    return Ide::get()->getImage("icons/$name.png");
+    if (!$name) return null;
+    if (is_object($name)) return $name;
+
+    if (str::startsWith($name, 'fa:') || str::startsWith($name, '525:')) {
+        [$type, $name] = str::split($name, ":", 2);
+        [$name, $size, $color] = str::split($name, ",");
+
+        $size = $size ?: "18px";
+
+        switch ($type) {
+            case "fa":
+                return new \php\gui\icons\UXFontAwesomeIcon($name, $size, $color);
+            case "525":
+                return new \php\gui\icons\UXIcons525Icon($name, $size, $color);
+        }
+
+        return null;
+    } else {
+        if (str::startsWith($name, "icons/")) {
+            return Ide::getImage($name);
+        } else {
+            return Ide::getImage("icons/$name.png");
+        }
+    }
 }
