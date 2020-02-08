@@ -26,10 +26,15 @@ Platforms available to build:
 
 * **win** - windows
 * **linux** - any linux distribution
-* **darwin** - OS X (MacOS)
+* **mac** - OS X (MacOS)
 
 ```bash
-jppm build-ide --{platform_name}
+jppm build-ide -{platform_name}
+```
+
+Example, build ide for Windows:
+```bash
+jppm build-ide -win
 ```
 
 ********************

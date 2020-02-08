@@ -149,7 +149,7 @@ function task_buildIde(Event $e)
     Tasks::copy('./dn-launcher/build/DevelNext.jar', './ide/build');
     Tasks::runExternal('./ide', 'copySourcesToBuild');
 
-    $os = $e->isFlag('linux') ? 'linux' : $e->isFlag('darwin') ? 'darwin' : 'win';
+    $os = $e->isFlag('linux') ? 'linux' : ($e->isFlag('darwin') || $e->isFlag('mac') ? 'darwin': 'win');
 
     $jreLink = $e->package()->getAny("jdk.$os.url");
     $jrePath = "./tools/build/jre/" . fs::name($jreLink);
