@@ -23,7 +23,7 @@ class JPPMBuildTaskConfiguration extends AbstractTaskConfiguration {
      * @return string
      */
     public function getIcon(): string {
-        return "icons/boxArrow16.png";
+        return "525:archive-box,,#4949d0";
     }
 
     public function getDefaultEnvironment(): string {

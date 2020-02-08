@@ -27,6 +27,7 @@ deps:
   jphp-gui-ext: ^2.0.0
   jphp-gui-game-ext: ^2.0.0
   jphp-gui-desktop-ext: ^2.0.0
+  jphp-gui-fonticons-ext: ^1.0.0
   jphp-compress-ext: ^1.0.0
   jphp-parser-ext: ^1.0.0
   jphp-process-ext: '*'

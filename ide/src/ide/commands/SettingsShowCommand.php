@@ -15,7 +15,7 @@ class SettingsShowCommand extends AbstractCommand
 
     public function getIcon()
     {
-        return 'icons/settings16.png';
+        return 'fa:gears,16px,';
     }
 
     public function isAlways()
@@ -26,6 +26,11 @@ class SettingsShowCommand extends AbstractCommand
     public function getCategory()
     {
         return 'help';
+    }
+
+    public function makeUiForHead()
+    {
+        return $this->makeGlyphButton();
     }
 
     /**

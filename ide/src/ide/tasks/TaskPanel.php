@@ -82,7 +82,7 @@ class TaskPanel {
         $panel = new UXAnchorPane();
         $panel->add($node);
 
-        $destroyButton = _(new UXButton("command.close", Ide::getImage("icons/square16.png")));
+        $destroyButton = _(new UXButton("command.close", ico("525:square,16px,#d04949")));
         $destroyButton->on("action", function () use ($destroyButton) {
             if ($this->process->isAlive())
                 $this->destroy();

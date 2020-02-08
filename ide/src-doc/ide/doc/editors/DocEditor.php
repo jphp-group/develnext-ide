@@ -544,7 +544,7 @@ class DocEditor extends AbstractEditor
         $tree->root = new UXTreeItem('Документация');
         $tree->rootVisible = true;
         $tree->root->expanded = true;
-        $tree->root->graphic = Ide::get()->getImage($this->getIcon());
+        $tree->root->graphic = ico($this->getIcon());
         $tree->multipleSelection = false;
 
         $tree->on('mouseUp', function () {
