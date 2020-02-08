@@ -44,7 +44,7 @@ class SplashForm extends AbstractIdeForm
         $this->version->text = $this->_app->getVersion();
 
         // Конечно, эфекты это прикольно, но нужно ли это?
-        if ($this->_app->isSnapshotVersion()) {
+        /*if ($this->_app->isSnapshotVersion()) {
             $effect = new UXSepiaToneEffect();
             $effect->level = 0.5;
             $this->image->effects->add($effect);
@@ -52,7 +52,7 @@ class SplashForm extends AbstractIdeForm
             $effect2 = new UXColorAdjustEffect();
             $effect2->saturation = -1;
             $this->tipBox->effects->add($effect2);
-        }
+        }*/
 
         if ($versionCode) {
             $this->versionCode->text = str::upperFirst($versionCode);
@@ -142,6 +142,8 @@ class SplashForm extends AbstractIdeForm
      */
     public function doShow()
     {
+        $this->tipBox->backgroundColor = '#363636';
+        $this->tip->textColor = '#ecf0f1';
         $this->tip->text = SplashTipSystem::get(Ide::get()->getLanguage()->getCode());
         // Я хочу увидеть, как это выглядит в продакшне
         /*if (Ide::get()->isDevelopment() && Ide::get()->isWindows()) {

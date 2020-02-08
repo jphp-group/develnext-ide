@@ -119,7 +119,7 @@ class ActionManager
     public function registerType($type)
     {
         if ($type instanceof AbstractActionType) {
-            $this->actionTypes[] = $type;
+            $this->actionTypes[str::lower(reflect::typeOf($type))] = $type;
             $this->actionTypeByTagName[str::lower($type->getTagName())] = $type;
             $this->lastUpdated = Time::millis();
         } elseif (is_string($type)) {
@@ -141,6 +141,8 @@ class ActionManager
             unset($this->actionTypes[$class]);
 
             $this->lastUpdated = Time::millis();
+        } else {
+            Logger::warn("Unknown $class to unregister");
         }
     }
 
