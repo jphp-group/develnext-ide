@@ -39,6 +39,7 @@ use ide\IdeException;
 use ide\library\IdeLibrarySkinResource;
 use ide\Logger;
 use ide\project\AbstractProjectBehaviour;
+use ide\project\behaviours\gui\SkinManagerForm;
 use ide\project\control\CommonProjectControlPane;
 use ide\project\control\DesignProjectControlPane;
 use ide\project\control\FormsProjectControlPane;
@@ -51,6 +52,7 @@ use ide\project\ProjectIndexer;
 use ide\project\ProjectModule;
 use ide\project\ProjectTree;
 use ide\systems\FileSystem;
+use ide\systems\IdeSystem;
 use ide\utils\FileUtils;
 use ide\utils\Json;
 use php\compress\ZipException;
@@ -687,7 +689,11 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
 
         $styleFile = $this->project->getSrcFile('.theme/style.fx.css');
 
-        if (!$styleFile->exists() || fs::time($styleFile) != $this->ideStylesheetFileTime) {
+        if (!$styleFile->exists()) {
+            if ($this->ideStylesheetFileTime != -1) {
+                $this->reloadStylesheet();
+            }
+        } else if (fs::time($styleFile) != $this->ideStylesheetFileTime) {
             $this->reloadStylesheet();
         }
     }
@@ -759,7 +765,8 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
             $this->applyStylesheetToEditor($editor);
         }
 
-        $this->ideStylesheetFileTime = fs::time($this->project->getSrcFile('.theme/style.fx.css'));
+        $file = $this->project->getSrcFile('.theme/style.fx.css');
+        $this->ideStylesheetFileTime = $file->isFile() ? fs::time($file) : -1;
     }
 
     public function saveLauncherConfig()
@@ -868,6 +875,18 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
         $this->project->defineFile('src/JPHP-INF/.bootstrap.php', $template, true);
     }
 
+    public function getDefaultSkin(): ProjectSkin
+    {
+        $ideLibrary = Ide::get()->getLibrary();
+        $resource = $ideLibrary->getResource('skins', SkinManagerForm::DEFAULT_SKIN);
+
+        if ($resource instanceof IdeLibrarySkinResource) {
+            return $resource->getSkin();
+        } else {
+            return ProjectSkin::createEmpty();
+        }
+    }
+
     /**
      * Удалить скин программы.
      * И установить скин по умолчанию
@@ -878,7 +897,7 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
         fs::clean($skinDir);
         fs::delete($skinDir);
 
-        $this->applySkin(ProjectSkin::createEmpty());
+        $this->applySkin($this->getDefaultSkin());
     }
 
     /**
@@ -902,6 +921,7 @@ class GuiFrameworkProjectBehaviour extends AbstractProjectBehaviour
     /**
      * Применить скин к программе.
      * @param ProjectSkin $skin
+     * @throws \Exception
      */
     public function applySkin(ProjectSkin $skin)
     {

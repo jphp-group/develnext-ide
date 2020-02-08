@@ -62,16 +62,7 @@ class ProjectSkin extends AbstractEntity
      */
     public static function createEmpty()
     {
-        //return new ProjectSkin(); 
-        
-        $defaultSkin = "library/skins/". SkinManagerForm::DEFAULT_SKIN . ".zip";
-        $file = IdeSystem::getOwnFile($defaultSkin);
-
-        if (IdeSystem::isDevelopment() && !fs::isFile($file)) {
-            $file = IdeSystem::getOwnFile('misc/' . $defaultSkin);
-        }
-
-        return self::createFromZip($file);
+        return new ProjectSkin();
     }
 
     /**

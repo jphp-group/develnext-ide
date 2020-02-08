@@ -2,8 +2,10 @@
 namespace ide\project\supports\jppm;
 
 use ide\formats\ProjectFormat;
+use ide\Ide;
 use ide\project\AbstractProjectSupport;
 use ide\project\Project;
+use ide\project\supports\jppm\settings\JPPMAppPluginSettingGroup;
 use ide\project\supports\jppm\tasks\JPPMBuildTaskConfiguration;
 use ide\project\supports\jppm\tasks\JPPMStartTaskConfiguration;
 use ide\project\supports\JPPMProjectSupport;
@@ -44,6 +46,8 @@ class JPPMAppPluginSupport extends AbstractProjectSupport
 
         $project->getRunDebugManager()->add('jppm-start', new JPPMStartTaskConfiguration());
         $project->getRunDebugManager()->add('jppm-build', new JPPMBuildTaskConfiguration());
+
+        Ide::get()->getSettings()->registerSettingGroup(new JPPMAppPluginSettingGroup());
     }
 
     /**
@@ -51,6 +55,8 @@ class JPPMAppPluginSupport extends AbstractProjectSupport
      */
     public function onUnlink(Project $project)
     {
+        Ide::get()->getSettings()->unregisterSettingGroup(JPPMAppPluginSettingGroup::class);
+
         /** @var ProjectFormat $projectFormat */
         if ($projectFormat = $project->getRegisteredFormat(ProjectFormat::class)) {
             $projectFormat->removeControlPane(JPPMControlPane::class);
@@ -60,3 +66,4 @@ class JPPMAppPluginSupport extends AbstractProjectSupport
         $project->getRunDebugManager()->remove('jppm-build');
     }
 }
+
