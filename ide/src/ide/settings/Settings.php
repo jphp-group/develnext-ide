@@ -5,6 +5,7 @@ namespace ide\settings;
 use ide\forms\SettingsForm;
 use ide\settings\ui\AbstractSettingsGroup;
 use ide\settings\ui\AbstractSettingsItem;
+use php\lib\reflect;
 
 class Settings
 {
@@ -21,8 +22,17 @@ class Settings
     /**
      * @param AbstractSettingsGroup $group
      */
-    public function registerSettingGroup(AbstractSettingsGroup $group) {
-        $this->groups[$group->getName()] = $group;
+    public function registerSettingGroup(AbstractSettingsGroup $group)
+    {
+        $this->groups[reflect::typeOf($group)] = $group;
+    }
+
+    /**
+     * @param string $groupClass
+     */
+    public function unregisterSettingGroup(string $groupClass)
+    {
+        unset($this->groups[$groupClass]);
     }
 
     /**
