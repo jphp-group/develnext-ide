@@ -235,15 +235,31 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
         $pkgFile->setIncludes(['JPHP-INF/.bootstrap.php']);
 
         $deps = [
-            'dn-app-framework' => '~1.0.0',
-            'dn-debug-bundle' => '~0.1.0',
-            'jphp-gui-desktop-ext' => '*',
-            'jphp-zend-ext' => '*',
+            'dn-app-framework' => '^1.0.0',
+            'dn-debug-bundle' => '^0.1.0',
+            'jphp-gui-desktop-ext' => '^1.0.0',
+            'jphp-zend-ext' => '^1.0.0',
+        ];
+
+        $devDeps = [
+            'dn-packr' => '^1.0.0'
         ];
 
         $depsUnix = ['jphp-gui-jfx-linux' => '^11.0.0'];
         $depsMac = ['jphp-gui-jfx-mac' => '^11.0.0'];
         $depsWin = ['jphp-gui-jfx-win' => '^11.0.0'];
+
+        $extra = [
+            'app' => [
+                'jvm-args' => ['-Xms96m'],
+                'build' => ['type' => 'multi-jar'],
+                'launcher' => [
+                    'icons' => ['launcher/app.ico', 'launcher/app.icns'],
+                    'java' => ['embedded' => true]
+                ],
+            ],
+            'packr' => ['enabled' => true, 'separated-build' => false]
+        ];
 
         $bundles = [
             'develnext.bundle.game2d.Game2DBundle' => ['dn-game2d-bundle', '~1.0.0'],
@@ -279,9 +295,12 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
         }
 
         $pkgFile->setDeps($deps);
+        $pkgFile->setDevDeps($devDeps);
+
         $pkgFile->setDeps($depsWin, 'win');
         $pkgFile->setDeps($depsUnix, 'unix');
         $pkgFile->setDeps($depsMac, 'mac');
+        $pkgFile->setExtra($extra);
 
         $pkgFile->save();
     }
