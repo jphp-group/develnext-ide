@@ -47,7 +47,7 @@ class PackrPlugin
             exit(-1);
         }
 
-        if (!$pkg->getAny('app.packer.enabled', true)) {
+        if (!$pkg->getAny('packr.enabled', true)) {
             Console::log('-> Skip Packr build (app.packer.enabled = false)');
             return;
         }
