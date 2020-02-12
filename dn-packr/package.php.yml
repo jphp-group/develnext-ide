@@ -1,0 +1,19 @@
+name: dn-packr
+type: plugin
+version: 1.0.0
+description: Pack JPHP & Java application to Executable Apps (Win, Linux, Mac)
+
+plugins: [Hub]
+
+deps:
+  jphp-core: '*'
+  jphp-json-ext: '*'
+  jphp-httpclient-ext: ^1.0.0
+
+plugin:
+  list: [dn\packr\PackrPlugin]
+  sources:
+    - src
+
+config:
+  ignore: ['/.git/**', '/.idea/**', '/examples/**', '/tests/**']
