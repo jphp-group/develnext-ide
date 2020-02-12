@@ -13,5 +13,9 @@ app:
   build:
     type: multi-jar
   launcher:
+    icons:
+      - './app.icns' # for mac
+      - './app.ico' # for win
+      # linux doesn't support icons
     java:
       embedded: true
