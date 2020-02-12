@@ -19,6 +19,8 @@ function task_publish(Event $e)
     Tasks::runExternal('./dn-app-framework', 'publish', [], ...$e->flags());
     Tasks::runExternal('./dn-designer', 'publish', [], ...$e->flags());
     Tasks::runExternal('./dn-gui-tabs-ext', 'publish', [], ...$e->flags());
+    Tasks::runExternal('./dn-launch4j-builder', 'publish', [], ...$e->flags());
+    Tasks::runExternal('./dn-packr', 'publish', [], ...$e->flags());
 
     foreach ($e->package()->getAny('bundles', []) as $bundle) {
         Tasks::runExternal("./bundles/$bundle", 'publish', [], ...$e->flags());
@@ -31,6 +33,8 @@ function task_publish(Event $e)
 function task_hubPublish(Event $e)
 {
     Tasks::runExternal('./dn-app-framework', 'hub:publish', [], ...$e->flags());
+    Tasks::runExternal('./dn-launch4j-builder', 'hub:publish', [], ...$e->flags());
+    Tasks::runExternal('./dn-packr', 'hub:publish', [], ...$e->flags());
 
     foreach ($e->package()->getAny('bundles', []) as $bundle) {
         Tasks::runExternal("./bundles/$bundle", 'hub:publish', [], ...$e->flags());
@@ -157,7 +161,7 @@ function task_buildIde(Event $e)
     if (!fs::exists($jrePath)) {
         fs::makeFile($jrePath);
         Console::log("Download JDK for $os from $jreLink");
-        Stream::putContents($jrePath, Stream::getContents($jreLink));
+        fs::copy($jrePath, $jreLink);
     }
 
     if ($jrePath) {

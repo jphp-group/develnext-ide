@@ -1,0 +1,17 @@
+
+name: examples
+
+plugins: [App]
+
+deps:
+  jphp-core: '*'
+
+devDeps:
+  dn-packr: '*'
+
+app:
+  build:
+    type: multi-jar
+  launcher:
+    java:
+      embedded: true
