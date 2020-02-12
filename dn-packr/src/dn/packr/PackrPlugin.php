@@ -115,7 +115,7 @@ class PackrPlugin
         $process = $process->inheritIO()->startAndWait();
 
         // move jars to libs
-        $separatedBuild = $pkg->getAny('packr.separated-build', false);
+        $separatedBuild = $pkg->getAny('packr.separated-build', true);
 
         if ($separatedBuild) {
             Tasks::createDir("$outputDir/libs");

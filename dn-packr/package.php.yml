@@ -8,7 +8,6 @@ plugins: [Hub]
 deps:
   jphp-core: '*'
   jphp-json-ext: '*'
-  jphp-httpclient-ext: ^1.0.0
 
 plugin:
   list: [dn\packr\PackrPlugin]
