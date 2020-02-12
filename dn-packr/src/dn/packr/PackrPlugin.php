@@ -3,11 +3,14 @@ namespace dn\packr;
 
 use compress\TarArchive;
 use httpclient\HttpClient;
+use packager\Colors;
 use packager\Event;
 use packager\JavaExec;
+use packager\Package;
 use packager\Vendor;
 use packager\cli\Console;
 use php\format\JsonProcessor;
+use php\lang\Process;
 use php\lib\arr;
 use php\lib\fs;
 use php\lib\str;
@@ -30,6 +33,8 @@ class PackrPlugin
      *
      * @jppm-description Build App Launcher via Packr
      * @param Event $event
+     * @throws \php\format\ProcessorException
+     * @throws \php\io\IOException
      * @throws \php\lang\IllegalArgumentException
      * @throws \php\lang\IllegalStateException
      */
@@ -73,6 +78,7 @@ class PackrPlugin
         $vendor = new Vendor($pkg->getConfigVendorPath());
         $packrPkg = $vendor->getPackage('dn-packr');
         $packrJarFile = $vendor->getFile($packrPkg, 'packr.jar')->getAbsoluteFile();
+        $rcEditBin = $vendor->getFile($packrPkg, 'rcedit-x86.exe')->getAbsoluteFile();
 
         $packr = (array) $pkg->getAny('packr', []);
         $javaExec = new JavaExec($packrJarFile);
@@ -104,6 +110,18 @@ class PackrPlugin
             case "mac": $config['platform'] = 'mac'; break;
         }
 
+        $icons = $pkg->getAny('app.launcher.icons', []);
+        $winIcon = flow($icons)->findOne(function ($el) { return fs::ext($el) === "ico"; });
+        $macIcon = flow($icons)->findOne(function ($el) { return fs::ext($el) === "icns"; });
+
+        if (fs::isFile($macIcon)) {
+            if (Package::isMac()) {
+                $config['icon'] = $macIcon;
+            }
+        } else {
+            Console::warn("Failed to find icon '{0}' for mac executable", $macIcon);
+        }
+
         $outputDir = fs::parent(fs::abs($buildDir)) . "/" . fs::name($buildDir) . "-" . $pkg->getOS();
         Tasks::deleteFile($outputDir);
 
@@ -113,6 +131,11 @@ class PackrPlugin
 
         $process = $javaExec->run([fs::abs($packrConfig)], fs::abs($buildDir));
         $process = $process->inheritIO()->startAndWait();
+
+        if ($winIcon) {
+            Console::info("Add icon " . Colors::withColor($winIcon, 'white') . " for '$buildFileName.exe'");
+            $this->addWinIcon($rcEditBin, fs::abs("$outputDir/$buildFileName.exe"), fs::abs($winIcon));
+        }
 
         // move jars to libs
         $separatedBuild = $pkg->getAny('packr.separated-build', true);
@@ -146,8 +169,25 @@ class PackrPlugin
             Tasks::deleteFile("$outputDir");
         }
 
+        Tasks::deleteFile($packrConfig);
+
         if ($process->getExitValue() != 0) {
             exit($process->getExitValue());
+        }
+    }
+
+    protected function addWinIcon($rcEditBin, $exeFile, $iconFile)
+    {
+        if (!fs::isFile($iconFile)) {
+            Console::warn("Failed to find icon '{0}' for exe", $iconFile);
+            return;
+        }
+
+        $proc = new Process([$rcEditBin, $exeFile, '--set-icon', $iconFile], fs::parent($exeFile));
+        $proc = $proc->inheritIO()->startAndWait();
+
+        if ($proc->getExitValue() !== 0) {
+            Console::warn("Failed to add icon to '{0}'", $exeFile);
         }
     }
 }
