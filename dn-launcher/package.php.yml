@@ -8,6 +8,7 @@ plugins:
 app:
   main-class: 'org.develnext.ide.Launcher'
   build:
+    type: one-jar
     file-name: 'DevelNext'
 
 gradle:
