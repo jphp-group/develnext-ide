@@ -19,7 +19,6 @@ function task_publish(Event $e)
     Tasks::runExternal('./dn-app-framework', 'publish', [], ...$e->flags());
     Tasks::runExternal('./dn-designer', 'publish', [], ...$e->flags());
     Tasks::runExternal('./dn-gui-tabs-ext', 'publish', [], ...$e->flags());
-    Tasks::runExternal('./dn-launch4j-builder', 'publish', [], ...$e->flags());
     Tasks::runExternal('./dn-packr', 'publish', [], ...$e->flags());
 
     foreach ($e->package()->getAny('bundles', []) as $bundle) {
@@ -148,10 +147,11 @@ function task_buildIde(Event $e)
     Tasks::copy('./ide/misc', './ide/build/');
 
     Tasks::deleteFile('./dn-launcher/build');
-    Tasks::runExternal('./dn-launcher', 'build');
+    Tasks::runExternal('./dn-launcher', 'build', $e->args());
     Tasks::deleteFile("./ide/build/DevelNext.jar");
     Tasks::copy('./dn-launcher/build/DevelNext.jar', './ide/build');
-    Tasks::runExternal('./ide', 'copySourcesToBuild');
+    Tasks::copy('./dn-launcher/build/libs/', './ide/build/libs/');
+    Tasks::runExternal('./ide', 'copySourcesToBuild', $e->args());
 
     $os = $e->isFlag('linux') ? 'linux' : ($e->isFlag('darwin') || $e->isFlag('mac') ? 'darwin': 'win');
 
