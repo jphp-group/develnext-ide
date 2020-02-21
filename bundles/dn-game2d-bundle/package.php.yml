@@ -1,12 +1,12 @@
 
 name: dn-game2d-bundle
-version: 1.0.0
+version: 3.0.0
 author: DevelNext
 
 plugins: [Hub, Doc]
 
 deps:
-  jphp-gui-game-ext: '*'
+  jphp-gui-game-ext: ^3.0.0
 
 config:
   ignore:

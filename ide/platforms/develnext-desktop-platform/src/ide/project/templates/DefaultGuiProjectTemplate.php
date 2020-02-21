@@ -235,9 +235,9 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
         $pkgFile->setIncludes(['JPHP-INF/.bootstrap.php']);
 
         $deps = [
-            'dn-app-framework' => '^1.0.0',
+            'dn-app-framework' => '^2.0.0',
             'dn-debug-bundle' => '^0.1.0',
-            'jphp-gui-desktop-ext' => '^1.0.0',
+            'jphp-gui-desktop-ext' => '^3.0.0',
             'jphp-zend-ext' => '^1.0.0',
         ];
 
@@ -245,9 +245,9 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
             'dn-packr' => '^1.0.0'
         ];
 
-        $depsUnix = ['jphp-gui-jfx-linux' => '^11.0.0'];
-        $depsMac = ['jphp-gui-jfx-mac' => '^11.0.0'];
-        $depsWin = ['jphp-gui-jfx-win' => '^11.0.0'];
+        $depsUnix = ['jphp-gui-jfx-linux' => '^13.0.0'];
+        $depsMac = ['jphp-gui-jfx-mac' => '^13.0.0'];
+        $depsWin = ['jphp-gui-jfx-win' => '^13.0.0'];
 
         $extra = [
             'app' => [
@@ -262,23 +262,23 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
         ];
 
         $bundles = [
-            'develnext.bundle.game2d.Game2DBundle' => ['dn-game2d-bundle', '~1.0.0'],
-            'ide.bundle.std.JPHPGuiDesktopBundle' => ['dn-game2d-bundle', '~1.0.0'],
-            'develnext.bundle.jsoup.JsoupBundle' => ['dn-jsoup-bundle', '~1.0.0'],
-            'develnext.bundle.hotkey.HotKeyBundle' => ['dn-hotkey-bundle', '~1.0.0'],
-            'develnext.bundle.sql.FireBirdSqlBundle' => ['dn-firebirdsql-bundle', '~1.0.0'],
-            'develnext.bundle.httpclient.HttpClientBundle' => ['dn-httpclient-bundle', '~1.0.0'],
-            'develnext.bundle.jfoenix.JFoenixBundle' => ['dn-jfoenix-bundle', '^1.0.0'],
-            'develnext.bundle.mail.MailBundle' => ['dn-mail-bundle', '~1.0.0'],
-            'develnext.bundle.sql.MysqlBundle' => ['dn-mysql-bundle', '~1.0.0'],
-            'develnext.bundle.sql.PgSqlBundle' => ['dn-pgsql-bundle', '~1.0.0'],
-            'develnext.bundle.sql.SqliteBundle' => ['dn-sqlite-bundle', '~1.0.0'],
-            'develnext.bundle.systemtray.SystemTrayBundle' => ['dn-systemtray-bundle', '~1.0.0'],
-            'develnext.bundle.zip.ZipBundle' => ['dn-zip-bundle', '~1.0.0'],
+            'develnext.bundle.game2d.Game2DBundle' => ['dn-game2d-bundle', '^3.0.0'],
+            'ide.bundle.std.JPHPGuiDesktopBundle' => ['dn-game2d-bundle', '^3.0.0'],
+            'develnext.bundle.jsoup.JsoupBundle' => ['dn-jsoup-bundle', '^1.0.0'],
+            'develnext.bundle.hotkey.HotKeyBundle' => ['dn-hotkey-bundle', '^1.0.0'],
+            'develnext.bundle.sql.FireBirdSqlBundle' => ['dn-firebirdsql-bundle', '^1.0.0'],
+            'develnext.bundle.httpclient.HttpClientBundle' => ['dn-httpclient-bundle', '^1.0.0'],
+            'develnext.bundle.jfoenix.JFoenixBundle' => ['dn-jfoenix-bundle', '^3.0.0'],
+            'develnext.bundle.mail.MailBundle' => ['dn-mail-bundle', '^1.0.0'],
+            'develnext.bundle.sql.MysqlBundle' => ['dn-mysql-bundle', '^1.0.0'],
+            'develnext.bundle.sql.PgSqlBundle' => ['dn-pgsql-bundle', '^1.0.0'],
+            'develnext.bundle.sql.SqliteBundle' => ['dn-sqlite-bundle', '^1.0.0'],
+            'develnext.bundle.systemtray.SystemTrayBundle' => ['dn-systemtray-bundle', '^3.0.0'],
+            'develnext.bundle.zip.ZipBundle' => ['dn-zip-bundle', '^1.0.0'],
         ];
 
         if ($addGame2D) {
-            $deps['dn-game2d-bundle'] = '*';
+            $deps['dn-game2d-bundle'] = '^3.0.0';
         }
 
         foreach ($project->getIdeFile("bundles/")->findFiles() as $file) {
@@ -298,7 +298,7 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
         $pkgFile->setDevDeps($devDeps);
 
         $pkgFile->setDeps($depsWin, 'win');
-        $pkgFile->setDeps($depsUnix, 'unix');
+        $pkgFile->setDeps($depsUnix, 'linux');
         $pkgFile->setDeps($depsMac, 'mac');
         $pkgFile->setExtra($extra);
 
