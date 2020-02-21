@@ -1,14 +1,14 @@
 name: develnext-gui-tabs-ext
-version: 1.0.0
+version: 2.0.0
 
 jfx:
-  version: 11.0.2
+  version: 13.0.2
 
 plugins: [Gradle, Hub]
 
 deps:
   jphp-runtime: '^1.0.0'
-  jphp-gui-ext: '^2.0.0'
+  jphp-gui-ext: '^3.0.0'
 
 
 gradle:

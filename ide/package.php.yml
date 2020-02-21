@@ -18,26 +18,45 @@ includes:
 deps:
   wizard-core: ^0.1.0
   wizard-localization: ^0.1.0
+
+  # core
   jphp-core: ^1.0.0
   jphp-xml-ext: ^1.0.0
   jphp-zend-ext: ^1.0.0
   jphp-yaml-ext: ^1.0.0
   jphp-zip-ext: ^1.0.0
   jphp-httpclient-ext: ^1.0.0
-  jphp-gui-ext: ^2.0.0
-  jphp-gui-game-ext: ^2.0.0
-  jphp-gui-desktop-ext: ^2.0.0
-  jphp-gui-fonticons-ext: ^1.0.0
   jphp-compress-ext: ^1.0.0
   jphp-parser-ext: ^1.0.0
   jphp-process-ext: '*'
-  develnext-designer: ^1.0.0
-  develnext-gui-tabs-ext: ^1.0.0
-  jphp-gui-jfx-win: ^11.0.0
-  jphp-gui-jfx-linux: ^11.0.0
-  jphp-gui-jediterm-ext: '*'
-  jphp-richtextfx-ext: 1.2.5
   jphp-cglib-ext: '*'
+
+  # gui
+  jphp-gui-ext: ^3.0.0
+  jphp-gui-web-ext: ^3.0.0
+  jphp-gui-game-ext: ^3.0.0
+  jphp-gui-desktop-ext: ^3.0.0
+  jphp-gui-fonticons-ext: ^3.0.0
+  jphp-gui-jediterm-ext: ^1.0.0
+  jphp-richtextfx-ext: 1.3.0
+
+  # develnext
+  develnext-designer: ^1.0.0
+  develnext-gui-tabs-ext: ^2.0.0
+
+
+depWin:
+  jphp-gui-jfx-win: ^13.0.0
+  jphp-gui-jfx-web-win: ^13.0.0
+
+depLinux:
+  jphp-gui-jfx-linux: ^13.0.0
+  jphp-gui-jfx-web-linux: ^13.0.0
+
+depMac:
+  jphp-gui-jfx-mac: ^13.0.0
+  jphp-gui-jfx-web-mac: ^13.0.0
+
 app:
   disable-launcher: '1'
   jvm-args:
