@@ -160,8 +160,11 @@ function task_buildIde(Event $e)
 
     if (!fs::exists($jrePath)) {
         fs::makeFile($jrePath);
-        Console::log("Download JDK for $os from $jreLink");
-        fs::copy($jrePath, $jreLink);
+        Console::log("Download JDK for $os from $jreLink, wait...");
+        if (fs::copy($jreLink, $jrePath) === 0) {
+            Console::error("Failed to download JDK ($jreLink)");
+            exit(-1);
+        }
     }
 
     if ($jrePath) {
