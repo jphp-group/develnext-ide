@@ -82,6 +82,7 @@ class JPPMProjectSupport extends AbstractProjectSupport
     /**
      * @param Project $project
      * @return mixed|void
+     * @throws \Exception
      */
     public function onLink(Project $project)
     {

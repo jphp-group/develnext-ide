@@ -1,0 +1,17 @@
+name: dn-crud-forms
+descriptions: CRUD Form Generator for GUI
+version: 1.0.0
+
+plugins: [App]
+
+deps:
+  jphp-core: '*'
+  jphp-zend-ext: '*'
+  jphp-gui-ext: '*'
+  jphp-yaml-ext: '*'
+  jphp-gui-fonticons-ext: '*'
+  #dn-app-framework: '*'
+
+sources:
+- src
+

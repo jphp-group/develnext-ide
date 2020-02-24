@@ -1,0 +1,21 @@
+
+
+plugins: [App]
+
+sources:
+- src-dev
+
+includes:
+- index.php
+
+deps:
+  dn-app-framework: '*'
+
+depsWin:
+  jphp-gui-jfx-win: ^13.0.0
+
+depsLinux:
+  jphp-gui-jfx-linux: ^13.0.0
+
+depsMac:
+  jphp-gui-jfx-mac: ^13.0.0
