@@ -20,6 +20,7 @@ function task_publish(Event $e)
     Tasks::runExternal('./dn-designer', 'publish', [], ...$e->flags());
     Tasks::runExternal('./dn-gui-tabs-ext', 'publish', [], ...$e->flags());
     Tasks::runExternal('./dn-packr', 'publish', [], ...$e->flags());
+    Tasks::runExternal('./dn-crud-forms', 'publish', [], ...$e->flags());
 
     foreach ($e->package()->getAny('bundles', []) as $bundle) {
         Tasks::runExternal("./bundles/$bundle", 'publish', [], ...$e->flags());

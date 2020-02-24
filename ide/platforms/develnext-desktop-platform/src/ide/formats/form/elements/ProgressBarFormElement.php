@@ -42,7 +42,7 @@ class ProgressBarFormElement extends AbstractFormElement
 
     public function getDefaultSize()
     {
-        return [150, 20];
+        return [200, 30];
     }
 
     public function isOrigin($any)
