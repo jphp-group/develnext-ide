@@ -2,11 +2,6 @@
  * Файл стилей для MainForm
  */
 
-.root {
-    /*-fx-font-size: 13px;*/
-}
-
-
 .btn-link {
     -fx-background-color: transparent;
     -fx-border-width: 0;
