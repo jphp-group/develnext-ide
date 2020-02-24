@@ -63,6 +63,7 @@ app:
   jvm-args:
   - -Djdk.gtk.version=2
   - -Ddevelnext.noCodeCache=true
+  - -Djphp.trace=true
   build:
     file-name: develnext-lib
     type: multi-jar
