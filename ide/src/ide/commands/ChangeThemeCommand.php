@@ -10,6 +10,7 @@ use ide\misc\AbstractCommand;
 use php\framework\Logger;
 use php\gui\framework\AbstractForm;
 use php\gui\framework\FormCollection;
+use php\gui\UXForm;
 use php\io\ResourceStream;
 use php\lib\str;
 
@@ -135,15 +136,21 @@ class ChangeThemeCommand extends AbstractCommand {
         $this->prevTheme = $this->currentTheme;
     }
 
-    public function applyStylesheet(AbstractForm $form){
+    public function applyStylesheet(UXForm $form){
         if (str::length($this->prevTheme) > 0) {
             $prev = $this->prevTheme->getCSSFile();
-            Logger::info('Stylesheet ' . $prev . ' removed from ' . $form->getName());
+            if ($form instanceof AbstractForm) {
+                Logger::info('Stylesheet ' . $prev . ' removed from ' . $form->getName());
+            }
             $form->removeStylesheet($prev);
         }
 
         $current = $this->getCurrentTheme()->getCSSFile();
-        Logger::info('Stylesheet ' . $current . ' applied to ' . $form->getName());
+
+        if ($form instanceof AbstractForm) {
+            Logger::info('Stylesheet ' . $current . ' applied to ' . $form->getName());
+        }
+
         $form->addStylesheet($current);
     }
 }

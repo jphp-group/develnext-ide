@@ -1,0 +1,4 @@
+
+app:
+  jvm-args:
+  - -Djphp.trace=true

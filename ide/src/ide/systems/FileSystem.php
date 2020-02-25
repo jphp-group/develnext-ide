@@ -1,6 +1,7 @@
 <?php
 namespace ide\systems;
 
+use ide\commands\ChangeThemeCommand;
 use ide\editors\AbstractEditor;
 use ide\editors\form\IdeTabPane;
 use ide\editors\menu\ContextMenu;
@@ -401,8 +402,13 @@ class FileSystem
         $win = new UXForm();
 
         $win->addStylesheet('/php/gui/framework/style.css');
+
         foreach (app()->getStyles() as $one) {
             $win->addStylesheet($one);
+        }
+
+        if (ChangeThemeCommand::$instance) {
+            ChangeThemeCommand::$instance->applyStylesheet($win);
         }
 
         $win->owner = Ide::get()->getMainForm();
