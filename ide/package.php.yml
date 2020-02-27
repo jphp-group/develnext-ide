@@ -20,7 +20,7 @@ deps:
   wizard-localization: ^0.1.0
 
   # core
-  jphp-core: ^1.0.0
+  jphp-core: ^1.2.0
   jphp-xml-ext: ^1.0.0
   jphp-zend-ext: ^1.0.0
   jphp-yaml-ext: ^1.0.0

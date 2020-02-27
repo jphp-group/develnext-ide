@@ -279,7 +279,7 @@ class IdeLocalizer extends Localizer
                 if ($this->getUseDefaultValuesForLang() === $this->language) {
                     if ($result === $message) {
                         foreach ($args as $i => $arg) {
-                            $def = str::replace($def, "\{$i\}", $arg);
+                            $def = str::replace($def, "{{$i}}", $arg);
                         }
 
                         return new LocalizedString($def);
@@ -295,7 +295,8 @@ class IdeLocalizer extends Localizer
         $regex = new Regex('(\\{.+\\})', '', $message);
         return new LocalizedString($regex->replaceWithCallback(function (Regex $regex) use ($args) {
             $text = $regex->group(1);
-            return $this->translate(substr($text, 1, -1), $args);
+            $localizedString = $this->translate(substr($text, 1, -1), $args);
+            return Regex::quoteReplacement($localizedString);
         }));
     }
 

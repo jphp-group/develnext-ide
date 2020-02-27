@@ -1379,23 +1379,30 @@ class Ide extends Application
             $this->registerExtension($extension);
         }
 
+        Logger::info("Register property Value Editors");
         $valueEditors = $this->getInternalList('.dn/propertyValueEditors');
         foreach ($valueEditors as $valueEditor) {
-            $valueEditor = new $valueEditor();
+            Logger::info("Register property editor " . $valueEditor);
 
+            $valueEditor = new $valueEditor();
             ElementPropertyEditor::register($valueEditor);
+
+            Logger::info("Register property editor " . $valueEditor . " is done");
         }
 
+        Logger::info("Register formats");
         $formats = $this->getInternalList('.dn/formats');
         foreach ($formats as $format) {
             $this->registerFormat(new $format());
         }
 
+        Logger::info("Register project Templates");
         $projectTemplates = $this->getInternalList('.dn/projectTemplates');
         foreach ($projectTemplates as $projectTemplate) {
             $this->registerProjectTemplate(new $projectTemplate());
         }
 
+        Logger::info("Register main Commands");
         $mainCommands = $this->getInternalList('.dn/mainCommands');
         $commands = [];
         foreach ($mainCommands as $commandClass) {

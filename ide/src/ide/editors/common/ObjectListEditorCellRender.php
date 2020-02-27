@@ -30,7 +30,7 @@ class ObjectListEditorCellRender
             $cell->graphic = $label;
         } else {
             if ($item->hint) {
-                $hintLabel = _(new UXLabel(": \{$item->hint\}"));
+                $hintLabel = _(new UXLabel(": {{$item->hint}}"));
             } else {
                 $hintLabel = new UXLabel("");
             }

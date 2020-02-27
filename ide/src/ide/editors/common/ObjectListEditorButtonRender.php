@@ -29,7 +29,7 @@ class ObjectListEditorButtonRender
         if ($this->hideHint) {
             $cell->graphic = $label;
         } else {
-            $hintLabel = _(new UXLabel($item->hint ? ": \{$item->hint\}" : ""));
+            $hintLabel = _(new UXLabel($item->hint ? ": {{$item->hint}}" : ""));
             $hintLabel->textColor = UXColor::of('gray');
 
             $cell->graphic = new UXHBox([$label, $hintLabel]);
