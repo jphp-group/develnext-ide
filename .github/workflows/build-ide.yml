@@ -16,6 +16,14 @@ jobs:
     - name: Install JPPM
       run: wget -O - https://github.com/jphp-group/jphp/releases/download/jppm-0.6.0/jppm-setup-0.6.0.sh | bash
     - name: Prepare IDE
-      run: jppm prepare-ide
+      run: jppm prepare-ide -win
     - name: Build IDE
       run: jppm build-ide -win
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        # Artifact name
+        name: DevelNextIDE-Windows
+        # Directory containing files to upload
+        path: ./ide/build
+
