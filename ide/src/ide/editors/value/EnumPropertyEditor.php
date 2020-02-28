@@ -1,5 +1,6 @@
 <?php
 namespace ide\editors\value;
+use ide\Logger;
 use ide\utils\UiUtils;
 use php\gui\UXButton;
 use php\gui\UXChoiceBox;
@@ -131,7 +132,7 @@ class EnumPropertyEditor extends TextPropertyEditor
      * @param $value
      * @param bool $noRefreshDesign
      */
-    public function updateUi($value, $noRefreshDesign = false)
+    public function updateUi($value, $noRefreshDesign = false, $setText = true)
     {
         parent::updateUi($value, $noRefreshDesign);
 

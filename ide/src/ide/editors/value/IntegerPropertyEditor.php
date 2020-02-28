@@ -23,7 +23,7 @@ class IntegerPropertyEditor extends SimpleTextPropertyEditor
     /**
      * @return int
      */
-    public function getMin(): int
+    public function getMin(): ?int
     {
         return $this->min;
     }
@@ -31,7 +31,7 @@ class IntegerPropertyEditor extends SimpleTextPropertyEditor
     /**
      * @param int $min
      */
-    public function setMin(int $min)
+    public function setMin(?int $min)
     {
         $this->min = $min;
     }
@@ -39,7 +39,7 @@ class IntegerPropertyEditor extends SimpleTextPropertyEditor
     /**
      * @return int
      */
-    public function getMax(): int
+    public function getMax(): ?int
     {
         return $this->max;
     }
@@ -47,7 +47,7 @@ class IntegerPropertyEditor extends SimpleTextPropertyEditor
     /**
      * @param int $max
      */
-    public function setMax(int $max)
+    public function setMax(?int $max)
     {
         $this->max = $max;
     }

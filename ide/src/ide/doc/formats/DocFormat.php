@@ -17,7 +17,7 @@ class DocFormat extends AbstractFormat
      * @param $file
      * @return AbstractEditor
      */
-    public function createEditor($file)
+    public function createEditor($file, array $options = [])
     {
         if (str::startsWith($file, '~doc/edit/')) {
             return new DocEntryEditor($file);
