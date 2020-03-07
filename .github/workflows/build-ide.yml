@@ -5,6 +5,9 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build: ["-win", "-linux", "-mac"]
 
     steps:
     - uses: actions/checkout@v2
@@ -16,14 +19,14 @@ jobs:
     - name: Install JPPM
       run: wget -O - https://github.com/jphp-group/jphp/releases/download/jppm-0.6.0/jppm-setup-0.6.0.sh | bash
     - name: Prepare IDE
-      run: jppm prepare-ide -win
+      run: jppm prepare-ide ${{ matrix.build }}
     - name: Build IDE
-      run: jppm build-ide -win
+      run: jppm build-ide ${{ matrix.build }}
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
         # Artifact name
-        name: DevelNextIDE-Windows
+        name: DevelNext${{ matrix.build }}
         # Directory containing files to upload
         path: ./ide/build
 
