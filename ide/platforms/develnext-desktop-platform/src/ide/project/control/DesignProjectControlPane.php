@@ -189,7 +189,7 @@ class DesignProjectControlPane extends AbstractProjectControlPane
         $path = Ide::project()->getSrcFile('.theme/style.fx.css');
         $this->editor = Ide::get()->getFormat($path)->createEditor($path);
         $this->editor->setTabbed(false);
-        $this->editor->loadContentToArea();
+        //$this->editor->loadContentToArea();
 
         $cssEditor = $this->editor->makeUi();
 
@@ -205,7 +205,7 @@ class DesignProjectControlPane extends AbstractProjectControlPane
     public function refresh()
     {
         if ($this->editor) {
-            $this->editor->loadContentToAreaIfModified();
+            //$this->editor->loadContentToAreaIfModified();
         }
 
         if ($this->ui) {

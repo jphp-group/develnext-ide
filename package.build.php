@@ -21,6 +21,7 @@ function task_publish(Event $e)
     Tasks::runExternal('./dn-gui-tabs-ext', 'publish', [], ...$e->flags());
     Tasks::runExternal('./dn-packr', 'publish', [], ...$e->flags());
     Tasks::runExternal('./dn-crud-forms', 'publish', [], ...$e->flags());
+    Tasks::runExternal('./dn-monaco-editor', 'publish', [], ...$e->flags());
 
     foreach ($e->package()->getAny('bundles', []) as $bundle) {
         Tasks::runExternal("./bundles/$bundle", 'publish', [], ...$e->flags());
@@ -33,7 +34,6 @@ function task_publish(Event $e)
 function task_hubPublish(Event $e)
 {
     Tasks::runExternal('./dn-app-framework', 'hub:publish', [], ...$e->flags());
-    Tasks::runExternal('./dn-launch4j-builder', 'hub:publish', [], ...$e->flags());
     Tasks::runExternal('./dn-packr', 'hub:publish', [], ...$e->flags());
 
     foreach ($e->package()->getAny('bundles', []) as $bundle) {

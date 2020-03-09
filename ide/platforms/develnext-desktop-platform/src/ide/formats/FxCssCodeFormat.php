@@ -2,10 +2,7 @@
 namespace ide\formats;
 
 use ide\editors\AbstractEditor;
-use ide\editors\CodeEditor;
-use ide\utils\FileUtils;
-use php\gui\designer\UXSyntaxAutoCompletion;
-use php\lib\fs;
+use ide\editors\MonacoCodeEditor;
 use php\lib\Str;
 
 class FxCssCodeFormat extends AbstractFormat
@@ -15,11 +12,14 @@ class FxCssCodeFormat extends AbstractFormat
      *
      * @param array $options
      * @return AbstractEditor
+     * @throws \php\io\IOException
      */
     public function createEditor($file, array $options = [])
     {
-        $editor = new CodeEditor($file, 'fxcss');
-        return $editor;
+        $monaco = new MonacoCodeEditor($file);
+        $monaco->setLanguage("css");
+
+        return $monaco;
     }
 
 

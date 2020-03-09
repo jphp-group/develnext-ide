@@ -42,6 +42,7 @@ deps:
   dn-crud-forms: '*'
 
   # develnext
+  dn-monaco-editor: '*'
   develnext-designer: ^1.0.0
   develnext-gui-tabs-ext: ^2.0.0
 

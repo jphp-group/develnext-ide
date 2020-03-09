@@ -2,7 +2,7 @@
 namespace ide\formats;
 
 use ide\editors\AbstractEditor;
-use ide\editors\CodeEditor;
+use ide\editors\MonacoCodeEditor;
 use php\lib\fs;
 
 class TextCodeFormat extends AbstractFormat
@@ -17,10 +17,12 @@ class TextCodeFormat extends AbstractFormat
      *
      * @param array $options
      * @return AbstractEditor
+     * @throws \php\io\IOException
      */
     public function createEditor($file, array $options = [])
     {
-        $editor = new CodeEditor($file, fs::ext($file));
+        $editor = new MonacoCodeEditor($file);
+        $editor->setLanguage(fs::ext($file));
 
         return $editor;
     }
