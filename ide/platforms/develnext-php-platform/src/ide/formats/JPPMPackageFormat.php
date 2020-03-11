@@ -3,6 +3,7 @@ namespace ide\formats;
 
 use ide\editors\AbstractEditor;
 use ide\editors\CodeEditor;
+use ide\editors\MonacoCodeEditor;
 use php\lib\arr;
 use php\lib\fs;
 
@@ -21,7 +22,10 @@ class JPPMPackageFormat extends AbstractFormat
      */
     public function createEditor($file, array $options = [])
     {
-        return new CodeEditor($file, fs::ext($file));
+        $editor = new MonacoCodeEditor($file);
+        $editor->setLanguage("yaml");
+
+        return $editor;
     }
 
     public function getIcon()

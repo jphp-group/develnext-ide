@@ -52,7 +52,7 @@ class UIDesktopBundle extends AbstractJarBundle
     {
         return [
             'jphp-gui-ext' => '*',
-            'jphp-gui-jfx-win' => '^11.0.0',
+            'jphp-gui-jfx-win' => '^14.0.0',
             'jphp-gui-tabs-ext' => '*',
             'jphp-gui-desktop-ext' => '*',
             'jphp-zend-ext' => '*',

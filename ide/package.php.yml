@@ -42,21 +42,22 @@ deps:
   dn-crud-forms: '*'
 
   # develnext
+  dn-monaco-editor: '*'
   develnext-designer: ^1.0.0
   develnext-gui-tabs-ext: ^2.0.0
 
 
 depsWin:
-  jphp-gui-jfx-win: ^13.0.0
-  jphp-gui-jfx-web-win: ^13.0.0
+  jphp-gui-jfx-win: ^14.0.0
+  jphp-gui-jfx-web-win: ^14.0.0
 
 depsLinux:
-  jphp-gui-jfx-linux: ^13.0.0
-  jphp-gui-jfx-web-linux: ^13.0.0
+  jphp-gui-jfx-linux: ^14.0.0
+  jphp-gui-jfx-web-linux: ^14.0.0
 
 depsMac:
-  jphp-gui-jfx-mac: ^13.0.0
-  jphp-gui-jfx-web-mac: ^13.0.0
+  jphp-gui-jfx-mac: ^14.0.0
+  jphp-gui-jfx-web-mac: ^14.0.0
 
 app:
   disable-launcher: '1'

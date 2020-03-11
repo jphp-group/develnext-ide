@@ -2,9 +2,8 @@
 namespace ide\formats;
 
 use ide\editors\AbstractEditor;
-use ide\editors\CodeEditor;
+use ide\editors\MonacoCodeEditor;
 use ide\utils\FileUtils;
-use php\gui\designer\UXSyntaxAutoCompletion;
 use php\lib\Str;
 
 class CssCodeFormat extends AbstractFormat
@@ -14,13 +13,14 @@ class CssCodeFormat extends AbstractFormat
      *
      * @param array $options
      * @return AbstractEditor
+     * @throws \php\io\IOException
      */
     public function createEditor($file, array $options = [])
     {
-        $editor = new CodeEditor($file, 'css');
-        $editor->registerDefaultCommands();
+        $monaco = new MonacoCodeEditor($file);
+        $monaco->setLanguage("css");
 
-        return $editor;
+        return $monaco;
     }
 
     public function getTitle($path)

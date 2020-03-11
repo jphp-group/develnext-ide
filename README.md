@@ -1,4 +1,4 @@
-# DevelNext 17
+# DevelNext IDE ![Build IDE](https://github.com/jphp-group/develnext-ide/workflows/Build%20IDE/badge.svg)
 
 DevelNext IDE (version 17+) with the JPPM support.
 
@@ -15,7 +15,7 @@ jppm start-ide
 ```
 
 ## How to build?
-1. Install **Java Development Kit 11** and the last version of JPPM (https://github.com/jphp-group/jphp/tree/master/packager).
+1. Install **Java Development Kit 11** and the last version of [JPPM](https://github.com/jphp-group/jphp/tree/master/packager).
 2. Prepare IDE dependencies:
 ```bash
 jppm prepare-ide

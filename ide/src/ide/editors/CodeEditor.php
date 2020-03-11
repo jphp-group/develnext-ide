@@ -156,21 +156,6 @@ class CodeEditor extends AbstractEditor
                     $this->textArea = new UXPhpCodeArea();
                     break;
 
-                case 'css':
-                case 'fxcss':
-                    $this->textArea = new UXFxCssCodeArea();
-
-                    break;
-
-                case 'js':
-                    $this->textArea = new UXJavaScriptCodeArea();
-                    break;
-
-                case 'yaml':
-                case 'yml':
-                    $this->textArea = new UXYamlCodeArea();
-                    break;
-
                 default:
                     $this->textArea = new UXTextCodeArea();
                     break;

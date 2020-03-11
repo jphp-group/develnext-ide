@@ -41,7 +41,7 @@ class JPPMBuildTaskConfiguration extends AbstractTaskConfiguration {
      * @inheritDoc
      */
     public function getTaskInfo(): TaskProcessInfo {
-        return new JPPMTaskProcessInfo("build", ["bytecode"]);
+        return new JPPMTaskProcessInfo("build");
     }
 
     public function onProcessExit(int $exitCode) {
