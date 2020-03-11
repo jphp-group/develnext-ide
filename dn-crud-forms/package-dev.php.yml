@@ -8,9 +8,6 @@ sources:
 includes:
 - index.php
 
-deps:
-  dn-app-framework: '*'
-
 depsWin:
   jphp-gui-jfx-win: ^13.0.0
 

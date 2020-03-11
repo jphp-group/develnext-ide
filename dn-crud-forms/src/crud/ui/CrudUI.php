@@ -9,6 +9,9 @@ use php\gui\layout\UXPane;
 use php\gui\layout\UXVBox;
 use php\gui\UXLabel;
 use php\gui\UXSeparator;
+use php\lib\arr;
+use function is_array;
+use function is_object;
 
 class CrudUI
 {
@@ -78,6 +81,17 @@ class CrudUI
         $this->entity = $entity;
     }
 
+    public function updateEntity($entity): void
+    {
+        if (is_array($entity)) {
+            $this->entity = arr::merge($this->entity, $entity);
+        } else if (is_object($entity)) {
+            foreach ((array) $entity as $prop => $value) {
+                $this->entity->{$prop} = $value;
+            }
+        }
+    }
+
     /**
      * @return mixed
      */
@@ -141,7 +155,7 @@ class CrudUI
                 $editorUi->classes->addAll(["editor-$code"]);
 
                 $crudField = $this->crudEntity->getFields()[$code];
-                $labelStr = $this->crud->t($crudField->label);
+                $labelStr = $this->crud->t($crudField->label ?: $crudField->code);
 
                 if ($editor->isWithoutLabel()) {
                     $itemUi = $editorUi;

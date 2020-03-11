@@ -1,6 +1,9 @@
 
 name: User
 
+window:
+  width: 800
+
 props:
   - { code: firstName, label: 'First Name' }
   - { code: lastName, label: 'Last Name' }
@@ -11,5 +14,6 @@ props:
   - { code: groups, label: 'Groups', editor: enum-set, args: {ADMIN: 'Admin', EDITOR: 'Editor', USER: 'User'}}
   - # hr
   - { code: path, label: 'Path', editor: path, args: {type: dir}, hint: "Path to user config directory" }
+  - { code: progress, label: 'Progress', editor: progress}
   - # hr
   - { editor: actions }

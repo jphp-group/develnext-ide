@@ -10,7 +10,7 @@ deps:
   jphp-gui-ext: '*'
   jphp-yaml-ext: '*'
   jphp-gui-fonticons-ext: '*'
-  #dn-app-framework: '*'
+  dn-app-framework: '*'
 
 sources:
 - src

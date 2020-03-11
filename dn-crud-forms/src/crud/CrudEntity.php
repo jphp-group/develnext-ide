@@ -5,10 +5,9 @@ use php\lib\str;
 
 class CrudEntity
 {
-    /**
-     * @var string
-     */
-    protected $name;
+    protected string $name;
+
+    protected array $window = [];
 
     /**
      * @var CrudField[]
@@ -16,11 +15,24 @@ class CrudEntity
     protected $fields = [];
 
     /**
+     * CrudEntity constructor.
+     * @param array $schema
+     */
+    public function __construct(array $schema = [])
+    {
+        if ($schema) {
+            $this->load($schema);
+        }
+    }
+
+    /**
      * @param array $schema
      */
     public function load(array $schema)
     {
         $this->name = $schema['name'];
+        $this->window = (array) $schema['window'];
+
         foreach ($schema['props'] as $i => $prop) {
             $code = $prop['code'];
 
@@ -39,6 +51,22 @@ class CrudEntity
 
             $this->fields[$code] = $crudField;
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return array
+     */
+    public function getWindow(): array
+    {
+        return $this->window;
     }
 
     /**

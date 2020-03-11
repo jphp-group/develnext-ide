@@ -106,7 +106,8 @@ class Application
         try {
             $this->loadConfig($configPath);
         } catch (IOException $e) {
-            throw new Exception("Unable to find the '$configPath' config");
+            $this->config = new Configuration();
+            Logger::warn("Unable to find the '$configPath' config");
         }
     }
 

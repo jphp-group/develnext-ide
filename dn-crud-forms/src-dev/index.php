@@ -1,38 +1,33 @@
 <?php
 
 use crud\CrudEntity;
+use crud\CrudForm;
 use crud\Cruds;
 use crud\ui\CrudUI;
+use php\gui\framework\Application;
 use php\gui\layout\UXAnchorPane;
 use php\gui\UXApplication;
 use php\gui\UXForm;
 use php\lib\fs;
+use php\time\Timer;
 
-UXApplication::launch(function (UXForm $form) {
-    $crud = Cruds::create();
+$app = new Application();
+$app->launch(function () {
+    $crudForm = new CrudForm(fs::parse('res://example_entity.yml'));
+    $crudForm->setEntity(['firstName' => 'Dmitriy', 'lastName' => 'Zaitsev', 'confirmed' => true, 'sex' => 'FEMALE']);
 
-    $crudEntity = new CrudEntity();
-    $crudEntity->load(fs::parse('res://example_entity.yml'));
-
-    $crudUi = new CrudUI($crud, $crudEntity);
-    $ui = $crudUi->makeUi();
-
-    $crudUi->setEntity(['firstName' => 'Dmitriy', 'lastName' => 'Zaitsev', 'confirmed' => true, 'sex' => 'FEMALE']);
-    $crudUi->load();
-
-    $ui->prefWidth = 400;
-    $ui->padding = 20;
-
-    $form->layout = $ui;
-
-    //$form->add($ui);
-    $form->show();
-    $form->centerOnScreen();
-
-    $crudUi->on('cancel', fn() => $form->hide());
-    $crudUi->on('save', function () use ($form, $crudUi) {
-        pre($crudUi->getEntity());
-        $form->hide();
+    Timer::every('0.2s', function () use ($crudForm) {
+        $crudForm->updateEntity(['progress' => $crudForm->getEntity()['progress'] + 0.005]);
     });
+
+    $crudForm->getCrudUi()->on('cancel', fn() => $crudForm->hide());
+    $crudForm->getCrudUi()->on('save', function (CrudUI $crudUi) use ($crudForm) {
+        pre($crudUi->getEntity());
+        $crudForm->hide();
+    });
+
+    $crudForm->centerOnScreen();
+    $crudForm->show();
 });
+
 
