@@ -245,9 +245,9 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
             'dn-packr' => '^1.0.0'
         ];
 
-        $depsUnix = ['jphp-gui-jfx-linux' => '^13.0.0'];
-        $depsMac = ['jphp-gui-jfx-mac' => '^13.0.0'];
-        $depsWin = ['jphp-gui-jfx-win' => '^13.0.0'];
+        $depsUnix = ['jphp-gui-jfx-linux' => '^14.0.0'];
+        $depsMac = ['jphp-gui-jfx-mac' => '^14.0.0'];
+        $depsWin = ['jphp-gui-jfx-win' => '^14.0.0'];
 
         $extra = [
             'app' => [
