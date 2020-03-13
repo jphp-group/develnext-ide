@@ -4,6 +4,7 @@ namespace ide\formats;
 use ide\autocomplete\php\PhpAutoComplete;
 use ide\editors\AbstractEditor;
 use ide\editors\CodeEditor;
+use ide\editors\MonacoCodeEditor;
 use ide\Ide;
 use ide\project\behaviours\PhpProjectBehaviour;
 use php\gui\designer\UXPhpCodeArea;
@@ -34,10 +35,18 @@ class PhpCodeFormat extends AbstractFormat
             'class' => PhpAutoComplete::class
         ];
 
-        $editor = new CodeEditor($file, 'php', $codeEditorOptions);
-        $editor->setEmbedded((bool) $options['embedded']);
+        $embedded = (bool) $options['embedded'];
+        $readOnly = $options['readOnly'];
 
-        if ($options['readOnly']) {
+        if ($embedded) {
+            $editor = new CodeEditor($file, 'php', $codeEditorOptions);
+            $editor->setEmbedded($embedded);
+        } else {
+            $editor = new MonacoCodeEditor($file);
+            $editor->setLanguage('php');
+        }
+
+        if ($readOnly) {
             $editor->setReadOnly(true);
         }
 

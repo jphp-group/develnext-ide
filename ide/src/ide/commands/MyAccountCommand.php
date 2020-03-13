@@ -40,17 +40,23 @@ class MyAccountCommand extends AbstractCommand
     public function __construct()
     {
         Ide::service()->on('privateEnable', function () {
-            $this->accountButton->enabled = true;
+            if ($this->accountButton) {
+                $this->accountButton->enabled = true;
+            }
         }, __CLASS__);
 
         Ide::service()->on('privateDisable', function () {
-            $this->accountButton->enabled = false;
-            $this->accountImage->image = Ide::get()->getImage('noAvatar.jpg')->image;
+            if ($this->accountButton) {
+                $this->accountButton->enabled = false;
+                $this->accountImage->image = Ide::get()->getImage('noAvatar.jpg')->image;
+            }
         }, __CLASS__);
 
         Ide::accountManager()->on('update', function ($data) {
-            $this->accountButton->text = $data ? $data['login'] : 'account.log.in';
-            $this->accountButton = _($this->accountButton);
+            if ($this->accountButton) {
+                $this->accountButton->text = $data ? $data['login'] : 'account.log.in';
+                $this->accountButton = _($this->accountButton);
+            }
 
             Ide::service()->file()->loadImage($data['avatarId'], $this->accountImage, 'noAvatar.jpg');
         }, __CLASS__);

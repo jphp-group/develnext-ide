@@ -1,22 +1,19 @@
 <?php
-namespace crud;
+namespace crud\ui;
 
+use crud\Crud;
+use crud\CrudEntity;
+use crud\CrudException;
+use crud\Cruds;
 use crud\ui\CrudUI;
-use php\gui\framework\AbstractForm;
 use php\gui\layout\UXAnchorPane;
-use php\gui\UXForm;
 
-/**
- * Class CrudForm
- * @package crud
- */
-class CrudForm extends UXForm
+class CrudPane extends UXAnchorPane
 {
-    /** @var CrudUI */
-    protected $crudUi;
+    protected CrudUI $crudUi;
 
     /**
-     * CrudForm constructor.
+     * CrudPane constructor.
      * @param array $schema
      * @param Crud|null $crud
      * @throws CrudException
@@ -24,6 +21,7 @@ class CrudForm extends UXForm
     public function __construct(array $schema, Crud $crud = null)
     {
         parent::__construct();
+
         $crud = $crud ?: Cruds::create();
 
         $crudEntity = new CrudEntity($schema);
@@ -43,9 +41,9 @@ class CrudForm extends UXForm
 
         /*$headHeight = $this->height;
         $UXPane->observer('height')->addOnceListener(fn($_, $new) => $this->minHeight = $new + 40);*/
-        $this->layout->add($UXPane);
-
+        $this->add($UXPane);
     }
+
 
     public function setEntity($data)
     {

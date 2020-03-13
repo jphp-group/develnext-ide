@@ -94,12 +94,16 @@ class SettingsForm extends AbstractIdeForm
 
         if ($item instanceof AbstractSettingsItem && $item->showBottomButtons()) {
             $buttonBox = new UXHBox();
+            $buttonBox->maxHeight = 35;
             $buttonBox->spacing = 8;
+            $buttonBox->fillHeight = true;
             $buttonBox->alignment = "CENTER_RIGHT";
 
             $ok = new UXButton("settings.buttons.ok");
             $apply = new UXButton("settings.buttons.apply");
             $close = new UXButton("settings.buttons.close");
+
+            $ok->maxHeight = $apply->maxHeight = $close->maxHeight = 9999;
 
             $buttonBox->add($ok);
             $buttonBox->add($apply);

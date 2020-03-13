@@ -3,16 +3,16 @@
 plugins: [App]
 
 sources:
-- src-dev
+- src-sandbox
 
 includes:
 - index.php
 
 depsWin:
-  jphp-gui-jfx-win: ^13.0.0
+  jphp-gui-jfx-win: ^14.0.0
 
 depsLinux:
-  jphp-gui-jfx-linux: ^13.0.0
+  jphp-gui-jfx-linux: ^14.0.0
 
 depsMac:
-  jphp-gui-jfx-mac: ^13.0.0
+  jphp-gui-jfx-mac: ^14.0.0
