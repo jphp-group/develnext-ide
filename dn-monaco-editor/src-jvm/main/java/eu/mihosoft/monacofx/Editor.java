@@ -23,10 +23,9 @@
  */
 package eu.mihosoft.monacofx;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import eu.mihosoft.monacofx.model.Range;
+import eu.mihosoft.monacofx.model.Selection;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -45,6 +44,7 @@ public final class Editor {
 
     private final StringProperty currentThemeProperty = new SimpleStringProperty();
     private final StringProperty currentLanguageProperty = new SimpleStringProperty();
+    private final BooleanProperty readOnlyProperty = new SimpleBooleanProperty();
 
     Editor(WebEngine engine) {
         this.engine = engine;
@@ -135,6 +135,11 @@ public final class Editor {
             engine.executeScript("monaco.editor.setTheme('"+getCurrentTheme()+"')");
         });
 
+        editor.eval("this.updateOptions({readOnly:"+isReadOnly()+"})");
+        readOnlyPropertyProperty().addListener((ov) -> {
+            editor.eval("this.updateOptions({readOnly:"+isReadOnly()+"})");
+        });
+
         // initial lang
         if(getCurrentLanguage()!=null) {
             engine.executeScript("monaco.editor.setModelLanguage(editorView.getModel(),'"+getCurrentLanguage()+"')");
@@ -148,6 +153,39 @@ public final class Editor {
         getDocument().setEditor(engine, window, editor);
 
         getViewController().setEditor(window, editor);
+    }
+
+    public boolean isInitialized() {
+        return editor != null && engine != null;
+    }
+
+    public Object callEditorMethod(String method, Object... args) {
+        if (isInitialized()) {
+            return editor.call(method, args);
+        } else {
+            return null;
+        }
+    }
+
+    public Selection getSelection() {
+        JSObject selection = (JSObject) callEditorMethod("getSelection");
+        return selection == null ? null : new Selection(selection);
+    }
+
+    public void setSelection(Selection range) {
+        callEditorMethod("setSelection", getJSEditor().eval(range.toString()));
+    }
+
+    public boolean isReadOnly() {
+        return readOnlyProperty.get();
+    }
+
+    public BooleanProperty readOnlyPropertyProperty() {
+        return readOnlyProperty;
+    }
+
+    public void setReadOnly(boolean readOnlyProperty) {
+        this.readOnlyProperty.set(readOnlyProperty);
     }
 
     public StringProperty currentThemeProperty() {
@@ -202,5 +240,31 @@ public final class Editor {
         this.themes.add(theme);
     }
 
+    public void focus() {
+        callEditorMethod("focus");
+    }
 
+    public void revealLine(int lineNumber) {
+        revealLine(lineNumber, 0);
+    }
+
+    public void revealLine(int lineNumber, int type) {
+        callEditorMethod("revealLine", lineNumber, type);
+    }
+
+    public void revealLineInCenter(int lineNumber) {
+        revealLineInCenter(lineNumber, 0);
+    }
+
+    public void revealLineInCenter(int lineNumber, int type) {
+        callEditorMethod("revealLineInCenter", lineNumber, type);
+    }
+
+    public void revealLineInCenterIfOutsideViewport(int lineNumber) {
+        revealLineInCenterIfOutsideViewport(lineNumber, 0);
+    }
+
+    public void revealLineInCenterIfOutsideViewport(int lineNumber, int type) {
+        callEditorMethod("revealLineInCenterIfOutsideViewport", lineNumber, type);
+    }
 }

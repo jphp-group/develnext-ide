@@ -139,6 +139,11 @@ class Project
     protected $srcGeneratedDirectory = null;
 
     /**
+     * @var array
+     */
+    protected array $readOnlyDirectories = [];
+
+    /**
      * @var string
      */
     protected $resDirectory = null;
@@ -173,6 +178,7 @@ class Project
      *
      * @param string $rootDir
      * @param string $name
+     * @throws \php\lang\IllegalArgumentException
      */
     public function __construct($rootDir, $name)
     {
@@ -290,6 +296,31 @@ class Project
 
             return $callback($file, $file->getRelativePath($this->getSrcDirectory())) === true;
         });
+    }
+
+    public function addReadOnlyDirectory(string $directory)
+    {
+        $this->readOnlyDirectories[$directory] = $directory;
+    }
+
+    public function removeReadOnlyDirectory(string $directory)
+    {
+        unset($this->readOnlyDirectories[$directory]);
+    }
+
+    public function isReadOnlyFile(string $path)
+    {
+        $path = $this->getAbsoluteFile($path);
+
+        foreach ($this->readOnlyDirectories as $directory) {
+            $directory = $this->getFile($directory);
+
+            if (str::startsWith(FileUtils::hashName($path), FileUtils::hashName($directory))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

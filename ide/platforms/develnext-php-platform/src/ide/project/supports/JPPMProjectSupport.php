@@ -86,6 +86,8 @@ class JPPMProjectSupport extends AbstractProjectSupport
      */
     public function onLink(Project $project)
     {
+        $project->addReadOnlyDirectory('vendor');
+
         $project->getTree()->addIgnorePaths([
             'package-lock.php.yml'
         ]);
@@ -359,6 +361,7 @@ class JPPMProjectSupport extends AbstractProjectSupport
      */
     public function onUnlink(Project $project)
     {
+        $project->removeReadOnlyDirectory('vendor');
         $project->getTree()->removeIgnorePaths(['package-lock.php.yml']);
         $project->offGroup(__CLASS__);
 

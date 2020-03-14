@@ -115,4 +115,9 @@ public class MonacoFX extends Region {
         return editor;
     }
 
+    @Override
+    public void requestFocus() {
+        super.requestFocus();
+        getEditor().focus();
+    }
 }

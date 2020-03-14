@@ -7,7 +7,7 @@ namespace ide\editors;
 use php\gui\monaco\MonacoEditor;
 use php\io\Stream;
 
-class MonacoCodeEditor extends AbstractEditor {
+class MonacoCodeEditor extends AbstractCodeEditor {
 
     /**
      * @var MonacoEditor
@@ -30,6 +30,13 @@ class MonacoCodeEditor extends AbstractEditor {
             Stream::putContents($file, $new);
         });
     }
+
+    public function setReadOnly($readOnly)
+    {
+        parent::setReadOnly($readOnly);
+        $this->editor->getEditor()->readOnly = $readOnly;
+    }
+
 
     public function load() {
         // nope
@@ -66,5 +73,50 @@ class MonacoCodeEditor extends AbstractEditor {
      */
     public function setLanguage(string $language) {
         $this->editor->getEditor()->currentLanguage = $language;
+    }
+
+    public function getValue(): string
+    {
+        $this->editor->getEditor()->document->text;
+    }
+
+    public function setValue(string $value): void
+    {
+        $this->editor->getEditor()->document->text = $value;
+    }
+
+    public function getSelectedText(): string
+    {
+
+    }
+
+    public function undo()
+    {
+        // TODO: Implement undo() method.
+    }
+
+    public function redo()
+    {
+        // TODO: Implement redo() method.
+    }
+
+    public function copySelected()
+    {
+        // TODO: Implement copySelected() method.
+    }
+
+    public function cutSelected()
+    {
+        // TODO: Implement cutSelected() method.
+    }
+
+    public function pasteFromClipboard()
+    {
+        // TODO: Implement pasteFromClipboard() method.
+    }
+
+    public function jumpToLine(int $line, int $offset = 0)
+    {
+        // TODO: Implement jumpToLine() method.
     }
 }

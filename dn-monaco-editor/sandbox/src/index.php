@@ -14,8 +14,17 @@ UXApplication::launch(function (UXForm $form) {
     $editor->getEditor()->currentTheme = "vs-dark";
 
     $editor->getEditor()->document->text = Stream::getContents("./package.php.yml");
-    $editor->getEditor()->document->addTextChangeListener(function ($oldValue, $newValue) {
+    $editor->getEditor()->document->addTextChangeListener(function ($oldValue, $newValue) use ($editor) {
         Stream::putContents("./package.php.yml", $newValue);
+    });
+    $editor->getEditor()->readOnly = true;
+
+    \php\time\Timer::every("2s", function () use ($editor) {
+        UXApplication::runLater(function () use ($editor) {
+            $range = ['selectionStartLineNumber' => 5, 'selectionStartColumn' => 1, 'positionLineNumber' => 5, 'positionColumn' => 1000];
+            $editor->getEditor()->setSelection($range);
+            $editor->getEditor()->revealLineInCenter(5); // jump to 5 line
+        });
     });
 
     UXAnchorPane::setAnchor($editor, 0);

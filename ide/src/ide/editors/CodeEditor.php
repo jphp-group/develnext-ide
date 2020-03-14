@@ -76,7 +76,6 @@ class CodeEditor extends AbstractEditor
      */
     protected $autoComplete;
 
-
     /**
      * @var FindTextDialogForm
      */

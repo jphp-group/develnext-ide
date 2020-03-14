@@ -77,6 +77,7 @@ class ProjectTree
     /**
      * ProjectTree constructor.
      * @param Project $project
+     * @throws \php\lang\IllegalArgumentException
      */
     public function __construct(Project $project)
     {

@@ -1278,13 +1278,21 @@ class Ide extends Application
         $format = $format ? $this->getRegisteredFormat($format) : $this->getFormat($path);
 
         if ($format) {
+            $project = Ide::project();
+
+            if ($project) {
+                if (!isset($options['readOnly'])) {
+                    $options['readOnly'] = $project->isReadOnlyFile($path);
+                }
+            }
+
             $editor = $format->createEditor($path, $options);
 
             if ($editor) {
                 $editor->setFormat($format);
             }
 
-            if ($project = Ide::project()) {
+            if ($project && $editor) {
                 if (!str::startsWith(FileUtils::hashName($path), FileUtils::hashName($project->getRootDir()))) {
                     $editor->setReadOnly(true);
                 }
