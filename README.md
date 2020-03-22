@@ -1,6 +1,6 @@
 # DevelNext IDE ![Build IDE](https://github.com/jphp-group/develnext-ide/workflows/Build%20IDE/badge.svg)
 
-DevelNext IDE (version 17+) with the JPPM support.
+DevelNext IDE with the JPPM support.
 
 ## How to run?
 
