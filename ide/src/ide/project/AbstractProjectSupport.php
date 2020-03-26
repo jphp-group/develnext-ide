@@ -25,6 +25,11 @@ abstract class AbstractProjectSupport
      */
     abstract public function onUnlink(Project $project);
 
+    public function getFitRequiredSupports(): array
+    {
+        return [];
+    }
+
     /**
      *
      */

@@ -83,6 +83,8 @@ class FileSystem
      */
     static protected $editorContentDividePosition;
 
+    static protected ?ContextMenu $menuForAddTab;
+
     /**
      * ..
      */
@@ -98,8 +100,6 @@ class FileSystem
     {
         return static::$openedWindows;
     }
-
-
 
     /**
      * @param $path
@@ -301,7 +301,7 @@ class FileSystem
      * @param bool $cache
      * @return AbstractEditor|null
      */
-    static function fetchEditor($path, $cache = false)
+    static function fetchEditor($path, $cache = false): ?AbstractEditor
     {
         $hash = FileUtils::hashName($path);
 
@@ -670,7 +670,29 @@ class FileSystem
         }
     }
 
-    static function setClickOnAddTab(callable $callback = null)
+    static function setMenuForAddTab(?ContextMenu $menu)
+    {
+        if ($menu) {
+            FileSystem::setClickOnAddTab(function (UXEvent $e) use ($menu) {
+                $menu->show($e->sender);
+            });
+
+            self::$menuForAddTab = $menu;
+        } else {
+            FileSystem::setClickOnAddTab(null);
+            self::$menuForAddTab = null;
+        }
+    }
+
+    /**
+     * @return ContextMenu|null
+     */
+    static function getMenuForAddTab(): ?ContextMenu
+    {
+        return self::$menuForAddTab;
+    }
+
+    static function setClickOnAddTab(?callable $callback = null)
     {
         static::$addTabClick = $callback;
 

@@ -13,7 +13,8 @@ use ide\Logger;
 use ide\misc\SimpleSingleCommand;
 use ide\project\behaviours\gui\SkinManagerForm;
 use ide\project\behaviours\gui\SkinSaveDialogForm;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
+use ide\project\Project;
+use ide\project\supports\JavaFXProjectSupport;
 use ide\utils\FileUtils;
 use ide\utils\UiUtils;
 use php\gui\layout\UXHBox;
@@ -71,18 +72,20 @@ class DesignProjectControlPane extends AbstractProjectControlPane
     {
         if ($this->editor) {
             $this->editor->open();
-            $this->editor->refreshUi();
+            if (method_exists($this->editor, 'refreshUi')) {
+                $this->editor->refreshUi();
+            }
         }
 
-        if ($gui = GuiFrameworkProjectBehaviour::get()) {
+        /** @var JavaFXProjectSupport $gui */
+        if ($gui = Project::findSupportOfCurrent('javafx')) {
             $project = Ide::project();
 
-            $skin = $gui->getCurrentSkin();
+            $skin = $gui->getCurrentSkin($project);
 
             if ($project->_skinChecked) return;
 
             $project->_skinChecked = true;
-
 
             if ($skin && $skin->getUid() && !Ide::get()->getLibrary()->getResource('skins', $skin->getUid())) {
                 if (MessageBoxForm::confirm(
@@ -148,7 +151,8 @@ class DesignProjectControlPane extends AbstractProjectControlPane
             $this->uiSkinName,
             '-',
             $menu->makeButton('command.select.skin::Выбрать скин', ico('brush16'), function () {
-                if ($gui = GuiFrameworkProjectBehaviour::get()) {
+                /** @var JavaFXProjectSupport $gui */
+                if ($gui = Project::findSupportOfCurrent('javafx')) {
                     try {
                         $manager = new SkinManagerForm();
                         if ($manager->showDialog() && $manager->getResult()) {
@@ -156,9 +160,9 @@ class DesignProjectControlPane extends AbstractProjectControlPane
                             $skin = $manager->getResult();
 
                             if ($skin->isEmpty()) {
-                                $gui->clearSkin();
+                                $gui->clearSkin(Ide::project());
                             } else {
-                                $gui->applySkin($manager->getResult());
+                                $gui->applySkin(Ide::project(), $manager->getResult());
                             }
 
                             $this->refresh();
@@ -221,8 +225,9 @@ class DesignProjectControlPane extends AbstractProjectControlPane
 
             _($this->uiSkinName);
 
-            if ($gui = GuiFrameworkProjectBehaviour::get()) {
-                $skin = $gui->getCurrentSkin();
+            /** @var JavaFXProjectSupport $gui */
+            if ($gui = Project::findSupportOfCurrent('javafx')) {
+                $skin = $gui->getCurrentSkin(Ide::project(), $gui);
 
                 if ($skin) {
                     $this->uiSkinName->text = $skin->getName();
@@ -264,9 +269,11 @@ class DesignProjectControlPane_SkinConvertToTheme extends AbstractMenuCommand
     public function onExecute($e = null, AbstractEditor $editor = null)
     {
         if (MessageBoxForm::confirm('ui.design.confirm.message.all.styles.replaced.with.skin::Все стили проекта будут заменены стилями скина, Вы уверены?')) {
-            $gui = GuiFrameworkProjectBehaviour::get();
-            $gui->convertSkinToTheme();
-            $this->pane->refresh();
+            $gui = Project::findSupportOfCurrent('javafx');
+            if ($gui) {
+                $gui->convertSkinToTheme(Ide::project());
+                $this->pane->refresh();
+            }
         }
     }
 
@@ -274,7 +281,9 @@ class DesignProjectControlPane_SkinConvertToTheme extends AbstractMenuCommand
     {
         parent::onBeforeShow($item, $editor);
 
-        $item->enabled = !!GuiFrameworkProjectBehaviour::get()->getCurrentSkin();
+        /** @var JavaFXProjectSupport $gui */
+        $gui = Project::findSupportOfCurrent('javafx');
+        $item->enabled = $gui && $gui->getCurrentSkin(Ide::project())->getName() === $gui->getDefaultSkinName();
     }
 }
 
@@ -306,8 +315,8 @@ class DesignProjectControlPane_SkinClearCommand extends AbstractMenuCommand
 
     public function onExecute($e = null, AbstractEditor $editor = null)
     {
-        if ($gui = GuiFrameworkProjectBehaviour::get()) {
-            $gui->clearSkin();
+        if ($gui = Project::findSupportOfCurrent('javafx')) {
+            $gui->clearSkin(Ide::project());
             $this->pane->refresh();
         }
     }
@@ -316,6 +325,8 @@ class DesignProjectControlPane_SkinClearCommand extends AbstractMenuCommand
     {
         parent::onBeforeShow($item, $editor);
 
-        $item->enabled = !!GuiFrameworkProjectBehaviour::get()->getCurrentSkin();
+        /** @var JavaFXProjectSupport $gui */
+        $gui = Project::findSupportOfCurrent('javafx');
+        $item->enabled = $gui && $gui->getCurrentSkin(Ide::project())->getName() === $gui->getDefaultSkinName();
     }
 }

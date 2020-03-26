@@ -1,92 +1,79 @@
 <?php
 namespace ide\editors;
 
-use develnext\lexer\inspector\entry\ExtendTypeEntry;
-use develnext\lexer\inspector\entry\TypeEntry;
-use develnext\lexer\inspector\entry\TypePropertyEntry;
-use develnext\lexer\token\ArgumentStmtToken;
-use develnext\lexer\token\FunctionStmtToken;
-use develnext\lexer\token\MethodStmtToken;
-use ide\action\ActionEditor;
-use ide\autocomplete\AutoCompleteRegion;
-use ide\behaviour\AbstractBehaviourSpec;
-use ide\behaviour\IdeBehaviourManager;
-use ide\editors\common\ObjectListEditorItem;
-use ide\editors\form\IdeActionsPane;
-use ide\editors\form\IdeBehaviourPane;
-use ide\editors\form\FormElementTypePane;
-use ide\editors\form\IdeEventListPane;
-use ide\editors\form\IdeFormFactory;
-use ide\editors\form\IdeObjectTreeList;
-use ide\editors\form\IdePropertiesPane;
-use ide\editors\form\IdeTabPane;
-use ide\editors\menu\ContextMenu;
-use ide\editors\value\BooleanPropertyEditor;
-use ide\editors\value\DoubleArrayPropertyEditor;
-use ide\editors\value\SimpleTextPropertyEditor;
-use ide\formats\AbstractFormFormat;
-use ide\formats\form\AbstractFormDumper;
-use ide\formats\form\AbstractFormElement;
-use ide\formats\form\SourceEventManager;
-use ide\formats\GuiFormFormat;
-use ide\formats\PhpCodeFormat;
-use ide\forms\MessageBoxForm;
-use ide\Ide;
-use ide\Logger;
-use ide\marker\target\MarkerTargable;
-use ide\misc\AbstractCommand;
-use ide\misc\EventHandlerBehaviour;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
-use ide\project\ProjectFile;
-use ide\project\ProjectIndexer;
-use ide\systems\FileSystem;
-use ide\ui\Notifications;
-use ide\utils\Json;
-use ide\utils\UiUtils;
-use java\reflection\ReflectionClass;
-use java\reflection\ReflectionObject;
+use develnext\lexer\{inspector\entry\ExtendTypeEntry,
+    inspector\entry\TypeEntry,
+    inspector\entry\TypePropertyEntry,
+    token\ArgumentStmtToken,
+    token\FunctionStmtToken,
+    token\MethodStmtToken};
+
+use ide\{action\ActionEditor,
+    autocomplete\AutoCompleteRegion,
+    behaviour\AbstractBehaviourSpec,
+    behaviour\IdeBehaviourManager,
+    editors\common\ObjectListEditorItem,
+    editors\form\IdeActionsPane,
+    editors\form\IdeBehaviourPane,
+    editors\form\FormElementTypePane,
+    editors\form\IdeEventListPane,
+    editors\form\IdeFormFactory,
+    editors\form\IdeObjectTreeList,
+    editors\form\IdePropertiesPane,
+    editors\form\IdeTabPane,
+    editors\menu\ContextMenu,
+    editors\value\BooleanPropertyEditor,
+    editors\value\DoubleArrayPropertyEditor,
+    editors\value\SimpleTextPropertyEditor,
+    formats\AbstractFormFormat,
+    formats\form\AbstractFormDumper,
+    formats\form\AbstractFormElement,
+    formats\form\SourceEventManager,
+    formats\PhpCodeFormat,
+    forms\MessageBoxForm,
+    Ide,
+    Logger,
+    misc\AbstractCommand,
+    misc\EventHandlerBehaviour,
+    project\Project,
+    project\ProjectIndexer,
+    systems\FileSystem,
+    ui\Notifications,
+    utils\Json,
+    utils\UiUtils};
 use php\format\ProcessorException;
-use php\gui\designer\UXDesigner;
-use php\gui\designer\UXDesignPane;
-use php\gui\designer\UXDesignProperties;
-use php\gui\designer\UXIsolatedNode;
-use php\gui\event\UXDragEvent;
-use php\gui\event\UXEvent;
-use php\gui\event\UXMouseEvent;
-use php\gui\framework\AbstractForm;
-use php\gui\framework\DataUtils;
-use php\gui\layout\UXAnchorPane;
-use php\gui\layout\UXHBox;
-use php\gui\layout\UXPane;
-use php\gui\layout\UXScrollPane;
-use php\gui\layout\UXVBox;
-use php\gui\paint\UXColor;
-use php\gui\UXApplication;
-use php\gui\UXCustomNode;
-use php\gui\UXData;
-use php\gui\UXForm;
-use php\gui\UXGroup;
-use php\gui\UXLabel;
-use php\gui\UXNode;
-use php\gui\UXSplitPane;
-use php\gui\UXTab;
-use php\gui\UXTabPane;
-use php\gui\UXTooltip;
-use php\io\File;
-use php\io\IOException;
-use php\io\Stream;
-use php\lang\IllegalArgumentException;
+
+use php\gui\{designer\UXDesigner,
+    designer\UXDesignPane,
+    designer\UXDesignProperties,
+    designer\UXIsolatedNode,
+    event\UXDragEvent,
+    event\UXEvent,
+    event\UXMouseEvent,
+    framework\AbstractForm,
+    framework\DataUtils,
+    layout\UXAnchorPane,
+    layout\UXHBox,
+    layout\UXPane,
+    layout\UXScrollPane,
+    layout\UXVBox,
+    paint\UXColor,
+    UXApplication,
+    UXCustomNode,
+    UXData,
+    UXForm,
+    UXGroup,
+    UXLabel,
+    UXNode,
+    UXSplitPane,
+    UXTab,
+    UXTabPane,
+    UXTooltip};
+
+use php\io\{File, IOException, Stream};
 use php\lang\IllegalStateException;
-use php\lib\arr;
-use php\lib\fs;
-use php\lib\Items;
-use php\lib\reflect;
-use php\lib\Str;
-use php\time\Time;
-use php\util\Configuration;
-use php\util\Flow;
-use php\util\Regex;
-use php\util\SharedStack;
+use php\lib\{fs, reflect, Str};
+use php\util\{Configuration, Flow, Regex, SharedStack};
 use timer\AccurateTimer;
 
 /**
@@ -619,12 +606,12 @@ class FormEditor extends AbstractModuleEditor
     public function createClone($id)
     {
         if (str::contains($id, '.')) {
-            $gui = GuiFrameworkProjectBehaviour::get();
+            $javafx = Project::findSupportOfCurrent('javafx');
 
-            if ($gui) {
+            if ($javafx) {
                 list($factoryName, $factoryId) = str::split($id, '.');
 
-                $formEditor = $gui->getFormEditor($factoryName);
+                $formEditor = $javafx->getFormEditor(Ide::project(), $factoryName);
 
                 if ($formEditor) {
                     return $formEditor->createClone($factoryId);
@@ -715,9 +702,11 @@ class FormEditor extends AbstractModuleEditor
             }
         }
 
-        $gui = GuiFrameworkProjectBehaviour::get();
+        $javafx = Project::findSupportOfCurrent('javafx');
 
-        if ($gui) {
+        if ($javafx) {
+            $project = Ide::project();
+
             $freeNodes = new SharedStack();
 
             DataUtils::scanAll($this->layout, function (UXData $data = null, UXNode $node) use ($gui, $freeNodes) {
@@ -743,7 +732,7 @@ class FormEditor extends AbstractModuleEditor
                     $type = $node->get('type');
                     list($factoryName, $factoryId) = str::split($type, '.');
 
-                    $formEditor = $factories[$factoryName] ?: $gui->getFormEditor($factoryName);
+                    $formEditor = $factories[$factoryName] ?: $javafx->getFormEditor($project, $factoryName);
                     $factories[$factoryName] = $formEditor;
 
                     if ($formEditor) {
@@ -763,7 +752,7 @@ class FormEditor extends AbstractModuleEditor
                     if ($factoryId) {
                         list($factoryName, $factoryId) = str::split($factoryId, '.');
 
-                        $formEditor = $factories[$factoryName] ?: $gui->getFormEditor($factoryName);
+                        $formEditor = $factories[$factoryName] ?: $javafx->getFormEditor($project, $factoryName);
                         $factories[$factoryName] = $formEditor;
 
                         if ($formEditor) {
@@ -845,11 +834,11 @@ class FormEditor extends AbstractModuleEditor
         $this->elementTypePane->resetConfigurable(get_class($this));
 
         if ($this->prototypeTypePane) {
-            $gui = GuiFrameworkProjectBehaviour::get();
+            $javafx = Project::findSupportOfCurrent('javafx');
             $this->prototypeTypePane->resetConfigurable(get_class($this) . "#prototype");
 
-            if ($gui) {
-                $prototypes = $gui->getAllPrototypes($this);
+            if ($javafx) {
+                $prototypes = $javafx->getAllPrototypes(Ide::project(), $this);
                 $this->prototypeTypePane->setElements($prototypes);
             }
         }
@@ -910,10 +899,10 @@ class FormEditor extends AbstractModuleEditor
             }
         } else {
             if ($factoryId = $node->data('-factory-id')) {
-                $gui = GuiFrameworkProjectBehaviour::get();
+                $javafx = Project::findSupportOfCurrent('javafx');
 
-                if ($gui) {
-                    $prototype = $gui->getPrototype($factoryId);
+                if ($javafx) {
+                    $prototype = $javafx->getPrototype(Ide::project(), $factoryId);
 
                     if ($prototype) {
                         foreach ($prototype['behaviours'] as $one) {
@@ -1086,14 +1075,16 @@ class FormEditor extends AbstractModuleEditor
             $this->actionEditor->renameMethod($bind['className'], $bind['methodName'], $bind['newMethodName']);
         }
 
-        $this->codeEditor->loadContentToArea(false);
-        $this->codeEditor->doChange(true);
+        $this->codeEditor->loadContentToArea(false, function () use ($newId) {
+            $this->codeEditor->doChange(true);
 
-        $this->reindex();
+            $this->reindex();
 
-        $this->leftPaneUi->updateEventList($newId);
-        $this->leftPaneUi->updateBehaviours($newId);
-        $this->leftPaneUi->refreshObjectTreeList($newId);
+            $this->leftPaneUi->updateEventList($newId);
+            $this->leftPaneUi->updateBehaviours($newId);
+            $this->leftPaneUi->refreshObjectTreeList($newId);
+        });
+
         return '';
     }
 
@@ -1117,10 +1108,10 @@ class FormEditor extends AbstractModuleEditor
      */
     public function getObjectList()
     {
-        $gui = GuiFrameworkProjectBehaviour::get();
+        $javafx = Project::findSupportOfCurrent('javafx');
 
-        if ($gui) {
-            return $gui->getObjectList($this->file);
+        if ($javafx) {
+            return $javafx->getObjectList(Ide::project(), $this->file);
         } else {
             $items = [];
 
@@ -1190,8 +1181,7 @@ class FormEditor extends AbstractModuleEditor
             $this->behaviourManager->save();
 
             if ($updateCodeEditor) {
-                $this->codeEditor->loadContentToArea(false);
-                $this->codeEditor->doChange(true);
+                $this->codeEditor->loadContentToArea(false, fn() => $this->codeEditor->doChange(true));
             }
         }
 
@@ -1483,11 +1473,13 @@ class FormEditor extends AbstractModuleEditor
             }
         }
 
-        foreach ($modules as $module) {
-            $module = Str::trim($module);
+        $javafx = Project::findSupportOfCurrent('javafx');
+        $project = Ide::project();
 
-            if ($gui = GuiFrameworkProjectBehaviour::get()) {
-                $this->modules[$module] = $gui->getModuleEditor($module, true);
+        if ($javafx) {
+            foreach ($modules as $module) {
+                $module = Str::trim($module);
+                $this->modules[$module] = $javafx->getModuleEditor($project, $module, true);
             }
         }
 
@@ -2079,8 +2071,7 @@ class FormEditor extends AbstractModuleEditor
         if ($node->id && $element->isNeedRegisterInSource() && $element->getElementClass()) {
             if ($this->eventManager->registerTarget($node->id, $element->getElementClass())) {
                 if ($this->codeEditor) {
-                    $this->codeEditor->loadContentToArea(false);
-                    $this->codeEditor->doChange(true);
+                    $this->codeEditor->loadContentToArea(false, fn() => $this->codeEditor->doChange(true));
                 }
             }
         }
@@ -2214,8 +2205,7 @@ class FormEditor extends AbstractModuleEditor
         $this->eventManager->insertCodeToMethod($class, $method, $code);
 
         waitAsync(100, function () {
-            $this->codeEditor->loadContentToArea(false);
-            $this->codeEditor->doChange(true);
+            $this->codeEditor->loadContentToArea(false, fn() => $this->codeEditor->doChange(true));
         });
     }
 

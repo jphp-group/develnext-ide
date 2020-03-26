@@ -39,12 +39,12 @@ abstract class AbstractMediaAction extends AbstractSimpleActionType
 
     function getGroup()
     {
-        return self::GROUP_MEDIA;
+        return 'media';
     }
 
     function getSubGroup()
     {
-        return self::SUB_GROUP_AUDIO;
+        return 'audio';
     }
 
     function getTagName()

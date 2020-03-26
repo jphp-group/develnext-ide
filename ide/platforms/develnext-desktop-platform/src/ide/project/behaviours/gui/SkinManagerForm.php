@@ -37,12 +37,6 @@ class SkinManagerForm extends AbstractIdeForm
 {
     use DialogFormMixin;
 
-    /**
-     * Имя файла у скина, который будет установлен по умолчанию, вместо "без скина"
-     * Точка в начале имени файла, чтоб он отображался в начале списка
-     */
-    const DEFAULT_SKIN = ".Modena";
-
     public function init()
     {
         parent::init();

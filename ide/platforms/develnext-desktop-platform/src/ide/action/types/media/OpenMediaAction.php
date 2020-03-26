@@ -5,7 +5,6 @@ use action\Media;
 use ide\action\AbstractSimpleActionType;
 use ide\action\Action;
 use ide\action\ActionScript;
-use php\lib\str;
 
 class OpenMediaAction extends AbstractSimpleActionType
 {
@@ -39,16 +38,6 @@ class OpenMediaAction extends AbstractSimpleActionType
             'source' => ['editor' => 'audio'],
             'autoplay' => ['def' => true]
         ];
-    }
-
-    function getGroup()
-    {
-        return self::GROUP_MEDIA;
-    }
-
-    function getSubGroup()
-    {
-        return self::SUB_GROUP_AUDIO;
     }
 
     function getTagName()

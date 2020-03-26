@@ -11,6 +11,7 @@ sources:
 - platforms/develnext-php-platform/src
 - platforms/develnext-web-platform/src
 - platforms/develnext-wizard-platform/src
+- platforms/develnext-visualprog-platform/src
 #- platforms/develnext-android-platform/src
 - ../dn-app-framework/src
 includes:
@@ -30,6 +31,7 @@ deps:
   jphp-parser-ext: ^1.0.0
   jphp-process-ext: '*'
   jphp-cglib-ext: '*'
+  jphp-git-ext: '*'
 
   # gui
   jphp-gui-ext: ^3.0.0

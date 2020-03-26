@@ -2,7 +2,6 @@
 namespace ide\editors;
 
 use Files;
-use game\SpriteSpec;
 use ide\editors\form\IdePropertiesPane;
 use ide\editors\form\IdeSpritePane;
 use ide\editors\form\IdeTabPane;
@@ -12,52 +11,40 @@ use ide\editors\value\ElementPropertyEditor;
 use ide\editors\value\EnumPropertyEditor;
 use ide\editors\value\GameFixturePropertyEditor;
 use ide\editors\value\IntegerPropertyEditor;
-use ide\editors\value\TextPropertyEditor;
+use ide\formats\sprite\SpriteSpec;
 use ide\forms\ImagePropertyEditorForm;
 use ide\forms\MessageBoxForm;
 use ide\Ide;
 use ide\Logger;
 use ide\misc\SimpleSingleCommand;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
+use ide\project\supports\JavaFXGame2DSupport;
 use ide\systems\Cache;
 use ide\ui\FlowListViewDecorator;
-use ide\ui\LazyImage;
-use ide\ui\LazyLoadingImage;
 use ide\utils\FileUtils;
 use ParseException;
 use php\format\ProcessorException;
 use php\game\UXSprite;
 use php\gui\designer\UXDesignProperties;
-use php\gui\event\UXEvent;
-use php\gui\event\UXMouseEvent;
 use php\gui\framework\Timer;
-use php\gui\layout\UXAnchorPane;
 use php\gui\layout\UXFlowPane;
 use php\gui\layout\UXHBox;
 use php\gui\layout\UXPane;
 use php\gui\layout\UXVBox;
-use php\gui\paint\UXColor;
-use php\gui\UXAlert;
 use php\gui\UXApplication;
 use php\gui\UXButton;
 use php\gui\UXCanvas;
 use php\gui\UXDialog;
-use php\gui\UXForm;
 use php\gui\UXImage;
 use php\gui\UXImageArea;
 use php\gui\UXLabel;
 use php\gui\UXListView;
 use php\gui\UXNode;
-use php\gui\UXTab;
 use php\gui\UXTabPane;
 use php\io\File;
 use php\io\IOException;
-use php\lang\IllegalStateException;
-use php\lang\Thread;
 use php\lib\fs;
 use php\lib\Items;
 use php\lib\Str;
-use php\util\Regex;
 use php\xml\DomElement;
 use php\xml\XmlProcessor;
 
@@ -372,11 +359,11 @@ class GameSpriteEditor extends AbstractEditor
 
             $project = Ide::project();
 
-            if ($project && $project->hasBehaviour(GuiFrameworkProjectBehaviour::class)) {
-                /** @var GuiFrameworkProjectBehaviour $behaviour */
-                $behaviour = $project->getBehaviour(GuiFrameworkProjectBehaviour::class);
+            if ($project && $project->hasSupport('javafx-game')) {
+                /** @var JavaFXGame2DSupport $game */
+                $game = $project->findSupport('javafx-game');
 
-                $behaviour->getSpriteManager()->reloadAll();
+                $game->getSpriteManager($project)->reloadAll();
             }
         };
 

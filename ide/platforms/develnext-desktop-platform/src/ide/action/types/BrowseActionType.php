@@ -26,7 +26,7 @@ class BrowseActionType extends AbstractSimpleActionType
 
     function getGroup()
     {
-        return self::GROUP_APP;
+        return 'system';
     }
 
     function getTagName()

@@ -44,12 +44,12 @@ class IfIntersectActionType extends AbstractSimpleActionType
 
     function getGroup()
     {
-        return self::GROUP_CONDITIONS;
+        return 'conditions';
     }
 
     function getSubGroup()
     {
-        return self::SUB_GROUP_ADDITIONAL;
+        return 'misc';
     }
 
     function getTagName()

@@ -32,6 +32,7 @@ abstract class AbstractFileTemplate
     /**
      * @param string $oldContent
      * @param Stream $stream
+     * @throws \php\io\IOException
      */
     public function apply($oldContent, Stream $stream)
     {

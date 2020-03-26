@@ -4,7 +4,6 @@ namespace ide\action\types;
 use ide\action\AbstractSimpleActionType;
 use ide\action\Action;
 use ide\action\ActionScript;
-use php\gui\framework\Application;
 
 /**
  * Class AppShutdownActionType
@@ -19,7 +18,7 @@ class AppShutdownActionType extends AbstractSimpleActionType
 
     function getGroup()
     {
-        return self::GROUP_APP;
+        return 'system';
     }
 
     function getTitle(Action $action = null)

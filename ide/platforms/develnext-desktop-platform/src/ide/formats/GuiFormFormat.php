@@ -18,8 +18,7 @@ use ide\forms\InputMessageBoxForm;
 use ide\forms\SetMainFormForm;
 use ide\Ide;
 use ide\Logger;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
-use ide\project\ProjectFile;
+use ide\project\Project;
 use ide\systems\FileSystem;
 use ide\systems\RefactorSystem;
 use ide\utils\FileUtils;
@@ -103,13 +102,16 @@ class GuiFormFormat extends AbstractFormFormat
         $name = fs::nameNoExt($path);
 
         if (!$silent) {
-            if ($behaviour = GuiFrameworkProjectBehaviour::get()) {
-                if ($behaviour->getMainForm() == $name) {
+            $javafx = Project::findSupportOfCurrent('javafx');
+
+            if ($javafx) {
+                $project = Ide::project();
+                if ($javafx->getMainForm($project) == $name) {
                     $dialog = new SetMainFormForm();
                     $dialog->setExcludedForms([$name]);
                     $dialog->showDialog();
 
-                    $behaviour->setMainForm($dialog->getResult(), false);
+                    $javafx->setMainForm($project, $dialog->getResult());
                 }
             }
         }
@@ -178,10 +180,11 @@ class GuiFormFormat extends AbstractFormFormat
                 $editor->save();
 
                 if ($result == '') {
-                    $gui = GuiFrameworkProjectBehaviour::get();
+                    $javafx = Project::findSupportOfCurrent('javafx');
+                    $project = Ide::project();
 
-                    if ($gui) {
-                        foreach ($gui->getFormEditors() as $it) {
+                    if ($javafx) {
+                        foreach ($javafx->getFormEditors($project) as $it) {
                             if ($editor === $it) {
                                 continue;
                             }

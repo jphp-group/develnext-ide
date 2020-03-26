@@ -6,13 +6,11 @@ use develnext\lexer\inspector\entry\TypePropertyEntry;
 use ide\formats\form\AbstractFormElement;
 use ide\Ide;
 use ide\Logger;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
 use ide\project\Project;
 use php\gui\designer\UXDesigner;
 use php\gui\framework\AbstractForm;
 use php\gui\framework\DataUtils;
 use php\gui\layout\UXFragmentPane;
-use php\gui\layout\UXVBox;
 use php\gui\text\UXFont;
 use php\gui\UXHyperlink;
 use php\gui\UXLabel;
@@ -92,8 +90,8 @@ class FragmentFormElement extends AbstractFormElement
             $label->font = $label->font->withBold();
             $label->text = $form;
 
-            if ($gui = GuiFrameworkProjectBehaviour::get()) {
-                $editor = $gui->getFormEditor($form);
+            if ($javafx = Project::findSupportOfCurrent('javafx')) {
+                $editor = $javafx->getFormEditor(Ide::project(), $form);
 
                 if ($editor) {
                     $size = $editor->getLayout()->prefSize;
@@ -125,7 +123,7 @@ class FragmentFormElement extends AbstractFormElement
         $t->data['type'] = [AbstractForm::class];
         $t->data['description'] = 'Фрагмент формы';
 
-        $gui = GuiFrameworkProjectBehaviour::get();
+        $gui = Project::findSupportOfCurrent('javafx');
 
         if ($gui) {
             $data = DataUtils::get($node);

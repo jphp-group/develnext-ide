@@ -8,8 +8,7 @@ use ide\editors\form\FormNamedBlock;
 use ide\formats\GuiFormDumper;
 use ide\formats\ScriptModuleFormat;
 use ide\Ide;
-use ide\Logger;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
+use ide\project\Project;
 use ide\project\ProjectIndexer;
 use ide\scripts\AbstractScriptComponent;
 use ide\scripts\ScriptComponentContainer;
@@ -27,7 +26,6 @@ use php\lib\fs;
 use php\lib\Items;
 use php\lib\reflect;
 use php\lib\Str;
-use stdClass;
 
 /**
  * Class ScriptModuleEditor
@@ -403,14 +401,14 @@ class ScriptModuleEditor extends FormEditor
             $this->actionEditor->renameMethod($bind['className'], $bind['methodName'], $bind['newMethodName']);
         }
 
-        $this->codeEditor->loadContentToArea(false);
-        $this->codeEditor->doChange(true);
-        $this->reindex();
+        $this->codeEditor->loadContentToArea(false, function () use ($newId) {
+            $this->codeEditor->doChange(true);
+            $this->reindex();
 
-        $this->leftPaneUi->updateEventList($newId);
-        $this->leftPaneUi->updateBehaviours($newId);
-        $this->leftPaneUi->refreshObjectTreeList($newId);
-
+            $this->leftPaneUi->updateEventList($newId);
+            $this->leftPaneUi->updateBehaviours($newId);
+            $this->leftPaneUi->refreshObjectTreeList($newId);
+        });
         return '';
     }
 
@@ -470,8 +468,7 @@ class ScriptModuleEditor extends FormEditor
         }
 
         if ($container && $container->id && $this->eventManager->removeBinds($container->id)) {
-            $this->codeEditor->loadContentToArea(false);
-            $this->codeEditor->doChange(true);
+            $this->codeEditor->loadContentToArea(false, fn() => $this->codeEditor->doChange(true));
         }
 
         if ($container && $container->id) {
@@ -518,12 +515,13 @@ class ScriptModuleEditor extends FormEditor
             return [];
         }
 
-        /** @var GuiFrameworkProjectBehaviour $gui */
-        $gui = $project->getBehaviour(GuiFrameworkProjectBehaviour::class);
+        $javafx = Project::findSupportOfCurrent('javafx');
 
-        $forms = $gui->getFormEditorsOfModule($this->getModuleName());
-
-        return $forms;
+        if ($javafx) {
+            return $javafx->getFormEditorsOfModule($project, $this->getModuleName());
+        } else {
+            return [];
+        }
     }
 
     /**

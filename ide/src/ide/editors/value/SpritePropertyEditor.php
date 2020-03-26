@@ -3,16 +3,10 @@ namespace ide\editors\value;
 
 use ide\commands\CreateGameSpriteProjectCommand;
 use ide\Ide;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
-use php\game\UXSprite;
-use php\game\UXSpriteView;
+use ide\project\supports\JavaFXGame2DSupport;
 use php\gui\event\UXMouseEvent;
 use php\gui\UXContextMenu;
-use php\gui\UXImage;
 use php\gui\UXMenuItem;
-use php\lib\Str;
-use php\lib\String;
-use php\util\Flow;
 
 class SpritePropertyEditor extends TextPropertyEditor
 {
@@ -48,11 +42,11 @@ class SpritePropertyEditor extends TextPropertyEditor
 
         $project = Ide::project();
 
-        if ($project && $project->hasBehaviour(GuiFrameworkProjectBehaviour::class)) {
-            /** @var GuiFrameworkProjectBehaviour $behaviour */
-            $behaviour = $project->getBehaviour(GuiFrameworkProjectBehaviour::class);
+        if ($project && $project->hasSupport('javafx-game')) {
+            /** @var JavaFXGame2DSupport $behaviour */
+            $behaviour = $project->findSupport('javafx-game');
 
-            $manager = $behaviour->getSpriteManager();
+            $manager = $behaviour->getSpriteManager($project);
 
             foreach ($manager->getSprites() as $name => $spec) {
                 $item = new UXMenuItem($name);

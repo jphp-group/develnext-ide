@@ -31,6 +31,7 @@ use ide\ui\LazyLoadingImage;
 use ide\ui\Notifications;
 use ide\utils\FileUtils;
 use ide\utils\Json;
+use php\concurrent\Promise;
 use php\gui\framework\Application;
 use php\gui\JSException;
 use php\gui\layout\UXAnchorPane;
@@ -328,21 +329,30 @@ class Ide extends Application
      *
      * @param callable $callback
      * @param callable|null $after
+     * @return Promise
      */
-    public static function async(callable $callback, callable $after = null)
+    public static function async(callable $callback, callable $after = null): Promise
     {
         $ide = self::get();
+        $threadPool = $ide->asyncThreadPool;
 
-        if ($ide->asyncThreadPool->isShutdown() || $ide->asyncThreadPool->isTerminated()) {
-            return;
-        }
-
-        $ide->asyncThreadPool->execute(function () use ($callback, $after) {
-            $result = $callback();
-
-            if ($after) {
-                $after($result);
+        return new Promise(function ($resolve, $reject) use ($callback, $after, $ide, $threadPool) {
+            if ($threadPool->isShutdown() || $threadPool->isTerminated()) {
+                return;
             }
+
+            $threadPool->execute(function () use ($callback, $after, $resolve, $reject) {
+                try {
+                    $result = $callback();
+                    $resolve($result);
+
+                    if ($after) {
+                        $after($result);
+                    }
+                } catch (\Throwable $e) {
+                    $reject($e);
+                }
+            });
         });
     }
 
@@ -420,8 +430,28 @@ class Ide extends Application
     }
 
     /**
+     * Добавить источник языковых переменных для языка.
+     *
+     * @param string $lang
+     * @param string $source
+     * @return bool
+     */
+    public function addLanguageSource(string $lang, string $source): bool
+    {
+        $language = $this->languages[$lang];
+        if ($language) {
+            $language->addSource($source);
+            return true;
+        } else {
+            Logger::warn("Failed to add language source '$source' for lang '$lang', language doesn't exist");
+            return false;
+        }
+    }
+
+    /**
      * @param \Exception|\Error $e
      * @param string $context
+     * @throws \Exception
      */
     public function sendError($e, $context = 'global')
     {

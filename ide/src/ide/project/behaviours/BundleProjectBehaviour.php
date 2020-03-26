@@ -98,35 +98,10 @@ class BundleProjectBehaviour extends AbstractProjectBehaviour
     public function inject()
     {
         // Do not save bundles conf via project.
-        /*$this->project->addIdeConfigConfigurer(__CLASS__, function (IdeConfiguration $conf) {
-            if (str::startsWith($conf->getShortName(), "bundles/")) {
-                $conf->setAutoSave(false);
-            }
-        });
-
-        foreach ($this->getPublicBundles(true) as $bundle) {
-            IdeSystem::getLoader()->addClassPath($bundle->getVendorDirectory());
-        }
-
-        $this->project->setSrcDirectory('src');
-        $this->project->setSrcGeneratedDirectory(self::GENERATED_DIRECTORY);
-
-        $this->project->on('save', [$this, 'doSave']);
-        $this->project->on('open', [$this, 'doLoad']);
-        $this->project->on('close', [$this, 'doClose']);
-        $this->project->on('preCompile', [$this, 'doPreCompile']);
-        $this->project->on('makeSettings', [$this, 'doMakeSettings']);
-        $this->project->on('updateSettings', [$this, 'doUpdateSettings']);
-        $this->project->on('create', [$this, 'doCreate']);
-
-        $this->project->on('createEditor', [$this, 'doCreateEditor']);*/
     }
 
     public function doCreate()
     {
-        /*uiLater(function () {
-            $this->showBundleCheckListDialog();
-        });*/
     }
 
     public function doCreateEditor(AbstractEditor $editor)

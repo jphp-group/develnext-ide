@@ -1,6 +1,7 @@
 <?php
 namespace ide\project\supports;
 
+use ide\formats\ProjectFormat;
 use Throwable;
 use framework\core\Event;
 use function alert;
@@ -86,6 +87,8 @@ class JPPMProjectSupport extends AbstractProjectSupport
      */
     public function onLink(Project $project)
     {
+        $project->registerFormat($projectFormat = new ProjectFormat());
+
         $project->addReadOnlyDirectory('vendor');
 
         $project->getTree()->addIgnorePaths([
@@ -139,7 +142,9 @@ class JPPMProjectSupport extends AbstractProjectSupport
         $this->pkgTemplate->save();
 
         $this->install($project);
-        $this->installToIDE($project);
+
+        $project->on('open', fn() => $this->installToIDE($project));
+        //$this->installToIDE($project);
 
         $this->pkgFileWatcher->start();
     }
@@ -261,7 +266,9 @@ class JPPMProjectSupport extends AbstractProjectSupport
 
     /**
      * Установка зависимостей jppm в среду. Парсит структуру пакетов, их зависимости. Добавляет пути к новым классам и удаляет неиспользуемые.
-     * @param  Project $project
+     * @param Project $project
+     * @throws IOException
+     * @throws \php\format\ProcessorException
      */
     public function installToIDE(Project $project)
     {
@@ -388,6 +395,8 @@ class JPPMProjectSupport extends AbstractProjectSupport
         $this->pkgTemplate = null;
         $this->pkgFileWatcher->free();
         $this->pkgFileWatcher = null;
+
+        $project->unregisterFormat(ProjectFormat::class);
     }
 
     public function getCode()

@@ -1,10 +1,10 @@
 <?php
 namespace ide\project\control;
+
 use ide\commands\CreateScriptModuleProjectCommand;
 use ide\editors\ScriptModuleEditor;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
+use ide\Ide;
 use php\gui\UXNode;
-use php\gui\layout\UXAnchorPane;
 use ide\editors\AbstractEditor;
 
 /**
@@ -29,12 +29,14 @@ class ModulesProjectControlPane extends AbstractEditorsProjectControlPane
 
     /**
      * @return AbstractEditor[]
+     * @throws \Exception
      */
     protected function getItems()
     {
-        $gui = GuiFrameworkProjectBehaviour::get();
+        $project = Ide::project();
+        $javafx = $project->findSupport('javafx');
 
-        return $gui ? $gui->getModuleEditors() : [];
+        return $javafx ? $javafx->getModuleEditors($project) : [];
     }
 
     /**

@@ -27,7 +27,7 @@ class SleepActionType extends AbstractSimpleActionType
 
     function getGroup()
     {
-        return self::GROUP_SCRIPT;
+        return 'logic';
     }
 
     function getTagName()

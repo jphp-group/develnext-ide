@@ -14,10 +14,11 @@ class PhpExtension extends AbstractExtension
 {
     public function onRegister()
     {
-        Ide::get()->registerProjectSupport(PHPProjectSupport::class);
-        Ide::get()->registerProjectSupport(JPPMProjectSupport::class);
-        Ide::get()->registerProjectSupport(JPPMAppPluginSupport::class);
-        Ide::get()->registerProjectSupport(JavaFXProjectSupport::class);
+        $ide = Ide::get();
+
+        $ide->registerProjectSupport(PHPProjectSupport::class);
+        $ide->registerProjectSupport(JPPMProjectSupport::class);
+        $ide->registerProjectSupport(JPPMAppPluginSupport::class);
     }
 
     public function onIdeStart()

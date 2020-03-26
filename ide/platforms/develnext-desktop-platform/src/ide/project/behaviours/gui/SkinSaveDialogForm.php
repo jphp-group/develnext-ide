@@ -4,14 +4,9 @@ namespace ide\project\behaviours\gui;
 use ide\entity\ProjectSkin;
 use ide\forms\AbstractIdeForm;
 use ide\forms\MessageBoxForm;
-use ide\forms\mixins\DialogFormMixin;
 use ide\forms\mixins\SavableFormMixin;
 use ide\Ide;
-use ide\library\IdeLibrary;
-use ide\library\IdeLibrarySkinResource;
 use ide\Logger;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
-use ide\project\Project;
 use ide\utils\FileUtils;
 use php\gui\UXFileChooser;
 use php\gui\UXImageView;
@@ -67,7 +62,7 @@ class SkinSaveDialogForm extends AbstractIdeForm
         $skin->setDescription($this->descField->text);
         $skin->setAuthor($this->authorField->text);
         $skin->setAuthorSite($this->authorSiteField->text);
-        $skin->setScopes(['gui', GuiFrameworkProjectBehaviour::class]);
+        $skin->setScopes(['gui']);
 
         return $skin;
     }

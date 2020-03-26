@@ -6,9 +6,7 @@ use ide\bundle\AbstractBundle;
 use ide\bundle\AbstractJarBundle;
 use ide\formats\ScriptModuleFormat;
 use ide\Ide;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
 use ide\project\Project;
-use php\lib\fs;
 
 class HotKeyBundle extends AbstractJarBundle
 {
@@ -20,11 +18,6 @@ class HotKeyBundle extends AbstractJarBundle
     function getDescription()
     {
         return "";
-    }
-
-    public function isAvailable(Project $project)
-    {
-        return $project->hasBehaviour(GuiFrameworkProjectBehaviour::class);
     }
 
     public function onAdd(Project $project, AbstractBundle $owner = null)

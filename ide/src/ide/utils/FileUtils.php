@@ -5,6 +5,7 @@ use ide\Ide;
 use ide\Logger;
 use ide\ui\Notifications;
 use php\compress\ZipFile;
+use php\concurrent\Promise;
 use php\gui\UXApplication;
 use php\gui\UXDialog;
 use php\io\File;
@@ -13,6 +14,7 @@ use php\io\IOException;
 use php\io\Stream;
 use php\lang\IllegalStateException;
 use php\lang\System;
+use php\lang\Thread;
 use php\lib\Str;
 use php\lib\fs;
 use php\time\Time;
@@ -357,6 +359,31 @@ class FileUtils
                 UiUtils::checkIO("{$time}ms, put(): $filename");
             }
         }
+    }
+
+    public static function getAsync($filename, callable $callback = null, $encoding = 'UTF-8'): Promise
+    {
+        $promise = new Promise(function ($resolve, $reject) use ($filename, $encoding, $callback) {
+            $result = Ide::async(function () use ($filename, $encoding) {
+                return Str::decode(Stream::getContents($filename), $encoding);
+            });
+
+            $result->then(function ($result) use ($result, $callback, $resolve) {
+                uiLater(function () use ($callback, $result, $resolve) {
+                    $resolve($result);
+                    if ($callback) {
+                        $callback($result);
+                    }
+                });
+            });
+
+            $result->catch(function (\Throwable $e) use ($reject, $filename) {
+                Logger::warn("Unable te get file content, message = {$e->getMessage()}, {$filename}");
+                uiLater(fn() => $reject($e));
+            });
+        });
+
+        return $promise;
     }
 
     public static function get($filename, $encoding = 'UTF-8')

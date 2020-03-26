@@ -1,7 +1,7 @@
 <?php
 namespace ide\editors\sprite;
 
-use game\SpriteSpec;
+use ide\formats\sprite\SpriteSpec;
 use ide\forms\MessageBoxForm;
 use ide\Ide;
 use ide\misc\EventHandlerBehaviour;

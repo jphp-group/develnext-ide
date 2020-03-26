@@ -1,19 +1,14 @@
 <?php
 namespace ide\formats\sprite;
 
-use Files;
-use game\SpriteSpec;
 use ide\Logger;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
 use ide\project\Project;
 use ide\systems\Cache;
 use ide\utils\FileUtils;
 use php\format\ProcessorException;
 use php\game\UXSprite;
 use php\gui\UXApplication;
-use php\gui\UXImage;
 use php\io\IOException;
-use php\lib\arr;
 use php\lib\fs;
 use php\lib\Str;
 use php\xml\XmlProcessor;
@@ -24,7 +19,7 @@ use php\xml\XmlProcessor;
  */
 class IdeSpriteManager
 {
-    const SPRITE_PATH = GuiFrameworkProjectBehaviour::GAME_DIRECTORY . "/sprites";
+    const SPRITE_PATH = "src/.game/sprites";
     /**
      * @var Project
      */
@@ -95,18 +90,18 @@ class IdeSpriteManager
     }
 
     /**
-     * @return \game\SpriteSpec[]
+     * @return SpriteSpec[]
      */
-    public function getSprites()
+    public function getSprites(): array
     {
         return $this->sprites;
     }
 
     /**
      * @param string $name
-     * @return SpriteSpec
+     * @return string
      */
-    public function createSprite($name)
+    public function createSprite($name): string
     {
         $this->sprites[$name] = $spec = new SpriteSpec($name);
         $spec->frameWidth = $spec->frameHeight = 32;

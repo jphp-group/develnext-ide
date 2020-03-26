@@ -337,9 +337,18 @@ class ProjectTree
         }
     }
 
-    public function addIgnoreFilter(callable $callback)
+    public function addIgnoreFilter(callable $callback, string $uid = null)
     {
-        $this->ignoreFilters[] = $callback;
+        if ($uid) {
+            $this->ignoreFilters[$uid] = $callback;
+        } else {
+            $this->ignoreFilters[] = $callback;
+        }
+    }
+
+    public function removeIgnoreFilter(string $uid)
+    {
+        unset($this->ignoreFilters[$uid]);
     }
 
     public function addValueCreator(callable $callback)

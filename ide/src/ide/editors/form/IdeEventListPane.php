@@ -827,8 +827,7 @@ class IdeEventListPane
 
                     AccurateTimer::executeAfter(100, function () use ($selected, $bind) {
                         if ($this->codeEditor) {
-                            $this->codeEditor->loadContentToArea(false);
-                            $this->codeEditor->doChange(true);
+                            $this->codeEditor->loadContentToArea(false, fn() => $this->codeEditor->doChange(true));
                         }
 
                         $this->manager->load();
@@ -855,8 +854,7 @@ class IdeEventListPane
 
             uiLater(function () use ($code) {
                 if ($this->codeEditor) {
-                    $this->codeEditor->loadContentToArea(false);
-                    $this->codeEditor->doChange(true);
+                    $this->codeEditor->loadContentToArea(false, fn() => $this->codeEditor->doChange(true));
                 }
 
                 $this->manager->load();
@@ -889,19 +887,24 @@ class IdeEventListPane
                 $this->manager->addBind($this->targetId, $code, $type['kind']);
 
                 uiLater(function () use ($code, $type) {
-                    if ($this->codeEditor) {
-                        $this->codeEditor->loadContentToArea(false);
+                    $func = function () use ($code) {
+
                         $this->codeEditor->doChange(true);
+                        $this->manager->load();
+
+                        $this->update($this->targetId);
+
+                        $this->setSelectedCode($code);
+                        $editor = $this->openEventSource($code);
+
+                        $this->trigger('add', [$code, $editor]);
+                    };
+
+                    if ($this->codeEditor) {
+                        $this->codeEditor->loadContentToArea(false, $func);
+                    } else {
+                        $func();
                     }
-
-                    $this->manager->load();
-
-                    $this->update($this->targetId);
-
-                    $this->setSelectedCode($code);
-                    $editor = $this->openEventSource($code);
-
-                    $this->trigger('add', [$code, $editor]);
                 });
             }
         }, $editable);

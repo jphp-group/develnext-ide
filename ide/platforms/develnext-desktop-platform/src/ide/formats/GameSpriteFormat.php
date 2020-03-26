@@ -1,19 +1,16 @@
 <?php
 namespace ide\formats;
 
-use Files;
-use game\SpriteSpec;
 use ide\editors\AbstractEditor;
 use ide\editors\GameSpriteEditor;
 use ide\forms\InputMessageBoxForm;
 use ide\Ide;
 use ide\Logger;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
+use ide\project\supports\JavaFXGame2DSupport;
 use ide\utils\FileUtils;
 use php\lib\fs;
 use php\lib\Str;
 use php\util\Regex;
-use php\xml\XmlProcessor;
 
 class GameSpriteFormat extends AbstractFormat
 {
@@ -52,7 +49,7 @@ class GameSpriteFormat extends AbstractFormat
         return fs::isFile($file) && Str::endsWith($file, ".sprite");
     }
 
-    public function delete($path)
+    public function delete($path, $silent = false)
     {
         parent::delete($path);
 
@@ -76,10 +73,11 @@ class GameSpriteFormat extends AbstractFormat
         parent::duplicate($path, $toPath);
 
         if ($project = Ide::project()) {
-            $gui = GuiFrameworkProjectBehaviour::get();
+            /** @var JavaFXGame2DSupport $gui */
+            $gui = $project->findSupport('javafx-game');
 
             if ($gui) {
-                $ideSpriteManager = $gui->getSpriteManager();
+                $ideSpriteManager = $gui->getSpriteManager($project);
                 $oldSpec = $ideSpriteManager->get(fs::nameNoExt($path));
                 $ideSpriteManager->createSprite(fs::nameNoExt($toPath));
                 $spec = $ideSpriteManager->get(fs::nameNoExt($toPath));

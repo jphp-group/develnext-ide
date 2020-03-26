@@ -1,7 +1,8 @@
 <?php
 namespace ide\formats\sprite;
 
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
+use ide\Ide;
+use ide\project\Project;
 use ide\ui\LazyLoadingImage;
 
 class SpritePreviewImage implements LazyLoadingImage
@@ -22,10 +23,11 @@ class SpritePreviewImage implements LazyLoadingImage
 
     function getImage()
     {
-        $gui = GuiFrameworkProjectBehaviour::get();
+        $gui = Project::findSupportOfCurrent('javafx-game');
 
         if ($gui) {
-            if ($manager = $gui->getSpriteManager()) {
+            /** @var IdeSpriteManager $manager */
+            if ($manager = $gui->getSpriteManager(Ide::project())) {
                 return $manager->getSpritePreview($this->name);
             }
         }

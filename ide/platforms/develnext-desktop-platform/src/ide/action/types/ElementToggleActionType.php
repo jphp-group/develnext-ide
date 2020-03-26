@@ -32,12 +32,12 @@ class ElementToggleActionType extends AbstractSimpleActionType
 
     function getSubGroup()
     {
-        return self::SUB_GROUP_COMPONENT;
+        return 'object';
     }
 
     function getGroup()
     {
-        return self::GROUP_CONTROL;
+        return 'ui';
     }
 
     function getTagName()

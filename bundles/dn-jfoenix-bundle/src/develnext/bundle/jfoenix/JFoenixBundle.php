@@ -6,18 +6,11 @@ use ide\bundle\AbstractJarBundle;
 use ide\formats\GuiFormFormat;
 use ide\Ide;
 use ide\library\IdeLibraryBundleResource;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
 use ide\project\Project;
 use php\desktop\Runtime;
-use php\xml\DomDocument;
 
 class JFoenixBundle extends AbstractJarBundle
 {
-    public function isAvailable(Project $project)
-    {
-        return $project->hasBehaviour(GuiFrameworkProjectBehaviour::class);
-    }
-
     public function onAdd(Project $project, AbstractBundle $owner = null)
     {
         parent::onAdd($project, $owner);

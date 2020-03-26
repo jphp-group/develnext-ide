@@ -6,10 +6,7 @@ use ide\bundle\AbstractBundle;
 use ide\bundle\AbstractJarBundle;
 use ide\formats\ScriptModuleFormat;
 use ide\Ide;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
 use ide\project\Project;
-use php\jsoup\Jsoup;
-use php\lib\fs;
 
 class JsoupBundle extends AbstractJarBundle
 {
@@ -21,11 +18,6 @@ class JsoupBundle extends AbstractJarBundle
     function getDescription()
     {
         return "Пакет для парсинга html и сайтов в стиле апи jQuery";
-    }
-
-    public function isAvailable(Project $project)
-    {
-        return $project->hasBehaviour(GuiFrameworkProjectBehaviour::class);
     }
 
     public function onAdd(Project $project, AbstractBundle $owner = null)

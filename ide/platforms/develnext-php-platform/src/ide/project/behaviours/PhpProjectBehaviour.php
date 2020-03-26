@@ -108,7 +108,6 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
     {
         $this->project->on('save', [$this, 'doSave']);
         $this->project->on('preCompile', [$this, 'doPreCompile']);
-        $this->project->on('compile', [$this, 'doCompile']);
 
         $this->project->on('makeSettings', [$this, 'doMakeSettings']);
         $this->project->on('updateSettings', [$this, 'doUpdateSettings']);
@@ -258,7 +257,9 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
             }
         }
 
-        if ($gui = GuiFrameworkProjectBehaviour::get()) {
+        $javafx = $this->project->findSupport('javafx');
+
+        if ($javafx) {
             $useByteCode = Project::ENV_PROD == $env;
 
             $dirs = [];
@@ -269,7 +270,7 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
                 }
             }
 
-            $gui->saveBootstrapScript($dirs, $useByteCode && $this->isByteCodeEnabled());
+            $javafx->saveBootstrapScript($this->project, $dirs, $useByteCode && $this->isByteCodeEnabled());
         }
     }
 
@@ -298,241 +299,6 @@ class PhpProjectBehaviour extends AbstractProjectBehaviour
         }
 
         return $result;
-    }
-
-    public function doCompile($env, callable $log = null)
-    {
-        $useByteCode = Project::ENV_PROD == $env;
-
-        if ($useByteCode && $this->isByteCodeEnabled()) {
-            $scope = new Environment(null, Environment::HOT_RELOAD);
-            $scope->importClass(FileUtils::class);
-
-            $zipLibraries = $this->collectZipLibraries();
-
-            $generatedDirectory = $this->project->getSrcFile('', true);
-            $dirs = [$generatedDirectory, $this->project->getSrcFile('')];
-
-            $includedFiles = [];
-
-            if ($bundle = BundleProjectBehaviour::get()) {
-                foreach ($bundle->fetchAllBundles($env) as $one) {
-                    $dirs[] = $one->getProjectVendorDirectory();
-                }
-            }
-
-            // Add packages -------------------------------
-            foreach ($dirs as $dir) {
-                fs::scan("$dir/.packages", function ($filename) use ($scope) {
-                    $ext = fs::ext($filename);
-
-                    if ($ext == 'pkg') {
-                        $package = FrameworkPackageLoader::makeFrom($filename);
-                        $scope->setPackage(fs::nameNoExt($filename), $package);
-                    }
-                }, 1);
-            }
-
-            foreach ($zipLibraries as $library) {
-                $zip = new ZipFile($library);
-                foreach ($zip->statAll() as $stat) {
-                    $name = $stat['name'];
-
-                    if (str::startsWith($name, '.packages/') && fs::ext($name) == 'pkg') {
-                        $zip->read($stat['name'], function (array $stat, Stream $stream) use ($name, $scope) {
-                            $package = FrameworkPackageLoader::makeFrom($stream);
-                            $scope->setPackage(fs::nameNoExt($name), $package);
-                        });
-                    }
-                }
-            }
-            // ----------------------------------------------
-
-            $scope->execute(function () use ($zipLibraries, $generatedDirectory, $dirs, &$includedFiles) {
-                ob_implicit_flush(true);
-
-                spl_autoload_register(function ($name) use ($zipLibraries, $generatedDirectory, $dirs, &$includedFiles) {
-                    echo("Try class '$name' auto load\n");
-
-                    foreach ($dirs as $dir) {
-                        $filename = "$dir/$name.php";
-
-                        if (fs::exists($filename)) {
-                            echo "Find class '$name' in ", $filename, "\n";
-
-                            $compiled = new File($generatedDirectory, $name . ".phb");
-                            fs::ensureParent($compiled);
-
-                            $includedFiles[FileUtils::hashName($filename)] = true;
-
-                            $fileStream = new FileStream($filename);
-                            $module = new Module($fileStream, false, true);
-                            $module->dump($compiled, true);
-                            $fileStream->close();
-                            return;
-                        }
-                    }
-                    foreach ($zipLibraries as $file) {
-                        if (!fs::exists($file)) {
-                            echo "SKIP $file, is not exists.\n";
-                            continue;
-                        }
-
-                        try {
-                            $name = str::replace($name, '\\', '/');
-
-                            $url = new URL("jar:file:///$file!/$name.php");
-
-                            $conn = $url->openConnection();
-                            $stream = $conn->getInputStream();
-
-                            $module = new Module($stream, false);
-                            $module->call();
-
-                            $stream->close();
-
-                            echo "Find class '$name' in ", $file, "\n";
-
-                            $compiled = new File($generatedDirectory, $name . ".phb");
-
-                            fs::ensureParent($compiled);
-
-                            $module->dump($compiled, true);
-
-                            return;
-                        } catch (IOException $e) {
-                            echo "[ERROR] {$e->getMessage()}\n";
-                            // nop.
-                        }
-                    }
-                });
-            });
-
-            foreach ($dirs as $i => $dir) {
-                fs::scan($dir, function ($filename) use ($log, $scope, $i, $useByteCode, $generatedDirectory, $dir, &$includedFiles) {
-                    $relativePath = FileUtils::relativePath($dir, $filename);
-
-                    if ($i == 1) { // ignore src files if they exist in src_generated dir.
-                        if (fs::exists($this->project->getSrcFile($relativePath, true))) {
-                            return;
-                        }
-                    }
-
-                    if (str::endsWith($filename, '.php')) {
-                        if ($includedFiles[FileUtils::hashName($filename)]) {
-                            return;
-                        }
-
-                        $filename = fs::normalize($filename);
-
-                        if ($log) {
-                            $log(":compile $filename");
-                        }
-
-                        $compiledFile = new File($generatedDirectory, '/' . fs::pathNoExt($relativePath) . '.phb');
-
-                        if ($compiledFile->getParentFile() && !$compiledFile->getParentFile()->isDirectory()) {
-                            $compiledFile->getParentFile()->mkdirs();
-                        }
-
-                        $includedFiles[FileUtils::hashName($filename)] = true;
-                        $scope->execute(function () use ($filename, $compiledFile) {
-                            $fileStream = new FileStream($filename);
-                            $module = new Module($fileStream, false, true);
-                            $stream = new FileStream($compiledFile, 'w+');
-                            $module->dump($stream, true);
-                            $stream->close();
-                            $fileStream->close();
-                        });
-                    }
-                });
-            }
-
-            fs::scan($generatedDirectory, function ($filename) use ($log, $scope, $useByteCode, &$includedFiles) {
-                if (fs::ext($filename) == 'php') {
-                    if ($includedFiles[FileUtils::hashName($filename)]) {
-                        return;
-                    }
-
-                    $filename = fs::normalize($filename);
-
-                    if ($log) $log(":compile-gen $filename");
-
-                    $compiledFile = fs::pathNoExt($filename) . '.phb';
-
-                    $includedFiles[FileUtils::hashName($filename)] = true;
-
-                    $scope->execute(function () use ($filename, $compiledFile) {
-                        $stream = new FileStream($compiledFile, 'w+');
-                        $fileStream = new FileStream($filename);
-                        $module = new Module($fileStream, false, true);
-                        $module->dump($stream);
-                        $stream->close();
-                        $fileStream->close();
-                    });
-
-                    if (!fs::delete($filename)) {
-                        $log("[WARNING]: Failed to delete file $filename");
-                    }
-                }
-            });
-
-            foreach ($zipLibraries as $library) {
-                if (!fs::exists($library)) {
-                    continue;
-                }
-
-                $jar = new ZipFile($library);
-
-                foreach ($jar->statAll() as $stat) {
-                    list($name) = [$stat['name']];
-
-                    if (str::startsWith($name, 'JPHP-INF/')) {
-                        continue;
-                    }
-
-                    if (fs::ext($name) == 'php') {
-                        $compiled = new File($generatedDirectory, '/' . fs::pathNoExt($name) . ".phb");
-
-                        if (!$compiled->exists()) {
-                            if ($compiled->getParentFile() && !$compiled->getParentFile()->isDirectory()) {
-                                $compiled->getParentFile()->mkdirs();
-                            }
-
-                            $jar->read($name, function ($_, Stream $stream) use ($name, $compiled, $log, $scope) {
-                                $className = fs::pathNoExt($name);
-                                $className = str::replace($className, '/', '\\');
-
-                                try {
-                                    $done = $scope->execute(function () use ($stream, $compiled, $className, $log) {
-                                        if (!class_exists($className, false)) {
-                                            try {
-                                                $module = new Module($stream, false);
-                                                $module->dump($compiled, true);
-                                                return true;
-                                            } catch (Error $e) {
-                                                if ($log) {
-                                                    $log("[ERROR] Unable to compile '{$className}', {$e->getMessage()}, on line {$e->getLine()}");
-                                                    return false;
-                                                }
-                                            }
-                                        }
-
-                                        return false;
-                                    });
-
-                                    if ($log && $done) {
-                                        $log(":compile {$name}");
-                                    }
-                                } finally {
-                                    $stream->close();
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-        }
     }
 
     public function doUpdateSettings(CommonProjectControlPane $editor = null)

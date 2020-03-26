@@ -37,12 +37,12 @@ class ElementSetValueActionType extends AbstractSimpleActionType
 
     function getGroup()
     {
-        return self::GROUP_CONTROL;
+        return 'ui';
     }
 
     function getSubGroup()
     {
-        return self::SUB_GROUP_COMPONENT;
+        return 'object';
     }
 
     function getTagName()

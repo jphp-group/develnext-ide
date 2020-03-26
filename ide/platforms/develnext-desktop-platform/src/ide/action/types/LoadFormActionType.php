@@ -27,14 +27,9 @@ class LoadFormActionType extends AbstractSimpleActionType
         ];
     }
 
-    function getSubGroup()
-    {
-        return self::SUB_GROUP_WINDOW;
-    }
-
     function getGroup()
     {
-        return self::GROUP_CONTROL;
+        return 'ui-forms';
     }
 
     function getTagName()

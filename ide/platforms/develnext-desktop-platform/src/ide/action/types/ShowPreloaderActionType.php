@@ -26,12 +26,7 @@ class ShowPreloaderActionType extends AbstractSimpleActionType
 
     function getGroup()
     {
-        return self::GROUP_CONTROL;
-    }
-
-    function getSubGroup()
-    {
-        return self::SUB_GROUP_WINDOW;
+        return 'ui-forms';
     }
 
     function getTagName()

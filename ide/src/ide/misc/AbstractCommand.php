@@ -115,6 +115,7 @@ abstract class AbstractCommand extends Module
     /**
      * Создать подменю для одной из существующих групп меню
      * @return UXMenuItem|null
+     * @throws \Exception
      */
     public function makeMenuItem()
     {

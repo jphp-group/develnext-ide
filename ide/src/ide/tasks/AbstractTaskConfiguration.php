@@ -41,7 +41,7 @@ abstract class AbstractTaskConfiguration {
     /**
      * @param int $exitCode
      */
-    public function onProcessExit(int $exitCode) {
+    public function onProcessExit(?int $exitCode) {
         // Stub ..
     }
 }

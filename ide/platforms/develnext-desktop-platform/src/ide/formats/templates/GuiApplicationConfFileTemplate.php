@@ -2,9 +2,8 @@
 namespace ide\formats\templates;
 
 use ide\formats\AbstractFileTemplate;
-use ide\project\AbstractProjectBehaviour;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
 use ide\project\Project;
+use ide\project\supports\JavaFXProjectSupport;
 
 /**
  * Class GuiApplicationConfFileTemplate
@@ -12,40 +11,44 @@ use ide\project\Project;
  */
 class GuiApplicationConfFileTemplate extends AbstractFileTemplate
 {
-    /** @var GuiFrameworkProjectBehaviour */
-    protected $behaviour;
-
     /**
      * @var Project
      */
     private $project;
+    /**
+     * @var JavaFXProjectSupport
+     */
+    private JavaFXProjectSupport $javafx;
 
     /**
      * GuiApplicationConfFileTemplate constructor.
      *
      * @param Project $project
+     * @param JavaFXProjectSupport $javafx
      */
-    public function __construct(Project $project)
+    public function __construct(Project $project, JavaFXProjectSupport $javafx)
     {
         parent::__construct();
 
         $this->project = $project;
+        $this->javafx = $javafx;
     }
 
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function getArguments()
     {
-        $this->behaviour = $this->project->getBehaviour(GuiFrameworkProjectBehaviour::class);
+        $javafx = $this->javafx;
 
         return [
             'PROJECT_NAME' => $this->project->getName(),
             'PROJECT_PACKAGE' => $this->project->getPackageName(),
-            'MAIN_FORM' => $this->behaviour->getMainForm(),
-            'APP_UUID' => $this->behaviour->getAppUuid(),
-            'FX_SPLASH_AUTO_HIDE' => $this->behaviour->getSplashData()['autoHide'] ? 1 : 0
+            'MAIN_FORM' => $javafx->getMainForm($this->project),
+            'APP_UUID' => $javafx->getAppUuid($this->project),
+            'FX_SPLASH_AUTO_HIDE' => $javafx->getSplashData($this->project)['autoHide'] ? 1 : 0
         ];
     }
 }

@@ -5,24 +5,12 @@ namespace ide\editors\common;
 use ide\editors\AbstractEditor;
 use ide\editors\FormEditor;
 use ide\editors\ScriptModuleEditor;
-use ide\formats\form\AbstractFormElement;
 use ide\Ide;
 use ide\Logger;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
-use ide\scripts\AbstractScriptComponent;
-use ide\scripts\elements\MacroScriptComponent;
-use ide\scripts\ScriptComponentContainer;
+use ide\project\Project;
 use ide\systems\FileSystem;
 use ide\utils\FileUtils;
-use php\gui\layout\UXHBox;
-use php\gui\paint\UXColor;
-use php\gui\UXApplication;
 use php\gui\UXComboBox;
-use php\gui\UXImageView;
-use php\gui\UXLabel;
-use php\gui\UXListCell;
-use php\gui\UXNode;
-use php\lib\Items;
 
 class ObjectListEditor
 {
@@ -378,11 +366,10 @@ class ObjectListEditor
         if ($this->enableAllForms && !$this->disableForms) {
             $project = Ide::get()->getOpenedProject();
 
-            if ($project && $project->hasBehaviour(GuiFrameworkProjectBehaviour::class)) {
-                /** @var GuiFrameworkProjectBehaviour $gui */
-                $gui = $project->getBehaviour(GuiFrameworkProjectBehaviour::class);
+            if ($project && $project->hasSupport('javafx')) {
+                $javafx = $project->findSupport('javafx');
 
-                $formEditors = $gui->getFormEditors();
+                $formEditors = $javafx->getFormEditors($project);
 
                 if (/*!($editor instanceof FormEditor) || sizeof($formEditors) > 1*/true) {
                     $this->addItem(new ObjectListEditorItem('ui.object.list.other.forms::[Другие формы]', null, ''));
@@ -416,10 +403,12 @@ class ObjectListEditor
         }
 
         if ($this->enableAppModule && !$this->disableModules) {
-            $gui = GuiFrameworkProjectBehaviour::get();
 
-            if ($gui && $gui->hasModule('AppModule')) {
-                $appModule = $gui->getModuleEditor('AppModule');
+            $javafx = Project::findSupportOfCurrent('javafx');
+            $project = Ide::project();
+
+            if ($javafx && $javafx->hasModule($project, 'AppModule')) {
+                $appModule = $javafx->getModuleEditor($project, 'AppModule');
 
                 if ($appModule instanceof ScriptModuleEditor) {
                     if ($editor && ($appModule && $editor && FileUtils::equalNames($appModule->getFile(), $editor->getFile()))) {

@@ -136,7 +136,12 @@ class ContextMenu
         $this->root->items->clear();
     }
 
-    public function addSeparator($group = null)
+    /**
+     * @param null $group
+     * @return UXMenu|UXContextMenu
+     * @throws IllegalArgumentException
+     */
+    protected function findGroup($group = null): object
     {
         $menu = $this->root;
 
@@ -148,7 +153,7 @@ class ContextMenu
             }
         }
 
-        $menu->items->add(UXMenuItem::createSeparator());
+        return $menu;
     }
 
     public function addGroup($code, $title, $icon = null)
@@ -157,6 +162,15 @@ class ContextMenu
         $this->root->items->add($menuItem);
 
         $this->groups[$code] = $menuItem;
+    }
+
+    public function addSeparator($group = null)
+    {
+        $menu = $this->findGroup($group);
+
+        $item = UXMenuItem::createSeparator();
+        $menu->items->add($item);
+        return $item;
     }
 
     protected function isCursorInPopup()
@@ -199,7 +213,13 @@ class ContextMenu
         }
     }
 
-    public function add(AbstractMenuCommand $command, $group = null)
+    /**
+     * @param AbstractMenuCommand $command
+     * @param null $group
+     * @return UXMenuItem[]
+     * @throws IllegalArgumentException
+     */
+    public function add(AbstractMenuCommand $command, $group = null): array
     {
         $command->setContextMenu($this);
 
@@ -234,24 +254,32 @@ class ContextMenu
             });
         }
 
-        $menu = $this->root;
+        $menu = $this->findGroup($group);
 
-        if ($group) {
-            $menu = $this->groups[$group];
-
-            if (!$menu) {
-                throw new IllegalArgumentException("Group $group not found");
-            }
-        }
-
+        $result = [];
         if ($command->withBeforeSeparator()) {
-            $menu->items->add(UXMenuItem::createSeparator());
+            $menu->items->add($result[] = UXMenuItem::createSeparator());
         }
 
-        $menu->items->add($menuItem);
+        $menu->items->add($result[] = $menuItem);
 
         if ($command->withSeparator() || $command->withAfterSeparator()) {
-            $menu->items->add(UXMenuItem::createSeparator());
+            $menu->items->add($result[] = UXMenuItem::createSeparator());
+        }
+
+        return $result;
+    }
+
+    public function remove(array $items, $group = null)
+    {
+        $menu = $this->findGroup($group);
+
+        foreach ($items as $item) {
+            if (is_array($item)) {
+                foreach ($item as $it) $menu->items->remove($it);
+            } else {
+                $menu->items->remove($item);
+            }
         }
     }
 

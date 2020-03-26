@@ -4,24 +4,14 @@ use ide\commands\CreateFormProjectCommand;
 use ide\editors\AbstractEditor;
 use ide\editors\common\FormListEditor;
 use ide\editors\FormEditor;
-use ide\forms\MessageBoxForm;
 use ide\Ide;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
-use ide\project\ProjectFile;
-use ide\systems\Cache;
-use ide\systems\FileSystem;
+use ide\project\Project;
 use ide\ui\FlowListViewDecorator;
 use ide\ui\ImageBox;
-use ide\utils\FileUtils;
-use php\gui\event\UXMouseEvent;
-use php\gui\layout\UXAnchorPane;
-use php\gui\layout\UXFlowPane;
 use php\gui\layout\UXHBox;
 use php\gui\layout\UXVBox;
-use php\gui\UXDialog;
 use php\gui\UXLabel;
 use php\gui\UXNode;
-use php\lib\fs;
 
 /**
  * @package ide\project\control
@@ -64,11 +54,14 @@ class FormsProjectControlPane extends AbstractEditorsProjectControlPane
 
     /**
      * @return AbstractEditor[]
+     * @throws \ide\IdeException
+     * @throws \Exception
      */
     protected function getItems()
     {
-        $gui = GuiFrameworkProjectBehaviour::get();
-        return $gui ? $gui->getFormEditors() : [];
+        $javafx = Project::findSupportOfCurrent('javafx');
+
+        return $javafx ? $javafx->getFormEditors(Ide::project()) : [];
     }
 
     /**
@@ -83,15 +76,16 @@ class FormsProjectControlPane extends AbstractEditorsProjectControlPane
     /**
      * @param FormEditor $item
      * @return UXNode
+     * @throws \Exception
      */
     protected function makeItemUi($item)
     {
         /** @var ImageBox $box */
         $box = parent::makeItemUi($item);
 
-        $gui = GuiFrameworkProjectBehaviour::get();
+        $javafx = Project::findSupportOfCurrent('javafx');
 
-        if ($gui && $gui->isMainForm($item)) {
+        if ($javafx && $javafx->isMainForm(Ide::project(), $item)) {
             $box->setTitle($box->getTitle(), '-fx-font-weight: bold;');
         }
 
@@ -106,9 +100,10 @@ class FormsProjectControlPane extends AbstractEditorsProjectControlPane
         $formListEditor->build();
 
         $formListEditor->onChange(function ($value) {
-            $gui = GuiFrameworkProjectBehaviour::get();
-            if ($gui) {
-                $gui->setMainForm($value);
+            $javafx = Project::findSupportOfCurrent('javafx');
+
+            if ($javafx) {
+                $javafx->setMainForm(Ide::project(), $value);
             }
 
             $this->refresh(false);
@@ -139,16 +134,18 @@ class FormsProjectControlPane extends AbstractEditorsProjectControlPane
         parent::refresh();
 
         if ($updateUi && $this->settingsMainFormCombobox) {
-            $gui = GuiFrameworkProjectBehaviour::get();
+            $javafx = Project::findSupportOfCurrent('javafx');
 
-            if ($gui) {
-                $mainForm = $gui->getMainForm();
+            $project = Ide::project();
+
+            if ($javafx) {
+                $mainForm = $javafx->getMainForm($project);
             }
 
             $this->settingsMainFormCombobox->updateUi();
 
-            if ($gui) {
-                $gui->setMainForm($mainForm);
+            if ($javafx) {
+                $javafx->setMainForm($project, $mainForm);
                 $this->settingsMainFormCombobox->setSelected($mainForm);
             }
         }

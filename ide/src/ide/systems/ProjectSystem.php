@@ -403,7 +403,7 @@ class ProjectSystem
         }
 
         if ($project) {
-            $project->close(true);
+            $project->save();
         }
 
         foreach (FileSystem::getOpened() as $hash => $info) {
@@ -413,6 +413,10 @@ class ProjectSystem
         }
 
         FileSystem::closeAllTabs();
+
+        if ($project) {
+            $project->close(false);
+        }
 
         Cache::clear();
 

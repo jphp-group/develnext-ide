@@ -15,7 +15,7 @@ class EventConsumeActionType extends AbstractSimpleActionType
 
     function getGroup()
     {
-        return self::GROUP_SCRIPT;
+        return 'logic';
     }
 
     function getTitle(Action $action = null)

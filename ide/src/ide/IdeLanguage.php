@@ -150,22 +150,23 @@ class IdeLanguage
     {
         // Зачем постоянно следить за языковыми файлами?
         // При разработке - ок, но не в продакшне
-        /*$this->sources[$source] = $fw = new FileWatcher($source);
-        $fw->start();
-        $fw->on('change', function (Event $event) use ($source) {
-            $newTime = $event->data['newTime'];
-            $oldTime = $event->data['oldTime'];
 
-            if ($newTime > 0) {
-                uiLater(function () use ($source) {
-                    $this->localizer->load($this->code, $source);
-                });
-            }
-        });*/
+        if (IdeSystem::isDevelopment()) {
+            $this->sources[$source] = $fw = new FileWatcher($source);
+            $fw->start();
+            $fw->on('change', function (Event $event) use ($source) {
+                $newTime = $event->data['newTime'];
+                //$oldTime = $event->data['oldTime'];
 
-        if (fs::isFile($source)) {
-            $this->localizer->load($this->code, $source);
+                if ($newTime > 0) {
+                    uiLater(function () use ($source) {
+                        $this->localizer->load($this->code, $source);
+                    });
+                }
+            });
         }
+
+        $this->localizer->load($this->code, $source);
     }
 
     public function isBeta(): bool

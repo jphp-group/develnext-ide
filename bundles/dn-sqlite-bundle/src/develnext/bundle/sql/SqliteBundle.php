@@ -3,12 +3,10 @@ namespace develnext\bundle\sql;
 
 use develnext\bundle\sql\components\SqliteClientComponent;
 use develnext\bundle\sql\components\SqliteStorageComponent;
-use develnext\bundle\sql\SqlBundle;
 use ide\bundle\AbstractBundle;
 use ide\bundle\AbstractJarBundle;
 use ide\formats\ScriptModuleFormat;
 use ide\Ide;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
 use ide\project\Project;
 
 class SqliteBundle extends AbstractJarBundle

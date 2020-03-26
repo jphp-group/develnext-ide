@@ -3,6 +3,7 @@ namespace ide\project;
 
 use develnext\lexer\inspector\AbstractInspector;
 use Exception;
+use ide\editors\menu\ContextMenu;
 use ide\formats\AbstractFileTemplate;
 use ide\formats\IdeFormatOwner;
 use ide\forms\MainForm;
@@ -174,6 +175,11 @@ class Project
     private $runDebugManager;
 
     /**
+     * @var array
+     */
+    private $data = [];
+
+    /**
      * Project constructor.
      *
      * @param string $rootDir
@@ -202,6 +208,7 @@ class Project
      * @param string $filename
      *                                                                                                                                                                                                                               3
      * @return Project
+     * @throws \php\lang\IllegalArgumentException
      */
     public static function createForFile($filename)
     {
@@ -227,6 +234,39 @@ class Project
     public function getConfig()
     {
         return $this->config;
+    }
+
+    /**
+     * @param string $name
+     * @param $value
+     * @return mixed|null
+     */
+    public function data(string $name, $value = null)
+    {
+        if (func_num_args() == 1) {
+            return $this->data[$name];
+        } else {
+            if ($value === null) {
+                unset($this->data[$name]);
+            } else {
+                $this->data[$name] = $value;
+            }
+
+            return null;
+        }
+    }
+
+    public function clearData(string $prefix): array
+    {
+        $r = [];
+        foreach ($this->data as $key => $value) {
+            if (str::startsWith($key, $prefix)) {
+                $r[] = $key;
+                unset($this->data[$key]);
+            }
+        }
+
+        return $r;
     }
 
     public function doTick()
@@ -892,6 +932,8 @@ class Project
     {
         Logger::info("Opening project ...");
 
+        FileSystem::setMenuForAddTab(new ContextMenu());
+
         if ($this->template) {
             $this->template->openProject($this);
         }
@@ -956,21 +998,45 @@ class Project
         foreach ($supports as $key => $support) {
             if (!$support->isFit($this)) {
                 Logger::info("Unlink support '$key' from project");
+                $this->trigger('unlinkSupport', $support);
                 $support->onUnlink($this);
                 unset($this->supports[$key]);
             }
         }
 
-        foreach ($ide->getProjectSupports() as $support) {
-            if (!isset($this->supports[$support->getCode()])) {
-                if ($support->isFit($this)) {
-                    Logger::info("Link support '{$support->getCode()}' to project");
-                    $support->onLink($this);
-                    $this->supports[$support->getCode()] = $support;
-                } else {
-                    //Logger::debug("Support '{$support->getCode()} is not fitted for the project'");
+        $projectSupports = $ide->getProjectSupports();
+        $depth = 12;
+
+        while ($projectSupports) {
+            foreach ($projectSupports as $key => $support) {
+                if ($support) {
+                    if (!isset($this->supports[$support->getCode()])) {
+                        if ($support->isFit($this)) {
+                            Logger::info("Link support '{$support->getCode()}' to project");
+                            $support->onLink($this);
+                            $this->supports[$support->getCode()] = $support;
+                            $projectSupports[$key] = null;
+                            $this->trigger('linkSupport', $support);
+                        } else {
+                            $fitRequiredSupports = $support->getFitRequiredSupports();
+
+                            if ($fitRequiredSupports) {
+                                // skip, re-try isFit
+                            } else {
+                                $projectSupports[$key] = null;
+                            }
+                            //Logger::debug("Support '{$support->getCode()} is not fitted for the project'");
+                        }
+                    }
                 }
             }
+
+            $depth--;
+            if ($depth == 0) {
+                break;
+            }
+
+            $projectSupports = \flow($projectSupports)->find(fn($el) => $el != null)->toArray();
         }
 
         $time = Time::millis() - $time;
@@ -991,6 +1057,21 @@ class Project
 
     /**
      * @param string $code
+     * @return AbstractProjectSupport|null
+     * @throws Exception
+     */
+    static public function findSupportOfCurrent(string $code): ?AbstractProjectSupport
+    {
+        $project = Ide::project();
+        if ($project) {
+            return $project->findSupport($code);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @param string $code
      * @return AbstractProjectSupport
      * @throws Exception
      */
@@ -1000,7 +1081,7 @@ class Project
             return $support;
         }
 
-        $ide = Ide::get();
+        /*$ide = Ide::get();
 
         foreach ($ide->getProjectSupports() as $support) {
             if ($code === $support->getCode()) {
@@ -1008,13 +1089,54 @@ class Project
                     Logger::info("Link support '{$support->getCode()}' to project from Project::findSupport()");
                     $support->onLink($this);
                     $this->supports[$support->getCode()] = $support;
+                    $this->trigger('linkSupport', $support);
 
                     return $support;
                 }
             }
-        }
+        }*/
 
         return null;
+    }
+
+    public function whenSupportLinked(string $code, callable $fn, string $tagId): bool
+    {
+        $support = $this->findSupport($code);
+        if ($support) {
+            $fn($support);
+            return true;
+        } else {
+            $id = "$tagId#$code";
+
+            $this->on('linkSupport', function (AbstractProjectSupport $support) use ($id, $fn, $code) {
+                if ($support->getCode() === $code) {
+                    $this->off('linkSupport', $id);
+                    $fn($support);
+                }
+            });
+
+            return false;
+        }
+    }
+
+    public function whenSupportUnlinked(string $code, callable $fn, string $tagId)
+    {
+        $support = $this->findSupport($code);
+        if (!$support) {
+            $fn($support);
+            return true;
+        } else {
+            $id = "$tagId#$code";
+
+            $this->on('unlinkSupport', function (AbstractProjectSupport $support) use ($id, $fn, $code) {
+                if ($support->getCode() === $code) {
+                    $this->off('unlinkSupport', $id);
+                    $fn($support);
+                }
+            });
+
+            return false;
+        }
     }
 
     /**
@@ -1294,6 +1416,8 @@ class Project
         $this->inspectors = [];
 
         $this->inspectorLoaderThreadPoll->shutdown();
+
+        FileSystem::setMenuForAddTab(null);
     }
 
     function free()

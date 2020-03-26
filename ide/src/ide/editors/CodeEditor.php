@@ -16,6 +16,7 @@ use ide\misc\EventHandlerBehaviour;
 use ide\systems\FileSystem;
 use ide\utils\FileUtils;
 use ide\utils\UiUtils;
+use php\concurrent\Promise;
 use php\gui\designer\UXYamlCodeArea;
 use php\gui\UXGenericStyledArea;
 use function is_array;
@@ -373,16 +374,20 @@ class CodeEditor extends AbstractEditor
     {
         $value = str::replace($value, "\t", str::repeat(" ", 4));
 
-        if ($this->textArea instanceof UXGenericStyledArea)
+        if ($this->textArea instanceof UXGenericStyledArea) {
             $this->textArea->replaceText(0, str::length($this->textArea->text), $value);
-        else $this->textArea->text = $value;
+        } else {
+            $this->textArea->text = $value;
+        }
     }
 
-    public function loadContentToAreaIfModified()
+    public function loadContentToAreaIfModified(callable $callback = null)
     {
         if (!$this->contentLoaded || $this->fileTime != fs::time($this->file)) {
             $resetHistory = !$this->contentLoaded;
-            $this->loadContentToArea($resetHistory);
+            $this->loadContentToArea($resetHistory, $callback);
+        } else {
+            $callback();
         }
     }
 
@@ -415,7 +420,7 @@ class CodeEditor extends AbstractEditor
         }
     }
 
-    public function loadContentToArea($resetHistory = true)
+    public function loadContentToArea($resetHistory = true, callable $callback = null)
     {
         $this->contentLoaded = true;
 
@@ -433,30 +438,39 @@ class CodeEditor extends AbstractEditor
 
         Logger::info("Start load file $file");
 
-        try {
-            $content = FileUtils::get($file);
-        } catch (IOException $e) {
-            $content = '';
-            Logger::warn("Unable to load $file: {$e->getMessage()}");
-        }
+        $func = function ($content) use ($resetHistory, $caret, $sX, $sY, $file, $callback, $promise) {
+            $this->setValue($content);
 
-        $this->setValue($content);
+            if ($resetHistory) {
+                if (!($this->textArea instanceof UXGenericStyledArea)) {
+                    $this->textArea->forgetHistory();
+                }
+            }
 
-        if ($resetHistory) {
-            if (!($this->textArea instanceof UXGenericStyledArea))
-                $this->textArea->forgetHistory();
-        }
+            $this->textArea->caretPosition = $caret;
 
-        $this->textArea->caretPosition = $caret;
+            if ($this->textAreaScrollPane) {
+                $this->textAreaScrollPane->scrollX = $sX;
+                $this->textAreaScrollPane->scrollY = $sY;
+            }
 
-        if ($this->textAreaScrollPane) {
-            $this->textAreaScrollPane->scrollX = $sX;
-            $this->textAreaScrollPane->scrollY = $sY;
-        }
+            Logger::info("Finish load file $file");
 
-        Logger::info("Finish load file $file");
+            $this->fileTime = fs::time($this->file);
 
-        $this->fileTime = fs::time($this->file);
+            if ($callback) {
+                $callback();
+            }
+        };
+
+        $promise = new Promise(function (callable $resolve, callable $reject) use ($file, $func) {
+            FileUtils::getAsync($file)->then(function ($result) use ($func, $resolve){
+                $func($result);
+                $resolve($result);
+            })->catch($reject);
+        });
+
+        return $promise;
     }
 
     public function load($resetHistory = true)

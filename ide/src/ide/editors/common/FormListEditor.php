@@ -2,7 +2,7 @@
 namespace ide\editors\common;
 
 use ide\Ide;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
+use ide\project\supports\JavaFXProjectSupport;
 
 class FormListEditor extends ObjectListEditor
 {
@@ -18,11 +18,11 @@ class FormListEditor extends ObjectListEditor
             $this->comboBox->items->add(new ObjectListEditorItem('ui.current.form::Текущая форма', null, $this->senderCode));
         }
 
-        if ($project && $project->hasBehaviour(GuiFrameworkProjectBehaviour::class)) {
-            /** @var GuiFrameworkProjectBehaviour $gui */
-            $gui = $project->getBehaviour(GuiFrameworkProjectBehaviour::class);
+        if ($project && $project->hasSupport('javafx')) {
+            /** @var JavaFXProjectSupport $javafx */
+            $javafx = $project->findSupport('javafx');
 
-            foreach ($gui->getFormEditors() as $formEditor) {
+            foreach ($javafx->getFormEditors($project) as $formEditor) {
                 $this->comboBox->items->add(new ObjectListEditorItem(
                     $formEditor->getTitle(),
                     Ide::get()->getImage($formEditor->getIcon()),

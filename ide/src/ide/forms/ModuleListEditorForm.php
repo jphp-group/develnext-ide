@@ -4,17 +4,10 @@ namespace ide\forms;
 use ide\commands\CreateScriptModuleProjectCommand;
 use ide\forms\mixins\DialogFormMixin;
 use ide\Ide;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
-use ide\utils\FileUtils;
-use php\gui\framework\AbstractForm;
 use php\gui\UXButton;
 use php\gui\UXCheckbox;
 use php\gui\UXListCell;
 use php\gui\UXListView;
-use php\gui\UXTextArea;
-use php\lib\fs;
-use php\lib\Items;
-use php\util\Flow;
 
 /**
  *
@@ -55,16 +48,16 @@ class ModuleListEditorForm extends AbstractIdeForm
         }
 
         if ($project) {
-            /** @var GuiFrameworkProjectBehaviour $gui */
-            $gui = $project->getBehaviour(GuiFrameworkProjectBehaviour::class);
-            $classes = $gui->getModuleClasses();
+            $javafx = $project->findSupport('javafx');
+
+            $classes = $javafx->getModuleClasses($project);
 
             foreach ($classes as $class) {
-                if ($class == $gui->getAppModuleClass()) {
+                if ($class == $javafx->getAppModuleClass($project)) {
                     continue;
                 }
 
-                $class = $gui->getModuleShortClass($class);
+                $class = $javafx->getModuleShortClass($project, $class);
 
                 $checkbox = new UXCheckbox($class);
                 $checkbox->selected = $values[$class];

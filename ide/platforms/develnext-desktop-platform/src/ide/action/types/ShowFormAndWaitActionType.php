@@ -28,15 +28,9 @@ class ShowFormAndWaitActionType extends AbstractSimpleActionType
         return "wizard.command.show.form.and.wait.help.text::Если у выбранной формы будет выставлен флаг 'Модальность', то все остальные окна будут заблокированы, пока форма не закроется.";
     }
 
-
-    function getSubGroup()
-    {
-        return self::SUB_GROUP_WINDOW;
-    }
-
     function getGroup()
     {
-        return self::GROUP_CONTROL;
+        return 'ui-forms';
     }
 
     function getTagName()

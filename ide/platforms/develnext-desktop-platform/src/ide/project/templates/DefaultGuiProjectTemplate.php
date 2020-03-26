@@ -6,7 +6,6 @@ use ide\formats\templates\JPPMPackageFileTemplate;
 use ide\project\AbstractProjectTemplate;
 use ide\project\behaviours\BackupProjectBehaviour;
 use ide\project\behaviours\BundleProjectBehaviour;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
 use ide\project\behaviours\JavaPlatformBehaviour;
 use ide\project\behaviours\PhpProjectBehaviour;
 use ide\project\behaviours\RunBuildProjectBehaviour;
@@ -67,10 +66,6 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
 
         if (!$project->hasBehaviour(JavaPlatformBehaviour::class)) {
             $project->register(new JavaPlatformBehaviour(), false);
-        }
-
-        if (!$project->hasBehaviour(GuiFrameworkProjectBehaviour::class)) {
-            $project->register(new GuiFrameworkProjectBehaviour(), false);
         }
 
         if (!$project->hasBehaviour(RunBuildProjectBehaviour::class)) {
@@ -262,8 +257,8 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
         ];
 
         $bundles = [
-            'develnext.bundle.game2d.Game2DBundle' => ['dn-game2d-bundle', '^3.0.0'],
-            'ide.bundle.std.JPHPGuiDesktopBundle' => ['dn-game2d-bundle', '^3.0.0'],
+            'develnext.bundle.game2d.Game2DBundle' => ['jphp-gui-game-ext', '^3.0.0'],
+            'ide.bundle.std.JPHPGuiDesktopBundle' => ['jphp-gui-game-ext', '^3.0.0'],
             'develnext.bundle.jsoup.JsoupBundle' => ['dn-jsoup-bundle', '^1.0.0'],
             'develnext.bundle.hotkey.HotKeyBundle' => ['dn-hotkey-bundle', '^1.0.0'],
             'develnext.bundle.sql.FireBirdSqlBundle' => ['dn-firebirdsql-bundle', '^1.0.0'],
@@ -278,7 +273,7 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
         ];
 
         if ($addGame2D) {
-            $deps['dn-game2d-bundle'] = '^3.0.0';
+            $deps['jphp-gui-game-ext'] = '^3.0.0';
         }
 
         foreach ($project->getIdeFile("bundles/")->findFiles() as $file) {
@@ -321,9 +316,6 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
         $php = $project->register(new PhpProjectBehaviour());
         $project->register(new JavaPlatformBehaviour());
 
-        /** @var GuiFrameworkProjectBehaviour $gui */
-        $gui = $project->register(new GuiFrameworkProjectBehaviour());
-
         $project->register(new RunBuildProjectBehaviour());
         $project->register(new ShareProjectBehaviour());
         $project->register(new BackupProjectBehaviour());
@@ -332,7 +324,7 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
             '*.log', '*.tmp'
         ]);
 
-        $project->on('create', function () use ($gui, $bundle, $php, $project) {
+        $project->on('create', function () use ($bundle, $php, $project) {
             $php->setImportType('package');
 
             //$bundle->addBundle(Project::ENV_ALL, UIDesktopBundle::class, false);
@@ -359,9 +351,11 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
                 FileUtils::put($styleFile, "/* JavaFX CSS Style with -fx- prefix */\n\n");
             }
 
-            $appModule  = $gui->createModule('AppModule');
-            $mainModule = $gui->createModule('MainModule');
-            $mainForm   = $gui->createForm('MainForm');
+            $javafx = $project->findSupport('javafx');
+
+            $appModule  = $javafx->createModule($project, 'AppModule');
+            $mainModule = $javafx->createModule($project,'MainModule');
+            $mainForm   = $javafx->createForm($project, 'MainForm');
 
             $project->getConfig()->setTreeState([
                 "/src/{$project->getPackageName()}/forms",
@@ -369,7 +363,7 @@ class DefaultGuiProjectTemplate extends AbstractProjectTemplate
                 "/src/.theme",
             ]);
 
-            $gui->setMainForm('MainForm');
+            $javafx->setMainForm($project, 'MainForm');
 
             FileSystem::open($project->getMainProjectFile());
             FileSystem::open($mainModule);

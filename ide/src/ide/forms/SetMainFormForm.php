@@ -5,11 +5,9 @@ use ide\editors\common\FormListEditor;
 use ide\editors\common\ObjectListEditorButtonRender;
 use ide\editors\common\ObjectListEditorCellRender;
 use ide\forms\mixins\DialogFormMixin;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
 use php\gui\event\UXEvent;
 use php\gui\UXComboBox;
 use php\gui\UXDialog;
-use php\gui\UXListView;
 
 /**
  * Class SetMainFormForm

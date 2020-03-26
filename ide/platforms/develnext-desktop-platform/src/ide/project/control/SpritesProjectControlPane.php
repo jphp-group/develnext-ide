@@ -1,15 +1,12 @@
 <?php
 namespace ide\project\control;
-use game\SpriteSpec;
+
 use ide\commands\CreateGameSpriteProjectCommand;
-use ide\commands\CreateScriptModuleProjectCommand;
-use ide\editors\AbstractEditor;
 use ide\editors\GameSpriteEditor;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
-use php\gui\UXNode;
-use php\gui\layout\UXAnchorPane;
-use php\lib\fs;
-use php\lib\reflect;
+use ide\Ide;
+use ide\project\Project;
+use ide\project\supports\JavaFXGame2DSupport;
+
 
 /**
  * @package ide\project\control
@@ -42,24 +39,28 @@ class SpritesProjectControlPane extends AbstractEditorsProjectControlPane
 
     /**
      * @return mixed[]
+     * @throws \Exception
      */
     protected function getItems()
     {
-        $gui = GuiFrameworkProjectBehaviour::get();
-        return $gui ? $gui->getSpriteEditors() : [];
+        $gui = Project::findSupportOfCurrent('javafx-game');
+
+        return $gui ? $gui->getSpriteEditors(Ide::project()) : [];
     }
 
     /**
      * @param GameSpriteEditor $item
      * @return mixed
+     * @throws \Exception
      */
     protected function getBigIcon($item)
     {
         $spec = $item->getSpec();
-        $gui = GuiFrameworkProjectBehaviour::get();
+        /** @var JavaFXGame2DSupport $gui */
+        $gui = Project::findSupportOfCurrent('javafx-game');
 
         if ($gui) {
-            $image = $gui->getSpriteManager()->getSpritePreview($spec->name);
+            $image = $gui->getSpriteManager(Ide::project())->getSpritePreview($spec->name);
 
             if (!$image) {
                 return ico('grayQuestion16')->image;

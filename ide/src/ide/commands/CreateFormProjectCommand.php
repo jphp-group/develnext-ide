@@ -7,29 +7,12 @@ use ide\editors\menu\AbstractMenuCommand;
 use ide\formats\GuiFormFormat;
 use ide\forms\MessageBoxForm;
 use ide\Ide;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
-use ide\project\ProjectTree;
 use ide\systems\FileSystem;
 use ide\utils\FileUtils;
 use php\lib\Str;
 
 class CreateFormProjectCommand extends AbstractMenuCommand
 {
-    /**
-     * @var ProjectTree
-     */
-    protected $tree;
-
-    /**
-     * CreateFormProjectCommand constructor.
-     * @param ProjectTree $tree
-     */
-    public function __construct(ProjectTree $tree = null)
-    {
-        $this->tree = $tree;
-    }
-
-
     public function getName()
     {
         return 'Новая форма';
@@ -51,8 +34,7 @@ class CreateFormProjectCommand extends AbstractMenuCommand
         $project = $ide->getOpenedProject();
 
         if ($project) {
-            /** @var GuiFrameworkProjectBehaviour $guiBehaviour */
-            $guiBehaviour = $project->getBehaviour(GuiFrameworkProjectBehaviour::class);
+            $javafx = $project->findSupport('javafx');
 
             $format = $ide->getRegisteredFormat(GuiFormFormat::class);
             $name = $format->showCreateDialog();
@@ -64,14 +46,14 @@ class CreateFormProjectCommand extends AbstractMenuCommand
                     return;
                 }
 
-                if ($guiBehaviour->hasForm($name)) {
+                if ($javafx->hasForm($project, $name)) {
                     $dialog = new MessageBoxForm("Форма '$name' уже существует, хотите её пересоздать?", ['Нет, оставить', 'Да, пересоздать']);
                     if ($dialog->showDialog() && $dialog->getResultIndex() == 0) {
                         return;
                     }
                 }
 
-                $file = $guiBehaviour->createForm($name);
+                $file = $javafx->createForm($project, $name);
 
                 /** @var FormEditor $editor */
                 $editor = FileSystem::fetchEditor($file);
@@ -80,13 +62,13 @@ class CreateFormProjectCommand extends AbstractMenuCommand
 
                 FileSystem::open($file);
 
-                if (!$guiBehaviour->getMainForm() && sizeof($guiBehaviour->getFormEditors()) < 2) {
+                if (!$javafx->getMainForm($project) && sizeof($javafx->getFormEditors($project)) < 2) {
                     $dlg = new MessageBoxForm(
                         "У вашего проекта нет главной формы, хотите сделать форму '$name' главной?", ['Да, сделать главной', 'Нет']
                     );
 
                     if ($dlg->showDialog() && $dlg->getResultIndex() == 0) {
-                        $guiBehaviour->setMainForm($name);
+                        $javafx->setMainForm($project, $name);
                         Ide::toast("Форма '$name' теперь главная в вашем проекте");
                     }
                 }

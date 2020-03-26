@@ -3,9 +3,11 @@
 
 namespace ide\editors;
 
-
+use ide\utils\FileUtils;
+use php\concurrent\Promise;
 use php\gui\monaco\MonacoEditor;
 use php\io\Stream;
+use php\lib\fs;
 
 class MonacoCodeEditor extends AbstractCodeEditor {
 
@@ -25,10 +27,21 @@ class MonacoCodeEditor extends AbstractCodeEditor {
         parent::__construct($file);
 
         $this->editor = new MonacoEditor();
-        $this->editor->getEditor()->document->text = Stream::getContents($file);
-        $this->editor->getEditor()->document->addTextChangeListener(function ($old, $new) use ($file) {
-            Stream::putContents($file, $new);
-        });
+
+        $init = function () {
+            $this->editor->getEditor()->document->addTextChangeListener(function ($old, $new) {
+                FileUtils::putAsync($this->file, $new);
+            });
+        };
+
+        if (fs::isFile($file)) {
+            FileUtils::getAsync($file)->then(function ($data, $init) {
+                $this->editor->getEditor()->document->text = $data;
+                $init();
+            });
+        } else {
+            $init();
+        }
     }
 
     public function setReadOnly($readOnly)
@@ -51,14 +64,19 @@ class MonacoCodeEditor extends AbstractCodeEditor {
     }
 
     public function loadContentToArea() {
-        if ($this->__content != null)
+        if ($this->__content != null) {
             $this->editor->getEditor()->document->text = $this->__content;
+        }
     }
 
-    public function loadContentToAreaIfModified() {
-        $this->__content = Stream::getContents($this->file);
-        if ($this->editor->getEditor()->document->text != $this->__content)
-            $this->loadContentToArea();
+    public function loadContentToAreaIfModified(): Promise {
+        return FileUtils::getAsync($this->file, function ($data) {
+            $this->__content = $data;
+
+            if ($this->editor->getEditor()->document->text != $this->__content) {
+                $this->loadContentToArea();
+            }
+        });
     }
 
     /**

@@ -1,15 +1,11 @@
 <?php
 namespace ide\build;
 
-use ide\commands\BuildProjectCommand;
 use ide\formats\templates\Launch4jConfigTemplate;
 use ide\forms\BuildProgressForm;
-use ide\forms\BuildProjectForm;
 use ide\forms\BuildSuccessForm;
 use ide\Ide;
 use ide\Logger;
-use ide\project\behaviours\GradleProjectBehaviour;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
 use ide\project\Project;
 use ide\systems\ProjectSystem;
 use ide\utils\FileUtils;
@@ -17,20 +13,12 @@ use php\gui\event\UXEvent;
 use php\gui\UXAlert;
 use php\gui\UXDialog;
 use php\gui\UXFileChooser;
-use php\gui\UXImage;
-use php\gui\UXImageView;
-use php\gui\UXLabel;
-use php\gui\UXTextArea;
 use php\gui\UXTextField;
 use php\io\File;
 use php\io\FileStream;
-use php\io\Stream;
 use php\lang\Process;
-use php\lib\arr;
 use php\lib\fs;
-use php\lib\Items;
 use php\lib\Str;
-use php\xml\XmlProcessor;
 
 /**
  * Class WindowsApplicationBuildType

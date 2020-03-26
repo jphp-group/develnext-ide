@@ -2,6 +2,7 @@
 namespace ide\formats;
 
 use ide\Ide;
+use ide\Logger;
 use php\lib\reflect;
 
 /**
@@ -31,6 +32,21 @@ trait IdeFormatOwner
         }
 
         $this->formats[$class] = $format;
+    }
+
+    public function unregisterFormat(string $formatClass)
+    {
+        $format = $this->formats[$formatClass];
+
+        if ($format) {
+            foreach ($format->getRequireFormats() as $el) {
+                $this->unregisterFormat(reflect::typeOf($el));
+            }
+
+            unset($this->formats[$formatClass]);
+        } else {
+            Logger::warn("Failed to unregister project format = $formatClass");
+        }
     }
 
     /**

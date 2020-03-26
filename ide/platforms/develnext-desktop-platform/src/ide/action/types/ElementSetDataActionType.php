@@ -40,12 +40,12 @@ class ElementSetDataActionType extends AbstractSimpleActionType
 
     function getGroup()
     {
-        return self::GROUP_SCRIPT;
+        return 'logic';
     }
 
     function getSubGroup()
     {
-        return self::SUB_GROUP_DATA;
+        return 'data';
     }
 
     function getTagName()

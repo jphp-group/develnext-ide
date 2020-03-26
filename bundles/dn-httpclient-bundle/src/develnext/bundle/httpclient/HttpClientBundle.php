@@ -1,7 +1,6 @@
 <?php
 namespace develnext\bundle\httpclient;
 
-use bundle\http\HttpChecker;
 use develnext\bundle\httpclient\components\HttpCheckerComponent;
 use develnext\bundle\httpclient\components\HttpClientComponent;
 use develnext\bundle\httpclient\components\HttpDownloaderComponent;
@@ -9,17 +8,10 @@ use ide\bundle\AbstractBundle;
 use ide\bundle\AbstractJarBundle;
 use ide\formats\ScriptModuleFormat;
 use ide\Ide;
-use ide\project\behaviours\GuiFrameworkProjectBehaviour;
 use ide\project\Project;
-use php\lib\fs;
 
 class HttpClientBundle extends AbstractJarBundle
 {
-    public function isAvailable(Project $project)
-    {
-        return $project->hasBehaviour(GuiFrameworkProjectBehaviour::class);
-    }
-
     public function onAdd(Project $project, AbstractBundle $owner = null)
     {
         parent::onAdd($project, $owner);
