@@ -3,7 +3,6 @@ namespace ide\action;
 
 use php\gui\layout\UXVBox;
 use php\gui\UXNode;
-use php\jsoup\Document;
 use php\xml\DomDocument;
 use php\xml\DomElement;
 
@@ -22,7 +21,7 @@ abstract class AbstractActionType
 
     function getGroup()
     {
-        return 'action.type.other::Другое';
+        return "logic";
     }
 
     function getSubGroup()
