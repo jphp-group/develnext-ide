@@ -64,7 +64,6 @@ depsMac:
 app:
   disable-launcher: '1'
   jvm-args:
-  - -Djdk.gtk.version=2
   - -Ddevelnext.noCodeCache=true
   - -Djphp.trace=true
   build:
