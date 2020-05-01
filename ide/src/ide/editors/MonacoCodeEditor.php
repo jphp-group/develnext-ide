@@ -9,7 +9,10 @@ use ide\commands\theme\LightTheme;
 use ide\Logger;
 use ide\utils\FileUtils;
 use php\concurrent\Promise;
+use php\gui\layout\UXAnchorPane;
+use php\gui\layout\UXHBox;
 use php\gui\monaco\MonacoEditor;
+use php\gui\UXLabel;
 use php\io\IOException;
 
 class MonacoCodeEditor extends AbstractCodeEditor {
@@ -85,7 +88,22 @@ class MonacoCodeEditor extends AbstractCodeEditor {
      * @inheritDoc
      */
     public function makeUi() {
-        return $this->editor;
+        $panel = new UXAnchorPane();
+        $loadingLabel = _(new UXLabel("code.editor.loading"));
+        $loadingLabel->font = $loadingLabel->font->withSize(16);
+
+        $loadingBox = new UXHBox([
+            ico("wait32"),
+            $loadingLabel
+        ], 8);
+        $loadingBox->alignment = "CENTER";
+
+        UXAnchorPane::setAnchor($loadingBox, 0);
+        UXAnchorPane::setAnchor($this->editor, 0);
+        $panel->add($loadingBox);
+        $panel->add($this->editor);
+
+        return $panel;
     }
 
     /**
