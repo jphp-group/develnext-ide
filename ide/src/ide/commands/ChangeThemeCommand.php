@@ -7,6 +7,7 @@ use ide\commands\theme\LightTheme;
 use ide\Ide;
 use ide\editors\AbstractEditor;
 use ide\misc\AbstractCommand;
+use ide\misc\EventHandlerBehaviour;
 use php\framework\Logger;
 use php\gui\framework\AbstractForm;
 use php\gui\framework\FormCollection;
@@ -15,6 +16,7 @@ use php\io\ResourceStream;
 use php\lib\str;
 
 class ChangeThemeCommand extends AbstractCommand {
+    use EventHandlerBehaviour;
 
     public static $instance;
 
@@ -93,6 +95,8 @@ class ChangeThemeCommand extends AbstractCommand {
         $this->currentTheme->onApply();
 
         Logger::info('Set IDE theme: ' . $theme);
+
+        $this->trigger("setCurrentTheme", [ $this->currentTheme ]);
     }
 
     public function unregisterTheme($themeName){

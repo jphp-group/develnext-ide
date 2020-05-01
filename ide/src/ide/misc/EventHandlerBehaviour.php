@@ -1,7 +1,6 @@
 <?php
 namespace ide\misc;
 
-use ide\Logger;
 use php\lib\str;
 
 trait EventHandlerBehaviour

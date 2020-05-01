@@ -1664,6 +1664,8 @@ class Ide extends Application
         }
 
         $done = true;
+
+        System::halt(0);
     }
 
     /**

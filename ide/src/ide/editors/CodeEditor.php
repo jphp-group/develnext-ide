@@ -17,13 +17,10 @@ use ide\systems\FileSystem;
 use ide\utils\FileUtils;
 use ide\utils\UiUtils;
 use php\concurrent\Promise;
-use php\gui\designer\UXYamlCodeArea;
 use php\gui\UXGenericStyledArea;
 use function is_array;
 use php\gui\designer\UXAbstractCodeArea;
 use php\gui\designer\UXCodeAreaScrollPane;
-use php\gui\designer\UXFxCssCodeArea;
-use php\gui\designer\UXJavaScriptCodeArea;
 use php\gui\designer\UXPhpCodeArea;
 use php\gui\designer\UXSyntaxTextArea;
 use php\gui\designer\UXTextCodeArea;
@@ -387,7 +384,8 @@ class CodeEditor extends AbstractEditor
             $resetHistory = !$this->contentLoaded;
             $this->loadContentToArea($resetHistory, $callback);
         } else {
-            $callback();
+            if ($callback)
+                $callback();
         }
     }
 

@@ -1,47 +1,49 @@
 <?php
 
-
 namespace ide\editors;
 
+use Exception;
+use ide\commands\ChangeThemeCommand;
+use ide\commands\theme\IDETheme;
+use ide\commands\theme\LightTheme;
+use ide\Logger;
 use ide\utils\FileUtils;
 use php\concurrent\Promise;
 use php\gui\monaco\MonacoEditor;
-use php\io\Stream;
-use php\lib\fs;
+use php\io\IOException;
 
 class MonacoCodeEditor extends AbstractCodeEditor {
-
-    /**
-     * @var MonacoEditor
-     */
-    private $editor;
-
+    private MonacoEditor $editor;
     private $__content;
 
     /**
      * MonacoCodeEditor constructor.
      * @param $file
-     * @throws \php\io\IOException
+     * @throws Exception
      */
     public function __construct($file) {
         parent::__construct($file);
-
         $this->editor = new MonacoEditor();
 
-        $init = function () {
+        $this->loadContentToAreaIfModified()->then(function () {
             $this->editor->getEditor()->document->addTextChangeListener(function ($old, $new) {
                 FileUtils::putAsync($this->file, $new);
             });
+        })->catch(function () use ($file) {
+            Logger::error("Failed to load content to monaco editor from {$file}");
+            $this->setReadOnly(true);
+        });
+
+        $applyEditorTheme = function (IDETheme $theme) {
+            if ($theme instanceof LightTheme) {
+                $this->editor->getEditor()->currentTheme = "vs-light";
+            } else {
+                $this->editor->getEditor()->currentTheme = "vs-dark";
+            }
         };
 
-        if (fs::isFile($file)) {
-            FileUtils::getAsync($file)->then(function ($data, $init) {
-                $this->editor->getEditor()->document->text = $data;
-                $init();
-            });
-        } else {
-            $init();
-        }
+        ChangeThemeCommand::$instance->bind("setCurrentTheme", $applyEditorTheme);
+        $applyEditorTheme(ChangeThemeCommand::$instance->getCurrentTheme());
     }
 
     public function setReadOnly($readOnly)

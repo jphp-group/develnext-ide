@@ -83,7 +83,10 @@ class FileSystem
      */
     static protected $editorContentDividePosition;
 
-    static protected ?ContextMenu $menuForAddTab;
+    /**
+     * @var ContextMenu
+     */
+    static protected $menuForAddTab;
 
     /**
      * ..
