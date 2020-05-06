@@ -1,5 +1,0 @@
-<element extends="ide/webplatform/formats/form/NodeWebElement">
-    <properties>
-        <property code="progress" realCode="value" name="Прогресс (%)" editor="integer" />
-    </properties>
-</element>

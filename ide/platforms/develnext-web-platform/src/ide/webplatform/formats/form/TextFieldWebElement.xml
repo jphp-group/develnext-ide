@@ -1,4 +1,0 @@
-<element extends="ide/webplatform/formats/form/TextInputControlWebElement">
-    <properties>
-    </properties>
-</element>

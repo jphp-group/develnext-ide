@@ -9,10 +9,7 @@ sources:
 - platforms/develnext-desktop-platform/src
 - platforms/develnext-java-platform/src
 - platforms/develnext-php-platform/src
-- platforms/develnext-web-platform/src
-- platforms/develnext-wizard-platform/src
 - platforms/develnext-visualprog-platform/src
-#- platforms/develnext-android-platform/src
 - ../dn-app-framework/src
 includes:
 - index.php

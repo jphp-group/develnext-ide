@@ -60,6 +60,7 @@ use php\time\Time;
 use php\time\Timer;
 use php\util\Regex;
 use php\util\Scanner;
+use Throwable;
 use timer\AccurateTimer;
 
 
@@ -349,7 +350,7 @@ class Ide extends Application
                     if ($after) {
                         $after($result);
                     }
-                } catch (\Throwable $e) {
+                } catch (Throwable $e) {
                     $reject($e);
                 }
             });
@@ -377,31 +378,6 @@ class Ide extends Application
     public function getLibrary()
     {
         return $this->library;
-    }
-
-    /**
-     * Менеджер тулов/утилит.
-     *
-     * @return IdeToolManager
-     */
-    public function getToolManager()
-    {
-        return $this->toolManager;
-    }
-
-    /**
-     * Утилита для локализации.
-     *
-     * @return L10n
-     */
-    public function getL10n()
-    {
-        if (!$this->l10n && $this->language) {
-            $language = $this->languages[$this->language->getAltLang()];
-            $this->l10n = $this->language->getL10n($language ? $language->getL10n() : $language);
-        }
-
-        return $this->l10n;
     }
 
     public function getLocalizer(): IdeLocalizer
@@ -478,58 +454,7 @@ class Ide extends Application
             $env['JAVA_HOME'] = $this->getJrePath();
         }
 
-        if ($this->getApacheAntPath()) {
-            $env['ANT_HOME'] = $this->getApacheAntPath();
-        }
-
         return $env;
-    }
-
-    public function getInnoSetupProgram()
-    {
-        $innoPath = new File($this->getToolPath(), '/innoSetup/ISCC.exe');
-
-        return $innoPath && $innoPath->exists() ? $innoPath->getCanonicalFile() : null;
-    }
-
-    public function getLaunch4JPath()
-    {
-        return fs::parent($this->getLaunch4JProgram());
-    }
-
-    public function getLaunch4JProgram()
-    {
-        if (Ide::get()->isWindows()) {
-            $launch4jPath = new File($this->getToolPath(), '/Launch4j/launch4jc.exe');
-        } else {
-            $launch4jPath = new File($this->getToolPath(), '/Launch4jLinux/launch4j');
-        }
-
-        return $launch4jPath && $launch4jPath->exists() ? $launch4jPath->getCanonicalFile() : null;
-    }
-
-    public function getApacheAntProgram()
-    {
-        $antPath = $this->getApacheAntPath();
-
-        if ($antPath) {
-            return FileUtils::normalizeName("$antPath/bin/ant" . ($this->isWindows() ? '.bat' : ''));
-        } else {
-            return 'ant';
-        }
-    }
-
-    public function getGradleProgram()
-    {
-        $gradlePath = $this->getGradlePath();
-
-        if ($gradlePath) {
-            return FileUtils::normalizeName("$gradlePath/bin/gradle" . ($this->isWindows() ? '.bat' : ''));
-        } else {
-            return 'gradle';
-        }
-
-        //throw new \Exception("Unable to find gradle bin");
     }
 
     /**
@@ -558,47 +483,6 @@ class Ide extends Application
         //Logger::info("Detect tool path: '$file', mode = {$this->mode}, launcher = {$launcher}");
 
         return $file;
-    }
-
-    /**
-     * Вернуть путь к apache ant тулу IDE.
-     *
-     * @return null|File
-     */
-    public function getApacheAntPath()
-    {
-        $antPath = new File($this->getToolPath(), '/apache-ant');
-
-        if (!$antPath->exists()) {
-            $antPath = System::getEnv()['ANT_HOME'];
-
-            if ($antPath) {
-                $antPath = File::of($antPath);
-            }
-        }
-
-        return $antPath && $antPath->exists() ? $antPath->getCanonicalFile() : null;
-    }
-
-    /**
-     * Вернуть путь к Gradle дистрибутиву.
-     *
-     * @deprecated не используется больше!
-     * @return null|File
-     */
-    public function getGradlePath()
-    {
-        $gradlePath = new File($this->getToolPath(), '/gradle');
-
-        if (!$gradlePath->exists()) {
-            $gradlePath = System::getEnv()['GRADLE_HOME'];
-
-            if ($gradlePath) {
-                $gradlePath = File::of($gradlePath);
-            }
-        }
-
-        return $gradlePath && $gradlePath->exists() ? $gradlePath->getCanonicalFile() : null;
     }
 
     /**
@@ -1554,7 +1438,7 @@ class Ide extends Application
     {
         try {
             return parent::get();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return null;
         }
     }

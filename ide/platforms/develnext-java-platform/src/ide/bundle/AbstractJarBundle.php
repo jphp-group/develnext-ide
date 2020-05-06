@@ -131,8 +131,6 @@ abstract class AbstractJarBundle extends AbstractBundle
                             });
                         }
                     }
-                } finally {
-
                 }
             }
         }

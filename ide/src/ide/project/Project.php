@@ -15,6 +15,7 @@ use ide\systems\FileSystem;
 use ide\utils\FileUtils;
 use php\concurrent\Promise;
 use php\io\File;
+use php\lang\IllegalArgumentException;
 use php\lang\ThreadPool;
 use php\lib\arr;
 use php\lib\fs;
@@ -184,16 +185,13 @@ class Project
      *
      * @param string $rootDir
      * @param string $name
-     * @throws \php\lang\IllegalArgumentException
+     * @throws IllegalArgumentException
      */
     public function __construct($rootDir, $name)
     {
         $this->name = $name;
         $this->rootDir = $rootDir;
         $this->config  = new ProjectConfig($rootDir, $name);
-
-        /** @var MainForm $mainForm */
-        $mainForm = Ide::get()->getMainForm();
 
         $this->tree = new ProjectTree($this);
         $this->runDebugManager = new ProjectRunDebugManager($this);
@@ -208,7 +206,7 @@ class Project
      * @param string $filename
      *                                                                                                                                                                                                                               3
      * @return Project
-     * @throws \php\lang\IllegalArgumentException
+     * @throws IllegalArgumentException
      */
     public static function createForFile($filename)
     {
@@ -385,22 +383,6 @@ class Project
     public function setSrcGeneratedDirectory($srcGeneratedDirectory)
     {
         $this->srcGeneratedDirectory = $srcGeneratedDirectory;
-    }
-
-    /**
-     * @return string
-     */
-    public function getResDirectory()
-    {
-        return $this->resDirectory;
-    }
-
-    /**
-     * @param string $resDirectory
-     */
-    public function setResDirectory($resDirectory)
-    {
-        $this->resDirectory = $resDirectory;
     }
 
     /**
@@ -1153,7 +1135,7 @@ class Project
 
     /**
      * @return ProjectExporter
-     * @throws \php\lang\IllegalArgumentException
+     * @throws IllegalArgumentException
      */
     public function makeExporter()
     {
