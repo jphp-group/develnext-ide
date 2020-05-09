@@ -23,7 +23,7 @@
  */
 package eu.mihosoft.monacofx;
 
-import eu.mihosoft.monacofx.model.Range;
+import com.google.gson.Gson;
 import eu.mihosoft.monacofx.model.Selection;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -31,6 +31,10 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.web.WebEngine;
 import netscape.javascript.JSObject;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public final class Editor {
 
@@ -45,6 +49,7 @@ public final class Editor {
     private final StringProperty currentThemeProperty = new SimpleStringProperty();
     private final StringProperty currentLanguageProperty = new SimpleStringProperty();
     private final BooleanProperty readOnlyProperty = new SimpleBooleanProperty();
+    private final Map<String, JSCallback> callbackMap = new LinkedHashMap<String, JSCallback>();
 
     Editor(WebEngine engine) {
         this.engine = engine;
@@ -266,5 +271,24 @@ public final class Editor {
 
     public void revealLineInCenterIfOutsideViewport(int lineNumber, int type) {
         callEditorMethod("revealLineInCenterIfOutsideViewport", lineNumber, type);
+    }
+
+    public void registerCompletionItemProvider(String language, CompletionItemProvider itemProvider) {
+        String id = UUID.randomUUID().toString();
+        callbackMap.put(id, json -> itemProvider.complete(new Gson().fromJson(json, CompletionItemProvider.RangeWithPosition.class)));
+        window.call("registerCompletionItemProvider", language, id);
+    }
+
+    public Object executeCallback(String id, String json) {
+        JSCallback callback = callbackMap.get(id);
+
+        if (callback != null)
+            return callback.execute(json);
+
+        return new Object();
+    }
+
+    public interface JSCallback {
+        Object execute(String json);
     }
 }

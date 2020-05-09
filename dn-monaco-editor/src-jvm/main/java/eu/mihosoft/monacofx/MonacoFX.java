@@ -23,6 +23,7 @@
  */
 package eu.mihosoft.monacofx;
 
+import com.google.gson.Gson;
 import javafx.application.Platform;
 import javafx.concurrent.Worker;
 import javafx.geometry.HPos;
@@ -39,6 +40,9 @@ public class MonacoFX extends Region {
     private final WebView view;
     private final WebEngine engine;
     private final Editor editor;
+    private final JavaBridge bridge;
+    private Runnable loaded;
+    private boolean isLoaded = false;
 
     private final static String EDITOR_HTML_RESOURCE_LOCATION = "/eu/mihosoft/monacofx/monaco-editor-0.20.0/index.html";
 
@@ -52,11 +56,14 @@ public class MonacoFX extends Region {
         engine.load(url);
 
         editor = new Editor(engine);
+        bridge = new JavaBridge();
+        bridge.setEditor(editor);
 
         engine.getLoadWorker().stateProperty().addListener((o, old, state) -> {
             if (state == Worker.State.SUCCEEDED) {
 
                 JSObject window = (JSObject) engine.executeScript("window");
+                window.setMember("console", bridge);
 
                 AtomicBoolean jsDone = new AtomicBoolean(false);
                 AtomicInteger attempts = new AtomicInteger();
@@ -75,6 +82,11 @@ public class MonacoFX extends Region {
                                 editor.setEditor(window, (JSObject) jsEditorObj);
                                 jsDone.set(true);
                                 view.setOpacity(1);
+
+                                if (loaded != null && !isLoaded) {
+                                    loaded.run();
+                                    isLoaded = true;
+                                }
                             }
                         });
 
@@ -119,5 +131,33 @@ public class MonacoFX extends Region {
     public void requestFocus() {
         super.requestFocus();
         getEditor().focus();
+    }
+
+    public void setLoaded(Runnable loaded) {
+        this.loaded = loaded;
+    }
+
+    public static class JavaBridge {
+        private Editor editor;
+
+        public Editor getEditor() {
+            return editor;
+        }
+
+        public void setEditor(Editor editor) {
+            this.editor = editor;
+        }
+
+        public void log(String log) {
+            System.out.println(log);
+        }
+
+        public void error(String error) {
+            System.err.println(error);
+        }
+
+        public String executeJavaCallback(String id, String data) {
+            return new Gson().toJson(getEditor().executeCallback(id, data));
+        }
     }
 }

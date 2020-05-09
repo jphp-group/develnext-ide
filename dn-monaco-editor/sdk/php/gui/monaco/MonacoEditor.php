@@ -11,4 +11,11 @@ class MonacoEditor extends UXRegion {
      */
     public function getEditor(): Editor {
     }
+
+    /**
+     * @param callable $onLoad
+     */
+    public function setOnLoad(callable $onLoad)
+    {
+    }
 }

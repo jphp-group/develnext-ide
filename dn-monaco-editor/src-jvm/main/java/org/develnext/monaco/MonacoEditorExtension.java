@@ -1,19 +1,9 @@
 package org.develnext.monaco;
 
-import eu.mihosoft.monacofx.Document;
-import eu.mihosoft.monacofx.Editor;
-import eu.mihosoft.monacofx.MonacoFX;
-import eu.mihosoft.monacofx.ViewController;
-import eu.mihosoft.monacofx.model.Range;
-import eu.mihosoft.monacofx.model.Selection;
-import org.develnext.monaco.classes.WrapDocument;
-import org.develnext.monaco.classes.WrapEditor;
-import org.develnext.monaco.classes.WrapMonacoEditor;
-import org.develnext.monaco.classes.WrapViewController;
+import eu.mihosoft.monacofx.*;
+import org.develnext.monaco.classes.*;
 import php.runtime.env.CompileScope;
 import php.runtime.ext.support.Extension;
-import php.runtime.memory.support.MemoryOperation;
-import php.runtime.memory.support.operation.BeanMemoryOperation;
 
 public class MonacoEditorExtension extends Extension {
     public static final String NS = "php\\gui\\monaco";
@@ -29,5 +19,6 @@ public class MonacoEditorExtension extends Extension {
         registerWrapperClass(scope, Editor.class, WrapEditor.class);
         registerWrapperClass(scope, Document.class, WrapDocument.class);
         registerWrapperClass(scope, ViewController.class, WrapViewController.class);
+        registerWrapperClass(scope, CompletionItemProvider.CompletionItem.class, WrapCompletionItem.class);
     }
 }

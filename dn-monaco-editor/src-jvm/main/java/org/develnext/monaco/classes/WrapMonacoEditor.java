@@ -6,6 +6,7 @@ import org.develnext.jphp.ext.javafx.classes.layout.UXRegion;
 import org.develnext.monaco.MonacoEditorExtension;
 import php.runtime.annotation.Reflection;
 import php.runtime.env.Environment;
+import php.runtime.invoke.Invoker;
 import php.runtime.reflection.ClassEntity;
 
 @Reflection.Name("MonacoEditor")
@@ -27,5 +28,10 @@ public class WrapMonacoEditor extends UXRegion<MonacoFX> {
     @Reflection.Signature
     public Editor getEditor() {
         return getWrappedObject().getEditor();
+    }
+
+    @Reflection.Signature
+    public void setOnLoad(Invoker callback) {
+        getWrappedObject().setLoaded(callback::callNoThrow);
     }
 }
