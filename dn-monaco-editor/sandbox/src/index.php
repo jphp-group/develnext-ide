@@ -15,14 +15,21 @@ UXApplication::launch(function (UXForm $form) {
 
     $editor->getEditor()->document->text = "<?php\necho \"Hello, Word\";";
     $editor->setOnLoad(function () use ($editor) {
-        $editor->getEditor()->registerCompletionItemProvider("php", function () {
+        $editor->getEditor()->registerCompletionItemProvider("php", function ($positionAndRange) {
             $item = new CompletionItem();
             $item->label = "test";
             $item->kind = 5; // from https://microsoft.github.io/monaco-editor/api/enums/monaco.languages.completionitemkind.html
             $item->documentation = "test 123";
-            $item->insertText = "echo 'test 123';";
+            $item->insertText = "position: lineNumber: " . $positionAndRange["position"]["lineNumber"] . ", column: " . $positionAndRange["position"]["column"];
+
+            $for = new CompletionItem();
+            $for->label = "for";
+            $for->kind = 17;
+            $for->documentation = "for loop";
+            $for->insertText = "for ()";
             return [
-                $item
+                $item,
+                $for
             ];
         });
     });
