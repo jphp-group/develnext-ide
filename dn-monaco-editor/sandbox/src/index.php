@@ -22,14 +22,15 @@ UXApplication::launch(function (UXForm $form) {
             $item->documentation = "test 123";
             $item->insertText = "position: lineNumber: " . $positionAndRange["position"]["lineNumber"] . ", column: " . $positionAndRange["position"]["column"];
 
-            $for = new CompletionItem();
-            $for->label = "for";
-            $for->kind = 17;
-            $for->documentation = "for loop";
-            $for->insertText = "for ()";
+            $snippet = new CompletionItem();
+            $snippet->label = "my-third-party-library";
+            $snippet->kind = 17;
+            $snippet->documentation = "snippet test";
+            $snippet->insertAsSnippet = true;
+            $snippet->insertText = '"${1:my-third-party-library}": "latest"';
             return [
                 $item,
-                $for
+                $snippet
             ];
         });
     });

@@ -30,9 +30,10 @@ public interface CompletionItemProvider {
 
     class CompletionItem {
         private String label;
-        private Integer kind;
+        private Integer kind; // https://microsoft.github.io/monaco-editor/api/enums/monaco.languages.completionitemkind.html
         private String documentation;
         private String insertText;
+        private Integer insertTextRules = 1; // https://microsoft.github.io/monaco-editor/api/enums/monaco.languages.completioniteminserttextrule.html
 
         public CompletionItem() {
         }
@@ -76,14 +77,12 @@ public interface CompletionItemProvider {
             this.insertText = insertText;
         }
 
-        @Override
-        public String toString() {
-            return "CompletionItem{" +
-                    "label='" + label + '\'' +
-                    ", kind=" + kind +
-                    ", documentation='" + documentation + '\'' +
-                    ", insertText='" + insertText + '\'' +
-                    '}';
+        public Integer getInsertTextRules() {
+            return insertTextRules;
+        }
+
+        public void setInsertTextRules(Integer insertTextRules) {
+            this.insertTextRules = insertTextRules;
         }
     }
 }

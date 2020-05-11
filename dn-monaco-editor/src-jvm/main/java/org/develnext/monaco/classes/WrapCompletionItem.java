@@ -23,6 +23,16 @@ public class WrapCompletionItem extends BaseWrapper<CompletionItemProvider.Compl
         __wrappedObject = new CompletionItemProvider.CompletionItem();
     }
 
+    @Reflection.Getter
+    public boolean getInsertAsSnippet() {
+        return getWrappedObject().getInsertTextRules() == 4;
+    }
+
+    @Reflection.Setter
+    public void setInsertAsSnippet(boolean asSnippet) {
+        getWrappedObject().setInsertTextRules(asSnippet ? 4 : 1);
+    }
+
     interface WrappedInterface {
         @Reflection.Property String label();
         @Reflection.Property Integer kind();

@@ -8,4 +8,5 @@ class CompletionItem
     public int $kind;
     public string $documentation;
     public string $insertText;
+    public bool $insertAsSnippet = false;
 }
