@@ -2,6 +2,7 @@ package org.develnext.monaco.classes;
 
 import eu.mihosoft.monacofx.Editor;
 import eu.mihosoft.monacofx.MonacoFX;
+import javafx.scene.control.ContextMenu;
 import org.develnext.jphp.ext.javafx.classes.layout.UXRegion;
 import org.develnext.monaco.MonacoEditorExtension;
 import php.runtime.annotation.Reflection;
@@ -33,5 +34,15 @@ public class WrapMonacoEditor extends UXRegion<MonacoFX> {
     @Reflection.Signature
     public void setOnLoad(Invoker callback) {
         getWrappedObject().setLoaded(callback::callNoThrow);
+    }
+
+    @Reflection.Getter
+    public ContextMenu getContextMenu() {
+        return getWrappedObject().getContextMenu();
+    }
+
+    @Reflection.Setter
+    public void setContextMenu(ContextMenu contextMenu) {
+        getWrappedObject().setContextMenu(contextMenu);
     }
 }

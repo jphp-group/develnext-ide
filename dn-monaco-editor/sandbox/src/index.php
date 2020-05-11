@@ -4,7 +4,10 @@ use php\gui\layout\UXAnchorPane;
 use php\gui\monaco\CompletionItem;
 use php\gui\UXApplication;
 use php\gui\monaco\MonacoEditor;
+use php\gui\UXContextMenu;
 use php\gui\UXForm;
+use php\gui\UXLabel;
+use php\gui\UXMenuItem;
 
 UXApplication::launch(function (UXForm $form) {
     $form->title = "MonacoEditor!";
@@ -12,6 +15,10 @@ UXApplication::launch(function (UXForm $form) {
     $editor->backgroundColor = "#333";
     $editor->getEditor()->currentLanguage = "php";
     $editor->getEditor()->currentTheme = "vs-dark";
+
+    $contextMenu = new UXContextMenu();
+    $contextMenu->items->add(new UXMenuItem("Test", new UXLabel("Test!")));
+    $editor->contextMenu = $contextMenu;
 
     $editor->getEditor()->document->text = "<?php\necho \"Hello, Word\";";
     $editor->setOnLoad(function () use ($editor) {

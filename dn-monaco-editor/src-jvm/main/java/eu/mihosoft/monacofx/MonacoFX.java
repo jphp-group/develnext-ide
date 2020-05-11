@@ -28,6 +28,8 @@ import javafx.application.Platform;
 import javafx.concurrent.Worker;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Region;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -43,18 +45,16 @@ public class MonacoFX extends Region {
     private final JavaBridge bridge;
     private Runnable loaded;
     private boolean isLoaded = false;
+    private ContextMenu contextMenu;
 
     private final static String EDITOR_HTML_RESOURCE_LOCATION = "/eu/mihosoft/monacofx/monaco-editor-0.20.0/index.html";
 
     public MonacoFX() {
         view = new WebView();
         view.setOpacity(0);
-        getChildren().add(view);
+        view.setContextMenuEnabled(false);
         engine = view.getEngine();
-        String url = getClass().getResource(EDITOR_HTML_RESOURCE_LOCATION).toExternalForm();
-
-        engine.load(url);
-
+        engine.load(getClass().getResource(EDITOR_HTML_RESOURCE_LOCATION).toExternalForm());
         editor = new Editor(engine);
         bridge = new JavaBridge();
         bridge.setEditor(editor);
@@ -101,6 +101,15 @@ public class MonacoFX extends Region {
 
             }
         });
+
+        getChildren().add(view);
+        setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+                if (contextMenu != null && view.getOpacity() != 0) {
+                    contextMenu.show(this, mouseEvent.getScreenX(), mouseEvent.getScreenY());
+                }
+            }
+        });
     }
 
     @Override protected double computePrefWidth(double height) {
@@ -135,6 +144,14 @@ public class MonacoFX extends Region {
 
     public void setLoaded(Runnable loaded) {
         this.loaded = loaded;
+    }
+
+    public ContextMenu getContextMenu() {
+        return contextMenu;
+    }
+
+    public void setContextMenu(ContextMenu contextMenu) {
+        this.contextMenu = contextMenu;
     }
 
     public static class JavaBridge {
