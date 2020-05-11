@@ -1,6 +1,7 @@
 package org.develnext.monaco.classes;
 
 import eu.mihosoft.monacofx.Document;
+import eu.mihosoft.monacofx.model.Range;
 import org.develnext.monaco.MonacoEditorExtension;
 import php.runtime.annotation.Reflection;
 import php.runtime.env.Environment;
@@ -24,6 +25,11 @@ public class WrapDocument extends BaseWrapper<Document> {
     @Reflection.Getter
     public Integer getNumberOfLines() {
         return getWrappedObject().numberOfLinesProperty().get();
+    }
+
+    @Reflection.Signature
+    public String getTextInRange(Range range) {
+        return getWrappedObject().getTextInRange(range);
     }
 
     @Reflection.Signature

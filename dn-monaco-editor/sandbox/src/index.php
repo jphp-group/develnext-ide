@@ -17,7 +17,11 @@ UXApplication::launch(function (UXForm $form) {
     $editor->getEditor()->currentTheme = "vs-dark";
 
     $contextMenu = new UXContextMenu();
-    $contextMenu->items->add(new UXMenuItem("Test", new UXLabel("Test!")));
+    $contextMenu->items->add(new UXMenuItem("Copy"));
+    $contextMenu->on("action", function () use ($editor) {
+        var_dump($editor->getEditor()->document->getTextInRange($editor->getEditor()->getSelection()));
+    });
+
     $editor->contextMenu = $contextMenu;
 
     $editor->getEditor()->document->text = "<?php\necho \"Hello, Word\";";

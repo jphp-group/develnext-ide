@@ -127,6 +127,11 @@
             }
         });
     }
+
+    function getTextInRange(range) {
+        const editor = getEditorView();
+        return editor.getModel().getValueInRange(JSON.parse(range));
+    }
 </script>
 </body>
 </html>

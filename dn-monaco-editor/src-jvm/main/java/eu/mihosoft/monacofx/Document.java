@@ -23,6 +23,8 @@
  */
 package eu.mihosoft.monacofx;
 
+import com.google.gson.Gson;
+import eu.mihosoft.monacofx.model.Range;
 import javafx.beans.property.*;
 import javafx.scene.web.WebEngine;
 import netscape.javascript.JSObject;
@@ -78,5 +80,9 @@ public class Document {
 
     public ReadOnlyIntegerProperty numberOfLinesProperty() {
         return numberOfLinesProperty;
+    }
+
+    public String getTextInRange(Range range) {
+        return (String) window.call("getTextInRange", new Gson().toJson(range));
     }
 }
