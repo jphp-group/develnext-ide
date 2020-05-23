@@ -1,5 +1,6 @@
 package eu.mihosoft.monacofx;
 
+import eu.mihosoft.monacofx.model.Position;
 import eu.mihosoft.monacofx.model.Range;
 
 import java.util.List;

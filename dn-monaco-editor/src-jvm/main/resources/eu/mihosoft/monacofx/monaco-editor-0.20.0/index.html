@@ -86,23 +86,22 @@
         monaco.editor.setTheme(theme);
     }
 
-    async function setValue(value) {
+    function setValue(value) {
         const editor = getEditorView();
         editor.getModel().setValue(value);
     }
 
-    async function getValue() {
+    function getValue() {
         const editor = getEditorView();
         return editor.getModel().getValue();
     }
 
-    async function updateModel(jsonModel) {
-        console.log(jsonModel);
+    function updateModel(jsonModel) {
         const editor = getEditorView();
         editor.getModel().updateOptions(JSON.parse(jsonModel));
     }
 
-    async function setLanguage(language) {
+    function setLanguage(language) {
         const editor = getEditorView();
         monaco.editor.setModelLanguage(editor.getModel(), language);
     }
@@ -131,6 +130,25 @@
     function getTextInRange(range) {
         const editor = getEditorView();
         return editor.getModel().getValueInRange(JSON.parse(range));
+    }
+
+    function executeEdits(rangeWithTextJson) {
+        const rangeWithText = JSON.parse(rangeWithTextJson);
+        const editor = getEditorView();
+        return editor.executeEdits('', [
+            { range: rangeWithText.range, text: rangeWithText.text }
+        ]);
+    }
+
+    function getPosition() {
+        const editor = getEditorView();
+        return JSON.stringify(editor.getPosition());
+    }
+
+    function setPosition(positionJson) {
+        const position = JSON.parse(positionJson);
+        const editor = getEditorView();
+        editor.setPosition(position);
     }
 </script>
 </body>

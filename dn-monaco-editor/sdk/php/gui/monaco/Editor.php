@@ -45,6 +45,20 @@ abstract class Editor
     }
 
     /**
+     * @return array
+     */
+    public function getPosition(): array
+    {
+    }
+
+    /**
+     * @param array $position
+     */
+    public function setPosition(array $position)
+    {
+    }
+
+    /**
      * @param int $lineNumber
      * @param int $type
      */

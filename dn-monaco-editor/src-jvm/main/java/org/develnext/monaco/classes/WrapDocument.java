@@ -40,5 +40,7 @@ public class WrapDocument extends BaseWrapper<Document> {
 
     interface WrappedInterface {
         @Reflection.Property String text();
+        void insert(String text);
+        void insert(String text, boolean replaceIfSelected);
     }
 }

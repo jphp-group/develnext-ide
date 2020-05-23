@@ -26,14 +26,19 @@ package eu.mihosoft.monacofx;
 import com.google.gson.Gson;
 import javafx.application.Platform;
 import javafx.concurrent.Worker;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Region;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
+import org.develnext.jphp.ext.javafx.classes.UXClipboard;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -103,11 +108,21 @@ public class MonacoFX extends Region {
         });
 
         getChildren().add(view);
-        setOnMouseClicked(mouseEvent -> {
+        view.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getButton() == MouseButton.SECONDARY) {
                 if (contextMenu != null && view.getOpacity() != 0) {
                     contextMenu.show(this, mouseEvent.getScreenX(), mouseEvent.getScreenY());
                 }
+            }
+        });
+
+        view.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.isControlDown() && keyEvent.getCharacter().equalsIgnoreCase("c")) {
+                ClipboardContent content = new ClipboardContent();
+                content.putString(getEditor().getDocument().getTextInRange(getEditor().getSelection()));
+                Clipboard.getSystemClipboard().setContent(content);
+            } else if (keyEvent.isControlDown() && keyEvent.getCharacter().equalsIgnoreCase("v")) {
+                getEditor().getDocument().insert(Clipboard.getSystemClipboard().getString());
             }
         });
     }

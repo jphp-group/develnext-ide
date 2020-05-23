@@ -24,6 +24,7 @@
 package eu.mihosoft.monacofx;
 
 import com.google.gson.Gson;
+import eu.mihosoft.monacofx.model.Position;
 import eu.mihosoft.monacofx.model.Selection;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -155,7 +156,7 @@ public final class Editor {
             engine.executeScript("monaco.editor.setModelLanguage(editorView.getModel(),'"+getCurrentLanguage()+"')");
         });
 
-        getDocument().setEditor(engine, window, editor);
+        getDocument().setEditor(engine, window, this);
 
         getViewController().setEditor(window, editor);
     }
@@ -179,6 +180,14 @@ public final class Editor {
 
     public void setSelection(Selection range) {
         callEditorMethod("setSelection", getJSEditor().eval(range.toString()));
+    }
+
+    public Position getPosition() {
+        return new Gson().fromJson(window.call("getPosition").toString(), Position.class);
+    }
+
+    public void setPosition(Position position) {
+        window.call("setPosition", new Gson().toJson(position));
     }
 
     public boolean isReadOnly() {

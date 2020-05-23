@@ -24,6 +24,7 @@
 package eu.mihosoft.monacofx;
 
 import com.google.gson.Gson;
+import eu.mihosoft.monacofx.model.Position;
 import eu.mihosoft.monacofx.model.Range;
 import javafx.beans.property.*;
 import javafx.scene.web.WebEngine;
@@ -32,7 +33,7 @@ import netscape.javascript.JSObject;
 public class Document {
 
     private WebEngine engine;
-    private JSObject editor;
+    private Editor editor;
     private JSObject editorGlobal;
     private JSObject window;
     private JFunction contentChangeListener;
@@ -40,12 +41,12 @@ public class Document {
     private final StringProperty textProperty = new SimpleStringProperty();
     private final IntegerProperty numberOfLinesProperty = new SimpleIntegerProperty();
 
-    void setEditor(WebEngine engine, JSObject window, JSObject editor) {
+    void setEditor(WebEngine engine, JSObject window, Editor editor) {
         this.engine = engine;
         this.editor = editor;
         this.window = window;
         this.contentChangeListener = new JFunction(args -> {
-            String text = (String) editor.call("getValue");
+            String text = (String) editor.getJSEditor().call("getValue");
             if (text != null) {
                 setText(text);
                 numberOfLinesProperty.setValue(text.split("\\R").length);
@@ -55,11 +56,11 @@ public class Document {
         });
 
         // initial text
-        editor.call("setValue", getText());
+        editor.getJSEditor().call("setValue", getText());
 
         // text changes -> js
         textProperty.addListener((ov) -> {
-            editor.call("setValue", getText());
+            editor.getJSEditor().call("setValue", getText());
         });
 
         // text changes <- js
@@ -84,5 +85,40 @@ public class Document {
 
     public String getTextInRange(Range range) {
         return (String) window.call("getTextInRange", new Gson().toJson(range));
+    }
+
+    protected static class RangeWithText {
+        private Range range;
+        private String text;
+
+        public RangeWithText(Range range, String text) {
+            this.range = range;
+            this.text = text;
+        }
+    }
+
+    protected boolean executeEdits(Range rage, String text) {
+        return (boolean)
+                window.call("executeEdits",
+                        new Gson().toJson(
+                                new RangeWithText(rage, text)));
+    }
+
+    public void insert(String text) {
+        insert(text, true);
+    }
+
+    public void insert(String text, boolean replaceIfSelected) {
+        Range range = null;
+        Position line = editor.getPosition();
+
+        if (replaceIfSelected) {
+            range = editor.getSelection();
+        } else {
+            range = new Range(line.getLineNumber(), line.getColumn(), line.getLineNumber(), line.getColumn());
+        }
+
+        executeEdits(range, text);
+        editor.setPosition(new Position(line.getColumn() + text.length(), line.getLineNumber()));
     }
 }

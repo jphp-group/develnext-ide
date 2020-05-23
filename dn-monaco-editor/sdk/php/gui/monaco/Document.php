@@ -24,4 +24,11 @@ abstract class Document {
     public function getTextInRange($range): string {
         return "Some text :^)";
     }
+
+    /**
+     * @param string $text
+     * @param bool $replaceIfSelected
+     */
+    public function insert(string $text, bool $replaceIfSelected = true) {
+    }
 }

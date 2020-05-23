@@ -1,12 +1,13 @@
 <?php
 
+use php\gui\event\UXKeyEvent;
 use php\gui\layout\UXAnchorPane;
 use php\gui\monaco\CompletionItem;
 use php\gui\UXApplication;
 use php\gui\monaco\MonacoEditor;
+use php\gui\UXClipboard;
 use php\gui\UXContextMenu;
 use php\gui\UXForm;
-use php\gui\UXLabel;
 use php\gui\UXMenuItem;
 
 UXApplication::launch(function (UXForm $form) {
@@ -16,11 +17,19 @@ UXApplication::launch(function (UXForm $form) {
     $editor->getEditor()->currentLanguage = "php";
     $editor->getEditor()->currentTheme = "vs-dark";
 
+    $copyAction = function () use ($editor) {
+        UXClipboard::setText($editor->getEditor()->document->getTextInRange($editor->getEditor()->getSelection()));
+    };
+
+    $pasteAction = function () use ($editor) {
+        $editor->getEditor()->document->insert(UXClipboard::getText());
+    };
+
     $contextMenu = new UXContextMenu();
-    $contextMenu->items->add(new UXMenuItem("Copy"));
-    $contextMenu->on("action", function () use ($editor) {
-        var_dump($editor->getEditor()->document->getTextInRange($editor->getEditor()->getSelection()));
-    });
+    $contextMenu->items->add($copy = new UXMenuItem("Copy"));
+    $contextMenu->items->add($paste = new UXMenuItem("Paste"));
+    $copy->on("action", $copyAction);
+    $paste->on("action", $pasteAction);
 
     $editor->contextMenu = $contextMenu;
 

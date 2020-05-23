@@ -23,6 +23,8 @@
  */
 package eu.mihosoft.monacofx;
 
+import eu.mihosoft.monacofx.model.Position;
+
 public final class Selection {
     public final Position start;
     public final Position stop;
