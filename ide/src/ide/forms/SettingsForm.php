@@ -6,6 +6,7 @@ use ide\Ide;
 use ide\settings\SettingsContext;
 use ide\settings\ui\AbstractSettingsGroup;
 use ide\settings\ui\AbstractSettingsItem;
+use ide\ui\elements\DNButton;
 use ide\ui\SettingsTreeItem;
 use php\gui\event\UXEvent;
 use php\gui\layout\UXAnchorPane;
@@ -99,9 +100,9 @@ class SettingsForm extends AbstractIdeForm
             $buttonBox->fillHeight = true;
             $buttonBox->alignment = "CENTER_RIGHT";
 
-            $ok = new UXButton("settings.buttons.ok");
-            $apply = new UXButton("settings.buttons.apply");
-            $close = new UXButton("settings.buttons.close");
+            $ok = new DNButton("settings.buttons.ok");
+            $apply = new DNButton("settings.buttons.apply");
+            $close = new DNButton("settings.buttons.close");
 
             $ok->maxHeight = $apply->maxHeight = $close->maxHeight = 9999;
 

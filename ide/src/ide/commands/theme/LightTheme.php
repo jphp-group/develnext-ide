@@ -3,7 +3,6 @@
 namespace ide\commands\theme;
 
 use ide\commands\theme\terminal\LightTerminalTheme;
-use ide\commands\theme\terminal\TerminalTheme;
 use java\reflection\ReflectionClass;
 use java\reflection\ReflectionTypes;
 
@@ -35,6 +34,13 @@ class LightTheme extends IDETheme {
      */
     public function getTerminalTheme() {
         return new LightTerminalTheme();
+    }
+
+    /**
+     * @return ColorPalette
+     */
+    public function getColorPalette(): ColorPalette {
+        return new LightColorPalette();
     }
 
     public function onApply() {

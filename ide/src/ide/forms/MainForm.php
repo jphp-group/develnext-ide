@@ -5,14 +5,12 @@ use ide\Ide;
 use ide\IdeConfigurable;
 use ide\IdeException;
 use ide\Logger;
+use ide\ui\elements\DNMenuBar;
 use ide\utils\UiUtils;
 use php\gui\UXDndTabPane;
-use php\gui\UXImage;
 use php\gui\UXLabel;
 use php\gui\UXMenu;
 use php\gui\UXMenuBar;
-use php\gui\UXMenuButton;
-use php\gui\UXMenuItem;
 use php\gui\UXNode;
 use php\gui\UXScreen;
 use php\gui\UXSplitPane;
@@ -215,6 +213,7 @@ class MainForm extends AbstractIdeForm
      */
     public function doShowing()
     {
+        DNMenuBar::applyIDETheme($this->mainMenu);
         _($this->mainMenu);
     }
 

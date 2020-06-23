@@ -4,8 +4,8 @@ namespace ide\misc;
 use framework\core\Module;
 use ide\editors\AbstractEditor;
 use ide\Ide;
+use ide\ui\elements\DNButton;
 use ide\utils\UiUtils;
-use php\gui\UXButton;
 use php\gui\UXMenuItem;
 use php\gui\UXSeparator;
 use php\lib\str;
@@ -93,7 +93,7 @@ abstract class AbstractCommand extends Module
 
     public function makeGlyphButton()
     {
-        $button = new UXButton();
+        $button = new DNButton();
         $button->tooltipText = $this->getName();
 
         if ($this->getAccelerator()) {

@@ -6,16 +6,16 @@ use ide\editors\AbstractEditor;
 use ide\editors\menu\ContextMenu;
 use ide\Ide;
 use ide\misc\AbstractCommand;
+use ide\ui\elements\DNButton;
 use php\gui\layout\UXAnchorPane;
 use php\gui\layout\UXPanel;
-use php\gui\UXButton;
 use php\gui\UXImageArea;
 use php\gui\UXSeparator;
 
 class MyAccountCommand extends AbstractCommand
 {
     /**
-     * @var UXButton
+     * @var DNButton
      */
     protected $accountButton;
 
@@ -39,6 +39,8 @@ class MyAccountCommand extends AbstractCommand
      */
     public function __construct()
     {
+        $this->accountImage = new UXImageArea();
+
         Ide::service()->on('privateEnable', function () {
             if ($this->accountButton) {
                 $this->accountButton->enabled = true;

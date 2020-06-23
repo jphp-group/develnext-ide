@@ -1,18 +1,13 @@
 <?php
 namespace ide\doc\commands;
 
-use ide\doc\editors\DocEditor;
 use ide\editors\AbstractEditor;
 use ide\Ide;
 use ide\misc\AbstractCommand;
-use ide\systems\FileSystem;
-use ide\ui\Notifications;
+use ide\ui\elements\DNButton;
 use php\gui\event\UXKeyEvent;
 use php\gui\layout\UXHBox;
 use php\gui\text\UXFont;
-use php\gui\UXButton;
-use php\gui\UXHyperlink;
-use php\gui\UXSeparator;
 use php\gui\UXTextField;
 use php\net\URL;
 
@@ -65,7 +60,7 @@ class DocCommand extends AbstractCommand
         //$button->style = '-fx-font-weight: bold;';
         //$button->width = 35;
 
-        $searchButton = new UXButton();
+        $searchButton = new DNButton();
         $searchButton->graphic = Ide::getImage("icons/search16.png", [16, 16]);
         $searchButton->tooltipText = 'doc.search.hint::Поиск по документации';
         $searchButton->maxHeight = 999;

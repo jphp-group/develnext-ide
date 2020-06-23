@@ -21,6 +21,8 @@ abstract class IDETheme {
 
     abstract public function getTerminalTheme();
 
+    abstract public function getColorPalette(): ColorPalette;
+
     public function onApply() {
         // something ...
     }

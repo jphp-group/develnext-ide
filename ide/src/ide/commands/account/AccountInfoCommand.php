@@ -3,16 +3,7 @@ namespace ide\commands\account;
 
 use ide\editors\AbstractEditor;
 use ide\forms\AccountProfileEditForm;
-use ide\forms\MessageBoxForm;
-use ide\Ide;
-use ide\Logger;
 use ide\misc\AbstractCommand;
-use ide\ui\Notifications;
-use php\gui\UXApplication;
-use php\gui\UXImageArea;
-use php\gui\UXMenuItem;
-use php\lang\IllegalStateException;
-use script\TimerScript;
 
 /**
  * Class AccountLogoutCommand

@@ -4,6 +4,7 @@ namespace ide;
 use ide\account\AccountManager;
 use ide\account\ServiceManager;
 use ide\bundle\AbstractBundle;
+use ide\commands\ChangeThemeCommand;
 use ide\editors\AbstractEditor;
 use ide\editors\value\ElementPropertyEditor;
 use ide\formats\AbstractFormat;
@@ -202,6 +203,7 @@ class Ide extends Application
     {
         parent::launch(
             function () {
+                ChangeThemeCommand::makeInstance();
                 Logger::reset();
                 Logger::info("Start IDE, mode = $this->mode, os = $this->OS, version = {$this->getVersion()}");
                 Logger::info(str::format("Commands Args = [%s]", str::join((array)$GLOBALS['argv'], ', ')));

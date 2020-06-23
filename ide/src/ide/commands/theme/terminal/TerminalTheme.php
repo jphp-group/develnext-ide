@@ -11,7 +11,7 @@ abstract class TerminalTheme {
     /**
      * @return string
      */
-    public function getFont(): string {
+    public function getFont(): ?string {
         return null;
     }
 

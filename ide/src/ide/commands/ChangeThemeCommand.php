@@ -12,7 +12,6 @@ use php\framework\Logger;
 use php\gui\framework\AbstractForm;
 use php\gui\framework\FormCollection;
 use php\gui\UXForm;
-use php\io\ResourceStream;
 use php\lib\str;
 
 class ChangeThemeCommand extends AbstractCommand {
@@ -53,9 +52,12 @@ class ChangeThemeCommand extends AbstractCommand {
 
         FormCollection::onAddEvent([$this, 'applyStylesheet']);
         $this->prevTheme = $this->getCurrentTheme();
-        self::$instance = $this;
 
         $this->getCurrentTheme()->onApply();
+    }
+
+    public static function makeInstance() {
+        self::$instance = new ChangeThemeCommand();
     }
 
     /**
@@ -146,7 +148,7 @@ class ChangeThemeCommand extends AbstractCommand {
             if ($form instanceof AbstractForm) {
                 Logger::info('Stylesheet ' . $prev . ' removed from ' . $form->getName());
             }
-            $form->removeStylesheet($prev);
+            //$form->removeStylesheet($prev);
         }
 
         $current = $this->getCurrentTheme()->getCSSFile();
@@ -155,6 +157,6 @@ class ChangeThemeCommand extends AbstractCommand {
             Logger::info('Stylesheet ' . $current . ' applied to ' . $form->getName());
         }
 
-        $form->addStylesheet($current);
+        //$form->addStylesheet($current);
     }
 }

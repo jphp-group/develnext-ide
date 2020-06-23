@@ -37,6 +37,13 @@ class DarkTheme extends IDETheme {
         return new DarkTerminalTheme();
     }
 
+    /**
+     * @return ColorPalette
+     */
+    public function getColorPalette(): ColorPalette {
+        return new DarkColorPalette();
+    }
+
     public function onApply() {
         ReflectionClass::forName("com.formdev.flatlaf.FlatDarkLaf")
             ->getMethod("install", [])
