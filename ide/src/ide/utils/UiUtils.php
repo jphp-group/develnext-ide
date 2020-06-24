@@ -3,6 +3,8 @@ namespace ide\utils;
 use ide\editors\menu\ContextMenu;
 use ide\Logger;
 use ide\misc\SeparatorCommand;
+use ide\ui\elements\DNAnchorPane;
+use ide\ui\elements\DNSeparator;
 use php\gui\event\UXKeyEvent;
 use php\gui\layout\UXAnchorPane;
 use php\gui\layout\UXHBox;
@@ -84,7 +86,7 @@ class UiUtils
             }
 
             if ($command == '-' || $command instanceof SeparatorCommand) {
-                $ui = new UXSeparator();
+                $ui = new DNSeparator();
 
                 if ($horizontal) {
                     $ui->orientation = 'VERTICAL';
@@ -129,6 +131,7 @@ class UiUtils
             }
         }
 
+        DNAnchorPane::applyIDETheme($pane);
         return $pane;
     }
 

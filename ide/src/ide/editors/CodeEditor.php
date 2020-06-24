@@ -14,6 +14,7 @@ use ide\Logger;
 use ide\misc\AbstractCommand;
 use ide\misc\EventHandlerBehaviour;
 use ide\systems\FileSystem;
+use ide\ui\elements\DNCheckbox;
 use ide\utils\FileUtils;
 use ide\utils\UiUtils;
 use php\concurrent\Promise;
@@ -989,7 +990,7 @@ class SetDefaultCommand extends AbstractCommand
 
     public function makeUiForHead()
     {
-        $ui = new UXCheckbox($this->getName());
+        $ui = new DNCheckbox($this->getName());
         $ui->padding = 3;
 
         $ui->selected = $this->formEditor->getDefaultEventEditor(false) == "php";

@@ -46,4 +46,18 @@ class LightCSSStyle extends CSSStyle
     public function getSeparatorCSS(): array {
         return [];
     }
+
+    /**
+     * @return array
+     */
+    public function getTextInputCSS(): array {
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    public function getListViewCSS(): array {
+        return [];
+    }
 }

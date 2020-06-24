@@ -1,4 +1,5 @@
 <?php
+
 namespace ide\forms;
 
 use ide\account\api\ServiceResponse;
@@ -9,11 +10,13 @@ use ide\Ide;
 use ide\library\IdeLibraryProjectResource;
 use ide\library\IdeLibraryResource;
 use ide\Logger;
-use ide\project\Project;
 use ide\project\ProjectConfig;
 use ide\systems\DialogSystem;
-use ide\systems\FileSystem;
 use ide\systems\ProjectSystem;
+use ide\ui\elements\DNButton;
+use ide\ui\elements\DNLabel;
+use ide\ui\elements\DNListView;
+use ide\ui\elements\DNTextField;
 use ide\ui\FlowListViewDecorator;
 use ide\ui\ImageBox;
 use ide\ui\Notifications;
@@ -21,7 +24,6 @@ use ide\utils\FileUtils;
 use ide\utils\UiUtils;
 use php\gui\event\UXEvent;
 use php\gui\event\UXMouseEvent;
-use php\gui\framework\AbstractForm;
 use php\gui\framework\Preloader;
 use php\gui\layout\UXAnchorPane;
 use php\gui\layout\UXHBox;
@@ -30,12 +32,8 @@ use php\gui\layout\UXVBox;
 use php\gui\UXApplication;
 use php\gui\UXButton;
 use php\gui\UXDialog;
-use php\gui\UXDirectoryChooser;
-use php\gui\UXFileChooser;
-use php\gui\UXForm;
 use php\gui\UXHyperlink;
 use php\gui\UXImageView;
-use php\gui\UXLabel;
 use php\gui\UXListCell;
 use php\gui\UXListView;
 use php\gui\UXTabPane;
@@ -44,7 +42,6 @@ use php\io\File;
 use php\lang\Thread;
 use php\lib\arr;
 use php\lib\fs;
-use php\lib\Items;
 use php\lib\Str;
 use php\time\Time;
 
@@ -104,11 +101,10 @@ class OpenProjectForm extends AbstractIdeForm
         parent::init();
 
         $cellFactory = function (UXListCell $cell, IdeLibraryProjectResource $resource) {
-            $titleName = new UXLabel($resource->getName());
-            $titleName->style = '-fx-font-weight: bold;' . UiUtils::fontSizeStyle() . ";";
+            $titleName = new DNLabel($resource->getName());
+            $titleName->font = $titleName->font->withBold()->withSize(UiUtils::fontSize());
 
-            $titleDescription = new UXLabel($resource->getDescription());
-            $titleDescription->style = '-fx-text-fill: gray;' . UiUtils::fontSizeStyle() . ";";
+            $titleDescription = new DNLabel($resource->getDescription());
 
             if (!$titleDescription->text) {
                 $titleDescription->text = _('project.open.empty.description');
@@ -169,7 +165,7 @@ class OpenProjectForm extends AbstractIdeForm
             foreach ($nodes as $node) {
                 $file = $node->data('file');
 
-                if ($file && $file->exists())  {
+                if ($file && $file->exists()) {
                     $what[] = $node->data('name');
                 }
             }
@@ -187,17 +183,24 @@ class OpenProjectForm extends AbstractIdeForm
 
         Ide::accountManager()->bind('login', [$this, 'updateShared']);
         Ide::accountManager()->bind('logout', [$this, 'updateShared']);
+
+        DNButton::applyIDETheme($this->openButton);
+        //DNButton::applyIDETheme($this->projectSearchButton);
+        DNTextField::applyIDETheme($this->pathField);
+        DNTextField::applyIDETheme($this->projectQueryField);
+        DNListView::applyIDETheme($this->embeddedLibraryList);
+        DNListView::applyIDETheme($this->libraryList);
+        DNListView::applyIDETheme($this->sharedList);
     }
 
     protected function sharedCellFactory(array $item)
     {
         $name = $item['name'] ?: _('project.open.unknown.project');
 
-        $titleName = new UXLabel($name);
-        $titleName->style = '-fx-font-weight: bold;' . UiUtils::fontSizeStyle() . ";";
+        $titleName = new DNLabel($name);
+        $titleName->font = $titleName->font->withBold()->withSize(UiUtils::fontSize());
 
-        $titleDescription = new UXLabel(_('project.open.updated.at') . ": " . (new Time($item['updatedAt']))->toString('dd.MM.yyyy HH:mm'));
-        $titleDescription->style = '-fx-text-fill: gray;' . UiUtils::fontSizeStyle() . ";";
+        $titleDescription = new DNLabel(_('project.open.updated.at') . ": " . (new Time($item['updatedAt']))->toString('dd.MM.yyyy HH:mm'));
 
         $actions = new UXHBox();
         $actions->spacing = 7;
@@ -235,8 +238,8 @@ class OpenProjectForm extends AbstractIdeForm
         });
         $actions->add($deleteLink);
 
-        $actions->add(_(new UXLabel("project.open.view.count"), $item['viewCount']));
-        $actions->add(_(new UXLabel("project.open.download.count"), $item['downloadCount']));
+        $actions->add(_(new DNLabel("project.open.view.count"), $item['viewCount']));
+        $actions->add(_(new DNLabel("project.open.download.count"), $item['downloadCount']));
 
         $title = new UXVBox([$titleName, $titleDescription, $actions]);
         $title->spacing = 0;

@@ -5,6 +5,7 @@ use ide\editors\AbstractEditor;
 use ide\Ide;
 use ide\misc\AbstractCommand;
 use ide\ui\elements\DNButton;
+use ide\ui\elements\DNTextField;
 use php\gui\event\UXKeyEvent;
 use php\gui\layout\UXHBox;
 use php\gui\text\UXFont;
@@ -40,7 +41,7 @@ class DocCommand extends AbstractCommand
 
     protected function makeSearchInputUi()
     {
-        $input = new UXTextField();
+        $input = new DNTextField();
         $input->promptText = 'doc.search.in.help::поиск в справке';
         $input->width = 170;
         $input->maxHeight = 999;
@@ -56,9 +57,6 @@ class DocCommand extends AbstractCommand
         $button = _($button);
         $button->maxHeight = 999;
         $button->padding = [0, 15];
-
-        //$button->style = '-fx-font-weight: bold;';
-        //$button->width = 35;
 
         $searchButton = new DNButton();
         $searchButton->graphic = Ide::getImage("icons/search16.png", [16, 16]);

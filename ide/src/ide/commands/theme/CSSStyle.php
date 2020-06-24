@@ -32,6 +32,16 @@ abstract class CSSStyle
     abstract public function getSeparatorCSS(): array;
 
     /**
+     * @return array
+     */
+    abstract public function getTextInputCSS(): array;
+
+    /**
+     * @return array
+     */
+    abstract public function getListViewCSS(): array;
+
+    /**
      * @param UXNode $node
      * @param array $css
      */
