@@ -3,18 +3,16 @@ namespace ide\editors\form;
 
 use ide\forms\MessageBoxForm;
 use ide\misc\EventHandler;
-use ide\misc\EventHandlerBehaviour;
-use ide\utils\UiUtils;
+use ide\ui\elements\DNAnchorPane;
+use ide\ui\elements\DNButton;
+use ide\ui\elements\DNComboBox;
+use ide\ui\elements\DNLabel;
+use ide\ui\elements\DNSeparator;
+use ide\ui\elements\DNTextField;
+use ide\ui\elements\DNToggleButton;
 use php\gui\designer\UXDesigner;
 use php\gui\designer\UXDesignPane;
-use php\gui\event\UXScrollEvent;
-use php\gui\framework\DataUtils;
 use php\gui\layout\UXHBox;
-use php\gui\text\UXFont;
-use php\gui\UXButton;
-use php\gui\UXComboBox;
-use php\gui\UXData;
-use php\gui\UXLabel;
 use php\gui\UXNode;
 use php\gui\UXSeparator;
 use php\gui\UXTextField;
@@ -75,12 +73,12 @@ class IdeActionsPane extends UXHBox
     public function __construct(UXDesigner $designer, UXDesignPane $designPane, callable $resetStyleCallback = null)
     {
         parent::__construct();
+        DNAnchorPane::applyIDETheme($this);
 
         $this->eventHandler = new EventHandler();
 
         $this->designer = $designer;
         $ui = $this;
-        $ui->style = UiUtils::fontSizeStyle() . ";";
 
         $ui->spacing = 4;
         $ui->padding = 5;
@@ -90,7 +88,7 @@ class IdeActionsPane extends UXHBox
 
         $this->snapTypeButtons = $group = new UXToggleGroup();
 
-        $dotsButton = $this->snapDotsButton = new UXToggleButton();
+        $dotsButton = $this->snapDotsButton = new DNToggleButton();
         $dotsButton->graphic = ico('dots16');
         $dotsButton->toggleGroup = $group;
         $dotsButton->selected = true;
@@ -101,7 +99,7 @@ class IdeActionsPane extends UXHBox
             $this->eventHandler->trigger('change');
         });
 
-        $gridButton = $this->snapGridButton = new UXToggleButton();
+        $gridButton = $this->snapGridButton = new DNToggleButton();
         $gridButton->toggleGroup = $group;
         $gridButton->graphic = ico('grid16');
 
@@ -111,7 +109,7 @@ class IdeActionsPane extends UXHBox
             $this->eventHandler->trigger('change');
         });
 
-        $emptyButton = $this->snapEmptyButton = new UXToggleButton();
+        $emptyButton = $this->snapEmptyButton = new DNToggleButton();
         $emptyButton->toggleGroup = $group;
         $emptyButton->graphic = ico('grayRect16');
 
@@ -125,11 +123,11 @@ class IdeActionsPane extends UXHBox
         $ui->add($dotsButton);
         $ui->add($gridButton);
         $ui->add($emptyButton);
-        $ui->add(new UXSeparator('VERTICAL'));
+        $ui->add(new DNSeparator('VERTICAL'));
 
-        $xTitle = _(new UXLabel('ui.editor.grid.option::Сетка [X,Y]:'));
+        $xTitle = _(new DNLabel('ui.editor.grid.option::Сетка [X,Y]:'));
         $xTitle->maxHeight = 999;
-        $xInput = $this->snapXInput = new UXTextField();
+        $xInput = $this->snapXInput = new DNTextField();
         $xInput->width = 35;
         $xInput->maxHeight = 999;
         $xInput->text = $this->designer->snapSizeX;
@@ -148,7 +146,7 @@ class IdeActionsPane extends UXHBox
 
         /*$yTitle = new UXLabel('Сетка Y:');
         $yTitle->maxHeight = 999; */
-        $yInput = $this->snapYInput = new UXTextField();
+        $yInput = $this->snapYInput = new DNTextField();
         $yInput->width = 35;
         $yInput->maxHeight = 999;
         $yInput->text = $this->designer->snapSizeY;
@@ -173,9 +171,9 @@ class IdeActionsPane extends UXHBox
         $this->designPane = $designPane;
 
         if ($resetStyleCallback) {
-            $ui->add(new UXSeparator('VERTICAL'));
+            $ui->add(new DNSeparator('VERTICAL'));
 
-            $applySkinBtn = new UXButton('Сбросить стили', ico('brush16'));
+            $applySkinBtn = new DNButton('Сбросить стили', ico('brush16'));
             $applySkinBtn->on('action', function () use ($resetStyleCallback) {
                 if (MessageBoxForm::confirm('Вы уверены, что хотите сбросить стили всех компонентов?')) {
                     $resetStyleCallback();
@@ -196,11 +194,11 @@ class IdeActionsPane extends UXHBox
 
     protected function makeZoomPane()
     {
-        $this->add(new UXSeparator('VERTICAL'));
-        $this->add($label = _(new UXLabel("ui.editor.scale.option::Масштаб:")));
+        $this->add(new DNSeparator('VERTICAL'));
+        $this->add($label = _(new DNLabel("ui.editor.scale.option::Масштаб:")));
         $label->maxHeight = 999;
 
-        $zoomSelect = $this->zoomSelect = new UXComboBox();
+        $zoomSelect = $this->zoomSelect = new DNComboBox();
         $zoomList = [10, 25, 33, 50, 67, 75, 100, 125, 150, 200, 300, 400, 500];
 
         $this->zoomSelect->visibleRowCount = sizeof($zoomList);
@@ -224,10 +222,10 @@ class IdeActionsPane extends UXHBox
 
     protected function makeAlignPane()
     {
-        $this->add(new UXSeparator('VERTICAL'));
+        $this->add(new DNSeparator('VERTICAL'));
 
         foreach (['left', 'right', 'top', 'bottom', 'center', 'middle'] as $align) {
-            $btn = new UXButton();
+            $btn = new DNButton();
             $btn->tooltipText = 'Alignment (' . str::upperFirst($align) . ")";
             $btn->graphic = ico('align' . str::upperFirst($align) . '16');
             $btn->on('click', function () use ($align) {

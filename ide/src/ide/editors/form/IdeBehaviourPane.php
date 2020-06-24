@@ -1,26 +1,25 @@
 <?php
 namespace ide\editors\form;
-use behaviour\custom\BlinkAnimationBehaviour;
+
 use ide\behaviour\AbstractBehaviourSpec;
 use ide\behaviour\IdeBehaviourManager;
-use ide\editors\value\BooleanPropertyEditor;
 use ide\editors\value\ElementPropertyEditor;
 use ide\forms\BehaviourCreateForm;
 use ide\forms\MessageBoxForm;
 use ide\forms\ScriptHelperForm;
 use ide\Ide;
-use ide\Logger;
 use ide\misc\EventHandlerBehaviour;
-use ide\utils\UiUtils;
+use ide\ui\elements\DNAnchorPane;
+use ide\ui\elements\DNButton;
+use ide\ui\elements\DNLabel;
+use ide\ui\elements\DNTitledPane;
 use php\gui\designer\UXDesignProperties;
 use php\gui\event\UXEvent;
 use php\gui\framework\behaviour\custom\AbstractBehaviour;
 use php\gui\layout\UXHBox;
 use php\gui\layout\UXPane;
 use php\gui\layout\UXVBox;
-use php\gui\UXButton;
 use php\gui\UXDialog;
-use php\gui\UXLabel;
 use php\gui\UXLabeled;
 use php\gui\UXNode;
 use php\gui\UXTab;
@@ -140,7 +139,7 @@ class IdeBehaviourPane
                 $groupPane = $pane->getGroupPane($code);
                 $groupPane->graphic = new UXHBox([
                     Ide::get()->getImage($spec->getIcon()),
-                    new UXLabel($spec->getName()),
+                    new DNLabel($spec->getName()),
                 ]);
 
                 if ($spec->isDeletable()) {
@@ -174,14 +173,14 @@ class IdeBehaviourPane
             if ($this->hintNode instanceof UXTab || $this->hintNode instanceof UXLabeled) {
                 if ($box->children->count) {
                     $this->hintNode->text = "";
-                    $countLabel = new UXLabel("+{$box->children->count}");
+                    $countLabel = new DNLabel("+{$box->children->count}");
                     $countLabel->textColor = 'blue';
                     $countLabel->font = $countLabel->font->withSize(10)->withBold();
 
-                    $this->hintNode->graphic = new UXHBox([_(new UXLabel($this->hintNodeText)), $countLabel]);
+                    $this->hintNode->graphic = new UXHBox([_(new DNLabel($this->hintNodeText)), $countLabel]);
                     $this->hintNode->graphic->spacing = 2;
                 } else {
-                    $this->hintNode->graphic = _(new UXLabel($this->hintNodeText));
+                    $this->hintNode->graphic = _(new DNLabel($this->hintNodeText));
                     $this->hintNode->graphic->textColor = 'gray';
                     $this->hintNode->text = "";
                 }
@@ -192,9 +191,9 @@ class IdeBehaviourPane
         }
 
         if ($box->children->count == 0) {
-            $hint = _(new UXLabel('ui.behaviour.list.empty::Поведений нет.'));
+            $hint = _(new DNLabel('ui.behaviour.list.empty::Поведений нет.'));
             $hint->padding = 10;
-            $hint->style = '-fx-font-style: italic';
+            $hint->font = $hint->font->withItalic();
 
             $box->add($hint);
         }
@@ -208,6 +207,7 @@ class IdeBehaviourPane
 
         $this->initButtonAdd($controlPane, $targetId);
 
+        DNAnchorPane::applyIDETheme($box);
         return $this->lastUi = $box;
     }
 
@@ -215,7 +215,7 @@ class IdeBehaviourPane
     {
         $box = new UXHBox();
 
-        $button = new UXLabel();
+        $button = new DNLabel();
         $button->cursor = 'HAND';
         $button->text = null;
         $button->graphic = ico('smallDelete16');
@@ -239,7 +239,7 @@ class IdeBehaviourPane
             }
         });
 
-        $scLab = new UXLabel('', ico('scriptHelper16'));
+        $scLab = new DNLabel('', ico('scriptHelper16'));
         $scLab->cursor = 'HAND';
         $scLab->tooltipText = 'command.generate.script::Сгенерировать скрипт';
         _($scLab);
@@ -268,16 +268,17 @@ class IdeBehaviourPane
         $box->add(_($button));
 
         $pane->graphic->add($box);
+        DNTitledPane::applyIDETheme($pane);
     }
 
     protected function initButtonAdd(UXPane $pane, $targetId)
     {
-        $button = new UXButton('ui.behaviour.command.add::Добавить поведение');
+        $button = new DNButton('ui.behaviour.command.add::Добавить поведение');
         $button->graphic = ico('plugin16');
 
         $button->height = 30;
         $button->maxWidth = 10000;
-        $button->style = '-fx-font-weight: bold; ' . UiUtils::fontSizeStyle();
+        $button->font = $button->font->withBold();
 
         $button->on('action', function () use ($targetId) {
             $target = $this->behaviourManager->getTarget($targetId);

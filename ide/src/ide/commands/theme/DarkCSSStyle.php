@@ -34,7 +34,8 @@ class DarkCSSStyle extends CSSStyle {
      */
     public function getLabelCSS(): array {
         return [
-            "-fx-text-fill" => "#ffffff"
+            "-fx-text-fill" => "#ffffff",
+            "-fx-base" => "gray"
         ];
     }
 
@@ -43,7 +44,8 @@ class DarkCSSStyle extends CSSStyle {
      */
     public function getBoxPanelCSS(): array {
         return [
-            "-fx-background-color" => "#393939"
+            "-fx-background-color" => "#393939",
+            "-fx-border-width" => "0"
         ];
     }
 
@@ -77,6 +79,37 @@ class DarkCSSStyle extends CSSStyle {
             "-fx-control-inner-background" => "-fx-base",
             "-fx-control-inner-background-alt" => "derive(-fx-base, 4%)",
             "-fx-text-fill" => "#ffffff"
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getTreeViewCSS(): array {
+        return [
+            "-fx-base" => "#333333",
+            "-fx-control-inner-background" => "-fx-base",
+            "-fx-control-inner-background-alt" => "derive(-fx-base, 4%)",
+            "-fx-text-fill" => "#ffffff"
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getTabPaneCSS(): array {
+        return [
+            "-dn-base" => "#333333",
+            "-dn-text-fill" => "#ffffff"
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getSplitPaneCSS(): array {
+        return [
+            "-dn-base" => "#333333"
         ];
     }
 }

@@ -194,11 +194,6 @@ abstract class AbstractEditor
         return true;
     }
 
-    public function getTabStyle()
-    {
-        return '';
-    }
-
     /**
      * @return string
      */

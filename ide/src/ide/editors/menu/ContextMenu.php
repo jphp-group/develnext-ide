@@ -380,7 +380,6 @@ class ContextMenu
         }
 
         $button->maxHeight = 999;
-        $button->style = UiUtils::fontSizeStyle() . "; ";
 
         $button->observer('showing')->addListener(function ($_, $value) use ($button) {
             if ($value) {

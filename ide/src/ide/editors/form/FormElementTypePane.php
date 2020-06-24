@@ -8,6 +8,13 @@ use ide\Ide;
 use ide\Logger;
 use ide\misc\EventHandlerBehaviour;
 use ide\scripts\AbstractScriptComponent;
+use ide\ui\elements\DNAnchorPane;
+use ide\ui\elements\DNButton;
+use ide\ui\elements\DNComboBox;
+use ide\ui\elements\DNLabel;
+use ide\ui\elements\DNTextField;
+use ide\ui\elements\DNTitledPane;
+use ide\ui\elements\DNToggleButton;
 use ide\utils\Json;
 use ide\utils\UiUtils;
 use php\gui\event\UXMouseEvent;
@@ -110,6 +117,7 @@ class FormElementTypePane
         //$this->layout->minWidth = 100;
         //$this->layout->maxWidth = 250;
         $this->layout->fillWidth = true;
+        DNAnchorPane::applyIDETheme($this->layout);
 
         $this->content = new UXScrollPane($this->layout);
         $this->content->fitToWidth = true;
@@ -139,7 +147,7 @@ class FormElementTypePane
         $this->layout->add($head);
 
         if (!$elements) {
-            $noLabel = new UXLabel("Список пуст.");
+            $noLabel = new DNLabel("Список пуст.");
             $noLabel->padding = 10;
             $this->layout->add($noLabel);
         }
@@ -331,10 +339,10 @@ class FormElementTypePane
         }
 
         if ($notFound) {
-            $label = new UXLabel('Ничего не найдено.');
+            $label = new DNLabel('Ничего не найдено.');
             $label->padding = 10;
 
-            $pane = new UXTitledPane('Результаты поиска', $label);
+            $pane = new DNTitledPane('Результаты поиска', $label);
             $pane->padding = [1, 3];
         } else {
             $pane = $this->makeGroupUi('Результаты поиска', $result);
@@ -372,7 +380,7 @@ class FormElementTypePane
               */
             $this->unselectedButton = null;
 
-            $this->searchField = $searchField = new UXTextField();
+            $this->searchField = $searchField = new DNTextField();
             $searchField->promptText = 'ui.searching.components::Поиск компонентов';
             $searchField->maxWidth = 10000;
             _($searchField);
@@ -388,7 +396,7 @@ class FormElementTypePane
                 });
             });
 
-            $this->viewSelect = $typeSelect = _(new UXComboBox([
+            $this->viewSelect = $typeSelect = _(new DNComboBox([
                 'ui.editor.icons.and.text::Иконки + текст',
                 'ui.editor.only.icons::Только иконки'
             ]));
@@ -423,8 +431,8 @@ class FormElementTypePane
 
         /** @var AbstractFormElement|ObjectListEditorItem $element */
         foreach ($elements as $id => $element) {
-            $button = $this->selectable ? new UXToggleButton($element->getName()) : new UXButton($element->getName());
-            $smallButton = $this->selectable ? new UXToggleButton() : new UXButton();
+            $button = $this->selectable ? new UXToggleButton($element->getName()) : new DNButton($element->getName());
+            $smallButton = $this->selectable ? new UXToggleButton() : new DNButton();
 
             if ($this->selectable) {
                 $button->toggleGroup = $this->toggleGroup;
@@ -505,7 +513,7 @@ class FormElementTypePane
             $this->buttons[] = $smallButton;
         }
 
-        $pane = _(new UXTitledPane($group, $this->isOnlyIcons() ? $fbox : $vbox));
+        $pane = _(new DNTitledPane($group, $this->isOnlyIcons() ? $fbox : $vbox));
         $pane->data('vbox', $vbox);
         $pane->data('fbox', $fbox);
         $pane->font = UXFont::of($pane->font->family, $pane->font->size, 'BOLD');

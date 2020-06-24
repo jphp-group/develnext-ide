@@ -8,10 +8,11 @@ use ide\editors\menu\ContextMenu;
 use ide\formats\form\AbstractFormElement;
 use ide\Ide;
 use ide\misc\EventHandlerBehaviour;
-use ide\utils\UiUtils;
+use ide\ui\elements\DNAnchorPane;
+use ide\ui\elements\DNButton;
+use ide\ui\elements\DNComboBox;
 use php\gui\event\UXEvent;
 use php\gui\layout\UXHBox;
-use php\gui\UXButton;
 use php\gui\UXComboBox;
 
 /**
@@ -150,8 +151,7 @@ class IdeObjectTreeList
 
     public function makeUi()
     {
-        $ui = new UXComboBox();
-        $ui->style = UiUtils::fontSizeStyle() . '; ';
+        $ui = new DNComboBox();
 
         $ui->on('action', function (UXEvent $event) {
             $this->trigger('change', [$event->sender->selected ? $event->sender->selected->value : null]);
@@ -166,10 +166,9 @@ class IdeObjectTreeList
         $this->ui = $ui;
 
         if ($this->contextMenu) {
-            $btn = new UXButton('', ico('menu16'));
+            $btn = new DNButton('', ico('menu16'));
             $btn->tooltipText = 'Меню выбранного объекта';
             $btn->maxHeight = 999;
-            $btn->style = UiUtils::fontSizeStyle();
 
             $btn->on('action', function () use ($btn) {
                 $this->contextMenu->show($btn);
@@ -177,7 +176,9 @@ class IdeObjectTreeList
 
             UXHBox::setHgrow($ui, 'ALWAYS');
             $ui->maxWidth = 999;
-            return new UXHBox([$btn, $ui], 1);
+            $box = new UXHBox([$btn, $ui], 1);
+            DNAnchorPane::applyIDETheme($box);
+            return $box;
         } else {
             return $ui;
         }

@@ -10,6 +10,9 @@ use ide\IdeException;
 use ide\Logger;
 use ide\ui\elements\DNAnchorPane;
 use ide\ui\elements\DNMenuBar;
+use ide\ui\elements\DNSplitPane;
+use ide\ui\elements\DNTabPane;
+use ide\ui\elements\DNTreeView;
 use ide\utils\UiUtils;
 use php\gui\UXDndTabPane;
 use php\gui\UXLabel;
@@ -113,16 +116,19 @@ class MainForm extends AbstractIdeForm
 
         $this->headRightPane->spacing = 5;
 
-        $pane = new UXDndTabPane();
+        $pane = new DNTabPane();
 
         $parent = $this->fileTabPane->parent;
         $this->fileTabPane->free();
 
-        /** @var UXTabPane $tabPane */
-        $tabPane = $pane ?: new UXTabPane();
+        $tabPane = $pane;
         $tabPane->id = 'fileTabPane';
         $tabPane->tabClosingPolicy = 'ALL_TABS';
         $tabPane->classes->add('dn-file-tab-pane');
+
+        DNTabPane::applyIDETheme($tabPane);
+        DNSplitPane::applyIDETheme($this->splitTree);
+        DNSplitPane::applyIDETheme($this->contentSplit);
 
         // todo fix bug
         /*$tabPane->on('keyDown', $keyDown = function (UXKeyEvent $e) {
@@ -144,7 +150,7 @@ class MainForm extends AbstractIdeForm
 
         $tree = new UXDirectoryTreeView();
         $tree->position = [0, 0];
-        $tree->style = UiUtils::fontSizeStyle();
+        DNTreeView::applyIDETheme($tree);
         $this->directoryTree->add($tree);
 
         UXAnchorPane::setAnchor($tree, 0);

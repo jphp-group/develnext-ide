@@ -10,6 +10,7 @@ use ide\Ide;
 use ide\Logger;
 use ide\ui\elements\DNAnchorPane;
 use ide\ui\elements\DNButton;
+use ide\ui\elements\DNSplitPane;
 use ide\utils\FileUtils;
 use ide\utils\Json;
 use ide\utils\UiUtils;
@@ -378,7 +379,7 @@ class FileSystem
             UXSplitPane::setResizeWithParent($wrap, false);
 
             $oldContent = $content;
-            $content = new UXSplitPane([$wrap, $content]);
+            $content = new DNSplitPane([$wrap, $content]);
 
             if ($type == 'tab') {
                 $wrap->observer('width')->addListener(function ($_, $value) {
@@ -464,7 +465,6 @@ class FileSystem
 
         $tab->text = $editor->getTitle();
         $tab->tooltip = $editor->getTooltip();
-        $tab->style = UiUtils::fontSizeStyle() . "; " . $editor->getTabStyle();
         $tab->graphic = Ide::get()->getImage($editor->getIcon());
         $tab->content = static::makeUiForEditor($editor, 'tab');
         $tab->userData = $editor;

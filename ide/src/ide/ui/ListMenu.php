@@ -1,16 +1,16 @@
 <?php
+
 namespace ide\ui;
 
 use ide\Ide;
-use ide\utils\UiUtils;
+use ide\ui\elements\DNLabel;
+use ide\ui\elements\DNListView;
 use php\gui\layout\UXHBox;
 use php\gui\layout\UXVBox;
-use php\gui\UXLabel;
 use php\gui\UXListCell;
-use php\gui\UXListView;
 use php\lib\arr;
 
-class ListMenu extends UXListView
+class ListMenu extends DNListView
 {
     protected $descriptionGetter = null;
     protected $nameGetter = null;
@@ -114,18 +114,15 @@ class ListMenu extends UXListView
     {
         $view->text = null;
 
-        $titleName = _(new UXLabel($this->getNameOfItem($page)));
+        $titleName = _(new DNLabel($this->getNameOfItem($page)));
         $titleName->classes->add('dn-list-menu-title');
 
         if ($this->isNameThin()) {
-            $titleName->style = '-fx-font-weight: normal;';
+            $titleName->font = $titleName->font->withThin();
         }
 
-        $titleName->style .= UiUtils::fontSizeStyle() . ";";
-
-        $titleDescription = _(new UXLabel($this->getDescriptionOfItem($page)));
+        $titleDescription = _(new DNLabel($this->getDescriptionOfItem($page)));
         $titleDescription->classes->add('dn-list-menu-description');
-        $titleDescription->style .= UiUtils::fontSizeStyle() . ";";
 
         $box = new UXHBox([$titleName]);
         $box->spacing = 0;
@@ -146,9 +143,10 @@ class ListMenu extends UXListView
         UXHBox::setHgrow($title, 'ALWAYS');
 
         if ($page->getMenuCount() >= 0) {
-            $label = new UXLabel($page->getMenuCount());
-            $label->classes->add('dn-list-menu-count');
-            $label->style = UiUtils::fontSizeStyle();
+            $label = new DNLabel($page->getMenuCount());
+            $label->css("-fx-background-color", "-fx-base");
+            $label->css("-fx-background-radius", "3px");
+            $label->css("-fx-padding", "2px 5px");
 
             $list[] = $label;
         }

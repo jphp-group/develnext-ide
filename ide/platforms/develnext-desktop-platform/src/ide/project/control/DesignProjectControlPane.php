@@ -15,6 +15,9 @@ use ide\project\behaviours\gui\SkinManagerForm;
 use ide\project\behaviours\gui\SkinSaveDialogForm;
 use ide\project\Project;
 use ide\project\supports\JavaFXProjectSupport;
+use ide\ui\elements\DNAnchorPane;
+use ide\ui\elements\DNLabel;
+use ide\ui\elements\DNSeparator;
 use ide\utils\FileUtils;
 use ide\utils\UiUtils;
 use php\gui\layout\UXHBox;
@@ -22,7 +25,6 @@ use php\gui\layout\UXVBox;
 use php\gui\text\UXFont;
 use php\gui\UXLabel;
 use php\gui\UXNode;
-use php\gui\UXSeparator;
 use php\lib\fs;
 
 /**
@@ -135,7 +137,7 @@ class DesignProjectControlPane extends AbstractProjectControlPane
 
     protected function makeActionsUi()
     {
-        $this->uiSkinName = new UXLabel();
+        $this->uiSkinName = new DNLabel();
         $icon = ico('brush32');
         UXHBox::setMargin($icon, [0, 5, 0, 0]);
 
@@ -197,8 +199,9 @@ class DesignProjectControlPane extends AbstractProjectControlPane
 
         $cssEditor = $this->editor->makeUi();
 
-        $ui = new UXVBox([$this->makeActionsUi(), new UXSeparator(), $cssEditor], 5);
+        $ui = new UXVBox([$this->makeActionsUi(), new DNSeparator(), $cssEditor], 5);
         UXVBox::setVgrow($cssEditor, 'ALWAYS');
+        DNAnchorPane::applyIDETheme($ui);
 
         return $ui;
     }

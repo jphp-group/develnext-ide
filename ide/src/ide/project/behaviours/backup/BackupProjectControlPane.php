@@ -3,18 +3,16 @@
 namespace ide\project\behaviours\backup;
 
 use ide\editors\menu\ContextMenu;
-use ide\editors\ProjectEditor;
-use ide\forms\MessageBoxForm;
-use ide\Ide;
 use ide\misc\SimpleSingleCommand;
 use ide\project\behaviours\BackupProjectBehaviour;
 use ide\project\control\AbstractProjectControlPane;
-use ide\systems\FileSystem;
+use ide\ui\elements\DNLabel;
+use ide\ui\elements\DNListView;
+use ide\ui\elements\DNSeparator;
 use ide\utils\UiUtils;
 use php\gui\event\UXMouseEvent;
 use php\gui\layout\UXHBox;
 use php\gui\layout\UXVBox;
-use php\gui\UXLabel;
 use php\gui\UXListCell;
 use php\gui\UXListView;
 use php\gui\UXNode;
@@ -31,12 +29,12 @@ class BackupProjectControlPane extends AbstractProjectControlPane
     private $behaviour;
 
     /**
-     * @var UXListView
+     * @var DNListView
      */
     private $uiList;
 
     /**
-     * @var UXListView
+     * @var DNListView
      */
     private $uiMasterList;
 
@@ -75,34 +73,32 @@ class BackupProjectControlPane extends AbstractProjectControlPane
      */
     protected function makeUi()
     {
-        $list = $this->uiList = new UXListView();
-        $masterList = $this->uiMasterList = new UXListView();
+        $list = $this->uiList = new DNListView();
+        $masterList = $this->uiMasterList = new DNListView();
 
         $cellFactory = function (UXListCell $cell, Backup $backup = null) {
             $cell->text = null;
             $cell->graphic = null;
 
             if ($backup) {
-                $title = new UXLabel($backup->getName());
-                $title->style = UiUtils::fontSizeStyle() . "; -fx-font-weight: bold;";
+                $title = new DNLabel($backup->getName());
+                $title->font = $title->font->withBold();
                 $createdAt = new Time($backup->getCreatedAt());
 
                 $createdAtText = $createdAt->toString('dd MMM, HH:mm:ss, yyyy г.', Locale::RUSSIAN());
 
                 if ($backup->getMaster()) {
-                    $description = new UXLabel($createdAtText .
+                    $description = new DNLabel($createdAtText .
                         ($backup->getDescription() ? ", {$backup->getDescription()}" : "")
                     );
                 } else {
                     $title->text = $createdAtText;
-                    $description = new UXLabel($backup->getDescription() . ", " . fs::name($backup->getFilename()));
+                    $description = new DNLabel($backup->getDescription() . ", " . fs::name($backup->getFilename()));
                 }
 
                 if ($backup->isNew()) {
                     $title->style = '-fx-text-fill: blue';
                 }
-
-                $description->style = '-fx-text-fill: gray; ' . UiUtils::fontSizeStyle();
 
                 $cell->graphic = new UXHBox([
                     ico('archive32'),
@@ -128,8 +124,8 @@ class BackupProjectControlPane extends AbstractProjectControlPane
         $masterList->height = $masterList->fixedCellSize * 4 + 2;
         UXVBox::setVgrow($list, 'ALWAYS');
 
-        $label1 = _(new UXLabel("backup.master.copies::Мастер-копии"));
-        $label2 = _(new UXLabel("backup.auto.copies::Автоматические копии"));
+        $label1 = _(new DNLabel("backup.master.copies::Мастер-копии"));
+        $label2 = _(new DNLabel("backup.auto.copies::Автоматические копии"));
 
         $label1->font->bold = $label2->font->bold = true;
 
@@ -141,7 +137,7 @@ class BackupProjectControlPane extends AbstractProjectControlPane
 
         return new UXVBox([
             $label1, $this->createMasterActionPane($masterList), $masterList,
-            new UXSeparator(),
+            new DNSeparator(),
             $label2, $this->createAutoActionPane($list), $list
         ], 10);
     }

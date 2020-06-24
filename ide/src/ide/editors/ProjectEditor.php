@@ -2,30 +2,13 @@
 namespace ide\editors;
 
 use ide\formats\ProjectFormat;
-use ide\Ide;
-use ide\Logger;
 use ide\project\control\AbstractProjectControlPane;
+use ide\ui\elements\DNAnchorPane;
 use ide\ui\ListMenu;
-use ide\utils\FileUtils;
-use php\gui\framework\AbstractForm;
-use php\gui\framework\EventBinder;
 use php\gui\layout\UXAnchorPane;
-use php\gui\layout\UXVBox;
-use php\gui\UXApplication;
-use php\gui\UXDesktop;
-use php\gui\UXDialog;
-use php\gui\UXLabel;
-use php\gui\UXListCell;
-use php\gui\UXListView;
-use php\gui\UXLoader;
 use php\gui\UXNode;
-use php\gui\UXSeparator;
-use php\io\File;
-use php\io\ResourceStream;
-use php\io\Stream;
 use php\lib\arr;
 use php\lib\reflect;
-use php\lib\str;
 
 /**
  * Class ProjectEditor
@@ -77,11 +60,6 @@ class ProjectEditor extends AbstractEditor
     public function getTitle()
     {
         return 'project.editor.title';
-    }
-
-    public function getTabStyle()
-    {
-        return '-fx-padding: 1px 7px; -fx-font-weight: bold;';
     }
 
     public function isPrependTab()
@@ -232,7 +210,7 @@ class ProjectEditor extends AbstractEditor
             $this->addControlPane($pane);
         }
 
-        $pane = new UXAnchorPane();
+        $pane = new DNAnchorPane();
         $pane->padding = 10;
 
         return $this->contentPane = $pane;

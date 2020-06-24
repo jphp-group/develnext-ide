@@ -1,18 +1,16 @@
 <?php
 namespace ide\ui;
 
-use ide\Ide;
 use ide\misc\AbstractCommand;
 use ide\misc\EventHandlerBehaviour;
+use ide\ui\elements\DNAnchorPane;
 use ide\utils\Json;
 use php\gui\event\UXDragEvent;
 use php\gui\event\UXEvent;
 use php\gui\event\UXMouseEvent;
-use php\gui\layout\UXAnchorPane;
 use php\gui\layout\UXFlowPane;
 use php\gui\layout\UXScrollPane;
 use php\gui\paint\UXColor;
-use php\gui\shape\UXRectangle;
 use php\gui\UXContextMenu;
 use php\gui\UXForm;
 use php\gui\UXLabel;
@@ -79,6 +77,8 @@ class FlowListViewDecorator implements \Countable
         if ($pane == null) {
             $pane = new UXFlowPane();
         }
+
+        DNAnchorPane::applyIDETheme($pane);
 
         $this->scrollPane = new UXScrollPane();
         $this->scrollPane->content = $pane;

@@ -1,15 +1,14 @@
 <?php
 namespace ide\editors\form;
-use ide\Logger;
+
 use ide\misc\EventHandlerBehaviour;
-use ide\utils\UiUtils;
+use ide\ui\elements\DNAnchorPane;
+use ide\ui\elements\DNTabPane;
 use php\gui\layout\UXAnchorPane;
-use php\gui\layout\UXHBox;
 use php\gui\layout\UXScrollPane;
 use php\gui\layout\UXVBox;
 use php\gui\UXApplication;
 use php\gui\UXNode;
-use php\gui\UXScreen;
 use php\gui\UXTab;
 use php\gui\UXTabPane;
 use php\lib\Items;
@@ -143,8 +142,6 @@ class IdeTabPane
                     $this->selectedIndex = $this->tabPane->selectedIndex;
                 });
             });
-
-            $tab->style = UiUtils::fontSizeStyle();
 
             $this->tabs[$code] = $tab;
 
@@ -360,7 +357,8 @@ class IdeTabPane
 
     public function makeUi()
     {
-        $ui = new UXTabPane();
+        $ui = new DNTabPane();
+        $ui->side = 'LEFT';
         UXAnchorPane::setAnchor($ui, 0);
 
         $ui->tabs->setAll($this->tabs);
@@ -384,6 +382,7 @@ class IdeTabPane
             $this->addCustomNode($node);
         }
 
+        DNAnchorPane::applyIDETheme($box);
         return $box;
     }
 }

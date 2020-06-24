@@ -60,4 +60,30 @@ class LightCSSStyle extends CSSStyle
     public function getListViewCSS(): array {
         return [];
     }
+
+    /**
+     * @return array
+     */
+    public function getTreeViewCSS(): array {
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    public function getTabPaneCSS(): array {
+        return [
+            "-dn-base" => "#f3f3f3",
+            "-dn-text-fill" => "#333333"
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getSplitPaneCSS(): array {
+        return [
+            "-dn-base" => "#f3f3f3"
+        ];
+    }
 }

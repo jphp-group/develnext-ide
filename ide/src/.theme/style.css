@@ -340,3 +340,25 @@
 .modules-editor {
     -fx-cursor: hand;
 }
+
+.dn-tab-pane > .tab-header-area {
+    -fx-base: -dn-base;
+    -fx-text-fill: -dn-text-fill;
+    -fx-border-radius: 0;
+}
+
+.dn-tab-pane > .tab-content-area {
+    -fx-background: -dn-base;
+    -fx-background-color: -dn-base;
+}
+
+.dn-split-pane {
+    -fx-border-width: 0;
+}
+
+.dn-split-pane:horizontal > .split-pane-divider {
+    -fx-base: -dn-base;
+}
+.dn-split-pane:vertical > .split-pane-divider {
+    -fx-base: -dn-base;
+}

@@ -9,14 +9,16 @@ use ide\Ide;
 use ide\settings\SettingsContext;
 use ide\settings\ui\AbstractSettingsGroup;
 use ide\settings\ui\AbstractSettingsItem;
+use ide\ui\elements\DNAnchorPane;
 use ide\ui\elements\DNButton;
+use ide\ui\elements\DNSplitPane;
+use ide\ui\elements\DNTreeView;
 use ide\ui\SettingsTreeItem;
 use php\gui\event\UXEvent;
 use php\gui\layout\UXAnchorPane;
 use php\gui\layout\UXHBox;
 use php\gui\UXSplitPane;
 use php\gui\UXTreeItem;
-use php\gui\UXTreeView;
 use php\lib\arr;
 
 class SettingsForm extends AbstractIdeForm
@@ -27,7 +29,7 @@ class SettingsForm extends AbstractIdeForm
     private $treeId;
 
     /**
-     * @var UXTreeView
+     * @var DNTreeView
      */
     private $tree;
 
@@ -41,9 +43,9 @@ class SettingsForm extends AbstractIdeForm
     {
         parent::__construct();
 
-        $split = new UXSplitPane();
+        $split = new DNSplitPane();
         $split->dividerPositions = [ .3 ];
-        $this->tree = new UXTreeView();
+        $this->tree = new DNTreeView();
         $this->tree->rootVisible = false;
         $this->tree->root = new UXTreeItem();
 
@@ -62,7 +64,7 @@ class SettingsForm extends AbstractIdeForm
         }
 
         $split->items->add($this->tree);
-        $split->items->add($this->root = new UXAnchorPane());
+        $split->items->add($this->root = new DNAnchorPane());
 
         /** @var IDETheme $currentTheme */
         $currentTheme = ChangeThemeCommand::$instance->getCurrentTheme();

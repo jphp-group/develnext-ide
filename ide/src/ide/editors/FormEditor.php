@@ -38,6 +38,10 @@ use ide\{action\ActionEditor,
     project\Project,
     project\ProjectIndexer,
     systems\FileSystem,
+    ui\elements\DNAnchorPane,
+    ui\elements\DNLabel,
+    ui\elements\DNSplitPane,
+    ui\elements\DNTabPane,
     ui\Notifications,
     utils\Json,
     utils\UiUtils};
@@ -1281,7 +1285,7 @@ class FormEditor extends AbstractModuleEditor
 
         $designer = $this->makeDesigner();
 
-        $tabs = new UXTabPane();
+        $tabs = new DNTabPane();
         $tabs->side = 'TOP';
         $tabs->tabClosingPolicy = 'UNAVAILABLE';
 
@@ -1924,7 +1928,7 @@ class FormEditor extends AbstractModuleEditor
 
         $class = __CLASS__;
 
-        $this->viewerAndEvents = new UXSplitPane([$viewer, $this->designerCodeEditor]);
+        $this->viewerAndEvents = new DNSplitPane([$viewer, $this->designerCodeEditor]);
 
         try {
             $this->viewerAndEvents->orientation = Ide::get()->getUserConfigValue("$class.orientation", 'VERTICAL');
@@ -1947,7 +1951,7 @@ class FormEditor extends AbstractModuleEditor
         $this->elementTypePaneContainer = $scrollPane;
 
         if ($this->prototypeTypePane) {
-            $typePanes = new UXTabPane();
+            $typePanes = new DNTabPane();
             $typePanes->tabClosingPolicy = 'UNAVAILABLE';
             $typePanes->side = 'LEFT';
 
@@ -1974,9 +1978,9 @@ class FormEditor extends AbstractModuleEditor
             $wrap = new UXVBox([$actions, $this->viewerAndEvents]);
             UXVBox::setVgrow($this->viewerAndEvents, 'ALWAYS');
 
-            $split = new UXSplitPane([$wrap, $scrollPane]);
+            $split = new DNSplitPane([$wrap, $scrollPane]);
         } else {
-            $split = new UXSplitPane([$this->viewerAndEvents, $scrollPane]);
+            $split = new DNSplitPane([$this->viewerAndEvents, $scrollPane]);
         }
 
         $split->observer('width')->addOnceListener(function ($_, $width) use ($scrollPane, $split) {
@@ -2470,7 +2474,7 @@ class FormEditor extends AbstractModuleEditor
             $this->leftPaneUi->hideBehaviourPane();
             $this->leftPaneUi->hideEventListPane();
 
-            $invalidLabel = new UXLabel('Нерабочий компонент');
+            $invalidLabel = new DNLabel('Нерабочий компонент');
             $invalidLabel->textColor = 'gray';
             $invalidLabel->graphic = ico('invalid16');
 

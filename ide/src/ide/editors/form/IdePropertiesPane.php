@@ -3,11 +3,11 @@ namespace ide\editors\form;
 
 use ide\editors\value\ElementPropertyEditor;
 use ide\misc\EventHandlerBehaviour;
+use ide\ui\elements\DNLabel;
+use ide\ui\elements\DNTitledPane;
 use php\gui\designer\UXDesignProperties;
-use php\gui\layout\UXAnchorPane;
 use php\gui\layout\UXHBox;
 use php\gui\layout\UXVBox;
-use php\gui\UXLabel;
 use php\gui\UXNode;
 
 class IdePropertiesPane
@@ -39,7 +39,7 @@ class IdePropertiesPane
      */
     public function __construct()
     {
-        $this->emptyNode = new UXLabel('Свойств нет.');
+        $this->emptyNode = new DNLabel('Свойств нет.');
     }
 
     /**
@@ -107,6 +107,7 @@ class IdePropertiesPane
             $groupPanes = $properties->getGroupPanes();
 
             foreach ($groupPanes as $pane) {
+                DNTitledPane::applyIDETheme($pane);
                 $pane = _($pane);
                 $pane->classes->add('property-group');
             }

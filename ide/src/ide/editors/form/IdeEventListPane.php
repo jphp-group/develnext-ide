@@ -20,6 +20,9 @@ use ide\Ide;
 use ide\Logger;
 use ide\misc\AbstractCommand;
 use ide\misc\EventHandlerBehaviour;
+use ide\ui\elements\DNButton;
+use ide\ui\elements\DNLabel;
+use ide\ui\elements\DNListView;
 use ide\utils\UiUtils;
 use php\desktop\Mouse;
 use php\gui\event\UXEvent;
@@ -537,19 +540,18 @@ class IdeEventListPane
 
     protected function makeEventTypePane()
     {
-        $addButton = new UXButton("ui.command.add.event::Добавить событие");
+        $addButton = new DNButton("ui.command.add.event::Добавить событие");
         $addButton->height = 30;
         $addButton->maxWidth = 10000;
-        $addButton->style = '-fx-font-weight: bold;' . UiUtils::fontSizeStyle();
+        $addButton->font = $addButton->font->withBold();
         $addButton->graphic = Ide::get()->getImage('icons/plus16.png');
 
         $addButton->on('action', function (UXEvent $event) {
             $this->doAddEvent($event);
         });
 
-        $changeButton = new UXButton();
+        $changeButton = new DNButton();
         $changeButton->size = [25, 25];
-        $changeButton->style = UiUtils::fontSizeStyle();
         $changeButton->graphic = Ide::get()->getImage('icons/exchange16.png');
         $changeButton->tooltipText = 'ui.command.change.event::Поменять событие';
 
@@ -557,16 +559,14 @@ class IdeEventListPane
             $this->doChangeEvent($event);
         });
 
-        $deleteButton = new UXButton();
-        $deleteButton->style =  UiUtils::fontSizeStyle();
+        $deleteButton = new DNButton();
         $deleteButton->size = [25, 25];
         $deleteButton->graphic = Ide::get()->getImage('icons/delete16.png');
 
-        $editButton = new UXButton("command.edit::Редактировать");
+        $editButton = new DNButton("command.edit::Редактировать");
         $editButton->graphic = Ide::get()->getImage('icons/edit16.png');
         $editButton->height = 25;
         $editButton->maxWidth = 10000;
-        $editButton->style = UiUtils::fontSizeStyle();
         UXHBox::setHgrow($editButton, 'ALWAYS');
 
         $otherButtons = new UXHBox([_($deleteButton), _($changeButton), _($editButton)]);
@@ -584,7 +584,7 @@ class IdeEventListPane
 
         $pane = new UXVBox();
 
-        $list = new UXListView();
+        $list = new DNListView();
         UXVBox::setVgrow($list, 'ALWAYS');
         $list->id = 'list';
 
@@ -659,10 +659,8 @@ class IdeEventListPane
                     $eventContextMenu->getRoot()->showByNode($constructorLink, 0, 18);
                 });
 
-                $phpLink = new UXHyperlink('php');
-
-                $name = _(new UXLabel($eventType['name']));
-                $name->style = UiUtils::fontSizeStyle() . "; -fx-font-weight: bold;";
+                $name = _(new DNLabel($eventType['name']));
+                $name->font = $name->font->withBold();
 
                 if ($codeEmpty && !$actionCount) {
                     $name->textColor = 'gray';
@@ -672,20 +670,20 @@ class IdeEventListPane
                 $nameLabel->spacing = 4;
 
                 if ($actionCount) {
-                    $node = new UXLabel("+$actionCount");
+                    $node = new DNLabel("+$actionCount");
                     $node->textColor = 'blue';
                     $node->font = $node->font->withSize(10)->withBold();
                     $nameLabel->add($node);
                 }
 
-                $methodNameLabel = new UXLabel($methodName);
+                $methodNameLabel = new DNLabel($methodName);
                 $methodNameLabel->textColor = UXColor::of('gray');
 
                 if ($param) {
-                    $paramLabel = new UXHBox([new UXLabel("("), _(new UXLabel($param)), new UXLabel(")")]);
+                    $paramLabel = new UXHBox([new DNLabel("("), _(new DNLabel($param)), new DNLabel(")")]);
 
                     foreach ($paramLabel->children as $l) {
-                        $l->style = '-fx-font-style: italic';
+                        $l->font = $l->font->withItalic();
                         $l->textColor = UXColor::of('#2f6eb2');
                     }
 
@@ -801,10 +799,10 @@ class IdeEventListPane
                     $countLabel->font->bold = true;
                     $countLabel->style = "-fx-font-size: 10px;";
 
-                    $this->hintNode->graphic = new UXHBox([_(new UXLabel($this->hintNodeText)), $countLabel]);
+                    $this->hintNode->graphic = new UXHBox([_(new DNLabel($this->hintNodeText)), $countLabel]);
                     $this->hintNode->graphic->spacing = 2;
                 } else {
-                    $this->hintNode->graphic = _(new UXLabel($this->hintNodeText));
+                    $this->hintNode->graphic = _(new DNLabel($this->hintNodeText));
                     $this->hintNode->graphic->textColor = 'gray';
                     $this->hintNode->text = "";
                 }

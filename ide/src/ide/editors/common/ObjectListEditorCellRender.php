@@ -2,9 +2,9 @@
 namespace ide\editors\common;
 
 use ide\Ide;
+use ide\ui\elements\DNLabel;
 use php\gui\layout\UXHBox;
 use php\gui\paint\UXColor;
-use php\gui\UXLabel;
 use php\gui\UXListCell;
 
 class ObjectListEditorCellRender
@@ -21,7 +21,7 @@ class ObjectListEditorCellRender
         $cell->graphic = null;
         $cell->text = null;
 
-        $label = _(new UXLabel($item->text));
+        $label = _(new DNLabel($item->text));
         $label->graphic = Ide::get()->getImage($item->graphic, [16, 16]);
 
         $label->paddingLeft = $item->level * 10;
@@ -30,9 +30,9 @@ class ObjectListEditorCellRender
             $cell->graphic = $label;
         } else {
             if ($item->hint) {
-                $hintLabel = _(new UXLabel(": {{$item->hint}}"));
+                $hintLabel = _(new DNLabel(": {{$item->hint}}"));
             } else {
-                $hintLabel = new UXLabel("");
+                $hintLabel = new DNLabel("");
             }
 
             $hintLabel->textColor = UXColor::of('gray');

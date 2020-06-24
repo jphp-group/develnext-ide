@@ -58,6 +58,7 @@ class AbstractIdeForm extends AbstractForm
         $this->title = _($this->title);
         _($this->layout);
 
+        $this->addStylesheet("/.theme/style.css");
         DNAnchorPane::applyIDETheme($this->layout);
     }
 }

@@ -42,6 +42,21 @@ abstract class CSSStyle
     abstract public function getListViewCSS(): array;
 
     /**
+     * @return array
+     */
+    abstract public function getTreeViewCSS(): array;
+
+    /**
+     * @return array
+     */
+    abstract public function getTabPaneCSS(): array;
+
+    /**
+     * @return array
+     */
+    abstract public function getSplitPaneCSS(): array;
+
+    /**
      * @param UXNode $node
      * @param array $css
      */
