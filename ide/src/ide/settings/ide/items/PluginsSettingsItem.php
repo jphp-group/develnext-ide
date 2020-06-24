@@ -5,9 +5,10 @@ namespace ide\settings\ide\items;
 use ide\Ide;
 use ide\settings\SettingsContext;
 use ide\settings\ui\AbstractSettingsItem;
+use ide\ui\elements\DNButton;
+use ide\ui\elements\DNLabel;
 use php\gui\layout\UXHBox;
 use php\gui\layout\UXVBox;
-use php\gui\UXButton;
 use php\gui\UXLabel;
 use php\gui\UXListView;
 use php\gui\UXNode;
@@ -42,7 +43,7 @@ class PluginsSettingsItem extends AbstractSettingsItem {
         $mainBox->items->add($list);
 
         foreach ($extensions as $extension) {
-            $label = new UXLabel(_($extension->getName()));
+            $label = new DNLabel(_($extension->getName()));
             $label->font = $label->font->withBold();
 
             $box = new UXHBox([
@@ -62,14 +63,14 @@ class PluginsSettingsItem extends AbstractSettingsItem {
             $header->alignment = "CENTER_LEFT";
             $fullBox->add($header);
 
-            $description = new UXLabel($extension->getDescription());
+            $description = new DNLabel($extension->getDescription());
             $description->wrapText = true;
 
             $fullBox->add($description);
 
             $buttonsBox = new UXHBox([
-                _($disableButton = new UXButton("plugin.disable")),
-                _($removeButton = new UXButton("plugin.remove")),
+                _($disableButton = new DNButton("plugin.disable")),
+                _($removeButton = new DNButton("plugin.remove")),
             ], 8);
 
             $fullBox->add($buttonsBox);

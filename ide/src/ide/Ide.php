@@ -12,7 +12,6 @@ use ide\formats\IdeFormatOwner;
 use ide\forms\MainForm;
 use ide\forms\SplashForm;
 use ide\l10n\IdeLocalizer;
-use ide\l10n\L10n;
 use ide\library\IdeLibrary;
 use ide\misc\AbstractCommand;
 use ide\misc\EventHandlerBehaviour;
@@ -28,6 +27,7 @@ use ide\systems\FileSystem;
 use ide\systems\IdeSystem;
 use ide\systems\ProjectSystem;
 use ide\tool\IdeToolManager;
+use ide\ui\elements\DNSeparator;
 use ide\ui\LazyLoadingImage;
 use ide\ui\Notifications;
 use ide\utils\FileUtils;
@@ -975,6 +975,7 @@ class Ide extends Application
                     if ($ui instanceof UXButton) {
                         $ui->maxHeight = 9999;
                     } else if ($ui instanceof UXSeparator) {
+                        DNSeparator::applyIDETheme($ui);
                         $ui->paddingLeft = 3;
                         $ui->paddingRight = 1;
                     }

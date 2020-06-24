@@ -15,7 +15,7 @@ class SettingsShowCommand extends AbstractCommand
 
     public function getIcon()
     {
-        return 'fa:gears,16px,';
+        return 'settings16';
     }
 
     public function isAlways()

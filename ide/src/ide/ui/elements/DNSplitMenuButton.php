@@ -2,31 +2,28 @@
 
 namespace ide\ui\elements;
 
-use Exception;
 use ide\commands\ChangeThemeCommand;
 use ide\commands\theme\CSSStyle;
 use ide\commands\theme\IDETheme;
-use php\gui\UXButton;
 use php\gui\UXNode;
+use php\gui\UXSplitMenuButton;
 
-class DNButton extends UXButton
+class DNSplitMenuButton extends UXSplitMenuButton
 {
     /**
-     * DNButton constructor.
-     * @param string $text
+     * DNSplitMenuButton constructor.
+     * @param null $text
      * @param UXNode|null $graphic
-     * @throws Exception
      */
-    public function __construct($text = '', UXNode $graphic = null)
-    {
+    public function __construct($text = null, UXNode $graphic = null) {
         parent::__construct($text, $graphic);
-        DNButton::applyIDETheme($this);
+        DNSplitMenuButton::applyIDETheme($this);
     }
 
     /**
-     * @param UXButton $button
+     * @param UXSplitMenuButton $button
      */
-    public static function applyIDETheme(UXButton $button) {
+    public static function applyIDETheme(UXSplitMenuButton $button) {
         /** @var IDETheme $currentTheme */
         $currentTheme = ChangeThemeCommand::$instance->getCurrentTheme();
         CSSStyle::applyCSSToNode($button, $currentTheme->getCSSStyle()->getButtonCSS());

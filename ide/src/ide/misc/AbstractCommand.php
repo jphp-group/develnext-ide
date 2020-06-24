@@ -5,7 +5,6 @@ use framework\core\Module;
 use ide\editors\AbstractEditor;
 use ide\Ide;
 use ide\ui\elements\DNButton;
-use ide\utils\UiUtils;
 use php\gui\UXMenuItem;
 use php\gui\UXSeparator;
 use php\lib\str;
@@ -104,7 +103,6 @@ abstract class AbstractCommand extends Module
         $button->maxHeight = 9999;
         $button->padding = 3;
         $button->paddingLeft = $button->paddingRight = 7;
-        $button->style = UiUtils::fontSizeStyle() . "; ";
 
         $action = $this->makeAction();
         $button->on('action', $action);

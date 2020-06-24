@@ -3,7 +3,7 @@
 namespace ide\ui\elements;
 
 use ide\commands\ChangeThemeCommand;
-use ide\commands\theme\ColorPalette;
+use ide\commands\theme\CSSStyle;
 use ide\commands\theme\IDETheme;
 use php\gui\UXMenuBar;
 
@@ -24,6 +24,6 @@ class DNMenuBar extends UXMenuBar
     public static function applyIDETheme(UXMenuBar $bar) {
         /** @var IDETheme $currentTheme */
         $currentTheme = ChangeThemeCommand::$instance->getCurrentTheme();
-        ColorPalette::applyCSSToNode($bar, $currentTheme->getColorPalette()->getMenuBarCSS());
+        CSSStyle::applyCSSToNode($bar, $currentTheme->getCSSStyle()->getMenuBarCSS());
     }
 }

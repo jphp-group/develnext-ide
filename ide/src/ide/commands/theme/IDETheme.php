@@ -21,7 +21,10 @@ abstract class IDETheme {
 
     abstract public function getTerminalTheme();
 
-    abstract public function getColorPalette(): ColorPalette;
+    /**
+     * @return CSSStyle
+     */
+    abstract public function getCSSStyle(): CSSStyle;
 
     public function onApply() {
         // something ...

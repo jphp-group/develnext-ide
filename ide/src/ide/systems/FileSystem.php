@@ -8,6 +8,8 @@ use ide\editors\menu\ContextMenu;
 use ide\forms\MainForm;
 use ide\Ide;
 use ide\Logger;
+use ide\ui\elements\DNAnchorPane;
+use ide\ui\elements\DNButton;
 use ide\utils\FileUtils;
 use ide\utils\Json;
 use ide\utils\UiUtils;
@@ -370,7 +372,7 @@ class FileSystem
             $wrapScroll->fitToWidth = true;
             UXAnchorPane::setAnchor($wrapScroll, 0);
 
-            $wrap = new UXAnchorPane();
+            $wrap = new DNAnchorPane();
             $wrap->width = static::$editorSplitDividerWidth;
             $wrap->add($wrapScroll);
             UXSplitPane::setResizeWithParent($wrap, false);
@@ -744,7 +746,7 @@ class FileSystem
             $tab->style = '-fx-cursor: hand; -fx-padding: 1px 0px;';
             $tab->graphic = Ide::get()->getImage('icons/plus16.png');
 
-            $button = new UXButton();
+            $button = new DNButton();
             $tab->graphic = $button;
 
             $button->graphic = Ide::get()->getImage('icons/plus16.png');

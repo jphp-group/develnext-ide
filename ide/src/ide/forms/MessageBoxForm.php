@@ -1,22 +1,18 @@
 <?php
 namespace ide\forms;
 
-use function flow;
 use ide\forms\mixins\DialogFormMixin;
 use ide\Ide;
-use ide\utils\UiUtils;
-use php\gui\framework\AbstractForm;
+use ide\ui\elements\DNButton;
+use ide\ui\elements\DNLabel;
 use php\gui\layout\UXHBox;
 use php\gui\UXApplication;
-use php\gui\UXButton;
 use php\gui\UXCheckbox;
-use php\gui\UXControl;
-use php\gui\UXForm;
 use php\gui\UXImageView;
 use php\gui\UXLabel;
 use php\gui\UXNode;
 use php\gui\UXWindow;
-use php\lib\str;
+use function flow;
 
 /**
  * @property UXHBox $buttonBox
@@ -74,6 +70,8 @@ class MessageBoxForm extends AbstractIdeForm
 
         $this->title = _('msg.title');
         $this->owner = Ide::get()->getMainForm();
+
+        DNLabel::applyIDETheme($this->messageLabel);
     }
 
     public function isChecked()
@@ -125,14 +123,13 @@ class MessageBoxForm extends AbstractIdeForm
         $this->messageLabel->text = $this->text;
 
         $i = 0;
-        foreach ($this->buttons as $value => $button)
-        {
+        foreach ($this->buttons as $value => $button) {
             if ($button instanceof UXNode) {
                 $this->buttonBox->add($button);
                 continue;
             }
 
-            $ui = new UXButton(_($button));
+            $ui = new DNButton(_($button));
             $ui->maxHeight = 10000;
             $ui->minWidth = 90;
             $ui->height = 30;
@@ -145,10 +142,8 @@ class MessageBoxForm extends AbstractIdeForm
             });
 
             if ($i++ == 0) {
-                $ui->style = '-fx-font-weight: bold';
+                $ui->css("-fx-font-weight", "bold");
             }
-
-            $ui->style .= ";" . UiUtils::fontSizeStyle();
 
             $this->buttonBox->add($ui);
         }

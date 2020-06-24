@@ -37,10 +37,10 @@ class LightTheme extends IDETheme {
     }
 
     /**
-     * @return ColorPalette
+     * @return CSSStyle
      */
-    public function getColorPalette(): ColorPalette {
-        return new LightColorPalette();
+    public function getCSSStyle(): CSSStyle {
+        return new LightCSSStyle();
     }
 
     public function onApply() {

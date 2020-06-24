@@ -2,6 +2,9 @@
 
 namespace ide\forms;
 
+use ide\commands\ChangeThemeCommand;
+use ide\commands\theme\CSSStyle;
+use ide\commands\theme\IDETheme;
 use ide\Ide;
 use ide\settings\SettingsContext;
 use ide\settings\ui\AbstractSettingsGroup;
@@ -11,7 +14,6 @@ use ide\ui\SettingsTreeItem;
 use php\gui\event\UXEvent;
 use php\gui\layout\UXAnchorPane;
 use php\gui\layout\UXHBox;
-use php\gui\UXButton;
 use php\gui\UXSplitPane;
 use php\gui\UXTreeItem;
 use php\gui\UXTreeView;
@@ -61,6 +63,10 @@ class SettingsForm extends AbstractIdeForm
 
         $split->items->add($this->tree);
         $split->items->add($this->root = new UXAnchorPane());
+
+        /** @var IDETheme $currentTheme */
+        $currentTheme = ChangeThemeCommand::$instance->getCurrentTheme();
+        CSSStyle::applyCSSToNode($this->root, $currentTheme->getCSSStyle()->getBoxPanelCSS());
 
         $this->layout = $split;
 

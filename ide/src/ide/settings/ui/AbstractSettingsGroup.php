@@ -5,6 +5,7 @@ namespace ide\settings\ui;
 use ide\Ide;
 use ide\settings\Settings;
 use ide\settings\SettingsContext;
+use ide\ui\elements\DNLabel;
 use php\gui\layout\UXVBox;
 use php\gui\UXHyperlink;
 use php\gui\UXLabel;
@@ -38,11 +39,11 @@ abstract class AbstractSettingsGroup {
         $box->spacing = 8;
         $box->classes->add("settings-group");
 
-        $name = new UXLabel(_($this->getName()));
+        $name = new DNLabel(_($this->getName()));
         $name->font = $name->font->withBold();
         $box->add($name);
 
-        $box->add(new UXLabel(
+        $box->add(new DNLabel(
             _($this->getDescription())
         ));
 

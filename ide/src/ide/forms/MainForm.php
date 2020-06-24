@@ -1,10 +1,14 @@
 <?php
 namespace ide\forms;
 
+use ide\commands\ChangeThemeCommand;
+use ide\commands\theme\CSSStyle;
+use ide\commands\theme\IDETheme;
 use ide\Ide;
 use ide\IdeConfigurable;
 use ide\IdeException;
 use ide\Logger;
+use ide\ui\elements\DNAnchorPane;
 use ide\ui\elements\DNMenuBar;
 use ide\utils\UiUtils;
 use php\gui\UXDndTabPane;
@@ -64,6 +68,8 @@ class MainForm extends AbstractIdeForm
         parent::__construct();
 
         $this->bottom = $this->bottomSpoiler;
+
+        DNAnchorPane::applyIDETheme($this->contentVBox);
 
         foreach ($this->contentVBox->children as $one) {
             if ($one instanceof UXMenuBar) {

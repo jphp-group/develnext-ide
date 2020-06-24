@@ -2,33 +2,30 @@
 
 namespace ide\ui\elements;
 
-use Exception;
 use ide\commands\ChangeThemeCommand;
 use ide\commands\theme\CSSStyle;
 use ide\commands\theme\IDETheme;
-use php\gui\UXButton;
+use php\gui\UXLabel;
 use php\gui\UXNode;
 
-class DNButton extends UXButton
+class DNLabel extends UXLabel
 {
     /**
-     * DNButton constructor.
+     * DNLabel constructor.
      * @param string $text
      * @param UXNode|null $graphic
-     * @throws Exception
      */
-    public function __construct($text = '', UXNode $graphic = null)
-    {
+    public function __construct($text = '', UXNode $graphic = null) {
         parent::__construct($text, $graphic);
-        DNButton::applyIDETheme($this);
+        DNLabel::applyIDETheme($this);
     }
 
     /**
-     * @param UXButton $button
+     * @param UXLabel $label
      */
-    public static function applyIDETheme(UXButton $button) {
+    public static function applyIDETheme(UXLabel $label) {
         /** @var IDETheme $currentTheme */
         $currentTheme = ChangeThemeCommand::$instance->getCurrentTheme();
-        CSSStyle::applyCSSToNode($button, $currentTheme->getCSSStyle()->getButtonCSS());
+        CSSStyle::applyCSSToNode($label, $currentTheme->getCSSStyle()->getLabelCSS());
     }
 }

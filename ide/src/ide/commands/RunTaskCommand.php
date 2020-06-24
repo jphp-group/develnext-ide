@@ -2,37 +2,22 @@
 
 namespace ide\commands;
 
-use facade\Async;
-use ide\tasks\TaskPanel;
-use php\concurrent\Promise;
-use function alert;
-use function dump;
-use function flow;
 use ide\editors\AbstractEditor;
-use ide\forms\BuildProgressForm;
 use ide\Ide;
 use ide\Logger;
 use ide\misc\AbstractCommand;
 use ide\project\Project;
-use ide\systems\FileSystem;
 use ide\systems\ProjectSystem;
+use ide\tasks\TaskPanel;
+use ide\ui\elements\DNSplitMenuButton;
 use php\gui\event\UXEvent;
 use php\gui\layout\UXHBox;
-use php\gui\UXComboBox;
 use php\gui\UXContextMenu;
-use php\gui\UXLabel;
 use php\gui\UXListCell;
 use php\gui\UXMenuItem;
-use php\gui\UXSplitMenuButton;
-use php\intellij\pty\PtyProcess;
-use php\lang\Process;
-use const PHP_INT_MAX;
-use function pre;
-use process\ProcessHandle;
 use function sizeof;
-use function uiLater;
 use function uiLaterAndWait;
-use function var_dump;
+use const PHP_INT_MAX;
 
 class RunTaskCommand extends AbstractCommand
 {
@@ -64,7 +49,7 @@ class RunTaskCommand extends AbstractCommand
 
 
         $this->panel = $panel = new UXHBox([], 4);
-        $this->taskSelect = $taskSelect = new UXSplitMenuButton('[не выбрано]', Ide::getImage($this->getIcon()));
+        $this->taskSelect = $taskSelect = new DNSplitMenuButton('[не выбрано]', Ide::getImage($this->getIcon()));
 
         $taskSelect->maxHeight = PHP_INT_MAX;
         $taskSelect->minWidth = 120;

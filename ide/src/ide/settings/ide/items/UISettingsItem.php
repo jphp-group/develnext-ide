@@ -5,35 +5,37 @@ namespace ide\settings\ide\items;
 
 
 use ide\commands\ChangeThemeCommand;
-use ide\commands\theme\IDETheme;
 use ide\Ide;
 use ide\IdeLanguage;
 use ide\l10n\LocalizedString;
 use ide\settings\SettingsContext;
 use ide\settings\ui\AbstractSettingsItem;
+use ide\ui\elements\DNCheckbox;
+use ide\ui\elements\DNComboBox;
+use ide\ui\elements\DNLabel;
+use ide\ui\elements\DNSeparator;
 use php\gui\layout\UXVBox;
-use php\gui\UXCheckbox;
-use php\gui\UXComboBox;
 use php\gui\UXImage;
-use php\gui\UXLabel;
 use php\gui\UXListCell;
 use php\gui\UXNode;
-use php\gui\UXSeparator;
 use php\lib\str;
 
-class UISettingsItem extends AbstractSettingsItem {
+class UISettingsItem extends AbstractSettingsItem
+{
 
     /**
      * @return string
      */
-    public function getName(): string {
+    public function getName(): string
+    {
         return "settings.ide.ui.item";
     }
 
     /**
      * @return string
      */
-    public function getIcon(): string {
+    public function getIcon(): string
+    {
         return "icons/label16.png";
     }
 
@@ -42,16 +44,17 @@ class UISettingsItem extends AbstractSettingsItem {
      * @return UXNode
      * @throws \Exception
      */
-    public function makeUi(SettingsContext $context): UXNode {
+    public function makeUi(SettingsContext $context): UXNode
+    {
         $box = new UXVBox();
         $box->spacing = 8;
         $box->padding = 16;
 
         // theme start
 
-        $box->add(new UXLabel("settings.ide.ui.theme.title"));
+        $box->add(new DNLabel("settings.ide.ui.theme.title"));
 
-        $themeCombobox = new UXComboBox();
+        $themeCombobox = new DNComboBox();
         $themeCombobox->id = "theme-combobox";
 
         $themes = ChangeThemeCommand::$instance->getThemes();
@@ -68,13 +71,13 @@ class UISettingsItem extends AbstractSettingsItem {
 
         // theme end
 
-        $box->add(new UXSeparator());
+        $box->add(new DNSeparator());
 
         // lang start
 
-        $box->add(new UXLabel("settings.ide.ui.language.title"));
+        $box->add(new DNLabel("settings.ide.ui.language.title"));
 
-        $langCombobox = new UXComboBox();
+        $langCombobox = new DNComboBox();
         $langCombobox->id = "lang-combobox";
         $langCombobox->onCellRender([$this, "uiLanguageRender"]);
         $langCombobox->onButtonRender([$this, "uiLanguageRender"]);
@@ -86,10 +89,10 @@ class UISettingsItem extends AbstractSettingsItem {
         $index = 0;
         foreach ($languages as $code => $language) {
 
-            /** @var IdeLanguage $language **/
+            /** @var IdeLanguage $language * */
             $langCombobox->items->add($code);
 
-            if($code == $currentLang){
+            if ($code == $currentLang) {
                 $langCombobox->selectedIndex = $index;
             }
 
@@ -100,13 +103,13 @@ class UISettingsItem extends AbstractSettingsItem {
 
         // lang end
 
-        $box->add(new UXSeparator());
+        $box->add(new DNSeparator());
 
         // splash start
 
-        $box->add(new UXLabel("settings.ide.ui.splash.title"));
+        $box->add(new DNLabel("settings.ide.ui.splash.title"));
 
-        $splashCheckBox = new UXCheckbox("settings.ide.ui.splash.show");
+        $splashCheckBox = new DNCheckbox("settings.ide.ui.splash.show");
         $splashCheckBox->id = "splash-checkbox";
         $splashCheckBox->selected = Ide::get()->getUserConfigValue('ide.splash', 1);
 
@@ -121,7 +124,8 @@ class UISettingsItem extends AbstractSettingsItem {
      * @param SettingsContext $context
      * @throws \Exception
      */
-    public function doSave(SettingsContext $context, UXNode $ui) {
+    public function doSave(SettingsContext $context, UXNode $ui)
+    {
         Ide::get()->setUserConfigValue('ide.splash', $ui->lookup("#splash-checkbox")->selected ? 1 : 0);
 
         ChangeThemeCommand::$instance->setCurrentTheme(
@@ -130,7 +134,7 @@ class UISettingsItem extends AbstractSettingsItem {
 
 
         $langCode = $ui->lookup("#lang-combobox")->value->__toString();
-        if(isset(Ide::get()->getLanguages()[$langCode])){
+        if (isset(Ide::get()->getLanguages()[$langCode])) {
             Ide::get()->setUserConfigValue('ide.language', $langCode);
             Ide::get()->getLocalizer()->language = $langCode;
         }
@@ -141,7 +145,8 @@ class UISettingsItem extends AbstractSettingsItem {
      * @return bool
      * @throws \Exception
      */
-    public function canSave(SettingsContext $context, UXNode $ui): bool {
+    public function canSave(SettingsContext $context, UXNode $ui): bool
+    {
         $theme = str::lower($ui->lookup("#theme-combobox")->value->__toString())
             != str::lower(ChangeThemeCommand::$instance->getCurrentTheme());
 
@@ -161,8 +166,9 @@ class UISettingsItem extends AbstractSettingsItem {
      * @param LocalizedString $value
      * @throws \Exception
      */
-    public function uiLanguageRender(UXListCell $item, $value){
-        $language = Ide::get()->getLanguages()[(string) $value];
+    public function uiLanguageRender(UXListCell $item, $value)
+    {
+        $language = Ide::get()->getLanguages()[(string)$value];
 
         $item->text = $language->getTitle();
         $item->graphic = Ide::get()->getImage(new UXImage($language->getIcon()));
@@ -177,10 +183,11 @@ class UISettingsItem extends AbstractSettingsItem {
     }
 
     /**
-     * @param  UXListCell $item
-     * @param  string $value
+     * @param UXListCell $item
+     * @param string $value
      */
-    public function uiThemeRender(UXListCell $item, $value){
+    public function uiThemeRender(UXListCell $item, $value)
+    {
         $item->text = $value->__toString();
     }
 }

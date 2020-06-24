@@ -38,10 +38,10 @@ class DarkTheme extends IDETheme {
     }
 
     /**
-     * @return ColorPalette
+     * @return CSSStyle
      */
-    public function getColorPalette(): ColorPalette {
-        return new DarkColorPalette();
+    public function getCSSStyle(): CSSStyle {
+        return new DarkCSSStyle();
     }
 
     public function onApply() {

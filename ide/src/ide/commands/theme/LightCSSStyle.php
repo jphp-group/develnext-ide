@@ -2,7 +2,7 @@
 
 namespace ide\commands\theme;
 
-class LightColorPalette extends ColorPalette
+class LightCSSStyle extends CSSStyle
 {
     /**
      * @return array
@@ -22,5 +22,28 @@ class LightColorPalette extends ColorPalette
             "-fx-base" => "#f3f3f3",
             "-fx-text-fill" => "#333333"
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getLabelCSS(): array {
+        return [
+            "-fx-text-fill" => "#333333"
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getBoxPanelCSS(): array {
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    public function getSeparatorCSS(): array {
+        return [];
     }
 }

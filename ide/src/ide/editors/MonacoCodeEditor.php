@@ -7,13 +7,14 @@ use ide\commands\ChangeThemeCommand;
 use ide\commands\theme\IDETheme;
 use ide\commands\theme\LightTheme;
 use ide\Logger;
+use ide\ui\elements\DNAnchorPane;
+use ide\ui\elements\DNLabel;
 use ide\utils\FileUtils;
 use php\concurrent\Promise;
 use php\gui\layout\UXAnchorPane;
 use php\gui\layout\UXHBox;
 use php\gui\monaco\MonacoEditor;
 use php\gui\UXLabel;
-use php\io\IOException;
 
 class MonacoCodeEditor extends AbstractCodeEditor {
     private MonacoEditor $editor;
@@ -88,8 +89,8 @@ class MonacoCodeEditor extends AbstractCodeEditor {
      * @inheritDoc
      */
     public function makeUi() {
-        $panel = new UXAnchorPane();
-        $loadingLabel = _(new UXLabel("code.editor.loading"));
+        $panel = new DNAnchorPane();
+        $loadingLabel = _(new DNLabel("code.editor.loading"));
         $loadingLabel->font = $loadingLabel->font->withSize(16);
 
         $loadingBox = new UXHBox([

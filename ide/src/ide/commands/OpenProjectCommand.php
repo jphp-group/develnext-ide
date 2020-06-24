@@ -5,8 +5,8 @@ use ide\editors\AbstractEditor;
 use ide\forms\OpenProjectForm;
 use ide\Ide;
 use ide\misc\AbstractCommand;
+use ide\ui\elements\DNSplitMenuButton;
 use php\gui\UXMenuItem;
-use php\gui\UXSplitMenuButton;
 
 /**
  * Class OpenProjectCommand
@@ -38,7 +38,7 @@ class OpenProjectCommand extends AbstractCommand
     {
         $button = $this->makeGlyphButton();
 
-        $split = new UXSplitMenuButton($button->text, $button->graphic);
+        $split = new DNSplitMenuButton($button->text, $button->graphic);
         $split->maxHeight = 9999;
         $split->tooltipText = $button->tooltipText;
         $split->on('action', $this->makeAction());

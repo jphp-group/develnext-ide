@@ -4,7 +4,7 @@ namespace ide\commands\theme;
 
 use php\gui\UXNode;
 
-abstract class ColorPalette
+abstract class CSSStyle
 {
     /**
      * @return array
@@ -15,6 +15,21 @@ abstract class ColorPalette
      * @return array
      */
     abstract public function getMenuBarCSS(): array;
+
+    /**
+     * @return array
+     */
+    abstract public function getLabelCSS(): array;
+
+    /**
+     * @return array
+     */
+    abstract public function getBoxPanelCSS(): array;
+
+    /**
+     * @return array
+     */
+    abstract public function getSeparatorCSS(): array;
 
     /**
      * @param UXNode $node

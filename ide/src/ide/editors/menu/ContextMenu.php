@@ -3,9 +3,10 @@ namespace ide\editors\menu;
 
 use action\Geometry;
 use ide\editors\AbstractEditor;
-use ide\Logger;
+use ide\Ide;
 use ide\misc\AbstractCommand;
 use ide\misc\EventHandlerBehaviour;
+use ide\ui\elements\DNSplitMenuButton;
 use ide\utils\UiUtils;
 use php\desktop\Mouse;
 use php\gui\event\UXKeyEvent;
@@ -14,11 +15,8 @@ use php\gui\UXContextMenu;
 use php\gui\UXMenu;
 use php\gui\UXMenuButton;
 use php\gui\UXMenuItem;
-use ide\Ide;
 use php\gui\UXNode;
-use php\gui\UXSplitMenuButton;
 use php\lang\IllegalArgumentException;
-use php\lib\str;
 
 /**
  * Class ContextMenu
@@ -369,7 +367,8 @@ class ContextMenu
      */
     public function makeButton(string $text = '', UXNode $icon = null, callable $onClick = null)
     {
-        $button = _(new UXSplitMenuButton($text, $icon));
+        /** @var DNSplitMenuButton $button */
+        $button = _(new DNSplitMenuButton($text, $icon));
 
         /** @var UXMenuItem $item */
         foreach ($this->getRoot()->items as $item) {

@@ -8,16 +8,14 @@ use ide\editors\WelcomeEditor;
  * Class WelcomeFormat
  * @package ide\formats
  */
-class WelcomeFormat extends AbstractFormat
-{
+class WelcomeFormat extends AbstractFormat {
     /**
      * @param $file
      *
      * @param array $options
      * @return AbstractEditor
      */
-    public function createEditor($file, array $options = [])
-    {
+    public function createEditor($file, array $options = []) {
         return new WelcomeEditor($file);
     }
 
@@ -26,8 +24,7 @@ class WelcomeFormat extends AbstractFormat
      *
      * @return bool
      */
-    public function isValid($file)
-    {
+    public function isValid($file) {
         return $file == '~welcome';
     }
 
@@ -36,8 +33,6 @@ class WelcomeFormat extends AbstractFormat
      *
      * @return mixed
      */
-    public function register($any)
-    {
-
+    public function register($any) {
     }
 }
