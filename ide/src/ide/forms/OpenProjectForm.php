@@ -16,6 +16,7 @@ use ide\systems\ProjectSystem;
 use ide\ui\elements\DNButton;
 use ide\ui\elements\DNLabel;
 use ide\ui\elements\DNListView;
+use ide\ui\elements\DNSeparator;
 use ide\ui\elements\DNTextField;
 use ide\ui\FlowListViewDecorator;
 use ide\ui\ImageBox;
@@ -34,8 +35,10 @@ use php\gui\UXButton;
 use php\gui\UXDialog;
 use php\gui\UXHyperlink;
 use php\gui\UXImageView;
+use php\gui\UXLabel;
 use php\gui\UXListCell;
 use php\gui\UXListView;
+use php\gui\UXSeparator;
 use php\gui\UXTabPane;
 use php\gui\UXTextField;
 use php\io\File;
@@ -58,6 +61,11 @@ use php\time\Time;
  * @property UXAnchorPane $sharedPane
  * @property UXTextField $projectQueryField
  * @property UXButton $projectSearchButton
+ * @property UXButton $pathButton
+ * @property UXLabel $projectOpenTitle
+ * @property UXLabel $projectOpenFavoriteDirectory
+ * @property UXLabel $projectOpenFileDesc
+ * @property UXSeparator $separator
  *
  * Class OpenProjectForm
  * @package ide\forms
@@ -184,13 +192,18 @@ class OpenProjectForm extends AbstractIdeForm
         Ide::accountManager()->bind('login', [$this, 'updateShared']);
         Ide::accountManager()->bind('logout', [$this, 'updateShared']);
 
+        DNLabel::applyIDETheme($this->projectOpenTitle);
+        DNLabel::applyIDETheme($this->projectOpenFileDesc);
+        DNLabel::applyIDETheme($this->projectOpenFavoriteDirectory);
         DNButton::applyIDETheme($this->openButton);
+        DNButton::applyIDETheme($this->pathButton);
         //DNButton::applyIDETheme($this->projectSearchButton);
         DNTextField::applyIDETheme($this->pathField);
         DNTextField::applyIDETheme($this->projectQueryField);
         DNListView::applyIDETheme($this->embeddedLibraryList);
         DNListView::applyIDETheme($this->libraryList);
         DNListView::applyIDETheme($this->sharedList);
+        DNSeparator::applyIDETheme($this->separator);
     }
 
     protected function sharedCellFactory(array $item)

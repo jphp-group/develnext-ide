@@ -9,12 +9,8 @@ use ide\ui\elements\DNAnchorPane;
 use ide\ui\elements\DNButton;
 use ide\ui\elements\DNLabel;
 use ide\ui\elements\DNSeparator;
-use php\gui\layout\UXAnchorPane;
-use php\gui\UXButton;
-use php\gui\UXLabel;
-use php\gui\UXLoader;
+use php\gui\layout\UXVBox;
 use php\gui\UXNode;
-use php\gui\UXSeparator;
 
 class WelcomeEditor extends AbstractEditor
 {
@@ -43,35 +39,37 @@ class WelcomeEditor extends AbstractEditor
      * @throws Exception
      */
     public function makeUi() {
-        $loader = new UXLoader();
-
-        /** @var UXAnchorPane $layout */
-        $layout = _($loader->load('res://.forms/blocks/_Welcome.fxml'));
+        $layout = new UXVBox();
+        $layout->padding = 24;
+        $layout->spacing = 8;
         DNAnchorPane::applyIDETheme($layout);
 
-        /** @var UXLabel $welcomeLabel */
-        $welcomeLabel = $layout->lookup('#welcomeLabel');
-        DNLabel::applyIDETheme($welcomeLabel);
+        $welcomeLabel = new DNLabel(_("welcome.title"));
+        $welcomeLabel->font = $welcomeLabel->font->withBold()->withSize(24);
 
-        /** @var UXSeparator $welcomeSeparator */
-        $welcomeSeparator = $layout->lookup('#welcomeSeparator');
-        DNSeparator::applyIDETheme($welcomeSeparator);
+        $layout->add($welcomeLabel);
+        $layout->add($separator = new DNSeparator());
+        $separator->height = 24;
 
-        /** @var UXButton $createProjectButton */
-        $createProjectButton = $layout->lookup('#createProjectButton');
+        $createProjectButton = new DNButton(_("welcome.project.create"), ico("new16"));
+        $createProjectButton->font = $createProjectButton->font->withSize(16);
+        $createProjectButton->width = 250;
+        $createProjectButton->alignment = 'BASELINE_LEFT';
         $createProjectButton->on('click', function () {
             Ide::get()->executeCommand(NewProjectCommand::class);
         });
 
-        /** @var UXButton $openProjectButton */
-        $openProjectButton = $layout->lookup('#openProjectButton');
+        $layout->add($createProjectButton);
+
+        $openProjectButton = new DNButton(_("welcome.project.open"), ico("open16"));
+        $openProjectButton->font = $openProjectButton->font->withSize(16);
+        $openProjectButton->width = 250;
+        $openProjectButton->alignment = 'BASELINE_LEFT';
         $openProjectButton->on('click', function () {
             Ide::get()->executeCommand(OpenProjectCommand::class);
         });
 
-        DNButton::applyIDETheme($createProjectButton);
-        DNButton::applyIDETheme($openProjectButton);
-
+        $layout->add($openProjectButton);
         return $layout;
     }
 }

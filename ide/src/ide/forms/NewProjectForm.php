@@ -9,13 +9,15 @@ use ide\library\IdeLibraryResource;
 use ide\misc\AbstractCommand;
 use ide\project\AbstractProjectTemplate;
 use ide\systems\ProjectSystem;
-use ide\utils\UiUtils;
+use ide\ui\elements\DNButton;
+use ide\ui\elements\DNLabel;
+use ide\ui\elements\DNListView;
+use ide\ui\elements\DNSeparator;
+use ide\ui\elements\DNTextField;
 use php\gui\event\UXMouseEvent;
-use php\gui\framework\AbstractForm;
 use php\gui\layout\UXHBox;
 use php\gui\layout\UXVBox;
-use php\gui\paint\UXColor;
-use php\gui\UXApplication;
+use php\gui\UXButton;
 use php\gui\UXDialog;
 use php\gui\UXDirectoryChooser;
 use php\gui\UXFileChooser;
@@ -23,6 +25,7 @@ use php\gui\UXImageView;
 use php\gui\UXLabel;
 use php\gui\UXListCell;
 use php\gui\UXListView;
+use php\gui\UXSeparator;
 use php\gui\UXTextField;
 use php\io\File;
 use php\lib\fs;
@@ -37,6 +40,16 @@ use php\util\Regex;
  * @property UXTextField $pathField
  * @property UXTextField $nameField
  * @property UXTextField $packageField
+ * @property UXButton $createButton
+ * @property UXButton $cancelButton
+ * @property UXButton $pathButton
+ * @property UXLabel $projectNewTitle
+ * @property UXLabel $projectNewName
+ * @property UXLabel $projectNewPackageName
+ * @property UXLabel $projectNewTemplate
+ * @property UXLabel $projectNewDir
+ * @property UXSeparator $topSeparator
+ * @property UXSeparator $bottomSeparator
  *
  * Class NewProjectForm
  * @package ide\forms
@@ -52,29 +65,9 @@ class NewProjectForm extends AbstractIdeForm
     /** @var UXFileChooser */
     protected $directoryChooser;
 
-    /**
-     * @var ContextMenu
-     */
-    protected $contextMenu;
-
     public function init()
     {
         parent::init();
-
-        $this->contextMenu = new ContextMenu();
-
-        $this->contextMenu->addCommand(AbstractCommand::make('Удалить', 'icons/delete16.png', function () {
-            $resource = Items::first($this->templateList->selectedItems);
-
-            if ($resource instanceof IdeLibraryResource) {
-                $msg = new MessageBoxForm("Вы уверены, что хотите удалить проект {$resource->getName()} из библиотеки?", ['Да, удалить', 'Нет'], $this);
-
-                if ($msg->showDialog() && $msg->getResultIndex() == 0) {
-                    Ide::get()->getLibrary()->delete($resource);
-                    $this->doShow();
-                }
-            }
-        }));
 
         $this->directoryChooser = new UXDirectoryChooser();
 
@@ -86,37 +79,38 @@ class NewProjectForm extends AbstractIdeForm
 
         $this->templateList->setCellFactory(function (UXListCell $cell, $template = null) {
             if ($template) {
-                if (is_string($template)) {
-                    $cell->text = $template . ":";
-                    $cell->textColor = UXColor::of('gray');
-                    $cell->padding = [5, 10];
-                    $cell->paddingTop = 10;
-                    $cell->style = '-fx-font-style: italic;';
-                    $cell->graphic = null;
-                } else {
-                    $titleName = new UXLabel($template->getName());
-                    $titleName->style = '-fx-font-weight: bold;'.UiUtils::fontSizeStyle();
+                $titleName = new DNLabel($template->getName());
+                $titleName->font = $titleName->font->withBold();
 
-                    $titleDescription = new UXLabel($template->getDescription());
-                    $titleDescription->style = '-fx-text-fill: gray;'.UiUtils::fontSizeStyle();
+                $titleDescription = new DNLabel($template->getDescription());
 
-                    if (!$titleDescription->text && $template instanceof IdeLibraryResource) {
-                        $titleDescription->text = 'Шаблонный проект без описания';
-                    }
+                $title = new UXVBox([$titleName, $titleDescription]);
+                $title->spacing = 0;
 
-                    $title = new UXVBox([$titleName, $titleDescription]);
-                    $title->spacing = 0;
+                $line = new UXHBox([$template instanceof AbstractProjectTemplate ? Ide::get()->getImage($template->getIcon32()) : ico('programEx32'), $title]);
+                $line->spacing = 7;
+                $line->padding = 5;
 
-                    $line = new UXHBox([$template instanceof AbstractProjectTemplate ? Ide::get()->getImage($template->getIcon32()) : ico('programEx32'), $title]);
-                    $line->spacing = 7;
-                    $line->padding = 5;
-
-                    $cell->text = null;
-                    $cell->graphic = $line;
-                    $cell->style = '';
-                }
+                $cell->text = null;
+                $cell->graphic = $line;
+                $cell->style = '';
             }
         });
+
+        DNListView::applyIDETheme($this->templateList);
+        DNTextField::applyIDETheme($this->pathField);
+        DNTextField::applyIDETheme($this->packageField);
+        DNTextField::applyIDETheme($this->nameField);
+        DNButton::applyIDETheme($this->createButton);
+        DNButton::applyIDETheme($this->cancelButton);
+        DNButton::applyIDETheme($this->pathButton);
+        DNLabel::applyIDETheme($this->projectNewTitle);
+        DNLabel::applyIDETheme($this->projectNewName);
+        DNLabel::applyIDETheme($this->projectNewPackageName);
+        DNLabel::applyIDETheme($this->projectNewTemplate);
+        DNLabel::applyIDETheme($this->projectNewDir);
+        DNSeparator::applyIDETheme($this->topSeparator);
+        DNSeparator::applyIDETheme($this->bottomSeparator);
     }
 
     /**
@@ -133,32 +127,11 @@ class NewProjectForm extends AbstractIdeForm
             $this->templateList->items->add($template);
         }
 
-        /*$libraryResources = Ide::get()->getLibrary()->getResources('projects');
-
-        if ($libraryResources) {
-            $this->templateList->items->add('Библиотека проектов');
-        }
-
-        $this->templateList->items->addAll($libraryResources);  */
-
         if ($templates) {
             $this->templateList->selectedIndexes = [0];
         }
 
         $this->nameField->requestFocus();
-    }
-
-    /**
-     * @event templateList.click-Right
-     * @param UXMouseEvent $e
-     */
-    public function doContextMenu(UXMouseEvent $e)
-    {
-        $resource = Items::first($this->templateList->selectedItems);
-
-        if ($resource instanceof IdeLibraryResource) {
-            $this->contextMenu->getRoot()->show($this, $e->screenX, $e->screenY);
-        }
     }
 
     /**

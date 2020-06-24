@@ -1,37 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="586.0" prefWidth="727.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="586.0" prefWidth="727.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox layoutX="21.0" layoutY="14.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <HBox prefHeight="32.0" prefWidth="640.0" spacing="10.0">
                <children>
                   <ImageView id="icon" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" />
-                  <Label maxWidth="1.7976931348623157E308" prefHeight="32.0" text="project.open.title" HBox.hgrow="ALWAYS">
+                  <Label fx:id="projectOpenTitle" maxWidth="1.7976931348623157E308" prefHeight="32.0" text="project.open.title" HBox.hgrow="ALWAYS">
                      <font>
                         <Font name="Tahoma" size="17.0" />
                      </font>
                   </Label>
                </children>
             </HBox>
-            <Separator prefHeight="9.0" prefWidth="661.0" />
+            <Separator fx:id="separator" prefHeight="9.0" prefWidth="661.0" />
             <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="617.0" spacing="10.0">
                <children>
                   <Button id="openButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="project.open.file">
@@ -39,7 +29,7 @@
                         <Insets left="15.0" right="15.0" />
                      </padding>
                   </Button>
-                  <Label prefHeight="24.0" text="project.open.file.desc" textFill="#6f6f6f" />
+                  <Label fx:id="projectOpenFileDesc" prefHeight="24.0" text="project.open.file.desc" textFill="#6f6f6f" />
                </children>
             </HBox>
             <TabPane id="tabPane" maxHeight="1.7976931348623157E308" styleClass="dn-style" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
@@ -104,7 +94,7 @@
             </TabPane>
             <VBox>
                <children>
-                  <Label prefHeight="24.0" text="project.open.favorite.directory" />
+                  <Label fx:id="projectOpenFavoriteDirectory" prefHeight="24.0" text="project.open.favorite.directory" />
                   <HBox prefHeight="31.0" prefWidth="640.0" spacing="10.0">
                      <children>
                         <Button id="pathButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="...">
