@@ -18,6 +18,7 @@ use ide\forms\mixins\SavableFormMixin;
 use ide\Ide;
 use ide\IdeException;
 use ide\misc\AbstractCommand;
+use ide\ui\elements\DNScrollPane;
 use ide\utils\PhpParser;
 use ide\utils\UiUtils;
 use php\format\ProcessorException;
@@ -573,7 +574,7 @@ class ActionConstructorForm extends AbstractIdeForm
             $t->data('group', $group);
             $t->text = $tab->text;
             $t->closable = false;
-            $t->content = new UXScrollPane($tab->content);
+            $t->content = new DNScrollPane($tab->content);
             $t->content->fitToWidth = true;
             $t->content->data('vbox', $tab->data('vbox'));
             $t->content->data('fbox', $tab->data('fbox'));

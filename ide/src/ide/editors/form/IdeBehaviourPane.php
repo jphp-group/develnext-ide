@@ -20,6 +20,7 @@ use php\gui\layout\UXHBox;
 use php\gui\layout\UXPane;
 use php\gui\layout\UXVBox;
 use php\gui\UXDialog;
+use php\gui\UXLabel;
 use php\gui\UXLabeled;
 use php\gui\UXNode;
 use php\gui\UXTab;
@@ -173,9 +174,8 @@ class IdeBehaviourPane
             if ($this->hintNode instanceof UXTab || $this->hintNode instanceof UXLabeled) {
                 if ($box->children->count) {
                     $this->hintNode->text = "";
-                    $countLabel = new DNLabel("+{$box->children->count}");
+                    $countLabel = new UXLabel("+{$box->children->count}");
                     $countLabel->textColor = 'blue';
-                    $countLabel->font = $countLabel->font->withSize(10)->withBold();
 
                     $this->hintNode->graphic = new UXHBox([_(new DNLabel($this->hintNodeText)), $countLabel]);
                     $this->hintNode->graphic->spacing = 2;

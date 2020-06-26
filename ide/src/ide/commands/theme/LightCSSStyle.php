@@ -86,4 +86,13 @@ class LightCSSStyle extends CSSStyle
             "-dn-base" => "#f3f3f3"
         ];
     }
+
+    /**
+     * @return array
+     */
+    public function getScrollPaneCSS(): array {
+        return [
+            "-dn-base" => "#f3f3f3"
+        ];
+    }
 }

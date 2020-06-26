@@ -1,13 +1,10 @@
 <?php
 namespace ide\editors\form;
 
-use game\SpriteManager;
 use ide\formats\sprite\IdeSpriteManager;
 use ide\misc\EventHandlerBehaviour;
 use php\game\UXSprite;
 use php\gui\event\UXEvent;
-use php\gui\event\UXMouseEvent;
-use php\gui\layout\UXAnchorPane;
 use php\gui\layout\UXHBox;
 use php\gui\layout\UXVBox;
 use php\gui\UXApplication;
@@ -18,7 +15,6 @@ use php\gui\UXImageArea;
 use php\gui\UXMenuItem;
 use php\gui\UXTextField;
 use php\gui\UXTitledPane;
-use php\lib\Items;
 
 /**
  * Class IdeSpritePane

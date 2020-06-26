@@ -4,6 +4,7 @@ namespace ide\ui;
 use ide\misc\AbstractCommand;
 use ide\misc\EventHandlerBehaviour;
 use ide\ui\elements\DNAnchorPane;
+use ide\ui\elements\DNScrollPane;
 use ide\utils\Json;
 use php\gui\event\UXDragEvent;
 use php\gui\event\UXEvent;
@@ -80,7 +81,7 @@ class FlowListViewDecorator implements \Countable
 
         DNAnchorPane::applyIDETheme($pane);
 
-        $this->scrollPane = new UXScrollPane();
+        $this->scrollPane = new DNScrollPane();
         $this->scrollPane->content = $pane;
         $this->scrollPane->fitToWidth = true;
         $this->scrollPane->fitToHeight = true;

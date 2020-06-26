@@ -22,7 +22,6 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import org.develnext.jphp.ext.javafx.classes.UXTableCell;
 import org.develnext.jphp.gui.designer.GuiDesignerExtension;
-import php.runtime.annotation.Reflection;
 import php.runtime.annotation.Reflection.Namespace;
 import php.runtime.annotation.Reflection.Nullable;
 import php.runtime.annotation.Reflection.Property;
@@ -214,6 +213,7 @@ public class UXDesignProperties extends BaseObject {
             setFocusTraversable(false);
 
             setStyle("-fx-font-size: 11px; -fx-font-family: Tahoma;");
+            getStyleClass().add("dn-property-table-view");
 
             prefHeightProperty().bind(fixedCellSizeProperty().multiply(Bindings.size(getItems())));
             minHeightProperty().bind(prefHeightProperty());
@@ -250,31 +250,18 @@ public class UXDesignProperties extends BaseObject {
                 }
             });
 
-            nameColumn.setCellFactory(new Callback<TableColumn, TableCell>() {
-                @Override
-                public TableCell call(TableColumn param) {
-                    return new NameCell<>();
-                }
-            });
-            valueColumn.setCellFactory(new Callback<TableColumn, TableCell>() {
-                @Override
-                public TableCell call(TableColumn param) {
-                    return new EditingCell<>();
-                }
-            });
+            nameColumn.setCellFactory(param -> new NameCell<>());
+            valueColumn.setCellFactory(param -> new EditingCell<>());
 
-            widthProperty().addListener(new ChangeListener<Number>() {
-                @Override
-                public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                    //Don't show header
-                    Pane header = (Pane) lookup("TableHeaderRow");
+            widthProperty().addListener((observable, oldValue, newValue) -> {
+                //Don't show header
+                Pane header = (Pane) lookup("TableHeaderRow");
 
-                    if (header.isVisible()){
-                        header.setMaxHeight(0);
-                        header.setMinHeight(0);
-                        header.setPrefHeight(0);
-                        header.setVisible(false);
-                    }
+                if (header.isVisible()){
+                    header.setMaxHeight(0);
+                    header.setMinHeight(0);
+                    header.setPrefHeight(0);
+                    header.setVisible(false);
                 }
             });
 
@@ -310,7 +297,7 @@ public class UXDesignProperties extends BaseObject {
             setAlignment(Pos.BASELINE_RIGHT);
             setPadding(new Insets(1, 5, 1, 1));
             setText(item == null ? null : item.toString());
-            setTextFill(Color.GRAY.darker());
+            getStyleClass().add("dn-name-cell");
         }
     }
 
@@ -325,6 +312,7 @@ public class UXDesignProperties extends BaseObject {
             super.updateItem(item, empty);
 
             setText(null);
+            getStyleClass().add("dn-edit-cell");
 
             PropertyValue value = (PropertyValue) item;
 

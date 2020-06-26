@@ -57,6 +57,11 @@ abstract class CSSStyle
     abstract public function getSplitPaneCSS(): array;
 
     /**
+     * @return array
+     */
+    abstract public function getScrollPaneCSS(): array;
+
+    /**
      * @param UXNode $node
      * @param array $css
      */

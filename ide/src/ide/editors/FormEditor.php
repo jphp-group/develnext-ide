@@ -40,6 +40,7 @@ use ide\{action\ActionEditor,
     systems\FileSystem,
     ui\elements\DNAnchorPane,
     ui\elements\DNLabel,
+    ui\elements\DNScrollPane,
     ui\elements\DNSplitPane,
     ui\elements\DNTabPane,
     ui\Notifications,
@@ -1815,9 +1816,9 @@ class FormEditor extends AbstractModuleEditor
         }
 
         if (!$fullArea) {
-            $viewer = $this->layoutViewer = new UXScrollPane(new UXIsolatedNode($area));
+            $viewer = $this->layoutViewer = new DNScrollPane(new UXIsolatedNode($area));
         } else {
-            $viewer = $this->layoutViewer = new UXScrollPane($area);
+            $viewer = $this->layoutViewer = new DNScrollPane($area);
         }
 
         $viewer->classes->add('dn-mosaic-background');

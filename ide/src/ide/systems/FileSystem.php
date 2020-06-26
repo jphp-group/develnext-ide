@@ -10,29 +10,19 @@ use ide\Ide;
 use ide\Logger;
 use ide\ui\elements\DNAnchorPane;
 use ide\ui\elements\DNButton;
+use ide\ui\elements\DNScrollPane;
 use ide\ui\elements\DNSplitPane;
 use ide\utils\FileUtils;
-use ide\utils\Json;
-use ide\utils\UiUtils;
 use php\gui\event\UXEvent;
-use php\gui\event\UXMouseEvent;
 use php\gui\layout\UXAnchorPane;
-use php\gui\layout\UXScrollPane;
-use php\gui\UXApplication;
-use php\gui\UXButton;
-use php\gui\UXContextMenu;
-use php\gui\UXDialog;
 use php\gui\UXDndTabPane;
 use php\gui\UXForm;
 use php\gui\UXSplitPane;
 use php\gui\UXTab;
-use php\gui\UXMenu;
 use php\gui\UXTabPane;
 use php\io\File;
-use php\lib\arr;
 use php\lib\fs;
 use php\lib\Items;
-use timer\AccurateTimer;
 
 class FileSystem
 {
@@ -368,7 +358,7 @@ class FileSystem
                 $leftPaneUi = $leftPaneUi->makeUi();
             }
 
-            $wrapScroll = new UXScrollPane($leftPaneUi);
+            $wrapScroll = new DNScrollPane($leftPaneUi);
             $wrapScroll->fitToHeight = true;
             $wrapScroll->fitToWidth = true;
             UXAnchorPane::setAnchor($wrapScroll, 0);

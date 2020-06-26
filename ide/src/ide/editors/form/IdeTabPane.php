@@ -3,9 +3,9 @@ namespace ide\editors\form;
 
 use ide\misc\EventHandlerBehaviour;
 use ide\ui\elements\DNAnchorPane;
+use ide\ui\elements\DNScrollPane;
 use ide\ui\elements\DNTabPane;
 use php\gui\layout\UXAnchorPane;
-use php\gui\layout\UXScrollPane;
 use php\gui\layout\UXVBox;
 use php\gui\UXApplication;
 use php\gui\UXNode;
@@ -131,7 +131,7 @@ class IdeTabPane
             $tab->text = $name;
 
             if ($withScroll && $content) {
-                $tab->content = new UXScrollPane($content);
+                $tab->content = new DNScrollPane($content);
                 $tab->content->fitToWidth = true;
             } else {
                 $tab->content = $content;

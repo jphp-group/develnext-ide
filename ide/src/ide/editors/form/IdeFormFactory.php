@@ -2,16 +2,12 @@
 namespace ide\editors\form;
 
 use ide\Logger;
-use php\game\UXSpriteView;
 use php\gui\framework\AbstractFactory;
 use php\gui\framework\DataUtils;
-use php\gui\UXData;
-use php\gui\UXImageArea;
 use php\gui\UXLoader;
 use php\gui\UXNode;
 use php\io\IOException;
 use php\lang\IllegalArgumentException;
-use php\time\Time;
 
 class IdeFormFactory extends AbstractFactory
 {

@@ -12,7 +12,8 @@ class DarkCSSStyle extends CSSStyle {
             "-fx-base" => "#333333",
             "-fx-control-inner-background" => "-fx-base",
             "-fx-control-inner-background-alt" => "derive(-fx-base, 4%)",
-            "-fx-text-fill" => "#ffffff"
+            "-dn-text-fill" => "#ffffff",
+            "-fx-text-fill" => "-dn-text-fill"
         ];
     }
 
@@ -108,6 +109,15 @@ class DarkCSSStyle extends CSSStyle {
      * @return array
      */
     public function getSplitPaneCSS(): array {
+        return [
+            "-dn-base" => "#333333"
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getScrollPaneCSS(): array {
         return [
             "-dn-base" => "#333333"
         ];

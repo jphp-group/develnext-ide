@@ -116,7 +116,8 @@ class MainForm extends AbstractIdeForm
 
         $this->headRightPane->spacing = 5;
 
-        $pane = new DNTabPane();
+        /** @var UXTabPane $pane */
+        $pane = new UXDndTabPane();
 
         $parent = $this->fileTabPane->parent;
         $this->fileTabPane->free();

@@ -22,6 +22,8 @@ class DNAnchorPane extends UXPanel {
      * @param UXPane $panel
      */
     public static function applyIDETheme(UXPane $panel) {
+        $panel->classes->add("dn-anchor-pane");
+
         /** @var IDETheme $currentTheme */
         $currentTheme = ChangeThemeCommand::$instance->getCurrentTheme();
         CSSStyle::applyCSSToNode($panel, $currentTheme->getCSSStyle()->getBoxPanelCSS());

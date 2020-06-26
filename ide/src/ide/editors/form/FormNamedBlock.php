@@ -3,13 +3,11 @@ namespace ide\editors\form;
 
 use ide\Ide;
 use php\gui\effect\UXColorAdjustEffect;
-use php\gui\event\UXEvent;
 use php\gui\layout\UXAnchorPane;
 use php\gui\UXApplication;
 use php\gui\UXImageView;
 use php\gui\UXLabel;
 use php\lib\str;
-use script\TimerScript;
 
 /**
  * Class FormNamedBlock

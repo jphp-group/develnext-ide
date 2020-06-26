@@ -670,9 +670,8 @@ class IdeEventListPane
                 $nameLabel->spacing = 4;
 
                 if ($actionCount) {
-                    $node = new DNLabel("+$actionCount");
+                    $node = new UXLabel("+$actionCount");
                     $node->textColor = 'blue';
-                    $node->font = $node->font->withSize(10)->withBold();
                     $nameLabel->add($node);
                 }
 
