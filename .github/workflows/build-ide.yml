@@ -17,7 +17,7 @@ jobs:
         java-package: jdk+fx # (jre, jdk, or jdk+fx) - defaults to jdk
         architecture: x64 # (x64 or x86) - defaults to x64
     - name: Install JPPM
-      run: wget -O - https://github.com/jphp-group/jphp/releases/download/jppm-0.6.1/jppm-setup-0.6.1.sh | bash
+      run: wget -O - https://github.com/jphp-group/jphp/releases/download/jppm-0.6.6/jppm-setup-0.6.6.sh | bash
     - name: Prepare IDE
       run: jppm prepare-ide ${{ matrix.build }}
     - name: Build IDE
