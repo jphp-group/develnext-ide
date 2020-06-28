@@ -1922,7 +1922,7 @@ class FormEditor extends AbstractModuleEditor
         $this->prototypeTypePane = $this->makePrototypePane();
         //$this->behaviourPane = new IdeBehaviourPane($this->behaviourManager);
 
-        $designerCodeEditor = new UXAnchorPane();
+        $designerCodeEditor = new DNAnchorPane();
         $designerCodeEditor->hide();
 
         $this->designerCodeEditor = $designerCodeEditor;
@@ -1945,7 +1945,7 @@ class FormEditor extends AbstractModuleEditor
 
         $this->viewerAndEvents->items->remove($designerCodeEditor);
 
-        $scrollPane = new UXScrollPane($this->elementTypePane->getContent());
+        $scrollPane = new DNScrollPane($this->elementTypePane->getContent());
         $scrollPane->fitToWidth = true;
         //$scrollPane->maxWidth = 240;
         $scrollPane->minHeight = 100;

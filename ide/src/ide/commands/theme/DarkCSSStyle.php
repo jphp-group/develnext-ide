@@ -110,7 +110,8 @@ class DarkCSSStyle extends CSSStyle {
      */
     public function getSplitPaneCSS(): array {
         return [
-            "-dn-base" => "#333333"
+            "-dn-base" => "#333333",
+            "-fx-background-color" => "none"
         ];
     }
 
