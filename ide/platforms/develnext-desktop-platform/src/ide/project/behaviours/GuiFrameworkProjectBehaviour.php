@@ -3,31 +3,15 @@
 namespace ide\project\behaviours;
 
 use ide\editors\AbstractEditor;
-use ide\editors\FormEditor;
 use ide\editors\menu\AbstractMenuCommand;
-use ide\entity\ProjectSkin;
-use ide\formats\sprite\IdeSpriteManager;
-use ide\formats\templates\GuiApplicationConfFileTemplate;
-use ide\forms\MessageBoxForm;
 use ide\Ide;
 use ide\IdeException;
-use ide\library\IdeLibrarySkinResource;
-use ide\Logger;
 use ide\project\AbstractProjectBehaviour;
-use ide\project\behaviours\gui\SkinManagerForm;
 use ide\project\supports\JavaFXProjectSupport;
 use ide\systems\FileSystem;
-use ide\utils\FileUtils;
-use php\compress\ZipException;
-use php\gui\UXApplication;
 use php\gui\UXMenu;
 use php\gui\UXMenuItem;
 use php\io\File;
-use php\io\IOException;
-use php\io\ResourceStream;
-use php\lib\fs;
-use php\lib\reflect;
-use php\lib\str;
 use php\util\Configuration;
 use timer\AccurateTimer;
 

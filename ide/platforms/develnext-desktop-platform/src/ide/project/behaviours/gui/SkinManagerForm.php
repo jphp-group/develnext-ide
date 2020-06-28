@@ -222,7 +222,6 @@ class SkinManagerForm extends AbstractIdeForm
 
     public function updateList()
     {
-        $this->list->items->clear(); // В списке не будет пункта "без скина"
         $resources = Ide::get()->getLibrary()->getResources('skins');
 
         foreach ($resources as $resource) {

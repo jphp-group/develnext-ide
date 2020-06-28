@@ -4,10 +4,11 @@ namespace ide\tasks;
 
 use ide\commands\ChangeThemeCommand;
 use ide\Ide;
+use ide\ui\elements\DNAnchorPane;
+use ide\ui\elements\DNButton;
+use ide\ui\elements\DNCheckbox;
 use php\gui\layout\UXAnchorPane;
 use php\gui\layout\UXHBox;
-use php\gui\UXButton;
-use php\gui\UXCheckbox;
 use php\gui\UXNode;
 use php\intellij\pty\PtyProcess;
 use php\intellij\ui\JediTermWidget;
@@ -79,10 +80,10 @@ class TaskPanel {
             $this->triggerDestroyEvent();
         });
 
-        $panel = new UXAnchorPane();
+        $panel = new DNAnchorPane();
         $panel->add($node);
 
-        $destroyButton = _(new UXButton("command.close", ico("525:square,16px,#d04949")));
+        $destroyButton = _(new DNButton("command.close", ico("525:square,16px,#d04949")));
         $destroyButton->on("action", function () use ($destroyButton) {
             if ($this->process->isAlive())
                 $this->destroy();
@@ -91,7 +92,7 @@ class TaskPanel {
             $this->triggerDestroyEvent();
         });
 
-        $hideCheckbox = _(new UXCheckbox("command.close.after.exit"));
+        $hideCheckbox = _(new DNCheckbox("command.close.after.exit"));
         $hideCheckbox->selected = $this->closeAfterExit;
         $hideCheckbox->on("action", function () use ($hideCheckbox) {
             Ide::get()->setUserConfigValue("builder.closeAfterDone", $this->closeAfterExit = $hideCheckbox->selected);

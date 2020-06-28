@@ -286,7 +286,7 @@ class DesignProjectControlPane_SkinConvertToTheme extends AbstractMenuCommand
 
         /** @var JavaFXProjectSupport $gui */
         $gui = Project::findSupportOfCurrent('javafx');
-        $item->enabled = $gui && $gui->getCurrentSkin(Ide::project())->getName() === $gui->getDefaultSkinName();
+        $item->enabled = $gui && $gui->getCurrentSkin(Ide::project()) != null;
     }
 }
 
@@ -330,6 +330,6 @@ class DesignProjectControlPane_SkinClearCommand extends AbstractMenuCommand
 
         /** @var JavaFXProjectSupport $gui */
         $gui = Project::findSupportOfCurrent('javafx');
-        $item->enabled = $gui && $gui->getCurrentSkin(Ide::project())->getName() === $gui->getDefaultSkinName();
+        $item->enabled = $gui && $gui->getCurrentSkin(Ide::project()) != null;
     }
 }

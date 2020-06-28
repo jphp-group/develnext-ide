@@ -13,6 +13,7 @@ use ide\project\ProjectIndexer;
 use ide\scripts\AbstractScriptComponent;
 use ide\scripts\ScriptComponentContainer;
 use ide\scripts\UnknownScriptComponent;
+use ide\ui\elements\DNAnchorPane;
 use ide\utils\FileUtils;
 use ide\utils\Json;
 use php\format\JsonProcessor;
@@ -361,7 +362,7 @@ class ScriptModuleEditor extends FormEditor
         }
 
 
-        $this->layout = new UXAnchorPane();
+        $this->layout = new DNAnchorPane();
         //$this->layout->minSize = [800, 600];
         //$this->layout->size = [800, 600];
         //$this->layout->css('background-color', 'white');

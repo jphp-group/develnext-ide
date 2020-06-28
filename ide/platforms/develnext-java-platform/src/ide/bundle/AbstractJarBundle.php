@@ -2,21 +2,15 @@
 
 namespace ide\bundle;
 
+use Exception;
 use ide\Ide;
 use ide\project\Project;
 use ide\project\ProjectModule;
 use ide\utils\FileUtils;
 use php\compress\ZipFile;
 use php\io\File;
-use php\io\IOException;
-use php\io\MiscStream;
-use php\io\Stream;
-use php\lib\arr;
 use php\lib\fs;
 use php\lib\str;
-use php\net\URL;
-use php\util\Regex;
-use php\util\Scanner;
 
 /**
  * Class AbstractJarBundle
@@ -105,31 +99,29 @@ abstract class AbstractJarBundle extends AbstractBundle
 
             if (fs::isFile($filename)) {
                 $zipFile = new ZipFile($filename);
-                try {
-                    $vendorDirectory = $this->getVendorDirectory() . "/";
+                $vendorDirectory = $this->getVendorDirectory() . "/";
 
-                    $project->addModule(ProjectModule::ofDir($this->getProjectVendorDirectory()));
+                $project->addModule(ProjectModule::ofDir($this->getProjectVendorDirectory()));
 
-                    foreach ($zipFile->statAll() as $stat) {
-                        $name = $stat['name'];
+                foreach ($zipFile->statAll() as $stat) {
+                    $name = $stat['name'];
 
-                        if ($name == "$vendorDirectory.vendor") {
+                    if ($name == "$vendorDirectory.vendor") {
+                        continue;
+                    }
+
+                    if (str::startsWith($name, $vendorDirectory)) {
+                        if ($stat['directory']) {
                             continue;
                         }
 
-                        if (str::startsWith($name, $vendorDirectory)) {
-                            if ($stat['directory']) {
-                                continue;
+                        $dest = $this->getProjectVendorDirectory()->getPath() . "/" . FileUtils::relativePath($vendorDirectory, $name);
+
+                        FileUtils::copyFileFromZipAsync($filename, $name, $dest, function ($result) use ($project, $dest) {
+                            if ($result > -1) {
+                                $project->loadSourceForInspector($dest);
                             }
-
-                            $dest = $this->getProjectVendorDirectory()->getPath() . "/" . FileUtils::relativePath($vendorDirectory, $name);
-
-                            FileUtils::copyFileFromZipAsync($filename, $name, $dest, function ($result) use ($project, $dest) {
-                                if ($result > -1) {
-                                    $project->loadSourceForInspector($dest);
-                                }
-                            });
-                        }
+                        });
                     }
                 }
             }

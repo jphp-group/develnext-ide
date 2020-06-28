@@ -3,8 +3,6 @@
 namespace ide\entity;
 
 use ide\misc\AbstractEntity;
-use ide\project\behaviours\gui\SkinManagerForm;
-use ide\systems\IdeSystem;
 use php\compress\ZipException;
 use php\compress\ZipFile;
 use php\io\IOException;

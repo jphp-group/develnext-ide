@@ -1394,7 +1394,7 @@ class FormEditor extends AbstractModuleEditor
         $count = $this->viewerAndEvents->items->count();
 
         if ($count < 2) {
-            $panel = new UXAnchorPane();
+            $panel = new DNAnchorPane();
 
             if ($dividerPositions) {
                 $this->viewerAndEvents->dividerPositions = $dividerPositions;

@@ -10,7 +10,7 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="688.0"
             prefWidth="988.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <VBox id="rootPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+        <VBox style="-fx-border-width: 0" id="rootPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
               AnchorPane.topAnchor="0.0">
             <children>
                 <SplitPane id="contentSplit" dividerPositions="1.0" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0"
@@ -45,7 +45,7 @@
                                 <!--<DockPane id="dockPane">
 
                                 </DockPane>  -->
-                                <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                                <AnchorPane style="-fx-border-width: 0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
                                             VBox.vgrow="ALWAYS">
                                     <children>
                                         <SplitPane dividerPositions="0.2530487804878049" id="splitTree"
@@ -73,7 +73,7 @@
                                 </AnchorPane>
                             </children>
                         </VBox>
-                        <AnchorPane id="bottomSpoiler" prefHeight="200.0" prefWidth="200.0"
+                        <AnchorPane style="-fx-border-width: 0" id="bottomSpoiler" prefHeight="200.0" prefWidth="200.0"
                                     SplitPane.resizableWithParent="false">
                             <children>
                                 <TabPane id="bottomSpoilerTabPane" layoutX="75.0" layoutY="50.0" prefHeight="200.0"

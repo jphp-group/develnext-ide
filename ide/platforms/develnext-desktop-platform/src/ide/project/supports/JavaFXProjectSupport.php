@@ -1001,8 +1001,7 @@ class JavaFXProjectSupport extends AbstractProjectSupport
         if (!fs::isDir($skinDir) ||
             !fs::isFile("$skinDir/skin.json") ||
             !fs::isFile("$skinDir/skin.css")) {
-            $this->clearSkin($project); // Если каких-то файлов темы нет, пусть тема будет очищена
-            return $this->getCurrentSkin($project);
+            return null;
         }
 
         try {
@@ -1010,7 +1009,7 @@ class JavaFXProjectSupport extends AbstractProjectSupport
             return $skin;
         } catch (IOException $e) {
             Logger::warn("Unable to read skin information, {$e->getMessage()}");
-            return ProjectSkin::createEmpty();
+            return null;
         }
     }
 
@@ -1027,7 +1026,7 @@ class JavaFXProjectSupport extends AbstractProjectSupport
         fs::clean($skinDir);
         fs::delete($skinDir);
 
-        $this->applySkin($project, $this->getDefaultSkin());
+        $this->reloadStylesheet($project);
     }
 
 
@@ -1058,23 +1057,6 @@ class JavaFXProjectSupport extends AbstractProjectSupport
                 MessageBoxForm::warning('message.gui.skin.cannot.apply.to.project::Данный скин невозможно применить к проекту данного типа.');
             });
         }
-    }
-
-    public function getDefaultSkin(): ?ProjectSkin
-    {
-        $ideLibrary = Ide::get()->getLibrary();
-        $resource = $ideLibrary->getResource('skins', $this->getDefaultSkinName());
-
-        if ($resource instanceof IdeLibrarySkinResource) {
-            return $resource->getSkin();
-        } else {
-            return ProjectSkin::createEmpty();
-        }
-    }
-
-    public function getDefaultSkinName(): string
-    {
-        return ".Modena";
     }
 
     /**

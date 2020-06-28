@@ -6,7 +6,13 @@ use ide\Logger;
 use ide\account\api\ServiceResponse;
 use ide\formats\templates\JPPMPackageFileTemplate;
 use ide\project\control\AbstractProjectControlPane;
+use ide\project\Project;
 use ide\project\supports\JPPMProjectSupport;
+use ide\ui\elements\DNAnchorPane;
+use ide\ui\elements\DNButton;
+use ide\ui\elements\DNLabel;
+use ide\ui\elements\DNListView;
+use ide\ui\elements\DNTextField;
 use php\gui\UXAlert;
 use php\gui\UXButton;
 use php\gui\UXClipboard;
@@ -136,7 +142,7 @@ class JPPMControlPane extends AbstractProjectControlPane
         $this->parentPane->padding = 3;
         $this->parentPane->spacing = 8;      
         
-        $packagesLabel = new UXLabel(_('jppm.package.manager.packages.title'));
+        $packagesLabel = new DNLabel(_('jppm.package.manager.packages.title'));
         $packagesLabel->font = $packagesLabel->font->withBold()->withSize(16);
         $this->parentPane->add($packagesLabel);
 
@@ -146,7 +152,7 @@ class JPPMControlPane extends AbstractProjectControlPane
         $this->parentPane->add($packBox);
         
         // 1.1 Список
-        $this->packagesList = new UXListView;
+        $this->packagesList = new DNListView();
         $this->packagesList->on('action', [$this, 'doSelectPackage']);
         UXHBox::setHgrow($this->packagesList, 'ALWAYS');
         $packBox->add($this->packagesList);
@@ -158,7 +164,7 @@ class JPPMControlPane extends AbstractProjectControlPane
         $packBox->add($buttonsBox);
         
         // 1.2.1 Кнопка удалить
-        $this->delButton = new UXButton(_('jppm.package.manager.delete'), ico('close16'));
+        $this->delButton = new DNButton(_('jppm.package.manager.delete'), ico('close16'));
         $this->delButton->enabled = false;
         $this->delButton->width = 150;
         $this->delButton->height = 32;
@@ -166,7 +172,7 @@ class JPPMControlPane extends AbstractProjectControlPane
         $buttonsBox->add($this->delButton);
         
         // 1.2.2 Кнопка readme
-        $this->readmeButton = new UXButton(_('jppm.package.manager.readme'), ico('search16'));
+        $this->readmeButton = new DNButton(_('jppm.package.manager.readme'), ico('search16'));
         $this->readmeButton->enabled = false;
         $this->readmeButton->width = 150;
         $this->readmeButton->height = 32;
@@ -174,12 +180,11 @@ class JPPMControlPane extends AbstractProjectControlPane
         $buttonsBox->add($this->readmeButton);
         
         // 2. Установка пакетов из репозитория         
-        $addLabel = new UXLabel(_('jppm.package.manager.addpane.title'));
+        $addLabel = new DNLabel(_('jppm.package.manager.addpane.title'));
         $addLabel->font = $packagesLabel->font->withBold()->withSize(16);
         $this->parentPane->add($addLabel);
 
-        $addPane = new UXPanel;
-        $addPane->style = '-fx-background-color: -fx-background';
+        $addPane = new DNAnchorPane();
         $addPane->padding = 10;
         $this->parentPane->add($addPane);
         
@@ -195,7 +200,7 @@ class JPPMControlPane extends AbstractProjectControlPane
         $addPaneBox->add($addBox);
         
         // 2.1.1 Поле ввода: имя пакета
-        $this->nameField = new UXTextField;
+        $this->nameField = new DNTextField();
         $this->nameField->promptText = _('jppm.package.manager.name.placeholder');
         $this->nameField->on('keyUp', function(UXKeyEvent $e){
             if($e->codeName == 'Enter'){
@@ -222,13 +227,13 @@ class JPPMControlPane extends AbstractProjectControlPane
         $addBox->add($this->nameField);
         
         // 2.1.2 Знак @
-        $aLabel = new UXLabel('@');
+        $aLabel = new DNLabel('@');
         $aLabel->font = $aLabel->font->/*withBold()->*/withSize(16);
         $aLabel->textColor = UXColor::of('#666');
         $addBox->add($aLabel);
 
         // 2.1.3 Поле ввода: версия пакета
-        $this->versionField = new UXTextField;
+        $this->versionField = new DNTextField();
         $this->versionField->promptText = _('jppm.package.manager.version.placeholder');
         $this->versionField->maxWidth = 350;
         $this->versionField->on('keyUp', function(UXKeyEvent $e){
@@ -239,19 +244,19 @@ class JPPMControlPane extends AbstractProjectControlPane
         $addBox->add($this->versionField);
         
         // 2.1.4 Кнопка добавить пакет
-        $this->addButton = new UXButton(_('jppm.package.manager.add'), ico('add16'));
+        $this->addButton = new DNButton(_('jppm.package.manager.add'), ico('add16'));
         $this->addButton->width = 140;
         $this->addButton->on('click', [$this, 'doAddPackage']);
         $addBox->add($this->addButton);
         
         
         // 2.2 Текст репозиторий
-        $repoLabel = new UXLabel(_('jppm.package.manager.repo'), ico('database16'));
+        $repoLabel = new DNLabel(_('jppm.package.manager.repo'), ico('database16'));
         $repoLabel->font = $repoLabel->font->withBold();
         $addPaneBox->add($repoLabel);
         
         // 2.3 Список репозитория
-        $this->repoList = new UXListView;
+        $this->repoList = new DNListView();
         $this->repoList->on('action', [$this, 'doSelectRepo']);
         $this->repoList->on('click', function(UXMouseEvent $e){
             if ($e->isDoubleClick() && $this->repoList->selectedIndex > -1) {
@@ -262,11 +267,11 @@ class JPPMControlPane extends AbstractProjectControlPane
         $this->uiPackageContextMenu($this->repoList);
         
         // 2.4 Кнопка обновить репозиторий и пагинация
-        $this->repoUpdateButton = new UXButton(_('jppm.package.manager.refresh'), ico('refresh16'));
+        $this->repoUpdateButton = new DNButton(_('jppm.package.manager.refresh'), ico('refresh16'));
         $this->repoUpdateButton->on('action', [$this, 'doUpdateRepos']);
 
         $buildPaginationButton = function ($icon, $offset): UXButton {
-            $button = new UXButton();
+            $button = new DNButton();
             $button->graphic = ico($icon);
             $button->on("action", function () use ($offset) {
                 $this->offset += $offset;
@@ -297,7 +302,7 @@ class JPPMControlPane extends AbstractProjectControlPane
         $progressBar->height = 24;
         $progressBar->anchors = ['top' => 0, 'left' => 0, 'right' => 0, 'bottom' => false];
 
-        $progressPane = new UXAnchorPane;
+        $progressPane = new DNAnchorPane();
         $progressPane->add($progressBar);
         UXHBox::setHgrow($progressBar, 'ALWAYS');
         
@@ -329,17 +334,17 @@ class JPPMControlPane extends AbstractProjectControlPane
             $isBundle = isset($packageData['ide-bundle']);
 
             $nameText = (isset($packageData['name']) && (str::length($packageData['name']) > 0)) ? $packageData['name'] : $name;
-            $nameLabel = new UXLabel($nameText);
+            $nameLabel = new DNLabel($nameText);
             $nameLabel->textColor = UXColor::of('#000000');
             $nameLabel->font = $nameLabel->font->withBold();
 
-            $versionLabel = new UXLabel('@' . $version);
+            $versionLabel = new DNLabel('@' . $version);
             $versionLabel->textColor = UXColor::of('#333333');
 
             $nameBox = new UXHBox([$nameLabel, $versionLabel]);
 
             $descript = $packageData['description'] ?? $packageData['develnext-bundle']['description'] ?? _('jppm.package.manager.no-description');
-            $descriptLabel = new UXLabel($descript);
+            $descriptLabel = new DNLabel($descript);
             $descriptLabel->font = $descriptLabel->font->withSize(11);
             $descriptLabel->textColor = UXColor::of('#333333');
 
@@ -351,21 +356,17 @@ class JPPMControlPane extends AbstractProjectControlPane
                     $icon = new UXImageView;
                     $icon->image = $this->project->getRootDir() . "/vendor/" . $name . "/src/.data/img/" . $packageData['ide-bundle']['icon'];
                 } else {
-                    $icon = ico('bundle16');
+                    $icon = ico('bundle32');
                 }
             } else {
-                $icon = ico('property16');
+                $icon = ico('library32');
             }
-            $icon->x =
-            $icon->y = 8;
-            $icon->width =
-            $icon->height = 16;
-            $iconPane = new UXAnchorPane;
-            $iconPane->add($icon);
-            $iconPane->padding = 4;
 
-            $packageBox = new UXHBox([$iconPane, $textBox]);
-            $packageBox->spacing = 5;
+            $icon->width =
+            $icon->height = 32;
+
+            $packageBox = new UXHBox([$icon, $textBox]);
+            $packageBox->spacing = 8;
             $packageBox->data('name', $name);
             $packageBox->data('version', $version);
 
@@ -411,18 +412,18 @@ class JPPMControlPane extends AbstractProjectControlPane
                         $box->data('version', '*');
                         $this->repoList->items->add($box);
                         
-                        $labelName = new UXLabel($item['name']);
+                        $labelName = new DNLabel($item['name']);
                         $labelName->font = $labelName->font->withBold()->withSize(14);
                         $labelName->textColor = UXColor::of('#333');
                         $box->add($labelName);
                         
                         $descText = (is_null($item['description']) ? 'No description' : $item['description']);
-                        $descLabel = new UXLabel($descText);
+                        $descLabel = new DNLabel($descText);
                         $descLabel->font = $descLabel->font->withSize(12);
                         $descLabel->textColor = UXColor::of('#333');
                         $box->add($descLabel);                    
                         
-                        $versionLabel = new UXLabel(_('jppm.package.manager.version') . ': *', ico('tag16'));
+                        $versionLabel = new DNLabel(_('jppm.package.manager.version') . ': *', ico('tag16'));
                         $versionLabel->graphicTextGap = 24;
                         $versionLabel->font = $versionLabel->font->withSize(12);
                         $versionLabel->textColor = UXColor::of('#666');
@@ -434,7 +435,7 @@ class JPPMControlPane extends AbstractProjectControlPane
                         }
                     }
                     
-                    $label = new UXLabel(_('jppm.package.manager.version') . ': ' . $item['version'], ico('tag16'));
+                    $label = new DNLabel(_('jppm.package.manager.version') . ': ' . $item['version'], ico('tag16'));
                     $label->data('name', $item['name']);
                     $label->data('version', $item['version']);
                     $label->graphicTextGap = $versionLabel->graphicTextGap;
