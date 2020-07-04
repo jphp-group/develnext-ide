@@ -10,8 +10,10 @@ use ide\ui\elements\DNCheckbox;
 use php\gui\layout\UXAnchorPane;
 use php\gui\layout\UXHBox;
 use php\gui\UXNode;
-use php\intellij\pty\PtyProcess;
+use php\intellij\tty\PtyProcess;
+use php\intellij\tty\PtyProcessConnector;
 use php\intellij\ui\JediTermWidget;
+use php\lib\str;
 
 class TaskPanel {
     /**
@@ -63,8 +65,8 @@ class TaskPanel {
     public function makeUI(): UXNode {
         $this->process = PtyProcess::exec($this->processInfo->getProgram(), $this->processInfo->getEnvironment(), $this->processInfo->getDirectory());
 
-        $this->terminal = new JediTermWidget($this->process,
-            ChangeThemeCommand::$instance->getCurrentTheme()->getTerminalTheme()->build());
+        $this->terminal = new JediTermWidget(ChangeThemeCommand::$instance->getCurrentTheme()->getTerminalTheme()->build());
+        $this->terminal->createTerminalSession(new PtyProcessConnector($this->process));
         $this->terminal->requestFocus();
         $this->terminal->start();
 
@@ -119,6 +121,10 @@ class TaskPanel {
 
     private function triggerDestroyEvent() {
         uiLater(function () {
+            $this->terminal->nextLine();
+            $this->terminal->nextLine();
+            $this->terminal->writeString( str::replace(((string)_("process.exit.message")), "%n", $this->process->getExitValue()));
+
             call_user_func($this->onProcessExit, $this->process->getExitValue());
 
             if (!$this->configurationProcessExitTriggered) {
