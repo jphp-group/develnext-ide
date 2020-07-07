@@ -7,7 +7,7 @@ jobs:
     runs-on: macos-10.15
     strategy:
       matrix:
-        build: ["--win", "--linux", "--mac"]
+        build: ["win", "linux", "mac"]
 
     steps:
     - uses: actions/checkout@v2
@@ -17,16 +17,20 @@ jobs:
         java-package: jdk+fx # (jre, jdk, or jdk+fx) - defaults to jdk
         architecture: x64 # (x64 or x86) - defaults to x64
     - name: Install JPPM
-      run: wget -O - https://github.com/jphp-group/jphp/releases/download/jppm-0.6.6/jppm-setup-0.6.6.sh | bash
+      run: wget -O - https://github.com/jphp-group/jphp/releases/download/jppm-0.6.7/jppm-setup-0.6.7.sh | bash
     - name: Prepare IDE
-      run: jppm prepare-ide ${{ matrix.build }}
+      run: jppm prepare-ide
+      env:
+        JPPM_OS_BUILD: ${{ matrix.build }}
     - name: Build IDE
-      run: jppm build-ide ${{ matrix.build }}
+      run: jppm build-ide
+      env:
+        JPPM_OS_BUILD: ${{ matrix.build }}
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
         # Artifact name
-        name: DevelNext${{ matrix.build }}
+        name: DevelNext-${{ matrix.build }}-SNAPSHOT
         # Directory containing files to upload
         path: ./ide/build
 
