@@ -58,7 +58,10 @@ class LightCSSStyle extends CSSStyle
      * @return array
      */
     public function getListViewCSS(): array {
-        return [];
+        return [
+            "-dn-base" => "#f3f3f3",
+            "-dn-selected-background-color" => "derive(-dn-base, -15%)",
+        ];
     }
 
     /**
@@ -73,8 +76,11 @@ class LightCSSStyle extends CSSStyle
      */
     public function getTabPaneCSS(): array {
         return [
-            "-dn-base" => "#f3f3f3",
-            "-dn-text-fill" => "#333333"
+            "-dn-base" => "#F4F4F4",
+            "-dn-text-fill" => "#333333",
+            "-dn-tab-header-area-background" => "derive(-dn-base, 30%)",
+            "-dn-tab-content-area-background" => "-dn-base",
+            "-dn-tab-header-background" => "-dn-base"
         ];
     }
 

@@ -227,15 +227,15 @@
     -fx-base: -dn-base;
     -fx-text-fill: -dn-text-fill;
     -fx-border-radius: 0;
-    -fx-background: derive(-dn-base, -30%);
+    -fx-background: -dn-tab-header-area-background;
 }
 
 .dn-tab-pane > .tab-content-area {
-    -fx-background: -dn-base;
+    -fx-background-color: -dn-tab-content-area-background;
 }
 
 .dn-tab-pane > .tab-header-background {
-    -fx-background: -dn-base;
+    -fx-background: -dn-tab-header-background;
 }
 
 .dn-split-pane {
@@ -259,4 +259,8 @@
 
 .dn-scroll-pane, .dn-anchor-pane {
     -fx-border: none;
+}
+
+.dn-list-view > .list-cell:filled:selected:focused, .list-cell:filled:selected {
+    -fx-background-color: -dn-selected-background-color;
 }

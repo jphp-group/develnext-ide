@@ -12,7 +12,7 @@ class DarkCSSStyle extends CSSStyle {
             "-fx-base" => "#333333",
             "-fx-control-inner-background" => "-fx-base",
             "-fx-control-inner-background-alt" => "derive(-fx-base, 4%)",
-            "-dn-text-fill" => "#ffffff",
+            "-dn-text-fill" => "#C7D3DA",
             "-fx-text-fill" => "-dn-text-fill"
         ];
     }
@@ -26,7 +26,8 @@ class DarkCSSStyle extends CSSStyle {
             "-fx-background-color" => "#333333",
             "-fx-control-inner-background" => "-fx-base",
             "-fx-control-inner-background-alt" => "derive(-fx-base, 4%)",
-            "-fx-text-fill" => "#ffffff"
+            "-dn-text-fill" => "#C7D3DA",
+            "-fx-text-fill" => "-dn-text-fill"
         ];
     }
 
@@ -35,7 +36,8 @@ class DarkCSSStyle extends CSSStyle {
      */
     public function getLabelCSS(): array {
         return [
-            "-fx-text-fill" => "#ffffff",
+            "-dn-text-fill" => "#C7D3DA",
+            "-fx-text-fill" => "-dn-text-fill",
             "-fx-base" => "gray"
         ];
     }
@@ -66,7 +68,8 @@ class DarkCSSStyle extends CSSStyle {
         return [
             "-fx-control-inner-background" => "#333333",
             "-fx-base" => "#333333",
-            "-fx-text-fill" => "#ffffff",
+            "-dn-text-fill" => "#C7D3DA",
+            "-fx-text-fill" => "-dn-text-fill",
             "-fx-prompt-text-fill" => "#a0a0a0"
         ];
     }
@@ -79,7 +82,9 @@ class DarkCSSStyle extends CSSStyle {
             "-fx-base" => "#333333",
             "-fx-control-inner-background" => "-fx-base",
             "-fx-control-inner-background-alt" => "derive(-fx-base, 4%)",
-            "-fx-text-fill" => "#ffffff"
+            "-dn-selected-background-color" => "derive(-fx-base, -30%)",
+            "-dn-text-fill" => "#C7D3DA",
+            "-fx-text-fill" => "-dn-text-fill",
         ];
     }
 
@@ -91,7 +96,8 @@ class DarkCSSStyle extends CSSStyle {
             "-fx-base" => "#333333",
             "-fx-control-inner-background" => "-fx-base",
             "-fx-control-inner-background-alt" => "derive(-fx-base, 4%)",
-            "-fx-text-fill" => "#ffffff"
+            "-dn-text-fill" => "#C7D3DA",
+            "-fx-text-fill" => "-dn-text-fill",
         ];
     }
 
@@ -101,7 +107,11 @@ class DarkCSSStyle extends CSSStyle {
     public function getTabPaneCSS(): array {
         return [
             "-dn-base" => "#333333",
-            "-dn-text-fill" => "#ffffff"
+            "-dn-text-fill" => "#C7D3DA",
+            "-fx-text-fill" => "-dn-text-fill",
+            "-dn-tab-header-area-background" => "derive(-dn-base, -30%)",
+            "-dn-tab-content-area-background" => "-dn-base",
+            "-dn-tab-header-background" => "-dn-base"
         ];
     }
 
