@@ -5,8 +5,10 @@ namespace ide\editors;
 use ide\commands\ChangeThemeCommand;
 use ide\Ide;
 use php\gui\UXNode;
-use php\intellij\pty\PtyProcess;
+use php\intellij\tty\PtyProcess;
+use php\intellij\tty\PtyProcessConnector;
 use php\intellij\ui\JediTermWidget;
+use php\io\File;
 use php\lang\System;
 
 class PtyEditor extends AbstractEditor {
@@ -26,7 +28,7 @@ class PtyEditor extends AbstractEditor {
 
         $args = ["cmd.exe"];
         $env  = System::getEnv();
-        $dir  = System::getProperty("user.home");
+        $dir  = new File(System::getProperty("user.home"));
 
         if (Ide::get()->isLinux() || Ide::get()->isMac()) {
             $args = ["/bin/bash", "--login"];
@@ -38,8 +40,8 @@ class PtyEditor extends AbstractEditor {
 
         $this->process = PtyProcess::exec($args, $env, $dir);
 
-        $this->terminal = new JediTermWidget($this->process,
-            ChangeThemeCommand::$instance->getCurrentTheme()->getTerminalTheme()->build());
+        $this->terminal = new JediTermWidget(ChangeThemeCommand::$instance->getCurrentTheme()->getTerminalTheme()->build());
+        $this->terminal->createTerminalSession(new PtyProcessConnector($this->process));
         $this->terminal->requestFocus();
         $this->terminal->start();
     }
