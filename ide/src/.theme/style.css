@@ -231,7 +231,7 @@
 }
 
 .dn-tab-pane > .tab-content-area {
-    -fx-background-color: -dn-tab-content-area-background;
+    -fx-background: -dn-tab-content-area-background;
 }
 
 .dn-tab-pane > .tab-header-background {
