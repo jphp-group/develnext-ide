@@ -8,6 +8,7 @@ use compress\TarArchive;
 use compress\ZipArchive;
 use packager\Event;
 use packager\cli\Console;
+use packager\Package;
 use php\io\Stream;
 use php\lib\arr;
 use php\lib\fs;
@@ -154,7 +155,7 @@ function task_buildIde(Event $e)
     Tasks::copy('./dn-launcher/build/libs/', './ide/build/libs/');
     Tasks::runExternal('./ide', 'copySourcesToBuild', $e->args());
 
-    $os = $e->isFlag('linux') ? 'linux' : ($e->isFlag('darwin') || $e->isFlag('mac') ? 'darwin': 'win');
+    $os = Package::getOS();
 
     $jreLink = $e->package()->getAny("jdk.$os.url");
     $jrePath = "./tools/build/jre/" . fs::name($jreLink);

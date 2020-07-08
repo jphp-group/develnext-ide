@@ -31,7 +31,7 @@ jdk:
   win:
     url: 'https://download.bell-sw.com/java/11/bellsoft-jdk11-windows-amd64.zip'
     dir: 'jdk-11'
-  darwin:
+  mac:
     url: 'https://download.bell-sw.com/java/11.0.5+11/bellsoft-jdk11.0.5+11-macos-amd64.zip'
     dir: 'jdk-11.jdk'
   linux:
