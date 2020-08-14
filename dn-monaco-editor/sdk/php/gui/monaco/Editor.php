@@ -90,6 +90,30 @@ abstract class Editor
     {
     }
 
+    public function focus()
+    {
+    }
+
+    public function undo()
+    {
+    }
+
+    public function redo()
+    {
+    }
+
+    public function copy(): bool
+    {
+    }
+
+    public function cut(): bool
+    {
+    }
+
+    public function paste(): bool
+    {
+    }
+
     /**
      * @param string $language
      * @param callable $callback (array): CompletionItem

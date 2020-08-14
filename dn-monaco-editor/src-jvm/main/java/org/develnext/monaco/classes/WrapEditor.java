@@ -72,5 +72,11 @@ public class WrapEditor extends BaseWrapper<Editor> {
         void revealLineInCenter(int lineNumber, int type);
         void revealLineInCenterIfOutsideViewport(int lineNumber);
         void revealLineInCenterIfOutsideViewport(int lineNumber, int type);
+
+        boolean copy();
+        boolean cut();
+        boolean paste();
+        void undo();
+        void redo();
     }
 }

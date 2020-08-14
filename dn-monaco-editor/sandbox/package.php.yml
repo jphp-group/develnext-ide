@@ -8,6 +8,10 @@ plugins:
 sources:
   - src
 
+tasks:
+  start-upd:
+    depends-on: ['install -f', 'start']
+
 includes:
   - index.php
 deps:

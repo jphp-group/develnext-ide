@@ -49,6 +49,10 @@
             }
         });
 
+        const initialVersion = editor.getModel().getAlternativeVersionId();
+        let currentVersion = initialVersion;
+        let lastVersion = initialVersion;
+
         if (editorCreatedCallback != null) {
             editorCreatedCallback.apply([editorView]);
         }
@@ -57,6 +61,31 @@
             if (contentChangeListener != null) {
                 contentChangeListener.apply([ev]);
             }
+
+            const versionId = editorView.getModel().getAlternativeVersionId();
+            // undoing
+            if (versionId < currentVersion) {
+                //enableRedoButton();
+                // no more undo possible
+                if (versionId === initialVersion) {
+                    //disableUndoButton();
+                }
+            } else {
+                // redoing
+                if (versionId <= lastVersion) {
+                    // redoing the last change
+                    if (versionId === lastVersion) {
+                        //disableRedoButton();
+                    }
+                } else { // adding new change, disable redo when adding new changes
+                    //disableRedoButton();
+                    if (currentVersion > lastVersion) {
+                        lastVersion = currentVersion;
+                    }
+                }
+                //enableUndoButton();
+            }
+            currentVersion = versionId;
         });
 
         editorView.onDidScrollChange((ev) => {
@@ -89,6 +118,21 @@
     function setValue(value) {
         const editor = getEditorView();
         editor.getModel().setValue(value);
+    }
+
+    function setValueWithHistory(value) {
+        const editor = getEditorView();
+        let model = editor.getModel();
+
+        model.pushEditOperations(
+            [],
+            [
+                {
+                    range: model.getFullModelRange(),
+                    text: value,
+                },
+            ]
+        );
     }
 
     function getValue() {
@@ -149,6 +193,33 @@
         const position = JSON.parse(positionJson);
         const editor = getEditorView();
         editor.setPosition(position);
+    }
+
+    function undo() {
+        const editor = getEditorView();
+        editor.trigger('source', 'undo');
+        editor.focus();
+    }
+
+    function redo() {
+        const editor = getEditorView();
+        editor.trigger('source', 'redo');
+        editor.focus();
+    }
+
+    function copy() {
+        const editor = getEditorView();
+        editor.trigger('source','editor.action.clipboardCopyAction');
+    }
+
+    function cut() {
+        const editor = getEditorView();
+        editor.trigger('source','editor.action.clipboardCutAction');
+    }
+
+    function paste() {
+        const editor = getEditorView();
+        editor.trigger('source','editor.action.clipboardPasteAction');
     }
 </script>
 </body>

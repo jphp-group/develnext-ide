@@ -14,6 +14,7 @@ use php\concurrent\Promise;
 use php\gui\layout\UXAnchorPane;
 use php\gui\layout\UXHBox;
 use php\gui\monaco\MonacoEditor;
+use php\gui\UXClipboard;
 use php\gui\UXLabel;
 
 class MonacoCodeEditor extends AbstractCodeEditor {
@@ -66,7 +67,7 @@ class MonacoCodeEditor extends AbstractCodeEditor {
     }
 
     public function requestFocus() {
-        // nope
+        $this->editor->getEditor()->focus();
     }
 
     public function loadContentToArea() {
@@ -126,7 +127,8 @@ class MonacoCodeEditor extends AbstractCodeEditor {
 
     public function getSelectedText(): string
     {
-
+        $editor = $this->editor;
+        return $editor->getEditor()->document->getTextInRange($editor->getEditor()->getSelection());
     }
 
     public function undo()
@@ -141,21 +143,25 @@ class MonacoCodeEditor extends AbstractCodeEditor {
 
     public function copySelected()
     {
-        // TODO: Implement copySelected() method.
+        $editor = $this->editor;
+        UXClipboard::setText($editor->getEditor()->document->getTextInRange($editor->getEditor()->getSelection()));
     }
 
     public function cutSelected()
     {
-        // TODO: Implement cutSelected() method.
+        $this->copySelected();
+        $this->editor->getEditor()->document->insert();
+        $this->editor->getEditor()->cut();
     }
 
     public function pasteFromClipboard()
     {
-        // TODO: Implement pasteFromClipboard() method.
+        $editor = $this->editor;
+        $editor->getEditor()->document->insert(UXClipboard::getText());
     }
 
     public function jumpToLine(int $line, int $offset = 0)
     {
-        // TODO: Implement jumpToLine() method.
+        $this->editor->getEditor()->revealLineInCenter($line);
     }
 }

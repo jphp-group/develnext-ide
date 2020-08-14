@@ -36,6 +36,7 @@ import netscape.javascript.JSObject;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
+import org.develnext.jphp.ext.javafx.classes.UXClipboard;
 
 public final class Editor {
 
@@ -256,6 +257,44 @@ public final class Editor {
 
     public void focus() {
         callEditorMethod("focus");
+    }
+
+    public void undo() {
+        window.call("undo");
+    }
+
+    public void redo() {
+        window.call("redo");
+    }
+
+    public boolean cut() {
+        if (copy()) {
+            getDocument().insert("");
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean copy() {
+        String textInRange = getDocument().getTextInRange(getSelection());
+
+        if (textInRange != null && !textInRange.isEmpty()) {
+            UXClipboard.setText(textInRange);
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean paste() {
+        String text = UXClipboard.getText();
+        if (text != null && !text.isEmpty()) {
+            getDocument().insert(text);
+            return true;
+        }
+
+        return false;
     }
 
     public void revealLine(int lineNumber) {

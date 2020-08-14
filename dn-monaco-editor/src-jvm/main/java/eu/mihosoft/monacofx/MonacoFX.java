@@ -157,6 +157,7 @@ public class MonacoFX extends Region {
         getEditor().focus();
     }
 
+
     public void setLoaded(Runnable loaded) {
         this.loaded = loaded;
     }

@@ -18,18 +18,38 @@ UXApplication::launch(function (UXForm $form) {
     $editor->getEditor()->currentTheme = "vs-dark";
 
     $copyAction = function () use ($editor) {
-        UXClipboard::setText($editor->getEditor()->document->getTextInRange($editor->getEditor()->getSelection()));
+        $editor->getEditor()->copy();
     };
 
     $pasteAction = function () use ($editor) {
-        $editor->getEditor()->document->insert(UXClipboard::getText());
+        $editor->getEditor()->paste();
+    };
+
+    $cutAction = function () use ($editor) {
+        $editor->getEditor()->cut();
     };
 
     $contextMenu = new UXContextMenu();
     $contextMenu->items->add($copy = new UXMenuItem("Copy"));
+    $contextMenu->items->add($cut = new UXMenuItem("Cut"));
     $contextMenu->items->add($paste = new UXMenuItem("Paste"));
     $copy->on("action", $copyAction);
     $paste->on("action", $pasteAction);
+    $cut->on("action", $cutAction);
+
+    $contextMenu->items->add(UXMenuItem::createSeparator());
+
+    $undo = new UXMenuItem("Undo");
+    $contextMenu->items->add($undo);
+    $undo->on("action", function () use ($editor) {
+        $editor->getEditor()->undo();
+    });
+
+    $redo = new UXMenuItem("Redo");
+    $contextMenu->items->add($redo);
+    $redo->on("action", function () use ($editor) {
+        $editor->getEditor()->redo();
+    });
 
     $editor->contextMenu = $contextMenu;
 

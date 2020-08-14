@@ -98,10 +98,7 @@ public class Document {
     }
 
     protected boolean executeEdits(Range rage, String text) {
-        return (boolean)
-                window.call("executeEdits",
-                        new Gson().toJson(
-                                new RangeWithText(rage, text)));
+        return (boolean) window.call("executeEdits", new Gson().toJson(new RangeWithText(rage, text)));
     }
 
     public void insert(String text) {
