@@ -133,31 +133,27 @@ class MonacoCodeEditor extends AbstractCodeEditor {
 
     public function undo()
     {
-        // TODO: Implement undo() method.
+        $this->editor->getEditor()->undo();
     }
 
     public function redo()
     {
-        // TODO: Implement redo() method.
+        $this->editor->getEditor()->redo();
     }
 
     public function copySelected()
     {
-        $editor = $this->editor;
-        UXClipboard::setText($editor->getEditor()->document->getTextInRange($editor->getEditor()->getSelection()));
+        $this->editor->getEditor()->copy();
     }
 
     public function cutSelected()
     {
-        $this->copySelected();
-        $this->editor->getEditor()->document->insert();
         $this->editor->getEditor()->cut();
     }
 
     public function pasteFromClipboard()
     {
-        $editor = $this->editor;
-        $editor->getEditor()->document->insert(UXClipboard::getText());
+        $this->editor->getEditor()->paste();
     }
 
     public function jumpToLine(int $line, int $offset = 0)
