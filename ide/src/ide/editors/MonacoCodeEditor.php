@@ -165,4 +165,14 @@ class MonacoCodeEditor extends AbstractCodeEditor {
     {
         $this->editor->getEditor()->revealLineInCenter($line);
     }
+
+    public function showFindDialog()
+    {
+        $this->editor->getEditor()->trigger('actions.find');
+    }
+
+    public function showReplaceDialog()
+    {
+        $this->editor->getEditor()->trigger('actions.find');
+    }
 }

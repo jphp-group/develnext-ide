@@ -73,6 +73,7 @@ public class WrapEditor extends BaseWrapper<Editor> {
         void revealLineInCenterIfOutsideViewport(int lineNumber);
         void revealLineInCenterIfOutsideViewport(int lineNumber, int type);
 
+        void trigger(String action);
         boolean copy();
         boolean cut();
         boolean paste();

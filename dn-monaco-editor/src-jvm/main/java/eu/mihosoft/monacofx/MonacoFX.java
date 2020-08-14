@@ -103,7 +103,6 @@ public class MonacoFX extends Region {
                     }
                 });
                 thread.start();
-
             }
         });
 

@@ -49,50 +49,23 @@
             }
         });
 
-        const initialVersion = editor.getModel().getAlternativeVersionId();
-        let currentVersion = initialVersion;
-        let lastVersion = initialVersion;
-
         if (editorCreatedCallback != null) {
-            editorCreatedCallback.apply([editorView]);
+            editorCreatedCallback.apply(null, [editorView]);
         }
 
         editorView.onDidChangeModelContent((ev) => {
             if (contentChangeListener != null) {
-                contentChangeListener.apply([ev]);
+                contentChangeListener.apply(null, [ev]);
             }
-
-            const versionId = editorView.getModel().getAlternativeVersionId();
-            // undoing
-            if (versionId < currentVersion) {
-                //enableRedoButton();
-                // no more undo possible
-                if (versionId === initialVersion) {
-                    //disableUndoButton();
-                }
-            } else {
-                // redoing
-                if (versionId <= lastVersion) {
-                    // redoing the last change
-                    if (versionId === lastVersion) {
-                        //disableRedoButton();
-                    }
-                } else { // adding new change, disable redo when adding new changes
-                    //disableRedoButton();
-                    if (currentVersion > lastVersion) {
-                        lastVersion = currentVersion;
-                    }
-                }
-                //enableUndoButton();
-            }
-            currentVersion = versionId;
         });
 
         editorView.onDidScrollChange((ev) => {
             if (scrollChangeListener != null) {
-                scrollChangeListener.apply([ev]);
+                scrollChangeListener.apply(null, [ev]);
             }
         });
+
+        return editorView;
     });
 
     function getEditorView() {
@@ -220,6 +193,11 @@
     function paste() {
         const editor = getEditorView();
         editor.trigger('source','editor.action.clipboardPasteAction');
+    }
+
+    function trigger(action) {
+        const editor = getEditorView();
+        editor.trigger('source', action);
     }
 </script>
 </body>

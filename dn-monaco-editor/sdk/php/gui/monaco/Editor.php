@@ -90,6 +90,10 @@ abstract class Editor
     {
     }
 
+    public function trigger(string $action)
+    {
+    }
+
     public function focus()
     {
     }

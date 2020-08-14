@@ -259,6 +259,10 @@ public final class Editor {
         callEditorMethod("focus");
     }
 
+    public void trigger(String action) {
+        window.call("trigger", action);
+    }
+
     public void undo() {
         window.call("undo");
     }
