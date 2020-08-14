@@ -9,10 +9,14 @@ use php\gui\UXClipboard;
 use php\gui\UXContextMenu;
 use php\gui\UXForm;
 use php\gui\UXMenuItem;
+use php\io\File;
+use php\io\ResourceStream;
+use php\lib\fs;
 
 UXApplication::launch(function (UXForm $form) {
     $form->title = "MonacoEditor!";
-    $editor = new MonacoEditor();
+    $editor = new MonacoEditor(/*(new ResourceStream('/monaco/index.html'))->toExternalForm()*/);
+
     $editor->backgroundColor = "#333";
     $editor->getEditor()->currentLanguage = "php";
     $editor->getEditor()->currentTheme = "vs-dark";
@@ -55,12 +59,13 @@ UXApplication::launch(function (UXForm $form) {
 
     $editor->getEditor()->document->text = "<?php\necho \"Hello, Word\";";
     $editor->setOnLoad(function () use ($editor) {
-        $editor->getEditor()->registerCompletionItemProvider("php", function ($positionAndRange) {
+        $editor->getEditor()->registerCompletionItemProvider("php", ["::", "->", "$"], function ($positionAndRange) use ($editor) {
             $item = new CompletionItem();
             $item->label = "test";
             $item->kind = 5; // from https://microsoft.github.io/monaco-editor/api/enums/monaco.languages.completionitemkind.html
             $item->documentation = "test 123";
-            $item->insertText = "position: lineNumber: " . $positionAndRange["position"]["lineNumber"] . ", column: " . $positionAndRange["position"]["column"];
+            $item->insertText = "position: lineNumber: " . $positionAndRange["position"]["lineNumber"] . ", column: " . $positionAndRange["position"]["column"] . ", pos: " . $editor->getEditor()->getPositionOffset();
+
 
             $snippet = new CompletionItem();
             $snippet->label = "my-third-party-library";
@@ -68,6 +73,7 @@ UXApplication::launch(function (UXForm $form) {
             $snippet->documentation = "snippet test";
             $snippet->insertAsSnippet = true;
             $snippet->insertText = '"${1:my-third-party-library}": "latest"';
+
             return [
                 $item,
                 $snippet

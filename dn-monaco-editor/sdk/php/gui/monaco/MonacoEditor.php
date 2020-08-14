@@ -13,6 +13,15 @@ class MonacoEditor extends UXRegion {
     public ?UXContextMenu $contextMenu = null;
 
     /**
+     * MonacoEditor constructor.
+     * @param string $htmlSource
+     */
+    public function __construct(string $htmlSource = '/eu/mihosoft/monacofx/monaco-editor-0.20.0/index.html')
+    {
+    }
+
+
+    /**
      * @return Editor
      */
     public function getEditor(): Editor {

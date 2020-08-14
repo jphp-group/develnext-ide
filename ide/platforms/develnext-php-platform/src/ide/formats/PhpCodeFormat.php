@@ -42,7 +42,7 @@ class PhpCodeFormat extends AbstractFormat
             $editor = new CodeEditor($file, 'php', $codeEditorOptions);
             $editor->setEmbedded($embedded);
         } else {
-            $editor = new MonacoCodeEditor($file);
+            $editor = new MonacoCodeEditor($file, $codeEditorOptions);
             $editor->setLanguage('php');
         }
 

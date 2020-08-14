@@ -317,7 +317,7 @@ class FileUtils
 
     public static function putAsync($filename, $content, $encoding = 'UTF-8')
     {
-        Ide::async(function () use ($filename, $content, $encoding) {
+        return Ide::async(function () use ($filename, $content, $encoding) {
             self::put($filename, $content, $encoding);
         });
     }

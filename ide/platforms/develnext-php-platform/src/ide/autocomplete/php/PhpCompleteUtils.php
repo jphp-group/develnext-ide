@@ -136,7 +136,7 @@ abstract class PhpCompleteUtils
         $insert = $method->name . '(';
 
         if ($method->arguments) {
-            $insert .= '#';
+            $insert .= '${1}';
         }
 
         $insert .= ')';

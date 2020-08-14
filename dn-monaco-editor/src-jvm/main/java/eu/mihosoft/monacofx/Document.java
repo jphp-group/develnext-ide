@@ -26,6 +26,8 @@ package eu.mihosoft.monacofx;
 import com.google.gson.Gson;
 import eu.mihosoft.monacofx.model.Position;
 import eu.mihosoft.monacofx.model.Range;
+import java.util.concurrent.atomic.AtomicBoolean;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
 import javafx.scene.web.WebEngine;
 import netscape.javascript.JSObject;
@@ -41,27 +43,37 @@ public class Document {
     private final StringProperty textProperty = new SimpleStringProperty();
     private final IntegerProperty numberOfLinesProperty = new SimpleIntegerProperty();
 
+    private boolean freezeEvents = false;
+
     void setEditor(WebEngine engine, JSObject window, Editor editor) {
         this.engine = engine;
         this.editor = editor;
         this.window = window;
+
+        InvalidationListener setValue = (ov) -> {
+            if (!freezeEvents) {
+                System.err.println("Set window value");
+                window.call("setValue", getText());
+            }
+        };
+
         this.contentChangeListener = new JFunction(args -> {
-            String text = (String) editor.getJSEditor().call("getValue");
+            String text = (String) window.call("getValue");
             if (text != null) {
+                freezeEvents = true;
                 setText(text);
+                freezeEvents = false;
                 numberOfLinesProperty.setValue(text.split("\\R").length);
             }
 
-            return null;
+            return "";
         });
 
         // initial text
         editor.getJSEditor().call("setValue", getText());
 
         // text changes -> js
-        textProperty.addListener((ov) -> {
-            editor.getJSEditor().call("setValue", getText());
-        });
+        textProperty.addListener(setValue);
 
         // text changes <- js
         window.setMember("contentChangeListener", contentChangeListener);

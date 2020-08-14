@@ -15,11 +15,13 @@ use ide\autocomplete\VariableAutoCompleteItem;
 use ide\bundle\AbstractJarBundle;
 use ide\editors\CodeEditor;
 use ide\editors\common\CodeTextArea;
+use ide\editors\MonacoCodeEditor;
 use ide\Ide;
 use ide\project\behaviours\BundleProjectBehaviour;
 use ide\project\behaviours\PhpProjectBehaviour;
 use ide\project\Project;
 use php\gui\designer\UXAbstractCodeArea;
+use php\gui\monaco\MonacoEditor;
 use php\lib\arr;
 use php\lib\fs;
 use php\lib\str;
@@ -53,10 +55,15 @@ class PhpAnyAutoCompleteType extends AutoCompleteType
     {
         $useString = "use " . $use . ";";
 
-        $text = $area->text;
+        if ($area instanceof MonacoEditor) {
+            $text = $area->getEditor()->document->text;
+            return false;
+        } else {
+            $text = $area->text;
+        }
 
         $pos = -1;
-        $caret = $area->caretPosition;
+        $caret = $area instanceof MonacoEditor ? $area->getEditor()->getPositionOffset() : $area->caretPosition;
 
         $regex = Regex::of('use[ ]+([0-9\\_a-z\\\\]+)', Regex::DOTALL | Regex::CASE_INSENSITIVE)->with($text);
         if ($regex->find()) {
@@ -86,7 +93,12 @@ class PhpAnyAutoCompleteType extends AutoCompleteType
         }
 
         $useString .= "\n";
-        $area->insertText($pos, $useString);
+
+        if ($area instanceof MonacoEditor) {
+            // nop.
+        } else {
+            $area->insertText($pos, $useString);
+        }
 
         if ($pos < $caret) {
             $area->caretPosition = $caret + str::length($useString);

@@ -52,6 +52,13 @@ abstract class Editor
     }
 
     /**
+     * @return int
+     */
+    public function getPositionOffset(): int
+    {
+    }
+
+    /**
      * @param array $position
      */
     public function setPosition(array $position)
@@ -120,9 +127,10 @@ abstract class Editor
 
     /**
      * @param string $language
+     * @param array $triggerCharacters
      * @param callable $callback (array): CompletionItem
      */
-    public function registerCompletionItemProvider(string $language, callable $callback)
+    public function registerCompletionItemProvider(string $language, array $triggerCharacters, callable $callback)
     {
     }
 }

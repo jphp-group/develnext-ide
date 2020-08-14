@@ -55,13 +55,13 @@
 
         editorView.onDidChangeModelContent((ev) => {
             if (contentChangeListener != null) {
-                contentChangeListener.apply(null, [ev]);
+                contentChangeListener.apply([ev]);
             }
         });
 
         editorView.onDidScrollChange((ev) => {
             if (scrollChangeListener != null) {
-                scrollChangeListener.apply(null, [ev]);
+                scrollChangeListener.apply([ev]);
             }
         });
 
@@ -123,8 +123,9 @@
         monaco.editor.setModelLanguage(editor.getModel(), language);
     }
 
-    function registerCompletionItemProvider(language, callbackId) {
+    function registerCompletionItemProvider(language, triggerCharacters, callbackId) {
         monaco.languages.registerCompletionItemProvider(language, {
+            triggerCharacters: triggerCharacters,
             provideCompletionItems: function(model, position) {
                 var word = model.getWordUntilPosition(position);
                 var range = {
@@ -160,6 +161,11 @@
     function getPosition() {
         const editor = getEditorView();
         return JSON.stringify(editor.getPosition());
+    }
+
+    function getPositionOffset() {
+        const editor = getEditorView();
+        return editor.getModel().getOffsetAt(editor.getPosition());
     }
 
     function setPosition(positionJson) {

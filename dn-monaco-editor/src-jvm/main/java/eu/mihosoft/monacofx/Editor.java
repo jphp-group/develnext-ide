@@ -26,6 +26,8 @@ package eu.mihosoft.monacofx;
 import com.google.gson.Gson;
 import eu.mihosoft.monacofx.model.Position;
 import eu.mihosoft.monacofx.model.Selection;
+import java.util.List;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -187,6 +189,10 @@ public final class Editor {
         return new Gson().fromJson(window.call("getPosition").toString(), Position.class);
     }
 
+    public Long getPositionOffset() {
+        return ((Number)window.call("getPositionOffset")).longValue();
+    }
+
     public void setPosition(Position position) {
         window.call("setPosition", new Gson().toJson(position));
     }
@@ -284,7 +290,9 @@ public final class Editor {
         String textInRange = getDocument().getTextInRange(getSelection());
 
         if (textInRange != null && !textInRange.isEmpty()) {
-            UXClipboard.setText(textInRange);
+            Platform.runLater(() -> {
+                UXClipboard.setText(textInRange);
+            });
             return true;
         }
 
@@ -325,10 +333,10 @@ public final class Editor {
         callEditorMethod("revealLineInCenterIfOutsideViewport", lineNumber, type);
     }
 
-    public void registerCompletionItemProvider(String language, CompletionItemProvider itemProvider) {
+    public void registerCompletionItemProvider(String language, List<String> triggerCharacters, CompletionItemProvider itemProvider) {
         String id = UUID.randomUUID().toString();
         callbackMap.put(id, json -> itemProvider.complete(new Gson().fromJson(json, CompletionItemProvider.RangeWithPosition.class)));
-        window.call("registerCompletionItemProvider", language, id);
+        window.call("registerCompletionItemProvider", language, triggerCharacters, id);
     }
 
     public Object executeCallback(String id, String json) {

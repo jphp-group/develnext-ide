@@ -8,5 +8,5 @@ description:
 
 code: >
   new Thread(fn => {
-      #
+      $0
   });

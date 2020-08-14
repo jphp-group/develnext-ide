@@ -24,6 +24,7 @@
 package eu.mihosoft.monacofx;
 
 import com.google.gson.Gson;
+import com.sun.javafx.webkit.WebConsoleListener;
 import javafx.application.Platform;
 import javafx.concurrent.Worker;
 import javafx.event.EventHandler;
@@ -32,6 +33,7 @@ import javafx.geometry.VPos;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Region;
@@ -54,12 +56,22 @@ public class MonacoFX extends Region {
 
     private final static String EDITOR_HTML_RESOURCE_LOCATION = "/eu/mihosoft/monacofx/monaco-editor-0.20.0/index.html";
 
+    static {
+        WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> {
+            System.out.println(message + "[at " + lineNumber + "]");
+        });
+    }
+
     public MonacoFX() {
+        this(null);
+    }
+
+    public MonacoFX(String htmlSource) {
         view = new WebView();
         view.setOpacity(0);
         view.setContextMenuEnabled(false);
         engine = view.getEngine();
-        engine.load(getClass().getResource(EDITOR_HTML_RESOURCE_LOCATION).toExternalForm());
+        engine.load(htmlSource == null ? getClass().getResource(EDITOR_HTML_RESOURCE_LOCATION).toExternalForm() : htmlSource);
         editor = new Editor(engine);
         bridge = new JavaBridge();
         bridge.setEditor(editor);
@@ -118,12 +130,13 @@ public class MonacoFX extends Region {
         });
 
         view.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.isControlDown() && keyEvent.getCharacter().equalsIgnoreCase("c")) {
-                ClipboardContent content = new ClipboardContent();
-                content.putString(getEditor().getDocument().getTextInRange(getEditor().getSelection()));
-                Clipboard.getSystemClipboard().setContent(content);
-            } else if (keyEvent.isControlDown() && keyEvent.getCharacter().equalsIgnoreCase("v")) {
-                getEditor().getDocument().insert(Clipboard.getSystemClipboard().getString());
+            boolean controlDown = keyEvent.isControlDown() || keyEvent.isMetaDown();
+
+            if (controlDown && keyEvent.getCode() == KeyCode.C) {
+                getEditor().focus();
+                if (!getEditor().copy()) {
+                    System.err.println("Failed to copy");
+                }
             }
         });
     }

@@ -27,6 +27,11 @@ public class WrapMonacoEditor extends UXRegion<MonacoFX> {
     }
 
     @Reflection.Signature
+    public void __construct(String htmlSource) {
+        __wrappedObject = new MonacoFX(htmlSource);
+    }
+
+    @Reflection.Signature
     public Editor getEditor() {
         return getWrappedObject().getEditor();
     }

@@ -35,13 +35,12 @@ public class WrapEditor extends BaseWrapper<Editor> {
     }
 
     @Reflection.Signature
-    public void registerCompletionItemProvider(String language, Invoker callback) {
-        getWrappedObject().registerCompletionItemProvider(language, rangeWithPosition -> {
+    public void registerCompletionItemProvider(String language, List<String> triggerCharacters, Invoker callback) {
+        getWrappedObject().registerCompletionItemProvider(language, triggerCharacters, rangeWithPosition -> {
             List<CompletionItemProvider.CompletionItem> items = new ArrayList<>();
             try {
                 Memory memory = callback.call(StrUtils.parseAs(getEnvironment(),
-                        new StringMemory(
-                                new Gson().toJson(rangeWithPosition)),
+                        new StringMemory(new Gson().toJson(rangeWithPosition)),
                         new StringMemory("json"),
                         new LongMemory(1024)));
 
@@ -65,6 +64,7 @@ public class WrapEditor extends BaseWrapper<Editor> {
         Selection getSelection();
         void setSelection(Selection range);
         Position getPosition();
+        Long getPositionOffset();
         void setPosition(Position position);
         void revealLine(int lineNumber);
         void revealLine(int lineNumber, int type);

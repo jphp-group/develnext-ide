@@ -6,4 +6,4 @@
     en: Doctype comment for inline variable
     ru: Doctype комментарий для инлайн переменной
 
-  code: "/** @var # */"
+  code: "/** @var ${1} */"
