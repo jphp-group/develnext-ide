@@ -514,6 +514,7 @@ class CodeEditor extends AbstractEditor
 
     /**
      * @return UXNode
+     * @throws IllegalArgumentException
      */
     public function makeUi()
     {

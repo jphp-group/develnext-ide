@@ -6,6 +6,7 @@ use ide\editors\AbstractEditor;
 use ide\Ide;
 use ide\misc\AbstractCommand;
 use ide\misc\EventHandlerBehaviour;
+use ide\misc\SeparatorCommand;
 use ide\ui\elements\DNSplitMenuButton;
 use ide\utils\UiUtils;
 use php\desktop\Mouse;
@@ -67,7 +68,7 @@ class ContextMenu
         $this->root->on('showing', [$this, 'doShowing']);
 
         foreach ($commands as $command) {
-            if ($command == '-') {
+            if ($command == '-' || $command instanceof SeparatorCommand) {
                 $this->root->items->add(UXMenuItem::createSeparator());
                 continue;
             }

@@ -6,6 +6,7 @@ use Exception;
 use ide\commands\ChangeThemeCommand;
 use ide\commands\theme\IDETheme;
 use ide\commands\theme\LightTheme;
+use ide\editors\menu\ContextMenu;
 use ide\Logger;
 use ide\ui\elements\DNAnchorPane;
 use ide\ui\elements\DNLabel;
@@ -89,7 +90,7 @@ class MonacoCodeEditor extends AbstractCodeEditor {
     /**
      * @inheritDoc
      */
-    public function makeUi() {
+    public function makeEditorUi() {
         $panel = new DNAnchorPane();
         $loadingLabel = _(new DNLabel("code.editor.loading"));
         $loadingLabel->font = $loadingLabel->font->withSize(16);
@@ -104,6 +105,10 @@ class MonacoCodeEditor extends AbstractCodeEditor {
         UXAnchorPane::setAnchor($this->editor, 0);
         $panel->add($loadingBox);
         $panel->add($this->editor);
+
+        if ($this->commands) {
+            $this->editor->contextMenu = (new ContextMenu($this, $this->commands))->getRoot();
+        }
 
         return $panel;
     }

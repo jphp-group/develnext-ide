@@ -1,12 +1,17 @@
 <?php
 namespace ide\editors;
 
+use ide\forms\CodeEditorSettingsForm;
 use ide\forms\FindTextDialogForm;
 use ide\forms\ReplaceTextDialogForm;
 use ide\Logger;
 use ide\misc\AbstractCommand;
 use ide\misc\EventHandlerBehaviour;
+use ide\systems\FileSystem;
+use ide\utils\UiUtils;
 use php\gui\layout\UXHBox;
+use php\gui\layout\UXVBox;
+use php\gui\UXLabel;
 use php\gui\UXNode;
 use php\lang\IllegalArgumentException;
 use php\lib\fs;
@@ -42,6 +47,44 @@ abstract class AbstractCodeEditor extends AbstractEditor
     abstract public function pasteFromClipboard();
 
     abstract public function jumpToLine(int $line, int $offset = 0);
+
+    abstract public function makeEditorUi();
+
+    public function makeUi()
+    {
+        if (!$this->isEmbedded()) {
+            $this->registerDefaultCommands();
+        }
+
+        $this->ui = $ui = new UXVBox();
+
+        $commandPane = UiUtils::makeCommandPane($this->commands);
+        $commandPane->padding = 5;
+        $commandPane->spacing = 4;
+        $commandPane->fillHeight = true;
+
+        if ($this->commands) {
+            $ui->add($commandPane);
+        }
+
+        $this->statusBar = $statusBar = new UXHBox();
+        $label = new UXLabel("* Только для чтения");
+        $label->font = $label->font->withBold();
+        $label->textColor = 'red';
+        $statusBar->backgroundColor = 'white';
+
+        $statusBar->add($label);
+        $statusBar->padding = 5;
+
+        $ui->add($editorUi = $this->makeEditorUi());
+
+        if ($this->isReadOnly()) {
+            $ui->add($statusBar);
+        }
+
+        UXVBox::setVgrow($editorUi, 'ALWAYS');
+        return $ui;
+    }
 
     /**
      * @return bool
@@ -88,6 +131,77 @@ abstract class AbstractCodeEditor extends AbstractEditor
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    public function registerDefaultCommands()
+    {
+        if (!$this->embedded) {
+            if ($this->isTabbed()) {
+                $this->register(AbstractCommand::make('editor.in.window::В отдельном окне', 'icons/tabRight16.png', function () {
+                    $this->save();
+
+                    FileSystem::close($this->file);
+                    FileSystem::open($this->file, true, null, true);
+                }));
+            } else {
+                $this->register(AbstractCommand::make('editor.in.tab::В виде таба', 'icons/tab16.png', function () {
+                    $this->save();
+
+                    FileSystem::close($this->file);
+                    FileSystem::open($this->file);
+                }));
+            }
+
+            if (!$this->isTabbed()) {
+                $this->register(AbstractCommand::make('code.editor.command.save::Сохранить (Ctrl + S)', 'icons/save16.png', function () {
+                    $this->save();
+                }));
+            }
+
+            $this->register(AbstractCommand::makeSeparator());
+        }
+
+        $this->register(AbstractCommand::make('code.editor.command.undo::Отменить (Ctrl + Z)', 'icons/undo16.png', function () {
+            $this->executeCommand('undo');
+        }));
+
+        $this->register(AbstractCommand::make('code.editor.command.redo::Вернуть (Ctrl + Shift + Z)', 'icons/redo16.png', function () {
+            $this->executeCommand('redo');
+        }));
+
+        $this->register(AbstractCommand::makeSeparator());
+
+        $this->register(AbstractCommand::make('code.editor.command.cut::Вырезать (Ctrl + X)', 'icons/cut16.png', function () {
+            $this->executeCommand('cut');
+        }));
+
+        $this->register(AbstractCommand::make('code.editor.command.copy::Копировать (Ctrl + C)', 'icons/copy16.png', function () {
+            $this->executeCommand('copy');
+        }));
+
+        $this->register(AbstractCommand::make('code.editor.command.paste::Вставить (Ctrl + V)', 'icons/paste16.png', function () {
+            $this->executeCommand('paste');
+        }));
+
+        $this->register(AbstractCommand::makeSeparator());
+
+
+        $this->register(AbstractCommand::makeWithText('command.find::Найти', 'icons/search16.png', function () {
+            $this->executeCommand('find');
+        }));
+
+        $this->register(AbstractCommand::makeWithText('command.replace::Заменить', 'icons/replace16.png', function () {
+            $this->executeCommand('replace');
+            $this->save();
+        }));
+
+        $this->register(AbstractCommand::makeSeparator());
+
+        /*$this->register(AbstractCommand::makeWithText('entity.settings::Настройки', 'icons/settings16.png', function () {
+            $settingsForm = new CodeEditorSettingsForm();
+            $settingsForm->setEditor($this);
+            $settingsForm->showAndWait();
+        }));*/
     }
 
     public function leave()

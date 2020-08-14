@@ -113,6 +113,8 @@ public class MonacoFX extends Region {
                 if (contextMenu != null && view.getOpacity() != 0) {
                     contextMenu.show(this, mouseEvent.getScreenX(), mouseEvent.getScreenY());
                 }
+            } else {
+                contextMenu.hide();
             }
         });
 

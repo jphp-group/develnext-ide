@@ -46,6 +46,7 @@ class PhpCodeFormat extends AbstractFormat
             $editor->setLanguage('php');
         }
 
+        $editor->setEmbedded($embedded);
         if ($readOnly) {
             $editor->setReadOnly(true);
         }
