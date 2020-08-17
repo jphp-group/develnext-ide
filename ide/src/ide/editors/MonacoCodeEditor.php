@@ -108,7 +108,7 @@ class MonacoCodeEditor extends AbstractCodeEditor
         }
 
         $this->editor->setOnLoad(function () {
-            $this->editor->getEditor()->registerCompletionItemProvider("php", [":", "$", ".", ">"], function ($positionAndRange) {
+            $this->editor->getEditor()->registerCompletionItemProvider("php", ": $ >", function ($positionAndRange) {
                 if ($string = $this->getAutocompleteString()) {
                     $items = null;
 
@@ -141,9 +141,10 @@ class MonacoCodeEditor extends AbstractCodeEditor
                         $one = new CompletionItem();
                         $one->label = $item->getName();
                         $one->insertText = $insert;
+                        $one->detail = $item->getDescription();
                         $one->documentation = $item->getDescription();
                         $one->kind = $this->getAutocompleteItemKind($item);
-                        $one->insertAsSnippet = str::contains($insert, '${');
+                        $one->insertAsSnippet = str::contains($insert, '$');
                         $result[] = $one;
                     }
 
@@ -151,16 +152,8 @@ class MonacoCodeEditor extends AbstractCodeEditor
                 } else {
                     return [];
                 }
-
-                /*$item = new CompletionItem();
-                $item->label = "test";
-                $item->kind = 5; // from https://microsoft.github.io/monaco-editor/api/enums/monaco.languages.completionitemkind.html
-                $item->documentation = "test 123";
-                $item->insertText = "position: lineNumber: " . $positionAndRange["position"]["lineNumber"] . ", column: " . $positionAndRange["position"]["column"];
-
-                return [
-                    $item
-                ];*/
+            }, function ($data) {
+                return $data['item'];
             });
         });
     }

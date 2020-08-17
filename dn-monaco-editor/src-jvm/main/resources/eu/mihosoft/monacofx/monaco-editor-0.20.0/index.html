@@ -123,9 +123,22 @@
         monaco.editor.setModelLanguage(editor.getModel(), language);
     }
 
-    function registerCompletionItemProvider(language, triggerCharacters, callbackId) {
+    function registerCompletionItemProvider(language, triggerCharacters, callbackId, resolveCallbackId) {
         monaco.languages.registerCompletionItemProvider(language, {
-            triggerCharacters: triggerCharacters,
+            triggerCharacters: triggerCharacters.split(" "),
+            resolveCompletionItem: function(model, position, item) {
+                if (resolveCallbackId !== undefined) {
+                    var data = JSON.parse(console.executeJavaCallback(resolveCallbackId, JSON.stringify({
+                        range: range,
+                        position: position,
+                        item: item
+                    })));
+                    item.detail = data.detail;
+                    item.documentation = data.documentation;
+                }
+
+                return item;
+            },
             provideCompletionItems: function(model, position) {
                 var word = model.getWordUntilPosition(position);
                 var range = {

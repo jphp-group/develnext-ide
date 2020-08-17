@@ -128,9 +128,11 @@ abstract class Editor
     /**
      * @param string $language
      * @param array $triggerCharacters
-     * @param callable $callback (array): CompletionItem
+     * @param callable $callback (array): CompletionItem[]
+     * @param callable $resolveCallback (array): CompletionItem
      */
-    public function registerCompletionItemProvider(string $language, array $triggerCharacters, callable $callback)
+    public function registerCompletionItemProvider(string $language, string $triggerCharacters,
+                                                   callable $callback, callable $resolveCallback)
     {
     }
 }

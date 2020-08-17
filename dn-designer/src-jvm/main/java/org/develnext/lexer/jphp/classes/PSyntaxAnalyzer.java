@@ -5,9 +5,12 @@ import org.develnext.jphp.core.tokenizer.TokenMeta;
 import org.develnext.jphp.core.tokenizer.Tokenizer;
 import org.develnext.jphp.core.tokenizer.token.ColonToken;
 import org.develnext.jphp.core.tokenizer.token.CommentToken;
+import org.develnext.jphp.core.tokenizer.token.OpenEchoTagToken;
+import org.develnext.jphp.core.tokenizer.token.OpenTagToken;
 import org.develnext.jphp.core.tokenizer.token.SemicolonToken;
 import org.develnext.jphp.core.tokenizer.token.Token;
 import org.develnext.jphp.core.tokenizer.token.expr.BraceExprToken;
+import org.develnext.jphp.core.tokenizer.token.expr.BraceExprToken.Kind;
 import org.develnext.jphp.core.tokenizer.token.expr.CommaToken;
 import org.develnext.jphp.core.tokenizer.token.expr.OperatorExprToken;
 import org.develnext.jphp.core.tokenizer.token.expr.ValueExprToken;
@@ -132,7 +135,8 @@ public class PSyntaxAnalyzer extends BaseWrapper<SyntaxAnalyzer> {
                 if (token instanceof BreakStmtToken || token instanceof SemicolonToken || token instanceof NewExprToken || token instanceof ColonToken
                         || token instanceof CommentToken || token instanceof ReturnStmtToken || token instanceof CaseStmtToken
                         || token instanceof ExtendsStmtToken || token instanceof ImplementsStmtToken || token instanceof ClassStmtToken || token instanceof InterfaceStmtToken
-                        || token instanceof TraitStmtToken || token instanceof AsStmtToken || token instanceof StaticExprToken || token instanceof GlobalStmtToken) {
+                        || token instanceof TraitStmtToken || token instanceof AsStmtToken || token instanceof StaticExprToken || token instanceof GlobalStmtToken
+                        || token instanceof OpenTagToken || token instanceof OpenEchoTagToken) {
                     break;
                 }
 
@@ -149,6 +153,8 @@ public class PSyntaxAnalyzer extends BaseWrapper<SyntaxAnalyzer> {
                 if (token instanceof BraceExprToken) {
                     BraceExprToken brace = (BraceExprToken) token;
 
+                    if (brace.isBlock()) break;
+
                     switch (brace.getKind()) {
                         case ARRAY:
                             arrBrace += brace.isClosed() ? 1 : -1;
@@ -158,9 +164,9 @@ public class PSyntaxAnalyzer extends BaseWrapper<SyntaxAnalyzer> {
                             simpleBrace += brace.isClosed() ? 1 : -1;
                             break;
 
-                        case BLOCK:
+                        /*case BLOCK:
                             blockBrace += brace.isClosed() ? 1 : -1;
-                            break;
+                            break;*/
                     }
 
                     if (arrBrace < 0 || blockBrace < 0 || simpleBrace < 0) {

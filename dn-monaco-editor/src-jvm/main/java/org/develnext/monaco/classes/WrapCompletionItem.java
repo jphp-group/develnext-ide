@@ -37,6 +37,7 @@ public class WrapCompletionItem extends BaseWrapper<CompletionItemProvider.Compl
         @Reflection.Property String label();
         @Reflection.Property Integer kind();
         @Reflection.Property String documentation();
+        @Reflection.Property String detail();
         @Reflection.Property String insertText();
     }
 }

@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface CompletionItemProvider {
     List<CompletionItem> complete(RangeWithPosition rangeWithPosition);
+    CompletionItem resolve(RangeWithPositionAndItem rangeWithPositionAndItem);
 
     class RangeWithPosition {
         private Range range;
@@ -29,21 +30,35 @@ public interface CompletionItemProvider {
         }
     }
 
+    class RangeWithPositionAndItem extends RangeWithPosition {
+        private CompletionItem item;
+
+        public CompletionItem getItem() {
+            return item;
+        }
+
+        public void setItem(CompletionItem item) {
+            this.item = item;
+        }
+    }
+
     class CompletionItem {
         private String label;
         private Integer kind; // https://microsoft.github.io/monaco-editor/api/enums/monaco.languages.completionitemkind.html
         private String documentation;
+        private String detail;
         private String insertText;
         private Integer insertTextRules = 1; // https://microsoft.github.io/monaco-editor/api/enums/monaco.languages.completioniteminserttextrule.html
 
         public CompletionItem() {
         }
 
-        public CompletionItem(String label, Integer kind, String documentation, String insertText) {
-            this.label = label;
-            this.kind = kind;
-            this.documentation = documentation;
-            this.insertText = insertText;
+        public String getDetail() {
+            return detail;
+        }
+
+        public void setDetail(String detail) {
+            this.detail = detail;
         }
 
         public String getLabel() {

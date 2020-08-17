@@ -7,6 +7,7 @@ class CompletionItem
     public string $label;
     public int $kind;
     public string $documentation;
+    public string $detail;
     public string $insertText;
     public bool $insertAsSnippet = false;
 }

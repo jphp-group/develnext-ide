@@ -24,6 +24,8 @@
 package eu.mihosoft.monacofx;
 
 import com.google.gson.Gson;
+import eu.mihosoft.monacofx.CompletionItemProvider.RangeWithPosition;
+import eu.mihosoft.monacofx.CompletionItemProvider.RangeWithPositionAndItem;
 import eu.mihosoft.monacofx.model.Position;
 import eu.mihosoft.monacofx.model.Selection;
 import java.util.List;
@@ -333,10 +335,17 @@ public final class Editor {
         callEditorMethod("revealLineInCenterIfOutsideViewport", lineNumber, type);
     }
 
-    public void registerCompletionItemProvider(String language, List<String> triggerCharacters, CompletionItemProvider itemProvider) {
+    public void registerCompletionItemProvider(String language, String triggerCharacters, CompletionItemProvider itemProvider) {
         String id = UUID.randomUUID().toString();
         callbackMap.put(id, json -> itemProvider.complete(new Gson().fromJson(json, CompletionItemProvider.RangeWithPosition.class)));
-        window.call("registerCompletionItemProvider", language, triggerCharacters, id);
+
+        String resolveId = UUID.randomUUID().toString();
+        callbackMap.put(resolveId, json -> {
+            RangeWithPositionAndItem args = new Gson().fromJson(json, RangeWithPositionAndItem.class);
+            return itemProvider.resolve(args);
+        });
+
+        window.call("registerCompletionItemProvider", language, triggerCharacters, id, resolveId);
     }
 
     public Object executeCallback(String id, String json) {
