@@ -3,6 +3,7 @@ package org.develnext.monaco.classes;
 import eu.mihosoft.monacofx.CompletionItemProvider;
 import org.develnext.monaco.MonacoEditorExtension;
 import php.runtime.annotation.Reflection;
+import php.runtime.annotation.Reflection.Property;
 import php.runtime.env.Environment;
 import php.runtime.lang.BaseWrapper;
 import php.runtime.reflection.ClassEntity;
@@ -34,10 +35,15 @@ public class WrapCompletionItem extends BaseWrapper<CompletionItemProvider.Compl
     }
 
     interface WrappedInterface {
-        @Reflection.Property String label();
-        @Reflection.Property Integer kind();
-        @Reflection.Property String documentation();
-        @Reflection.Property String detail();
-        @Reflection.Property String insertText();
+        @Property String label();
+        @Property Integer kind();
+        @Property String documentation();
+        @Property String detail();
+        @Property String insertText();
+        @Property String filterText();
+        @Property String sortText();
+
+        @Property boolean preselect();
+
     }
 }

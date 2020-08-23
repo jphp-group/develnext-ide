@@ -48,7 +48,11 @@ public interface CompletionItemProvider {
         private String documentation;
         private String detail;
         private String insertText;
+        private String filterText;
+        private String sortText;
         private Integer insertTextRules = 1; // https://microsoft.github.io/monaco-editor/api/enums/monaco.languages.completioniteminserttextrule.html
+
+        private boolean preselect;
 
         public CompletionItem() {
         }
@@ -99,6 +103,30 @@ public interface CompletionItemProvider {
 
         public void setInsertTextRules(Integer insertTextRules) {
             this.insertTextRules = insertTextRules;
+        }
+
+        public boolean isPreselect() {
+            return preselect;
+        }
+
+        public void setPreselect(boolean preselect) {
+            this.preselect = preselect;
+        }
+
+        public String getFilterText() {
+            return filterText;
+        }
+
+        public void setFilterText(String filterText) {
+            this.filterText = filterText;
+        }
+
+        public String getSortText() {
+            return sortText;
+        }
+
+        public void setSortText(String sortText) {
+            this.sortText = sortText;
         }
     }
 }

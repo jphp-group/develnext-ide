@@ -57,21 +57,22 @@ UXApplication::launch(function (UXForm $form) {
 
     $editor->contextMenu = $contextMenu;
 
-    $editor->getEditor()->document->text = "<?php\necho \"Hello, Word\";";
+    $editor->getEditor()->document->text = "<?php\necho \"Hello, Word\";\n// foobar";
     $editor->setOnLoad(function () use ($editor) {
+
         $editor->getEditor()->registerCompletionItemProvider("php", ": > $", function ($positionAndRange) use ($editor) {
             $item = new CompletionItem();
             $item->label = "test";
             $item->kind = 3; // from https://microsoft.github.io/monaco-editor/api/enums/monaco.languages.completionitemkind.html
-            $item->documentation = "test 123";
-            $item->detail = "test 123";
+            $item->documentation = "test **123**\n\nFoobar";
+            $item->detail = "Test Type";
             $item->insertText = "position: lineNumber: " . $positionAndRange["position"]["lineNumber"] . ", column: " . $positionAndRange["position"]["column"] . ", pos: " . $editor->getEditor()->getPositionOffset();
-
 
             $snippet = new CompletionItem();
             $snippet->label = "my-third-party-library";
             $snippet->kind = 17;
             $snippet->documentation = "snippet test";
+            $snippet->detail = "Foobar";
             $snippet->insertAsSnippet = true;
             $snippet->insertText = '"${1:my-third-party-library}": "latest"';
 
@@ -82,9 +83,13 @@ UXApplication::launch(function (UXForm $form) {
         }, function ($data) use ($editor) {
             $item = new CompletionItem();
             $item->detail = "Hello World";
-            $item->documentation = "Hey hey hey";
+            $item->documentation = "Hey *hey* hey";
             return $item;
         });
+
+
+        $editor->getEditor()->focus();
+        $editor->getEditor()->setPosition(['lineNumber' => 2, 'column' => 3]);
     });
     /*$editor->getEditor()->document->addTextChangeListener(function ($oldValue, $newValue) use ($editor) {
         Stream::putContents("./package.php.yml", $newValue);

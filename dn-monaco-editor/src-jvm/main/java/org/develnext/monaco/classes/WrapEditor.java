@@ -90,6 +90,8 @@ public class WrapEditor extends BaseWrapper<Editor> {
         Position getPosition();
         Long getPositionOffset();
         void setPosition(Position position);
+        void revealPosition(Position position);
+        void revealPosition(Position position, int type);
         void revealLine(int lineNumber);
         void revealLine(int lineNumber, int type);
         void revealLineInCenter(int lineNumber);
@@ -103,5 +105,7 @@ public class WrapEditor extends BaseWrapper<Editor> {
         boolean paste();
         void undo();
         void redo();
+
+        void focus();
     }
 }

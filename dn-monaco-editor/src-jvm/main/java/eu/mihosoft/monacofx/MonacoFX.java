@@ -137,6 +137,7 @@ public class MonacoFX extends Region {
                 if (!getEditor().copy()) {
                     System.err.println("Failed to copy");
                 }
+                keyEvent.consume();
             }
         });
     }

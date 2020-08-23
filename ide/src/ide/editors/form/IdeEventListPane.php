@@ -6,6 +6,7 @@ use develnext\lexer\token\FunctionStmtToken;
 use develnext\lexer\token\MethodStmtToken;
 use ide\action\ActionEditor;
 use ide\autocomplete\AutoCompleteRegion;
+use ide\editors\AbstractCodeEditor;
 use ide\editors\AbstractEditor;
 use ide\editors\CodeEditor;
 use ide\editors\menu\AbstractMenuCommand;
@@ -86,7 +87,7 @@ class IdeEventListPane
     protected $targetId = '';
 
     /**
-     * @var CodeEditor
+     * @var AbstractCodeEditor
      */
     protected $codeEditor;
 
@@ -206,7 +207,7 @@ class IdeEventListPane
     }
 
     /**
-     * @return CodeEditor
+     * @return AbstractCodeEditor
      */
     public function getCodeEditor()
     {
@@ -214,9 +215,9 @@ class IdeEventListPane
     }
 
     /**
-     * @param CodeEditor $codeEditor
+     * @param AbstractCodeEditor $codeEditor
      */
-    public function setCodeEditor(CodeEditor $codeEditor)
+    public function setCodeEditor(AbstractCodeEditor $codeEditor)
     {
         $this->codeEditor = $codeEditor;
 
@@ -373,12 +374,11 @@ class IdeEventListPane
                 $actionConstructor->setContext($this->context);
 
                 if ($actionConstructor->getLiveCodeEditor()->getAutoComplete()) {
-                    $actionConstructor->getLiveCodeEditor()->getAutoComplete()->getComplete()->on(
+                    $actionConstructor->getLiveCodeEditor()->getAutoComplete()->on(
                         'addFunctionArgument',
                         function ($type, ArgumentStmtToken $argument, $index, FunctionStmtToken $method, AutoCompleteRegion $region) {
                             return $this->codeEditor
                                 ->getAutoComplete()
-                                ->getComplete()
                                 ->trigger('addFunctionArgument', [$type, $argument, $index, $method, $region]);
                         }
                     );

@@ -90,10 +90,10 @@ abstract class Editor
     }
 
     /**
-     * @param int $lineNumber
+     * @param array $position [lineNumber => ..., column => ...]
      * @param int $type
      */
-    public function revealPosition(int $lineNumber, int $type = 0): void
+    public function revealPosition(array $position, int $type = 0): void
     {
     }
 

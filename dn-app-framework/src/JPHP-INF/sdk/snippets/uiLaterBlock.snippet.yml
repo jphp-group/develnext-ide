@@ -8,5 +8,5 @@ description:
 
 code: >
   uiLater(fn => {
-      #
+      $0
   });

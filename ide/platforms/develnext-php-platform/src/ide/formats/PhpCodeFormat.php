@@ -38,13 +38,13 @@ class PhpCodeFormat extends AbstractFormat
         $embedded = (bool) $options['embedded'];
         $readOnly = $options['readOnly'];
 
-        if ($embedded) {
+        /*if ($embedded) {
             $editor = new CodeEditor($file, 'php', $codeEditorOptions);
             $editor->setEmbedded($embedded);
-        } else {
+        } else {*/
             $editor = new MonacoCodeEditor($file, $codeEditorOptions);
             $editor->setLanguage('php');
-        }
+        //}
 
         $editor->setEmbedded($embedded);
         if ($readOnly) {

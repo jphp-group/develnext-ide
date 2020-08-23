@@ -278,15 +278,15 @@ class PhpAnyAutoCompleteType extends AutoCompleteType
     {
         $result = [];
 
-        $result['GLOBALS'] = new VariableAutoCompleteItem('GLOBALS', 'array', $this->kind == '~any' ? '$GLOBALS' : null);
-        $result['_ENV'] = new VariableAutoCompleteItem('_ENV', 'array', $this->kind == '~any' ? '$_ENV' : null);
+        $result['GLOBALS'] = new VariableAutoCompleteItem('$GLOBALS', 'array', '\\$GLOBALS');
+        $result['_ENV'] = new VariableAutoCompleteItem('$_ENV', 'array', '\\$_ENV');
 
         foreach ($context->getGlobalRegion()->getValues('variable') as $one) {
-            $result[$one['name']] = new VariableAutoCompleteItem($one['name'], $one['type'], ($this->kind == '~any') ? "$" . $one['name'] : null);
+            $result[$one['name']] = new VariableAutoCompleteItem("$" . $one['name'], $one['type'], "\\$" . $one['name']);
         }
 
         foreach ($region->getValues('variable') as $one) {
-            $result[$one['name']] = new VariableAutoCompleteItem($one['name'], $one['type'], ($this->kind == '~any') ? "$" . $one['name'] : null);
+            $result[$one['name']] = new VariableAutoCompleteItem("$" . $one['name'], $one['type'], "\\$" . $one['name']);
         }
 
         return $result;
@@ -307,15 +307,15 @@ class PhpAnyAutoCompleteType extends AutoCompleteType
                 new StatementAutoCompleteItem('for', 'Цикл', 'for ('),
                 new StatementAutoCompleteItem('foreach', 'Цикл по массиву', 'foreach ($1) $0'),
                 new StatementAutoCompleteItem('while', 'Цикл', 'while ($1) $0'),
-                new StatementAutoCompleteItem('do', 'Цикл', 'do { $0'),
+                new StatementAutoCompleteItem('do', 'Цикл', 'do { $0 }'),
                 new StatementAutoCompleteItem('function', 'Объявление функции', 'function '),
                 new StatementAutoCompleteItem('fn', 'Анонимная функция (короткий синтаксис)', 'fn'),
                 new StatementAutoCompleteItem('class', 'Объявление класса', 'class '),
                 new StatementAutoCompleteItem('namespace', 'Объявление пространства имен', 'namespace '),
                 new StatementAutoCompleteItem('use', 'Подключение класса', 'use '),
-                new StatementAutoCompleteItem('switch', 'Множественное условие', 'switch ($1) $0'),
-                new StatementAutoCompleteItem('case', 'Если от множественного условия', 'case $1: $0'),
-                new StatementAutoCompleteItem('default', 'По умолчанию в множественном условии switch', 'default: '),
+                new StatementAutoCompleteItem('switch', 'Множественное условие', 'switch ($1) { $0 }'),
+                new StatementAutoCompleteItem('case', 'Если от множественного условия', 'case $1: $0; break;'),
+                new StatementAutoCompleteItem('default', 'По умолчанию в множественном условии switch', 'default: $0;'),
                 new StatementAutoCompleteItem('global', 'Глобальная переменная', 'global $'),
                 new StatementAutoCompleteItem('const', 'Объявление константы', 'const '),
                 new StatementAutoCompleteItem('var', 'Объявление переменной класса', 'var '),
@@ -342,13 +342,13 @@ class PhpAnyAutoCompleteType extends AutoCompleteType
                 new StatementAutoCompleteItem('exit', '', 'exit()'),
                 new StatementAutoCompleteItem('interface', '', 'interface '),
                 new StatementAutoCompleteItem('trait', '', 'trait '),
-                new StatementAutoCompleteItem('try', '', 'try {'),
+                new StatementAutoCompleteItem('try', '', 'try { $0 }'),
                 new StatementAutoCompleteItem('catch', '', 'catch ($1) { $0 }'),
                 new StatementAutoCompleteItem('finally', '', 'finally { $0 }'),
                 new StatementAutoCompleteItem('throw new', '', 'throw new '),
                 new StatementAutoCompleteItem('extends', '', 'extends '),
                 new StatementAutoCompleteItem('implements', '', 'implements '),
-                new StatementAutoCompleteItem('list', '', 'list($1) $0'),
+                new StatementAutoCompleteItem('list', '', 'list($1)$0'),
                 new StatementAutoCompleteItem('callable', 'Тип функция/метод', 'callable '),
                 new StatementAutoCompleteItem('iterable', 'Тип, перечисляемый', 'iterable '),
                 new StatementAutoCompleteItem('bool', 'Тип, булево', 'bool '),

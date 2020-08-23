@@ -15,6 +15,7 @@ use php\gui\UXLabel;
 use php\gui\UXNode;
 use php\lang\IllegalArgumentException;
 use php\lib\fs;
+use php\lib\str;
 
 abstract class AbstractCodeEditor extends AbstractEditor
 {
@@ -312,5 +313,14 @@ abstract class AbstractCodeEditor extends AbstractEditor
             default:
                 ;
         }
+    }
+
+    public function jumpToLineSpaceOffset($beginLine)
+    {
+        $lines = str::lines($this->getValue());
+        $str = $lines[$beginLine];
+        $trimStr = str::trimLeft($str);
+
+        $this->jumpToLine($beginLine, str::length($str) - str::length($trimStr) + 1);
     }
 }

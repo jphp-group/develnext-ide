@@ -47,6 +47,19 @@
                 arrowSize: 30,
                 alwaysConsumeMouseWheel: false
             }
+        }, {
+            storageService: {
+                get() {},
+                getBoolean(key) {
+                    if (key === "expandSuggestionDocs")
+                        return true;
+
+                    return false;
+                },
+                store() {},
+                onWillSaveState() {},
+                onDidChangeStorage() {}
+            }
         });
 
         if (editorCreatedCallback != null) {
@@ -128,6 +141,14 @@
             triggerCharacters: triggerCharacters.split(" "),
             resolveCompletionItem: function(model, position, item) {
                 if (resolveCallbackId !== undefined) {
+                    var word = model.getWordUntilPosition(position);
+                    var range = {
+                        startLineNumber: position.lineNumber,
+                        endLineNumber: position.lineNumber,
+                        startColumn: word.startColumn,
+                        endColumn: word.endColumn
+                    };
+
                     var data = JSON.parse(console.executeJavaCallback(resolveCallbackId, JSON.stringify({
                         range: range,
                         position: position,
@@ -135,6 +156,14 @@
                     })));
                     item.detail = data.detail;
                     item.documentation = data.documentation;
+                }
+
+                if (typeof item.documentation === "string") { // add support markdown
+                    item.documentation = {
+                        value: item.documentation,
+                        supportThemeIcons: true,
+                        isTrusted: true
+                    }
                 }
 
                 return item;
@@ -148,11 +177,13 @@
                     endColumn: word.endColumn
                 };
 
+                let suggestions = JSON.parse(console.executeJavaCallback(callbackId, JSON.stringify({
+                    range: range,
+                    position: position
+                })));
+
                 return {
-                    suggestions: JSON.parse(console.executeJavaCallback(callbackId, JSON.stringify({
-                        range: range,
-                        position: position
-                    })))
+                    suggestions: suggestions
                 };
             }
         });
@@ -185,6 +216,12 @@
         const position = JSON.parse(positionJson);
         const editor = getEditorView();
         editor.setPosition(position);
+    }
+
+    function revealPosition(positionJson, type) {
+        const position = JSON.parse(positionJson);
+        const editor = getEditorView();
+        editor.revealPosition(position, type);
     }
 
     function undo() {

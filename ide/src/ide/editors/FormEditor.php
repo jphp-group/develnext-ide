@@ -163,7 +163,7 @@ class FormEditor extends AbstractModuleEditor
     protected $formDumper;
 
     /**
-     * @var CodeEditor
+     * @var MonacoCodeEditor
      */
     protected $codeEditor;
 
@@ -1533,7 +1533,7 @@ class FormEditor extends AbstractModuleEditor
 
     protected function makeCodeEditor()
     {
-        $complete = $this->codeEditor->getAutoComplete() ? $this->codeEditor->getAutoComplete()->getComplete() : null;
+        $complete = $this->codeEditor->getAutoComplete() ? $this->codeEditor->getAutoComplete() : null;
 
         if ($complete) {
             $complete->on('addFunctionArgument', function ($type, ArgumentStmtToken $arg, $index, FunctionStmtToken $func, AutoCompleteRegion $region) use ($complete) {

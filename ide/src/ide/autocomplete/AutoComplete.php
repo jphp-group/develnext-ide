@@ -69,6 +69,7 @@ class AutoComplete
      * @param int $caretPosition
      * @param int $caretLine
      * @param int $caretOffset
+     * @throws \php\io\IOException
      */
     public function update($sourceCode, $caretPosition = 0, $caretLine = 0, $caretOffset = 0)
     {

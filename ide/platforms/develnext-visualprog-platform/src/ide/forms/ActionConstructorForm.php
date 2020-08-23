@@ -8,6 +8,7 @@ use ide\action\Action;
 use ide\action\ActionEditor;
 use ide\action\ActionManager;
 use ide\action\ActionScript;
+use ide\editors\AbstractCodeEditor;
 use ide\editors\AbstractEditor;
 use ide\editors\CodeEditor;
 use ide\editors\FormEditor;
@@ -82,7 +83,7 @@ class ActionConstructorForm extends AbstractIdeForm
     protected $contextEditor;
 
     /**
-     * @var CodeEditor
+     * @var AbstractCodeEditor
      */
     protected $liveCodeEditor;
 
@@ -212,11 +213,11 @@ class ActionConstructorForm extends AbstractIdeForm
         ], PhpCodeFormat::class);
         $liveCodeEditor->setReadOnly(false);
 
-        $this->liveCodeEditor->getTextArea()->on('keyUp', function (UXKeyEvent $e) {
+        /*$this->liveCodeEditor->getTextArea()->on('keyUp', function (UXKeyEvent $e) {
             if ($e->codeName == 'Enter' && $e->controlDown) {
                 $this->actionSave();
             }
-        }, __CLASS__);
+        }, __CLASS__);*/
 
         $liveCodeEditor->registerDefaultCommands();
 
@@ -442,7 +443,7 @@ class ActionConstructorForm extends AbstractIdeForm
     }
 
     /**
-     * @return CodeEditor
+     * @return AbstractCodeEditor
      */
     public function getLiveCodeEditor()
     {

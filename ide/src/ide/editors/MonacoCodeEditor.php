@@ -22,13 +22,12 @@ use ide\Logger;
 use ide\ui\elements\DNAnchorPane;
 use ide\ui\elements\DNLabel;
 use ide\utils\FileUtils;
+use ide\utils\MarkdownUtils;
 use php\concurrent\Promise;
 use php\gui\layout\UXAnchorPane;
 use php\gui\layout\UXHBox;
 use php\gui\monaco\CompletionItem;
 use php\gui\monaco\MonacoEditor;
-use php\gui\UXClipboard;
-use php\gui\UXLabel;
 use php\lib\arr;
 use php\lib\char;
 use php\lib\fs;
@@ -59,18 +58,31 @@ class MonacoCodeEditor extends AbstractCodeEditor
         $this->editor = new MonacoEditor();
 
         $this->loadContentToAreaIfModified()->then(function () {
-            $this->editor->getEditor()->document->addTextChangeListener(function ($old, $new) {
-                $editor = $this->editor->getEditor();
-                $position = $editor->getPosition();
-                $this->autoComplete->update($this->getValue(), $editor->getPositionOffset(), $position['lineNumber'], $position['column']);
 
-                FileUtils::putAsync($this->file, $new)->then(function () {
-                    $this->fileTime = $this->file;
-                });
-            });
         })->catch(function () use ($file) {
             Logger::error("Failed to load content to monaco editor from {$file}");
             $this->setReadOnly(true);
+        });
+
+        $this->editor->getEditor()->document->addTextChangeListener(function ($old, $new) {
+            $editor = $this->editor->getEditor();
+
+            if ($this->file) {
+                FileUtils::putAsync($this->file, $new)->then(function () {
+                    $this->fileTime = $this->file;
+                });
+            }
+
+            if ($this->autoComplete && $editor->isInitialized()) {
+                $this->autoComplete->update(
+                    $editor->document->text,
+                    $editor->getPositionOffset(),
+                    $editor->getPosition()["lineNumber"],
+                    $editor->getPosition()["column"]
+                );
+            }
+
+            $this->doChange();
         });
 
         $applyEditorTheme = function (IDETheme $theme) {
@@ -83,7 +95,6 @@ class MonacoCodeEditor extends AbstractCodeEditor
 
         ChangeThemeCommand::$instance->bind("setCurrentTheme", $applyEditorTheme);
         $applyEditorTheme(ChangeThemeCommand::$instance->getCurrentTheme());
-
 
         if ($options['autoComplete'] instanceof AutoComplete) {
             $this->autoComplete = $options['autoComplete'];
@@ -108,52 +119,89 @@ class MonacoCodeEditor extends AbstractCodeEditor
         }
 
         $this->editor->setOnLoad(function () {
+            $editor = $this->editor->getEditor();
+
+            if ($this->autoComplete) {
+                $this->autoComplete->update(
+                    $editor->document->text,
+                    $editor->getPositionOffset(),
+                    $editor->getPosition()["lineNumber"],
+                    $editor->getPosition()["column"]
+                );
+            }
+
             $this->editor->getEditor()->registerCompletionItemProvider("php", ": $ >", function ($positionAndRange) {
-                if ($string = $this->getAutocompleteString()) {
-                    $items = null;
+                if ($this->autoComplete) {
+                    if ($string = $this->getAutocompleteString()) {
+                        $items = null;
 
-                    $region = $this->autoComplete->findRegion($positionAndRange["position"]["lineNumber"], $positionAndRange["position"]["column"]);
-                    $types = $this->autoComplete->identifyType($string, $region);
+                        $region = $this->autoComplete->findRegion($positionAndRange["position"]["lineNumber"], $positionAndRange["position"]["column"]);
+                        $types = $this->autoComplete->identifyType($string, $region);
 
-                    if (arr::keys($this->autoCompleteTypes) != $types) {
-                        $this->autoCompleteTypes = [];
+                        if (arr::keys($this->autoCompleteTypes) != $types) {
+                            $this->autoCompleteTypes = [];
 
-                        foreach ($types as $type) {
-                            //if (!$this->hasType($type)) {
-                            $this->addAutocompleteType($type);
-                            //}
-                        }
-                    }
-
-                    $prefix = $this->getAutocompleteString(true);
-
-                    $items = $this->makeAutocompleteItems($prefix, $positionAndRange["position"]);
-                    $result = [];
-                    /** @var AutoCompleteItem $item */
-                    foreach ($items as $item) {
-                        $insert = $item->getInsert();
-                        if (!is_string($insert) && is_callable($insert)) {
-                            $in = new AutoCompleteInsert($this->editor);
-                            $insert($in);
-                            $insert = $in->getValue();
+                            foreach ($types as $type) {
+                                //if (!$this->hasType($type)) {
+                                $this->addAutocompleteType($type);
+                                //}
+                            }
                         }
 
-                        $one = new CompletionItem();
-                        $one->label = $item->getName();
-                        $one->insertText = $insert;
-                        $one->detail = $item->getDescription();
-                        $one->documentation = $item->getDescription();
-                        $one->kind = $this->getAutocompleteItemKind($item);
-                        $one->insertAsSnippet = str::contains($insert, '$');
-                        $result[] = $one;
-                    }
+                        $prefix = $this->getAutocompleteString(true);
 
-                    return $result;
+                        $items = $this->makeAutocompleteItems($prefix, $positionAndRange["position"]);
+                        $result = [];
+                        /** @var AutoCompleteItem $item */
+                        foreach ($items as $item) {
+                            $insert = $item->getInsert();
+                            if (!is_string($insert) && is_callable($insert)) {
+                                $in = new AutoCompleteInsert($this->editor);
+                                $insert($in);
+                                $insert = $in->getValue();
+                            }
+
+                            $one = new CompletionItem();
+                            $one->label = $item->getName();
+                            $one->insertText = $insert;
+
+
+                            $name = $item->getName();
+                            if ($item instanceof MethodAutoCompleteItem) {
+                                $name .= '()';
+                            }
+
+                            $one->detail = $name;
+
+                            $description = MarkdownUtils::make($item->getDescription());
+                            $contentValue = $item->getContent();
+
+                            if (is_array($contentValue) && ($contentValue['DEF'] || $contentValue['RU'])) {
+                                $description .= "\n\n---\n\n";
+                                $description .= "> " . $contentValue['RU'] ?: $contentValue['DEF'];
+                            } else if ($contentValue) {
+                                $description .= "\n\n---\n\n";
+                                $description .= "> " . $contentValue;
+                            }
+
+                            $one->documentation = $description;
+                            $one->kind = $this->getAutocompleteItemKind($item);
+                            $one->insertAsSnippet = str::contains($insert, '$');
+                            $result[] = $one;
+                        }
+
+                        return $result;
+                    } else {
+                        return [];
+                    }
                 } else {
                     return [];
                 }
             }, function ($data) {
-                return $data['item'];
+                $item = new CompletionItem();
+                $item->documentation = $data['item']['documentation'];
+                $item->detail = $data['item']['detail'];
+                return $item;
             });
         });
     }
@@ -175,6 +223,11 @@ class MonacoCodeEditor extends AbstractCodeEditor
 
     public function load()
     {
+        if ($this->file && fs::isFile($this->file)) {
+            FileUtils::getAsync($this->file, function ($content) {
+                $this->setValue($content);
+            });
+        }
         // nope
     }
 
@@ -185,6 +238,9 @@ class MonacoCodeEditor extends AbstractCodeEditor
         }
 
         $value = $this->getValue();
+        var_dump($value);
+        var_dump($this->file);
+
         FileUtils::putAsync($this->file, $value)->then(function () {
             $this->fileTime = $this->file;
         });
@@ -192,25 +248,41 @@ class MonacoCodeEditor extends AbstractCodeEditor
 
     public function requestFocus()
     {
+        $this->editor->requestFocus();
         $this->editor->getEditor()->focus();
     }
 
-    public function loadContentToArea()
+    public function loadContentToArea($resetHistory = true, callable $callback = null)
     {
-        if ($this->__content != null) {
-            $this->editor->getEditor()->document->text = $this->__content;
+        $this->contentLoaded = true;
+
+        $file = $this->file;
+        if ($file && $this->editor->getEditor()->isInitialized()) {
+            return FileUtils::getAsync($file, function ($content) use ($callback, $file) {
+                $this->setValue($content);
+
+                $this->fileTime = fs::time($file);
+
+                if ($callback) {
+                    $callback();
+                }
+            });
+        } else {
+            return Promise::resolve(null);
         }
     }
 
-    public function loadContentToAreaIfModified(): Promise
+    public function loadContentToAreaIfModified(callable $callback = null): Promise
     {
-        return FileUtils::getAsync($this->file, function ($data) {
-            $this->__content = $data;
-
-            if ($this->editor->getEditor()->document->text != $this->__content) {
-                $this->loadContentToArea();
+        if (!$this->contentLoaded || $this->fileTime != fs::time($this->file)) {
+            $resetHistory = !$this->contentLoaded;
+            return $this->loadContentToArea($resetHistory, $callback);
+        } else {
+            if ($callback) {
+                $callback();
             }
-        });
+            return Promise::resolve(null);
+        }
     }
 
     /**
@@ -250,7 +322,7 @@ class MonacoCodeEditor extends AbstractCodeEditor
 
     public function getValue(): string
     {
-        $this->editor->getEditor()->document->text;
+        return $this->editor->getEditor()->document->text;
     }
 
     public function setValue(string $value): void
@@ -291,7 +363,12 @@ class MonacoCodeEditor extends AbstractCodeEditor
 
     public function jumpToLine(int $line, int $offset = 0)
     {
-        $this->editor->getEditor()->revealLineInCenter($line);
+        $editor = $this->editor->getEditor();
+        if ($editor->isInitialized()) {
+            $editor->focus();
+            $editor->revealLineInCenter($line + 1);
+            $editor->setPosition(['lineNumber' => $line + 1, 'column' => $offset]);
+        }
     }
 
     public function showFindDialog()

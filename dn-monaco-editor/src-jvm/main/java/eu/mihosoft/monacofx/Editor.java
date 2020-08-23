@@ -311,6 +311,14 @@ public final class Editor {
         return false;
     }
 
+    public void revealPosition(Position position, int type) {
+        window.call("revealPosition", new Gson().toJson(position), type);
+    }
+
+    public void revealPosition(Position position) {
+        revealPosition(position, 0);
+    }
+
     public void revealLine(int lineNumber) {
         revealLine(lineNumber, 0);
     }
