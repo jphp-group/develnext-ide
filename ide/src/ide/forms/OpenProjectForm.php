@@ -17,6 +17,7 @@ use ide\ui\elements\DNButton;
 use ide\ui\elements\DNLabel;
 use ide\ui\elements\DNListView;
 use ide\ui\elements\DNSeparator;
+use ide\ui\elements\DNTabPane;
 use ide\ui\elements\DNTextField;
 use ide\ui\FlowListViewDecorator;
 use ide\ui\ImageBox;
@@ -204,6 +205,7 @@ class OpenProjectForm extends AbstractIdeForm
         DNListView::applyIDETheme($this->libraryList);
         DNListView::applyIDETheme($this->sharedList);
         DNSeparator::applyIDETheme($this->separator);
+        DNTabPane::applyIDETheme($this->tabPane);
     }
 
     protected function sharedCellFactory(array $item)
