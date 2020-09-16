@@ -28,11 +28,6 @@ class SettingsShowCommand extends AbstractCommand
         return 'help';
     }
 
-    public function makeUiForHead()
-    {
-        return $this->makeGlyphButton();
-    }
-
     /**
      * @param null $e
      * @param AbstractEditor|null $editor

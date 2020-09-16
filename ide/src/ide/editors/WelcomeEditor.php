@@ -4,6 +4,7 @@ namespace ide\editors;
 use Exception;
 use ide\commands\NewProjectCommand;
 use ide\commands\OpenProjectCommand;
+use ide\commands\SettingsShowCommand;
 use ide\Ide;
 use ide\ui\elements\DNAnchorPane;
 use ide\ui\elements\DNButton;
@@ -70,6 +71,16 @@ class WelcomeEditor extends AbstractEditor
         });
 
         $layout->add($openProjectButton);
+
+        $openSettingsButton = new DNButton(_("welcome.settings.open"), ico("settings16"));
+        $openSettingsButton->font = $openProjectButton->font->withSize(16);
+        $openSettingsButton->width = 250;
+        $openSettingsButton->alignment = 'BASELINE_LEFT';
+        $openSettingsButton->on('click', function () {
+            Ide::get()->executeCommand(SettingsShowCommand::class);
+        });
+
+        $layout->add($openSettingsButton);
         return $layout;
     }
 }
