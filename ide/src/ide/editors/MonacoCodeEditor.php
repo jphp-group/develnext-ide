@@ -238,8 +238,6 @@ class MonacoCodeEditor extends AbstractCodeEditor
         }
 
         $value = $this->getValue();
-        var_dump($value);
-        var_dump($this->file);
 
         FileUtils::putAsync($this->file, $value)->then(function () {
             $this->fileTime = $this->file;

@@ -68,6 +68,10 @@ class TaskPanel {
 
         $this->terminal = new JediTermWidget(ChangeThemeCommand::$instance->getCurrentTheme()->getTerminalTheme()->build());
         $this->terminal->createTerminalSession(new PtyProcessConnector($this->process));
+
+        $this->terminal->writeString(str::join($this->processInfo->getProgram(), " "));
+        $this->terminal->nextLine();
+
         $this->terminal->requestFocus();
         $this->terminal->start();
 
