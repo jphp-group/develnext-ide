@@ -62,6 +62,11 @@ abstract class CSSStyle
     abstract public function getScrollPaneCSS(): array;
 
     /**
+     * @return array
+     */
+    abstract public function getFlowPaneCSS(): array;
+
+    /**
      * @param UXNode $node
      * @param array $css
      */

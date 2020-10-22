@@ -6,6 +6,8 @@ use ide\editors\menu\AbstractMenuCommand;
 use ide\forms\MessageBoxForm;
 use ide\Ide;
 use ide\systems\FileSystem;
+use ide\ui\elements\DNButton;
+use ide\ui\elements\DNSeparator;
 use ide\ui\FlowListViewDecorator;
 use ide\ui\ImageBox;
 use php\gui\event\UXMouseEvent;
@@ -263,7 +265,7 @@ abstract class AbstractEditorsProjectControlPane extends AbstractProjectControlP
 
     protected function makeActionsUi()
     {
-        $addButton = _(new UXButton('command.add::Добавить'));
+        $addButton = _(new DNButton('command.add::Добавить'));
         $addButton->classes->add('icon-plus');
         $addButton->font = $addButton->font->withBold();
         $addButton->maxHeight = 999;
@@ -272,7 +274,7 @@ abstract class AbstractEditorsProjectControlPane extends AbstractProjectControlP
             $this->trigger('updateCount');
         });
 
-        $editButton = _(new UXButton('command.edit::Редактировать'));
+        $editButton = _(new DNButton('command.edit::Редактировать'));
         $editButton->classes->add('icon-edit');
         $editButton->maxHeight = 999;
         $editButton->enabled = false;
@@ -280,7 +282,7 @@ abstract class AbstractEditorsProjectControlPane extends AbstractProjectControlP
             $this->doEdit();
         });
 
-        $cloneButton = _(new UXButton('command.clone::Клонировать'));
+        $cloneButton = _(new DNButton('command.clone::Клонировать'));
         $cloneButton->classes->add('icon-copy');
         $cloneButton->maxHeight = 999;
         $cloneButton->enabled = false;
@@ -288,14 +290,10 @@ abstract class AbstractEditorsProjectControlPane extends AbstractProjectControlP
             $this->doClone();
         });
 
-        $delButton = new UXButton();
+        $delButton = _(new DNButton('command.delete::Удалить'));
         $delButton->classes->add('icon-trash2');
         $delButton->maxHeight = 999;
         $delButton->enabled = false;
-        $delButton->text = 'command.delete::Удалить';
-
-        _($delButton);
-
         $delButton->on('action', function () {
             $this->list->removeBySelections();
         });
@@ -310,7 +308,7 @@ abstract class AbstractEditorsProjectControlPane extends AbstractProjectControlP
         $ui->spacing = 5;
         $ui->minHeight = 30;
 
-        return $ui;
+        return new UXVBox([ $ui, new DNSeparator() ], 8);
     }
 
     /**

@@ -133,4 +133,16 @@ class DarkCSSStyle extends CSSStyle {
             "-dn-base" => "#333333"
         ];
     }
+
+    /**
+     * @return array
+     */
+    public function getFlowPaneCSS(): array {
+        return [
+            "-dn-base" => "#333333",
+            "-fx-border-color" => "derive(-dn-base, 30%)",
+            "-fx-border-style" => "solid",
+            "-fx-border-width" => "1px"
+        ];
+    }
 }

@@ -3,7 +3,8 @@ namespace ide\ui;
 
 use ide\misc\AbstractCommand;
 use ide\misc\EventHandlerBehaviour;
-use ide\ui\elements\DNAnchorPane;
+use ide\ui\elements\DNFlowPane;
+use ide\ui\elements\DNLabel;
 use ide\ui\elements\DNScrollPane;
 use ide\utils\Json;
 use php\gui\event\UXDragEvent;
@@ -79,7 +80,7 @@ class FlowListViewDecorator implements \Countable
             $pane = new UXFlowPane();
         }
 
-        DNAnchorPane::applyIDETheme($pane);
+        DNFlowPane::applyIDETheme($pane);
 
         $this->scrollPane = new DNScrollPane();
         $this->scrollPane->content = $pane;
@@ -90,7 +91,6 @@ class FlowListViewDecorator implements \Countable
 
         $pane->hgap = 10;
         $pane->vgap = 10;
-        $pane->padding = 10;
 
         $pane->classes->add('flow-list-view');
 
@@ -407,7 +407,7 @@ class FlowListViewDecorator implements \Countable
             }
         }
 
-        $node->classes->add('list-cell');
+        //$node->classes->add('list-cell');
         $this->pane->add($node);
 
         $node->on('mouseDown', function (UXMouseEvent $e) {
@@ -475,7 +475,7 @@ class FlowListViewDecorator implements \Countable
     {
         $this->pane->children->clear();
 
-        $object = _(new UXLabel($this->emptyListText));
+        $object = _(new DNLabel($this->emptyListText));
         $object->classes->addAll(['empty-list-text', 'dn-list-hint']);
 
         $this->pane->children->add($object);

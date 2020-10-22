@@ -7,6 +7,7 @@ use ide\Ide;
 use ide\ui\elements\DNAnchorPane;
 use ide\ui\elements\DNButton;
 use ide\ui\elements\DNCheckbox;
+use ide\ui\elements\DNSeparator;
 use php\gui\layout\UXAnchorPane;
 use php\gui\layout\UXHBox;
 use php\gui\UXNode;
@@ -100,14 +101,20 @@ class TaskPanel {
             Ide::get()->setUserConfigValue("builder.closeAfterDone", $this->closeAfterExit = $hideCheckbox->selected);
         });
 
+        $separator = new DNSeparator();
+        $panel->add($separator);
+
         $box = new UXHBox([ $destroyButton, $hideCheckbox ], 8);
         $box->alignment = "CENTER_LEFT";
         $panel->add($box);
 
         UXAnchorPane::setAnchor($node, 8);
-        UXAnchorPane::setBottomAnchor($node, 40);
+        UXAnchorPane::setBottomAnchor($node, 46);
         UXAnchorPane::setBottomAnchor($box, 8);
         UXAnchorPane::setLeftAnchor($box, 8);
+        UXAnchorPane::setLeftAnchor($separator, 8);
+        UXAnchorPane::setRightAnchor($separator, 8);
+        UXAnchorPane::setBottomAnchor($separator, 43);
 
         return $panel;
     }

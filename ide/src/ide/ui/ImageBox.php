@@ -1,5 +1,6 @@
 <?php
 namespace ide\ui;
+use ide\ui\elements\DNLabel;
 use ide\utils\UiUtils;
 use php\gui\UXImageArea;
 use php\gui\layout\UXVBox;
@@ -24,6 +25,8 @@ class ImageBox extends UXVBox implements StreamLoadableBehaviour
      */
     protected $titleLabel;
 
+    protected $boxBackgroundColor = "transparent";
+
     /**
      * ImageBox constructor.
      * @param int $width
@@ -34,7 +37,6 @@ class ImageBox extends UXVBox implements StreamLoadableBehaviour
         parent::__construct();
 
         $this->alignment = 'TOP_CENTER';
-        $this->classes->add('dn-list-item');
 
         $item = new UXImageArea();
         $item->size = [$width, $height];
@@ -47,15 +49,27 @@ class ImageBox extends UXVBox implements StreamLoadableBehaviour
         $this->add($item);
         $this->imageArea = $item;
 
-        $nameLabel = new UXLabelEx();
+        $nameLabel = new DNLabel();
         $nameLabel->textAlignment = 'CENTER';
         $nameLabel->alignment = 'TOP_CENTER';
         $nameLabel->paddingTop = 5;
         $nameLabel->width = $item->width;
-        $nameLabel->style = UiUtils::fontSizeStyle() . "; ";
+
+        $this->classes->addListener(function () {
+            $this->backgroundColor = $this->boxBackgroundColor = $this->classes->has("selected") ? "#00000020" : "transparent";
+        });
+
+        $this->on("mouseEnter", function () {
+            $this->backgroundColor = "#00000020";
+        });
+
+        $this->on("mouseExit", function () {
+            $this->backgroundColor = $this->boxBackgroundColor;
+        });
 
         $this->add($nameLabel);
         $this->titleLabel = $nameLabel;
+        $this->padding = 12;
     }
 
     public function setImage(UXImage $image = null)

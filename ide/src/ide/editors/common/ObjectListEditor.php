@@ -9,12 +9,13 @@ use ide\Ide;
 use ide\Logger;
 use ide\project\Project;
 use ide\systems\FileSystem;
+use ide\ui\elements\DNComboBox;
 use ide\utils\FileUtils;
 use php\gui\UXComboBox;
 
 class ObjectListEditor
 {
-    /** @var UXComboBox */
+    /** @var DNComboBox */
     protected $comboBox;
 
     /** @var AbstractEditor|null */
@@ -188,7 +189,7 @@ class ObjectListEditor
 
     protected function makeUi()
     {
-        $this->comboBox = new UXComboBox();
+        $this->comboBox = new DNComboBox();
         $this->comboBox->visibleRowCount = 30;
 
         $this->comboBox->on('action', function () {

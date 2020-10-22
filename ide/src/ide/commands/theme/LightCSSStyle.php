@@ -101,4 +101,16 @@ class LightCSSStyle extends CSSStyle
             "-dn-base" => "#f3f3f3"
         ];
     }
+
+    /**
+     * @return array
+     */
+    public function getFlowPaneCSS(): array {
+        return [
+            "-dn-base" => "#f3f3f3",
+            "-fx-border-color" => "derive(-dn-base, 30%)",
+            "-fx-border-style" => "solid",
+            "-fx-border-width" => "1px"
+        ];
+    }
 }

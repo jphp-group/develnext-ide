@@ -6,6 +6,8 @@ use ide\editors\common\FormListEditor;
 use ide\editors\FormEditor;
 use ide\Ide;
 use ide\project\Project;
+use ide\ui\elements\DNLabel;
+use ide\ui\elements\DNSeparator;
 use ide\ui\FlowListViewDecorator;
 use ide\ui\ImageBox;
 use php\gui\layout\UXHBox;
@@ -112,21 +114,21 @@ class FormsProjectControlPane extends AbstractEditorsProjectControlPane
         $formListEditor->getUi()->width = 250;
         $this->settingsMainFormCombobox = $formListEditor;
 
-        $label = _(new UXLabel('ui.form.show.on.start'));
+        $label = _(new DNLabel('ui.form.show.on.start'));
         $label->opacity = 0.75;
 
         $box = new UXHBox([$formListEditor->getUi(), $label], 5);
         $box->alignment = 'CENTER_LEFT';
 
         $ui = new UXVBox([
-            _(new UXLabel('{ui.main.form::Главная форма}:')),
+            _(new DNLabel('{ui.main.form::Главная форма}:')),
             $box,
         ]);
 
         $ui->spacing = 3;
         $ui->alignment = 'CENTER_LEFT';
 
-        return [$ui];
+        return [new UXVBox([ $ui, new DNSeparator() ], 8)];
     }
 
     public function refresh($updateUi = true)
